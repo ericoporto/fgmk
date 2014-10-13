@@ -1,0 +1,19 @@
+{
+    "LevelsList": {
+        "big": "big.json", 
+        "insideLevel0": "insideLevel0.json", 
+        "level0": "level0.json", 
+        "level1": "level1.json", 
+        "level2": "level2.json"
+    }, 
+    "Player": {
+        "charaFile": "person.json", 
+        "charaSet": "person", 
+        "facing": "back", 
+        "initPosX": 160, 
+        "initPosY": 288
+    }, 
+    "World": {
+        "initLevel": "level0"
+    }
+}
