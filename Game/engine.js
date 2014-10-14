@@ -243,12 +243,12 @@ var mapMenu =  new menu({
         options: new menu({
                 showFPS: new menu({
                     yes: {
-                        action: [function(){ FPS.show = true }, 'exit'],
+                        action: [function(){ debug.FPS.show = true }, 'exit'],
                         index: 0
                         },
 
                     no: {
-                        action: [function(){ FPS.show = false }, 'exit'],
+                        action: [function(){ debug.FPS.show = false }, 'exit'],
                         index: 1
                         }
                 },0),

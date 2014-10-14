@@ -571,10 +571,17 @@ screen.loop = function(){
 			// update
 			engine.update(screen.frameCount);
             camera.setupMap(this.engine.currentLevel)
-			camera.drawMapLayer(this.engine.currentLevel, "layer1");
-			camera.drawMapLayer(this.engine.currentLevel, "layer2");
-			camera.drawChar(player);	
-			camera.drawMapLayer(this.engine.currentLevel, "layer4");
+            if(debug.showLayer.layer1)
+			    camera.drawMapLayer(this.engine.currentLevel, "layer1");
+
+            if(debug.showLayer.layer2)
+			    camera.drawMapLayer(this.engine.currentLevel, "layer2");
+
+            if(debug.showLayer.layer3)
+    			camera.drawChar(player);	
+
+            if(debug.showLayer.layer4)
+    			camera.drawMapLayer(this.engine.currentLevel, "layer4");
             screen.drawEffects();
             screen.drawHID();
 
@@ -593,7 +600,7 @@ screen.loop = function(){
 			
 		}
 				
-        FPS.draw();
+        debug.FPS.draw();
 		screen.timer = setTimeout("screen.loop()", 1000/60.0);
 	
 	}catch(err){
@@ -601,7 +608,16 @@ screen.loop = function(){
 	}
 }
 
-FPS = {
+debug = {};
+
+debug.showLayer = {
+    layer1 : true,
+    layer2 : true,
+    layer3 : true,
+    layer4 : true
+};
+
+debug.FPS = {
     counter : 0,
     FPS : 0,
     show : false, 
@@ -614,8 +630,9 @@ FPS = {
     loop : function(){
         this.FPS = this.counter;
         this.counter = 0;
-        this.timer = setTimeout("FPS.loop()", 1000);
+        this.timer = setTimeout("debug.FPS.loop()", 1000);
     }
-};
 
+
+}
 

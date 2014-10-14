@@ -53,7 +53,24 @@ var HID = {
             gamepad: function(pad){ return pad.buttons[1].pressed; }
 	    }
     },
-
+    debugKeys: {
+        layer1: {
+            letter: '1',
+            toggle: function(){debug.showLayer.layer1 = !debug.showLayer.layer1}
+        },
+        layer2: {
+            letter: '2',
+            toggle: function(){debug.showLayer.layer2 = !debug.showLayer.layer2}
+        },
+        layer3: {
+            letter: '3',
+            toggle: function(){debug.showLayer.layer3 = !debug.showLayer.layer3}
+        },
+        layer4: {
+            letter: '4',
+            toggle: function(){debug.showLayer.layer4 = !debug.showLayer.layer4}
+        }
+    },
 
 
     processGamepad: function (){
@@ -107,6 +124,7 @@ var HID = {
                 HIDItem.active = true;
             }
         }	
+
     },
 
     keyUp: function (e){
@@ -122,6 +140,14 @@ var HID = {
             }
         }	
 		
+        for(var key in HID.debugKeys){
+            var HIDItem = HID.debugKeys[key];
+
+            if(actualkey == HIDItem.letter){
+                HIDItem.toggle();
+            }
+        }	
+
     },
 
     setupTouchZone: function (_screen){

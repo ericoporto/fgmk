@@ -66,7 +66,7 @@ bootstrap.onLoadDOM = function(){
         feedbackEng.setup();
 		engine.loop();
 		screen.loop();
-        FPS.loop();
+        debug.FPS.loop();
 	}catch (err){
 		alert("onLoadDOM "+err);
 	}
