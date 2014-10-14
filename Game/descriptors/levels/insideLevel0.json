@@ -2,7 +2,7 @@
 {
 "Level": 
     {
-    "foreground": 
+    "layer4": 
         [[  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
@@ -123,7 +123,7 @@
         "78":  [  3, 13]
         },
     "tileImage": "img/tile.png",
-    "background": 
+    "layer1": 
         [[ 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 49, 45, 45, 45, 45, 45, 45],
          [ 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
          [ 45, 45, 45, 48, 59, 59, 59, 59, 49, 48, 59, 59, 59, 49, 45, 45, 45, 45, 45, 45],
@@ -158,7 +158,7 @@
              [  3,  4]]
         },
     "levelName": "insideLevel0",
-    "background2": 
+    "layer2": 
         [[  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
@@ -234,12 +234,12 @@
     "eventsActions": 
         {
         "1":  ["fadeOut|pixelizeFadeOut;keepEffect","teleport|4;9;level0","fadeIn|pixelizeFadeIn;doNotKeep"],
-        "3":  ["changeTile|40;background2;keep;4;11;4;this","changeTile|39;background2;keep;keep;10;4;this"],
+        "3":  ["changeTile|40;layer2;keep;4;11;4;this","changeTile|39;layer2;keep;keep;10;4;this"],
         "2":  ["showText|this locker is locked","fadeOut|pixelizeFadeOut;keepEffect","showText|wait... what's this?","teleport|8;2;level1","fadeIn|pixelizeFadeIn;doNotKeep","showText|crazy things..."],
         "5":  [""],
-        "4":  ["changeTile|38;background2;keep;3;11;4;this","changeTile|37;background2;keep;keep;10;4;this"],
-        "7":  ["changeTile|26;background2;keep;6;current"],
-        "6":  ["changeTile|30;background2;keep;7;current"]
+        "4":  ["changeTile|38;layer2;keep;3;11;4;this","changeTile|37;layer2;keep;keep;10;4;this"],
+        "7":  ["changeTile|26;layer2;keep;6;current"],
+        "6":  ["changeTile|30;layer2;keep;7;current"]
         }
     }
 }

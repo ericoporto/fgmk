@@ -12,8 +12,8 @@ camera.finex = 0;
 camera.finey = 0;
 
 camera.setupMap = function(_worldLevel, _engine){
-	this.maxWorldWidth = _worldLevel["Level"]["background"][0].length;
-	this.maxWorldHeight = _worldLevel["Level"]["background"].length;
+	this.maxWorldWidth = _worldLevel["Level"]["layer1"][0].length;
+	this.maxWorldHeight = _worldLevel["Level"]["layer1"].length;
 }
 
 camera.setupCanvas = function(_canvas){
@@ -571,10 +571,10 @@ screen.loop = function(){
 			// update
 			engine.update(screen.frameCount);
             camera.setupMap(this.engine.currentLevel)
-			camera.drawMapLayer(this.engine.currentLevel, "background");
-			camera.drawMapLayer(this.engine.currentLevel, "background2");
+			camera.drawMapLayer(this.engine.currentLevel, "layer1");
+			camera.drawMapLayer(this.engine.currentLevel, "layer2");
 			camera.drawChar(player);	
-			camera.drawMapLayer(this.engine.currentLevel, "foreground");
+			camera.drawMapLayer(this.engine.currentLevel, "layer4");
             screen.drawEffects();
             screen.drawHID();
 

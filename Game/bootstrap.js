@@ -27,9 +27,9 @@ resources.harvest = function(){
 
 
     this.playerCharaset = jsonLevelGet(descriptors+charaset+init['Player']['charaFile'])['Charaset'][init['Player']['charaSet']];
-    LevelsList = jsonLevelGet(descriptors+"levels.json");
-    for (var level in LevelsList.LevelsList) {
-        var levelItem = LevelsList.LevelsList[level]
+    LevelsList = init['LevelsList']
+    for (var level in LevelsList) {
+        var levelItem = LevelsList[level]
 
         resources['levels'][level] = jsonLevelGet(descriptors+levels+levelItem);        
     }

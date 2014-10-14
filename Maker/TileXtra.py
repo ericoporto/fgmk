@@ -9,7 +9,7 @@ import numpy as np
 import tMat
 
 COREIMGFOLDER = "img/core/"
-LayersName = ["background","background2","foreground","colision","events"]
+LayersName = ["layer1","layer2","layer4","colision","events"]
 NonViewable = ["colision","events"]
 LayersNameViewable = [_layer for _layer in LayersName if _layer not in NonViewable]
  
