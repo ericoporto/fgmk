@@ -10,10 +10,10 @@
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "back", 
-        "initPosX": 160, 
-        "initPosY": 288
+        "initPosX": 256, 
+        "initPosY": 224
     }, 
     "World": {
-        "initLevel": "level0"
+        "initLevel": "insideLevel0"
     }
 }

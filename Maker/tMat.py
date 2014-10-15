@@ -140,7 +140,12 @@ def fwriteKeyVals(data, f, indent=0):
 
 def fwriteKeyValsJS(data, f, indent=0):
     if isinstance(data, list):
-        if isinstance(data[0], list):
+        try:
+            gotdata = isinstance(data[0], list)
+        except IndexError:
+            gotdata = False
+
+        if gotdata:
 
             f.write( "\n" + "    " * indent + "[" )  
             for i in range(len(data) ):  
@@ -153,11 +158,26 @@ def fwriteKeyValsJS(data, f, indent=0):
                     f.write( "," ) if j != len(data[0])-1 else (f.write( "]," ) if i != len(data)-1 else f.write( "]" ))  
                 f.write( "\n" ) if i != len(data)-1 else f.write( "]" )  
         else:
+            try:
+                gotdata = data[0]
+            except IndexError:
+                gotdata = 'False'
 
-            f.write( " [" ) 
-            for i in range(len(data) ):  
-                f.write( "%3d" % data[i] )   
-                f.write( "," ) if i != len(data)-1 else f.write( "]" )
+            if gotdata is not 'False':
+                f.write( " [" ) 
+                for i in range(len(data) ): 
+                    if isinstance(data[i], Number):
+                        f.write( "%3d" % data[i] )   
+                    else:
+                        dataListLf = data[i].split("\n")
+                        dataToWrite = dataListLf[0]
+                        for line in dataListLf[1:]:
+                            dataToWrite += '\\n'+line
+
+                        f.write( "\"" + dataToWrite + "\"")
+                    f.write( "," ) if i != len(data)-1 else f.write( "]" )
+            else:
+                f.write( " [\"\"]" )
             
     elif isinstance(data, dict):
         if(indent):

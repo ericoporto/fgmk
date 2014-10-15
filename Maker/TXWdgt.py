@@ -13,6 +13,11 @@ import TileXtra
 
 DESCRIPTORSFOLDER = "descriptors/"
 LEVELFOLDER = "levels/"
+IMGFOLDER = "img/"
+AUDIOFOLDER = "audio/"
+CHARASETFOLDER = "charaset/"
+FONTFOLDER = "font/"
+
 GAMESETTINGS = "init.json"
 
 def getLevelPathFromInitFile(gamefolder,levelname):
@@ -109,7 +114,69 @@ class CommandCGroupTType(QUndoCommand):
             tile.updateTileImageInMap( change[2], self.Layer, self.ptileset , self.pmyMapWidget.myScale)
             #print("Type= ", change[2], "  X= " ,change[0], "  Y= " , change[1])
 
+class newProject(QDialog):
+    def __init__(self, parent=None, **kwargs):
+        QDialog.__init__(self, parent, **kwargs)
 
+        self.returnValue = { "name" : "NewFile", "baseFolder" : "" }
+
+        self.VBox = QVBoxLayout(self)
+        self.VBox.setAlignment(Qt.AlignTop) 
+
+        HBoxFolder = QHBoxLayout()
+        self.LineEditFolder = QLineEdit ()
+        self.LineEditFolder.setReadOnly(True);
+        self.LineEditFolder.setText(str(self.returnValue["baseFolder"]))
+        self.buttonFolder = QPushButton("Browse")
+        self.buttonFolder.clicked.connect(self.selectGameFolder)
+        HBoxFolder.addWidget(self.LineEditFolder)
+        HBoxFolder.addWidget(self.buttonFolder)
+
+        HBoxName = QHBoxLayout()
+        self.LineEditName = QLineEdit ()
+        self.LineEditName.setText(str(self.returnValue["name"]))
+        self.LineEditName.editingFinished.connect(self.validateLineEditName)
+        HBoxName.addWidget(QLabel("Name:"))
+        HBoxName.addWidget(self.LineEditName)
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(QLabel("THIS FUNCTION IS NOT COMPLETE YET"))
+        self.VBox.addWidget(QLabel("Select folder to create game:"))
+        self.VBox.addLayout(HBoxFolder)
+        self.VBox.addWidget(QLabel("Set game name:"))
+        self.VBox.addLayout(HBoxName)
+        self.VBox.addWidget(self.buttonBox)
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('New game project...')  
+
+    def validateLineEditName(self):
+        tempStr = str(self.LineEditName.text())
+        tempStr=tempStr.title()
+        tempStr=tempStr.replace(" ", "")
+        self.LineEditName.setText(tempStr)
+        self.returnValue["name"] = self.LineEditName.text()
+        self.validateIsOk()
+
+    def selectGameFolder(self):
+        self.LineEditFolder.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")) )
+        self.returnValue["baseFolder"] = self.LineEditFolder.text()
+        self.validateIsOk()
+
+    def validateIsOk(self):
+        if self.returnValue["name"] != "" and self.returnValue["baseFolder"] != "":
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+        else:
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+
+    def getValue(self):
+        return self.returnValue
 
 class newFile(QDialog):
     def __init__(self, parent=None, **kwargs):

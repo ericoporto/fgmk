@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # display a tiled image from tileset with PyQt
 import os
+import server
 import sys
 import json
 import TileXtra
@@ -12,7 +13,7 @@ from PyQt4 import QtGui, QtCore
 import actionDialog
 import TXWdgt
 
-sSettings = { "gamefolder": "Game/" }
+sSettings = { "gamefolder": "" }
 
 COLISIONLAYER = 3
 EVENTSLAYER = 4
@@ -615,6 +616,7 @@ class PaletteWidget(QWidget):
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None, **kwargs):
+        global sSettings
         QMainWindow.__init__(self, parent, **kwargs)
 
         self.resize(1024,768)
@@ -622,7 +624,7 @@ class MainWindow(QMainWindow):
         self.undoStack = QUndoStack(self)
 
         self.levelName = "newFile"
-        self.workingFile = self.levelName + ".json"
+        sSettings["workingFile"]  = self.levelName + ".json"
 
         self.myMap = TileXtra.MapFormat()
 
@@ -665,6 +667,7 @@ class MainWindow(QMainWindow):
         self.menubar =  QtGui.QMenuBar()
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
+        projectMenu = self.menubar.addMenu('&Project')
         fileMenu.addAction('&New', self.newFile, "Ctrl+N")
         fileMenu.addAction('&Open...', self.openFile, "Ctrl+O")
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
@@ -678,7 +681,10 @@ class MainWindow(QMainWindow):
         redoAction = self.undoStack.createRedoAction(self, self.tr("&Redo"))
         redoAction.setShortcuts(QKeySequence.Redo)    
         editMenu.addAction(redoAction)
-        editMenu.addAction('Set starting &position...', self.selectStartPosition, "")
+
+        projectMenu.addAction('New &Project', self.newProject, "")
+        projectMenu.addAction('Set starting &position...', self.selectStartPosition, "")
+        projectMenu.addAction('Run Project', self.runServer, "f5")
         
         viewMenu = self.menubar.addMenu('&View')
 
@@ -733,6 +739,46 @@ class MainWindow(QMainWindow):
             self.myMapWidget.resize(self.myMapWidget.TileWidth*32*self.myMapWidget.myScale,self.myMapWidget.TileHeight*32*self.myMapWidget.myScale)
         self.myMapWidget.show()
         
+    def runServer(self):
+        global sSettings 
+        server.servePage(sSettings["gamefolder"])
+
+    def newProject(self):
+        myNewProjectDialog = TXWdgt.newProject(self)
+        if myNewProjectDialog.exec_() == QtGui.QDialog.Accepted:
+            returnedNFD = myNewProjectDialog.getValue()
+            self.__newProject(returnedNFD)
+
+    def __newProject(self,returnedNFD):
+        import shutil
+        global sSettings
+        projectPath = os.path.join(str(returnedNFD["baseFolder"]), str(returnedNFD["name"]))
+        sSettings["basefolder"] = str(returnedNFD["baseFolder"])
+        sSettings["gamefolder"] = projectPath
+        sSettings["gamename"] = str(returnedNFD["name"])
+        os.mkdir(projectPath)
+        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER))
+        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER,TXWdgt.LEVELFOLDER))
+        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER,TXWdgt.CHARASETFOLDER))
+        os.mkdir(os.path.join(projectPath,TXWdgt.AUDIOFOLDER))
+        os.mkdir(os.path.join(projectPath,TXWdgt.FONTFOLDER))
+        os.mkdir(os.path.join(projectPath,TXWdgt.IMGFOLDER))
+        engineFiles = ["bootstrap.js","engine.js","game.css","hid.js","index.html","printer.js","screen.js","icon.png"]
+        engineFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Game/")
+        for file in engineFiles:
+            shutil.copyfile(os.path.join(engineFolder,file),os.path.join(projectPath,file))
+        #copy the font
+        shutil.copyfile(os.path.join(engineFolder,TXWdgt.FONTFOLDER,"INFO56_0.ttf"),os.path.join(projectPath,TXWdgt.FONTFOLDER,"INFO56_0.ttf"))
+
+        #copy audio
+        src = os.path.join(engineFolder,TXWdgt.AUDIOFOLDER)
+        src_files = os.listdir(src)
+        for file_name in src_files:
+            full_file_name = os.path.join(src, file_name)
+            if (os.path.isfile(full_file_name)):
+                shutil.copy(full_file_name, os.path.join(projectPath,TXWdgt.AUDIOFOLDER))
+
+        self.undoStack.clear()
 
     def newFile(self):
         myNewFileDialog = TXWdgt.newFile(self)
@@ -744,10 +790,10 @@ class MainWindow(QMainWindow):
         global sSettings
         sSettings["gamefolder"] = returnedNFD["gameFolder"]
         self.levelName = returnedNFD["name"]
-        self.workingFile = self.levelName + ".json"
-        self.setWindowTitle(self.workingFile)
+        sSettings["workingFile"]  = self.levelName + ".json"
+        self.setWindowTitle(sSettings["workingFile"] )
         self.myMap.new(self.levelName, returnedNFD["width"], returnedNFD["height"])
-        self.myTileSet = TileXtra.TileSet( self.myMap.tileImage,self.myMap.palette)
+        self.myTileSet = TileXtra.TileSet( os.path.join(sSettings["gamefolder"],self.myMap.tileImage),self.myMap.palette)
         self.myMapWidget.DrawMap(self)
         m.gridViewAction.setChecked(False) #### gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
@@ -757,29 +803,36 @@ class MainWindow(QMainWindow):
     
 
     def saveFile(self):
-        filename = self.workingFile
+        global sSettings
+        filename = sSettings["workingFile"] 
         if filename != "":
             self.myMap.save(filename)
 
     def saveFileAs(self):
+        global sSettings
         filename = QtGui.QFileDialog.getSaveFileName(self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.json)') 
         if filename != "":
-            self.workingFile = filename
-            self.myMap.save(self.workingFile)
+            sSettings["workingFile"] = filename
+            self.myMap.save(sSettings["workingFile"])
 
     def exportToJsAs(self):
+        global sSettings
         filename = QtGui.QFileDialog.getSaveFileName(self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)') 
         if filename != "":
-            self.workingFile = filename
-            self.myMap.exportJS(self.workingFile)
+            sSettings["workingFile"]  = filename
+            self.myMap.exportJS(sSettings["workingFile"] )
 
     def openFile(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open File', os.path.expanduser("~")) 
+        global sSettings
+        if(sSettings["gamefolder"] == ""):
+            sSettings["gamefolder"] = os.path.expanduser("~")
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open File', sSettings["gamefolder"]) 
         if os.path.isfile(filename):
-            self.workingFile = filename
-            self.setWindowTitle(self.workingFile)
-            self.myMap.load(self.workingFile)
-            self.myTileSet = TileXtra.TileSet( self.myMap.tileImage,self.myMap.palette)
+            sSettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
+            sSettings["workingFile"] = filename
+            self.setWindowTitle(sSettings["workingFile"] )
+            self.myMap.load(sSettings["workingFile"])
+            self.myTileSet = TileXtra.TileSet( os.path.join(sSettings["gamefolder"],self.myMap.tileImage),self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             m.gridViewAction.setChecked(False) #### gambiarra
             self.undoStack.clear()
