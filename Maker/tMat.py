@@ -100,8 +100,17 @@ def fwriteKeyVals(data, f, indent=0):
                     f.write( "[" )  
                 else:
                     f.write( "    " * indent + " [" )
-                for j in range(len(data[0])):  
-                    f.write( "%3d" % data[i][j] )  
+                for j in range(len(data[0])):
+                    if isinstance( data[i][j], Number):
+                        f.write( "%3d" %  data[i][j] )   
+                    else:
+                        dataListLf = data[i][j].split("\n")
+                        dataToWrite = dataListLf[0]
+                        for line in dataListLf[1:]:
+                            dataToWrite += '\\n'+line
+
+                        f.write( "\"" + dataToWrite + "\"")  
+
                     f.write( "," ) if j != len(data[0])-1 else (f.write( "]," ) if i != len(data)-1 else f.write( "]" ))  
                 f.write( "\n" ) if i != len(data)-1 else f.write( "]" )  
         else:
@@ -154,7 +163,16 @@ def fwriteKeyValsJS(data, f, indent=0):
                 else:
                     f.write( "    " * indent + " [" )
                 for j in range(len(data[0])):  
-                    f.write( "%3d" % data[i][j] )  
+                    if isinstance( data[i][j], Number):
+                        f.write( "%3d" %  data[i][j] )   
+                    else:
+                        dataListLf = data[i][j].split("\n")
+                        dataToWrite = dataListLf[0]
+                        for line in dataListLf[1:]:
+                            dataToWrite += '\\n'+line
+
+                        f.write( "\"" + dataToWrite + "\"")  
+
                     f.write( "," ) if j != len(data[0])-1 else (f.write( "]," ) if i != len(data)-1 else f.write( "]" ))  
                 f.write( "\n" ) if i != len(data)-1 else f.write( "]" )  
         else:

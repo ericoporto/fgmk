@@ -114,11 +114,20 @@
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0]],
     "eventsActions": 
         {
-        "1":  ["fadeIn|pixelizeFadeIn;doNotKeep","teleport|2;2;level0"],
-        "2":  ["fadeOut|pixelizeFadeOut;doNotKeep","showText|I'm a turtle!"],
-        "5":  [""],
-        "4":  ["fadeOut|pixelizeFadeOut;keepEffect","teleport|9;8;level2","fadeIn|pixelizeFadeIn;doNotKeep"],
-        "6":  ["teleport|2;3;level0"]
+        "1": 
+            [["fadeIn","pixelizeFadeIn;doNotKeep"],
+             ["teleport","2;2;level0"]],
+        "2": 
+            [["fadeOut","pixelizeFadeOut;doNotKeep"],
+             ["showText","I'm a turtle!"]],
+        "5": 
+            [[""]],
+        "4": 
+            [["fadeOut","pixelizeFadeOut;keepEffect"],
+             ["teleport","9;8;level2"],
+             ["fadeIn","pixelizeFadeIn;doNotKeep"]],
+        "6": 
+            [["teleport","2;3;level0"]]
         },
     "colision": 
         [[  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1],

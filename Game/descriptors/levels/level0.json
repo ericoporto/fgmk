@@ -165,12 +165,16 @@
         },
     "eventsActions": 
         {
-        "1":  ["showText|This text has more characters than it's allowed.\nI want to see if the splitting is right.\n46.\n39.\nThose were the characters numbers."],
-        "3":  ["showText|This locker is empty"],
-        "2":  ["showText|Hello World!"],
-        "5":  ["showText|maninhaaa!!!","fadeOut|pixelizeFadeOut;doNotKeep","teleport|10;5;insideLevel0"],
-        "4":  ["fadeOut|pixelizeFadeOut;keepEffect","teleport|5;5;insideLevel0","fadeIn|pixelizeFadeIn;doNotKeep"],
-        "6":  ["teleport|4;4;level1"]
+        "1":  [["showText","This text has more characters than it's allowed.\nI want to see if the splitting is right.\n46.\n39.\nThose were the characters numbers."]],
+        "3":  [["showText","This locker is empty"]],
+        "2":  [["showText","Hello World!"]],
+        "5":  [["showText","maninhaaa!!!"],
+               ["fadeOut","pixelizeFadeOut;doNotKeep"],
+               ["teleport","10;5;insideLevel0"]],
+        "4":  [["fadeOut","pixelizeFadeOut;keepEffect"],
+               ["teleport","5;5;insideLevel0"],
+               ["fadeIn","pixelizeFadeIn;doNotKeep"]],
+        "6":  [["teleport","4;4;level1"]]
         }
     }
 }

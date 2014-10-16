@@ -69,6 +69,18 @@ def tileRect( firstClickedX, firstClickedY, lastClickedX, lastClickedY,fullLayer
         
     return whatChanged
 
+class actionItem(QtGui.QListWidgetItem):
+    def __init__(self, actionAndParameter):
+        super(actionItem, self).__init__(str(actionAndParameter))
+        self.setText=str(actionAndParameter)
+        self.setData(Qt.UserRole, actionAndParameter)
+
+    def getAction(self):
+        actionAndParameterReturn = self.data(Qt.UserRole).toPyObject()
+        action = str(actionAndParameterReturn[0])
+        parameter = str(actionAndParameterReturn[1])
+        return [action,parameter]
+
 class MapFormat:
     def __init__( self ):
         self.jsonTree = []
@@ -230,6 +242,9 @@ class MapFormat:
             self.listOfActions[str(event)] = []
         self.listOfActions[str(event)][index]=action
 
+    def removeAllActionsOnEvent(self,event):
+        self.listOfActions[str(event)] = []
+
     def removeLastActionOnEvent(self,event):
         if self.listOfActions.get(str(event),None) is None:
             self.listOfActions[str(event)] = []
@@ -238,6 +253,8 @@ class MapFormat:
     def removeActionByIndexOnEvent(self,index,event):
         if self.listOfActions.get(str(event),None) is None:
             self.listOfActions[str(event)] = []
+        print("listOfActions index {0}".format(index))
+        print(self.listOfActions[str(event)][index])
         del self.listOfActions[str(event)][index]
 
     def getActionListOnEvent(self,event):

@@ -313,8 +313,8 @@ class ActionsWidget(QDialog):
         if self.myActionsDialog.exec_() == QtGui.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
 
-            self.returnValue.append('|')
-            self.returnValue.append(str(returnActDlg))
+            #self.returnValue.append('|')
+            self.returnValue = [str(self.returnValue),str(returnActDlg)]
             self.accept()
 
     def getValue(self):

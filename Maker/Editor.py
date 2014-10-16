@@ -306,7 +306,7 @@ class ToolsWidget(QWidget):
                 self.ToolTile[i].updateTileImageInMap(RIGHTCLICKTILE, RIGHTCLICKLAYER, self.toolTileset.tileset, self.scale)
             else:
                 self.ToolTile[i].updateTileImageInMap(0, RIGHTCLICKLAYER, self.toolTileset.tileset , self.scale)
-    
+
 
 class EventsWidget(QWidget):
     def __init__(self,pMap, parent=None, **kwargs):
@@ -364,10 +364,15 @@ class EventsWidget(QWidget):
             VBoxButtons.addWidget(checkbox)
             checkbox.stateChanged.connect(self.checkboxesChanged)
 
+        self.ActionList.setDragDropMode(QAbstractItemView.InternalMove)
+
         self.EventsList.itemSelectionChanged.connect(self.enableButtonsBecauseEventsList)
         self.ActionList.itemSelectionChanged.connect(self.enableButtonsBecauseActionList)
 #        self.EventsList.itemClicked.connect(self.selectedItemFromEventsList)
         self.EventsList.itemSelectionChanged.connect(self.selectedItemFromEventsList)
+
+        ActionListModel = self.ActionList.model()
+        ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
         self.addActionButton.setEnabled(False)
         self.removeActionButton.setEnabled(False)
@@ -380,14 +385,25 @@ class EventsWidget(QWidget):
 
         self.pMap = pMap
 
+    def updateActionFromWidget(self):
+        self.pMap.removeAllActionsOnEvent(self.EventsList.selectedItems()[0].whatsThis())
+        i = 0
+        while i < self.ActionList.count():
+            item = self.ActionList.item(i)
+            actionToAdd = item.getAction()
+            self.pMap.addActionToEvent(actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
+            i += 1
+        print(self.pMap.getActionListOnEvent(self.EventsList.selectedItems()[0].whatsThis()))
+        
+
     def editAction(self):
 
         if self.EventsList.selectedItems() is not None: 
             indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
             actionParamToEdit = self.pMap.getActionOnEvent(indexOfAction,self.EventsList.selectedItems()[0].whatsThis())
 
-            actionToEdit = actionParamToEdit.split('|')[0]
-            paramOfEdit = actionParamToEdit.split('|')[1]
+            actionToEdit = actionParamToEdit[0]
+            paramOfEdit = actionParamToEdit[1]
 
             paramArrayOfEdit = paramOfEdit.split(';')
 
@@ -397,10 +413,10 @@ class EventsWidget(QWidget):
             if self.myActionsDialog.exec_() == QtGui.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
 
-                actionToAdd = actionToEdit+'|'+str(returnActDlg)
+                actionToAdd = [actionToEdit,str(returnActDlg)]
 
                 self.ActionList.takeItem(indexOfAction)
-                self.ActionList.insertItem(indexOfAction,actionToAdd)
+                self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
                 self.pMap.changeActionOnEvent(indexOfAction,actionToAdd,self.EventsList.selectedItems()[0].whatsThis())                             
 
     def deselectAction(self):
@@ -450,30 +466,32 @@ class EventsWidget(QWidget):
 
         self.myActionsWidget = TXWdgt.ActionsWidget(sSettings,self)
         if self.myActionsWidget.exec_() == QtGui.QDialog.Accepted:
-            actionToAdd = str(self.myActionsWidget.getValue())
+            actionToAdd = self.myActionsWidget.getValue()
         
             if self.EventsList.selectedItems() is not None:  
                 if not self.ActionList.selectedItems():      
-                    self.ActionList.addItem(actionToAdd)
+                    self.ActionList.addItem(TileXtra.actionItem(actionToAdd))
                     self.pMap.addActionToEvent(actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
                 else:
                     indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
-                    self.ActionList.insertItem(indexOfAction,actionToAdd)
+                    self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
                     self.pMap.insertActionToEvent(indexOfAction,actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
 
     def removeAction(self):
 
         for item in self.ActionList.selectedItems():
-            self.ActionList.takeItem(self.ActionList.row(item))
-            self.pMap.removeActionByIndexOnEvent(self.ActionList.row(item),self.EventsList.selectedItems()[0].whatsThis())
+            itemIndex = self.ActionList.row(item)
+            self.pMap.removeActionByIndexOnEvent(itemIndex,self.EventsList.selectedItems()[0].whatsThis())
+            self.ActionList.takeItem(itemIndex)
+
 
     def selectedItemFromEventsList(self):
         item = self.EventsList.selectedItems()[0]
 
         self.ActionList.clear()    
 
-        for actionItem in self.pMap.getActionListOnEvent(item.whatsThis()):
-            self.ActionList.addItem(actionItem)
+        for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
+            self.ActionList.addItem(TileXtra.actionItem(actionitemInList))
 
         state = self.pMap.getEventType(item.whatsThis())
         
@@ -788,9 +806,9 @@ class MainWindow(QMainWindow):
 
     def __newFile(self,returnedNFD):
         global sSettings
-        sSettings["gamefolder"] = returnedNFD["gameFolder"]
-        self.levelName = returnedNFD["name"]
-        sSettings["workingFile"]  = self.levelName + ".json"
+        sSettings["gamefolder"] = str(returnedNFD["gameFolder"])
+        self.levelName = str(returnedNFD["name"])
+        sSettings["workingFile"]  = os.path.join(sSettings["gamefolder"], self.levelName + ".json")
         self.setWindowTitle(sSettings["workingFile"] )
         self.myMap.new(self.levelName, returnedNFD["width"], returnedNFD["height"])
         self.myTileSet = TileXtra.TileSet( os.path.join(sSettings["gamefolder"],self.myMap.tileImage),self.myMap.palette)

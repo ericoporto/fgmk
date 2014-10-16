@@ -249,8 +249,10 @@
         },
     "eventsActions": 
         {
-        "1":  ["fadeOut|pixelizeFadeOut;keepEffect","teleport|8;2;level1","fadeIn|pixelizeFadeIn;doNotKeep"],
-        "4":  [""]
+        "1":  [["fadeOut","pixelizeFadeOut;keepEffect"],
+               ["teleport","8;2;level1"],
+               ["fadeIn","pixelizeFadeIn;doNotKeep"]],
+        "4":  [[""]]
         }
     }
 }

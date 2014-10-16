@@ -1,0 +1,13 @@
+{
+    "WeirdGuy": {
+        "charaFile": "person.json", 
+        "charaSet": "person2", 
+        "facing": "back",
+        "stateActions": 
+            {
+            "1":  [["fadeOut","pixelizeFadeOut;keepEffect"],
+                   ["teleport","4;9;level0"],
+                   ["fadeIn","pixelizeFadeIn;doNotKeep"]]
+            }
+    }
+}

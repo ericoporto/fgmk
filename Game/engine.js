@@ -543,9 +543,7 @@ eventInMap = function(level,event,evType,position) {
     if (level['eventsType'][event.toString()][0] == evType[0] && level['eventsType'][event.toString()][1] == evType[1]) {
         var aNmb, action, actionAndParam;
         for (aNmb = 0; aNmb < level['eventsActions'][event.toString()].length ; aNmb++) {
-            action = level['eventsActions'][event.toString()][aNmb];
-
-            actionAndParam = action.split('|');
+            actionAndParam = level['eventsActions'][event.toString()][aNmb];
             translateActions(actionAndParam[0],actionAndParam[1],position);
         }
     }

@@ -181,13 +181,22 @@
          [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0]],
     "eventsActions": 
         {
-        "1":  ["fadeOut|pixelizeFadeOut;keepEffect","teleport|4;9;level0","fadeIn|pixelizeFadeIn;doNotKeep"],
-        "3":  ["changeTile|40;layer2;keep;4;11;4;this","changeTile|39;layer2;keep;keep;10;4;this"],
-        "2":  ["showText|this locker is locked","fadeOut|pixelizeFadeOut;keepEffect","showText|wait... what's this?","teleport|8;2;level1","fadeIn|pixelizeFadeIn;doNotKeep","showText|crazy things..."],
+        "1":  [["fadeOut","pixelizeFadeOut;keepEffect"],
+               ["teleport","4;9;level0"],
+               ["fadeIn","pixelizeFadeIn;doNotKeep"]],
+        "3":  [["changeTile","40;layer2;keep;4;11;4;this"],
+               ["changeTile","39;layer2;keep;keep;10;4;this"]],
+        "2":  [["showText","this locker is locked"],
+               ["fadeOut","pixelizeFadeOut;keepEffect"],
+               ["showText","wait... what's this?"],
+               ["teleport","8;2;level1"],
+               ["fadeIn","pixelizeFadeIn;doNotKeep"],
+               ["showText","crazy things..."]],
         "5":  [""],
-        "4":  ["changeTile|38;layer2;keep;3;11;4;this","changeTile|37;layer2;keep;keep;10;4;this"],
-        "7":  ["changeTile|26;layer2;keep;6;current"],
-        "6":  ["changeTile|30;layer2;keep;7;current"]
+        "4":  [["changeTile","38;layer2;keep;3;11;4;this"],
+               ["changeTile","37;layer2;keep;keep;10;4;this"]],
+        "7":  [["changeTile","26;layer2;keep;6;current"]],
+        "6":  [["changeTile","30;layer2;keep;7;current"]]
         },
     "colision": 
         [[  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
