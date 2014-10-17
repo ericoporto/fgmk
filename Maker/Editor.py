@@ -12,6 +12,7 @@ from PyQt4.QtCore import *
 from PyQt4 import QtGui, QtCore
 import actionDialog
 import TXWdgt
+from flowlayout import FlowLayout as FlowLayout
 
 sSettings = { "gamefolder": "" }
 
@@ -229,8 +230,7 @@ class ToolsWidget(QWidget):
 
         self.toolTileset = TileXtra.TileSet( TileXtra.COREIMGFOLDER + "tools.png" )
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.FBox = FlowLayout(self)
 
         TOOLSTARTINGTILE = 6
         ToolsName = ["pen", "dropper", "bucket", "line","rectangle"]
@@ -249,7 +249,7 @@ class ToolsWidget(QWidget):
             self.ToolTile[-1].setToolTip(ToolsName[i]+"\nWhen selected, "+ToolsHelp[i])
             self.connect(self.ToolTile[-1], SIGNAL('clicked()'), self.toolLeftClicked)
             self.connect(self.ToolTile[-1], SIGNAL('rightClicked()'), self.toolRightClicked)
-            self.VBox.addWidget(self.ToolTile[-1])
+            self.FBox.addWidget(self.ToolTile[-1])
 
         self.updateToolTiles()
         self.show()
@@ -574,6 +574,8 @@ class LayerWidget(QWidget):
         changeLayerCurrent(layerNumber)
 
 
+
+
 class PaletteWidget(QWidget):
     def __init__(self, parent=None, tileSetInstance=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
@@ -631,6 +633,22 @@ class PaletteWidget(QWidget):
         self.CurrentTT.initTile( self.tileSetInstance.tileset, 0 , 0 ,  self.tileSetInstance.boxsize, [imageIndex,0,0,0,0], 4)
         self.CurrentTT.show()
 
+class ExitFSWidget(QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.parent = parent
+        self.VBox = QVBoxLayout(self)
+        self.ButtonExitFS = QPushButton("exit\nfullscreen")
+        self.connect(self.ButtonExitFS, SIGNAL('clicked()'), self.ExitFS) 
+        self.VBox.addWidget(self.ButtonExitFS)   
+        self.setMaximumHeight(60)
+        #self.setMinimumHeight(60)
+        self.setMaximumWidth(90)
+        #self.setMinimumWidth(84)
+
+    def ExitFS(self):
+        self.parent.fullscreenViewAction.toggle()
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None, **kwargs):
@@ -682,7 +700,7 @@ class MainWindow(QMainWindow):
     def FancyWindow(self):
         global sSettings
 
-        self.menubar =  QtGui.QMenuBar()
+        self.menubar =  QtGui.QMenuBar(self)
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
         projectMenu = self.menubar.addMenu('&Project')
@@ -700,51 +718,69 @@ class MainWindow(QMainWindow):
         redoAction.setShortcuts(QKeySequence.Redo)    
         editMenu.addAction(redoAction)
 
-        projectMenu.addAction('New &Project', self.newProject, "")
-        projectMenu.addAction('Set starting &position...', self.selectStartPosition, "")
-        projectMenu.addAction('Run Project', self.runServer, "f5")
-        
-        viewMenu = self.menubar.addMenu('&View')
+        projectMenu.addAction('New &Project', self.newProject, '')
+        projectMenu.addAction('Set starting &position...', self.selectStartPosition, '')
+        projectMenu.addAction('Run Project', self.runServer, 'f5')
+                
+        self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = PaletteWidget(self, self.myTileSet)
         self.paletteDockWdgt=QDockWidget("Palette", self)
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.paletteDockWdgt)
 
-        viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
+        self.viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
 
         self.myLayerWidget = LayerWidget(self)
         self.layerDockWdgt=QDockWidget("Layers", self)
         self.layerDockWdgt.setWidget(self.myLayerWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.layerDockWdgt)
 
-        viewMenu.addAction(self.layerDockWdgt.toggleViewAction())
+        self.viewMenu.addAction(self.layerDockWdgt.toggleViewAction())
 
         self.myToolsWidget = ToolsWidget(self)
         self.toolsDockWdgt=QDockWidget("Tool", self)
         self.toolsDockWdgt.setWidget(self.myToolsWidget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.toolsDockWdgt)
 
-        viewMenu.addAction(self.toolsDockWdgt.toggleViewAction())
+        self.viewMenu.addAction(self.toolsDockWdgt.toggleViewAction())
 
         self.myEventsWidget = EventsWidget(self.myMap, self)
-        self.eventsDockWdgt=QDockWidget("Tool", self)
+        self.eventsDockWdgt=QDockWidget("Events", self)
         self.eventsDockWdgt.setWidget(self.myEventsWidget)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.eventsDockWdgt)
 
-        viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
+        self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
-        self.gridViewAction = QtGui.QAction('grid', viewMenu, checkable=True)
-        viewMenu.addAction(self.gridViewAction )
-
+        self.gridViewAction = QtGui.QAction('grid', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.gridViewAction )
         self.connect(self.gridViewAction , SIGNAL('changed()'), self.changeGridMargin)
+
+        self.myExitFSWidget = ExitFSWidget(self)
+        self.exitFSDockWdgt=QDockWidget("", self)
+        self.exitFSDockWdgt.setWidget(self.myExitFSWidget)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.exitFSDockWdgt)
+        self.exitFSDockWdgt.hide()
+
+        self.fullscreenViewAction = QtGui.QAction('Fullscreen', self.viewMenu, checkable=True)
+        self.fullscreenViewAction.setShortcut ('f11')
+        self.viewMenu.addAction(self.fullscreenViewAction )
+        self.connect(self.fullscreenViewAction , SIGNAL('changed()'), self.changeToFullscreen)
 
         helpMenu = self.menubar.addMenu('&Help')
         helpMenu.addAction('About...', self.helpAbout)
 
-        
+        self.showInternalNavigator()
         
         self.setMenuBar(self.menubar)
+
+    def changeToFullscreen(self):
+        if self.fullscreenViewAction.isChecked():
+            self.showFullScreen()
+            self.exitFSDockWdgt.show()
+        else:
+            self.showNormal()
+            self.exitFSDockWdgt.hide()
 
     def changeGridMargin(self):
         if self.gridViewAction.isChecked() is True:
@@ -757,6 +793,22 @@ class MainWindow(QMainWindow):
             self.myMapWidget.resize(self.myMapWidget.TileWidth*32*self.myMapWidget.myScale,self.myMapWidget.TileHeight*32*self.myMapWidget.myScale)
         self.myMapWidget.show()
         
+    def showInternalNavigator(self):
+        import PyQt4.QtWebKit as QtWebKit
+        global sSettings
+        self.myWebView = QtWebKit.QWebView();
+        self.myWebView.setMinimumWidth(200)
+        self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
+        self.myDockWebviewWdgt=QDockWidget("Webview", self)
+        self.myDockWebviewWdgt.setWidget(self.myWebView)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.myDockWebviewWdgt)
+        actionDockWebView = self.myDockWebviewWdgt.toggleViewAction()
+        actionDockWebView.setShortcut ('f6')
+        self.viewMenu.addAction(actionDockWebView)
+
+        self.myDockWebviewWdgt.hide()
+
+
     def runServer(self):
         global sSettings 
         server.servePage(sSettings["gamefolder"])
@@ -825,6 +877,8 @@ class MainWindow(QMainWindow):
         filename = sSettings["workingFile"] 
         if filename != "":
             self.myMap.save(filename)
+        self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
+        self.myWebView.reload()
 
     def saveFileAs(self):
         global sSettings
@@ -856,6 +910,8 @@ class MainWindow(QMainWindow):
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
+            self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
+            self.myWebView.reload()
 
     def helpAbout(self):
         QMessageBox.about(self, "About...", "Made by Erico")

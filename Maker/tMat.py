@@ -213,7 +213,7 @@ def fwriteKeyValsJS(data, f, indent=0):
     else:
         f.write("\"" + data + "\"")
 
-import Image
+from PIL import Image
 
 def alpha_composite(dst, src):
     '''
