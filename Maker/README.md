@@ -1,4 +1,4 @@
-![Icon](iconTiny.png) fangamk
+![Icon](../iconTiny.png) fangamk
 =============================
 
 Maker
