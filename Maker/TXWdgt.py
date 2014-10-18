@@ -10,34 +10,20 @@ import numpy as np
 import tMat
 import actionDialog
 import TileXtra
-
-DESCRIPTORSFOLDER = "descriptors/"
-LEVELFOLDER = "levels/"
-IMGFOLDER = "img/"
-AUDIOFOLDER = "audio/"
-CHARASETFOLDER = "charaset/"
-FONTFOLDER = "font/"
-
-GAMESETTINGS = "init.json"
+import fifl
 
 def getLevelPathFromInitFile(gamefolder,levelname):
-    global DESCRIPTORSFOLDER
-    global LEVELFOLDER
     initFile=openInitFile(gamefolder)
-    return os.path.join(str(gamefolder), DESCRIPTORSFOLDER,LEVELFOLDER,initFile['LevelsList'][str(levelname)])
+    return os.path.join(str(gamefolder), fifl.LEVELS,initFile['LevelsList'][str(levelname)])
 
 def openInitFile(gamefolder):
-    global DESCRIPTORSFOLDER
-    global GAMESETTINGS
-    f = open(os.path.join(str(gamefolder), DESCRIPTORSFOLDER,GAMESETTINGS ), "r" )
+    f = open(os.path.join(str(gamefolder), fifl.DESCRIPTORS,fifl.GAMESETTINGS ), "r" )
     initFileJsonTree = json.load(f)
     f.close()
     return initFileJsonTree
 
 def saveInitFile(gamefolder, initFileJsonTree):
-    global DESCRIPTORSFOLDER
-    global GAMESETTINGS
-    f = open(os.path.join(str(gamefolder), DESCRIPTORSFOLDER,GAMESETTINGS ), "w" )
+    f = open(os.path.join(str(gamefolder), fifl.DESCRIPTORS,fifl.GAMESETTINGS ), "w" )
     initFileJsonTree = json.dump(initFileJsonTree, f, indent=4, sort_keys=True)
     f.close()
     return initFileJsonTree

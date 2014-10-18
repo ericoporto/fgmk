@@ -9,11 +9,11 @@
     "Player": {
         "charaFile": "person.json", 
         "charaSet": "person", 
-        "facing": "back", 
-        "initPosX": 192, 
-        "initPosY": 192
+        "facing": "down", 
+        "initPosX": 416, 
+        "initPosY": 64
     }, 
     "World": {
-        "initLevel": "insideLevel0"
+        "initLevel": "level1"
     }
 }

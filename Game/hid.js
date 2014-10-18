@@ -54,6 +54,10 @@ var HID = {
 	    }
     },
     debugKeys: {
+        resize: {
+            letter: '0',
+            toggle: function(){screen.resize()}
+        },
         layer1: {
             letter: '1',
             toggle: function(){debug.showLayer.layer1 = !debug.showLayer.layer1}

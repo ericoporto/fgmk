@@ -340,6 +340,7 @@ player.setup = function() {
     player = resources.playerCharaset;
     player['mapx'] = init['Player']['initPosX'];
     player['mapy'] = init['Player']['initPosY'];
+    player['facing'] = init['Player']['facing'];
     player['steps'] = 0;
     player['running'] = false;
     player['update'] = function(){
@@ -353,7 +354,7 @@ player.setup = function() {
 
 
 	        if(HID.inputs["up"].active){
-		        player.facing = "front";
+		        player.facing = "up";
                 if(py> 0){7
 		            if(engine.currentLevel["Level"]["colision"][py-1][px] == 0){
 			            player.steps = 32;
@@ -392,7 +393,7 @@ player.setup = function() {
                         feedbackEng.play('stop');
                 }
 	        }else if(HID.inputs["down"].active){
-		        player.facing = "back";
+		        player.facing = "down";
                 if(py< engine.currentLevel["Level"]["colision"][0].length -1){
 		            if(engine.currentLevel["Level"]["colision"][py+1][px] == 0){
 			            player.steps = 32;
@@ -405,7 +406,7 @@ player.setup = function() {
                         feedbackEng.play('stop');
                 }
 	        }else if(HID.inputs["accept"].active){
-                if(player.facing == "front"){
+                if(player.facing == "up"){
                     if(py-1> 0)
                         if(engine.currentLevel["Level"]["events"][py-1][px] != 0) {
                             eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[1,0],[py-1,px])
@@ -426,7 +427,7 @@ player.setup = function() {
                             HID.inputs["accept"].active = false
                             engine.waitTime(400);
                             }
-                }else if(player.facing = "back"){
+                }else if(player.facing = "down"){
                     if(py+1< engine.currentLevel["Level"]["events"][0].length -1)
                         if(engine.currentLevel["Level"]["events"][py+1][px] != 0) {
                             eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[1,0],[py+1,px])
@@ -443,26 +444,26 @@ player.setup = function() {
 	
         }else{
 	        player.steps -= 2;
-	        if(player.facing == "front"){
+	        if(player.facing == "up"){
 		        player.mapy -= 2;
 	        }else if(player.facing == "left"){
 		        player.mapx -= 2;
 	        }else if(player.facing == "right"){
 		        player.mapx += 2;
-	        }else if(player.facing = "back"){
+	        }else if(player.facing = "down"){
 		        player.mapy += 2;
 	        }	
 
 	        if(player.running)  
                 if (!(player.steps==0)) {
 	                player.steps -= 2;
-	                if(player.facing == "front"){
+	                if(player.facing == "up"){
 		                player.mapy -= 2;
 	                }else if(player.facing == "left"){
 		                player.mapx -= 2;
 	                }else if(player.facing == "right"){
 		                player.mapx += 2;
-	                }else if(player.facing = "back"){
+	                }else if(player.facing = "down"){
 		                player.mapy += 2;
 	                }
                 }
@@ -555,7 +556,7 @@ engine.teleport = function(param) {
     player.mapx = parseInt(param[0],10)*32 ;
 	player.mapy = (parseInt(param[1],10)-1)*32;
     player.steps = 32;
-    player.facing = "back";
+    player.facing = "down";
     HID.cleanInputs()
     HID.clearInputs()
 }

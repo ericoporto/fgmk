@@ -13,6 +13,7 @@ from PyQt4 import QtGui, QtCore
 import actionDialog
 import TXWdgt
 from flowlayout import FlowLayout as FlowLayout
+import fifl
 
 sSettings = { "gamefolder": "" }
 
@@ -792,13 +793,18 @@ class MainWindow(QMainWindow):
             self.myMapWidget.Grid.setVerticalSpacing(0)
             self.myMapWidget.resize(self.myMapWidget.TileWidth*32*self.myMapWidget.myScale,self.myMapWidget.TileHeight*32*self.myMapWidget.myScale)
         self.myMapWidget.show()
+
+    def reloadWebview(self):
+        url = "file:///"+os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")
+        url = url.replace("\\", '/')
+        self.myWebView.load(QUrl(url))
         
     def showInternalNavigator(self):
         import PyQt4.QtWebKit as QtWebKit
         global sSettings
         self.myWebView = QtWebKit.QWebView();
         self.myWebView.setMinimumWidth(200)
-        self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
+        self.reloadWebview()
         self.myDockWebviewWdgt=QDockWidget("Webview", self)
         self.myDockWebviewWdgt.setWidget(self.myWebView)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.myDockWebviewWdgt)
@@ -811,7 +817,7 @@ class MainWindow(QMainWindow):
 
     def runServer(self):
         global sSettings 
-        server.servePage(sSettings["gamefolder"])
+        server.servePage(os.path.abspath(sSettings["gamefolder"]))
 
     def newProject(self):
         myNewProjectDialog = TXWdgt.newProject(self)
@@ -827,26 +833,26 @@ class MainWindow(QMainWindow):
         sSettings["gamefolder"] = projectPath
         sSettings["gamename"] = str(returnedNFD["name"])
         os.mkdir(projectPath)
-        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER))
-        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER,TXWdgt.LEVELFOLDER))
-        os.mkdir(os.path.join(projectPath,TXWdgt.DESCRIPTORSFOLDER,TXWdgt.CHARASETFOLDER))
-        os.mkdir(os.path.join(projectPath,TXWdgt.AUDIOFOLDER))
-        os.mkdir(os.path.join(projectPath,TXWdgt.FONTFOLDER))
-        os.mkdir(os.path.join(projectPath,TXWdgt.IMGFOLDER))
+        os.mkdir(os.path.join(projectPath,fifl.DESCRIPTORS))
+        os.mkdir(os.path.join(projectPath,fifl.LEVELS))
+        os.mkdir(os.path.join(projectPath,fifl.CHARASETS))
+        os.mkdir(os.path.join(projectPath,fifl.AUDIO))
+        os.mkdir(os.path.join(projectPath,fifl.FONT))
+        os.mkdir(os.path.join(projectPath,fifl.IMG))
         engineFiles = ["bootstrap.js","engine.js","game.css","hid.js","index.html","printer.js","screen.js","icon.png"]
         engineFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Game/")
         for file in engineFiles:
             shutil.copyfile(os.path.join(engineFolder,file),os.path.join(projectPath,file))
         #copy the font
-        shutil.copyfile(os.path.join(engineFolder,TXWdgt.FONTFOLDER,"INFO56_0.ttf"),os.path.join(projectPath,TXWdgt.FONTFOLDER,"INFO56_0.ttf"))
+        shutil.copyfile(os.path.join(engineFolder,fifl.FONT,"INFO56_0.ttf"),os.path.join(projectPath,fifl.FONT,"INFO56_0.ttf"))
 
         #copy audio
-        src = os.path.join(engineFolder,TXWdgt.AUDIOFOLDER)
+        src = os.path.join(engineFolder,fifl.AUDIO)
         src_files = os.listdir(src)
         for file_name in src_files:
             full_file_name = os.path.join(src, file_name)
             if (os.path.isfile(full_file_name)):
-                shutil.copy(full_file_name, os.path.join(projectPath,TXWdgt.AUDIOFOLDER))
+                shutil.copy(full_file_name, os.path.join(projectPath,fifl.AUDIO))
 
         self.undoStack.clear()
 
@@ -877,8 +883,7 @@ class MainWindow(QMainWindow):
         filename = sSettings["workingFile"] 
         if filename != "":
             self.myMap.save(filename)
-        self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
-        self.myWebView.reload()
+            self.reloadWebview()
 
     def saveFileAs(self):
         global sSettings
@@ -886,6 +891,7 @@ class MainWindow(QMainWindow):
         if filename != "":
             sSettings["workingFile"] = filename
             self.myMap.save(sSettings["workingFile"])
+            self.reloadWebview()
 
     def exportToJsAs(self):
         global sSettings
@@ -910,8 +916,7 @@ class MainWindow(QMainWindow):
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
-            self.myWebView.load(QUrl(os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")));
-            self.myWebView.reload()
+            self.reloadWebview()
 
     def helpAbout(self):
         QMessageBox.about(self, "About...", "Made by Erico")

@@ -104,8 +104,8 @@ camera.drawChar = function(chara){
 
     var targetFrame = Math.floor(screen.frameCount/4)%4;
 
-	if(player.steps) charaAnimation = chara[player.currentSet]["walking"][player.facing]
-    else charaAnimation =  chara[player.currentSet]["standing"][player.facing]
+	if(chara.steps) charaAnimation = chara[chara.currentSet]["walking"][chara.facing]
+    else charaAnimation =  chara[chara.currentSet]["standing"][chara.facing]
 	
     var screenx = 0, screeny =0;
 
@@ -161,7 +161,7 @@ screen.setEngine = function(engine) {
 
 screen.drawChara = function(charaset, animation, frameNumber, position) {
 	screen.ctx.drawImage(charaset,
-		32*animation[frameNumber][0], 32*animation[frameNumber][1],
+		32*animation[frameNumber][0], 64*animation[frameNumber][1],
 		32, 64,
 		this.GSTARTX+position[0], this.GSTARTY+position[1],
 		32, 64);
