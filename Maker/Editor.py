@@ -919,7 +919,7 @@ class MainWindow(QMainWindow):
             self.reloadWebview()
 
     def helpAbout(self):
-        QMessageBox.about(self, "About...", "Made by Erico")
+        QMessageBox.about(self, "About...", "Made by Erico\nWith help from the internet")
 
     def closeEvent(self, event):
         quit_msg = "Do you want to save changes?"
@@ -940,8 +940,14 @@ if __name__=="__main__":
     from sys import argv, exit
 
     a=QApplication(argv)
+    splash_pix = QPixmap('icon.png')
+    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
     m=MainWindow()
+    a.processEvents()
     m.show()
+    splash.finish(m)
     m.raise_()
     exit(a.exec_())
 
