@@ -99,6 +99,7 @@ class BaseCharaset:
     def __init__( self , image_file):
 
         self.init(image_file)
+        self.imgFile = image_file
 
     def init( self , image_file):
         self.bcset = []
@@ -106,41 +107,108 @@ class BaseCharaset:
         self.boxh = 64
         self.boxsize = (self.boxw, self.boxh)        
         self.imageFile = Image.open( image_file )
-        if self.imageFile.size[0] % self.boxsize(0) == 0 and self.imageFile.size[1] % self.boxsize(1) ==0 :
+        if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] ==0 :
             currentx = 0
             currenty = 0
             tilei = 0
             yj = 0
             while currenty < self.imageFile.size[1]:
-                bcset.append([]) 
+                self.bcset.append([]) 
                 while currentx < self.imageFile.size[0]:
-                    imageTemp = self.imageFile.crop((currentx,currenty,currentx + self.boxsize, currenty + self.boxsize))
+                    imageTemp = self.imageFile.crop((currentx,currenty,currentx + self.boxw, currenty + self.boxh))
                     self.bcset[yj].append([imageTemp,imageTemp.resize((self.boxw*2, self.boxh*2), Image.NEAREST) , imageTemp.resize((int(self.boxw*0.5), int(self.boxh*0.5)), Image.NEAREST)]  )
                     currentx += self.boxw
 
                 yj += 1
                 currenty += self.boxh
                 currentx = 0
+        else:
+            QMessageBox.about(self,"Your file width and height are not good to {0}x{1} pixel charaset!".format(self.boxw,self.boxh))
 
     def getTileSetImage(self, TileType):
-        tileImage = ImageQt( self.tileset[ TileType ] )
+        tileImage = ImageQt( self.tileset[ TileType[1]][TileType[0]] )
         pixmap = QtGui.QPixmap.fromImage(tileImage)
         image = QtGui.QPixmap(pixmap)
         return image
+
+
+
+class CharaPalette(QWidget):
+    def __init__(self, base_image=None ,parent=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.Grid = QGridLayout(self)
+
+        self.Grid.setHorizontalSpacing(0)
+        self.Grid.setVerticalSpacing(0)
+        self.Grid.setSpacing(0)
+        self.Grid.setContentsMargins(0, 0, 0, 0)
+        self.boxw = 32
+        self.boxh = 64
+        self.boxsize = (self.boxw, self.boxh)  
+
+        self.scale = 2
+
+        self.charasetList = []
+
+        if(base_image != None):
+            self.update(base_image)
+
+    def update(self, base_image):
+        self.baseImage = base_image
+        self.draw()
+
+    def draw(self):
+
+        self.myBC = BaseCharaset( self.baseImage )
+
+        self.setVisible(False)
+
+        self.charHei = len(self.myBC.bcset)
+        self.charWid = len(self.myBC.bcset[0])
+
+        if len(self.charasetList) > 1:
+            for collum in self.charasetList:
+                for wdgt in collum:
+                    wdgt.deleteLater()
+                    wdgt = None
+            self.charasetList = []
+            
+        # get the background numbers and use to get the tiles
+        # for i in height    
+        for iy in xrange(self.charHei):
+            # for j in width
+            self.charasetList.append([])
+            for jx in range(self.charWid):
+                self.charasetList[iy].append(CharaTile(self))
+                self.Grid.addWidget(self.charasetList[iy][jx], iy, jx)
+                self.charasetList[iy][jx].init( self.myBC.bcset, self.boxsize, [iy,jx], self.scale)
+                self.connect(self.charasetList[iy][jx], SIGNAL('clicked()'), self.csetSinClick)              
+
+        self.resize(self.charWid*self.boxw*self.scale,self.charHei*self.boxh*self.scale)
+
+        self.setVisible(True)
+
+    def csetSinClick(self):
+        self.rValue = (self.sender().charType, self.myBC.bcset, self.scale)
+        self.emit(SIGNAL('clicked()'))  
+ 
 
 class CharaTile(QLabel):
     def __init(self, parent):
         QLabel.__init__(self, parent)
 
-        self.tileType = []
-        self.boxWidth = 32
-        self.boxHeight = 64
-        self.boxSize = (self.boxWidth, self.boxHeight)
-        self.setMinimumSize (QSize(self.boxWidth, self.boxHeight))
+        self.charType = []
+        self.boxw = 32
+        self.boxh = 64
+        self.boxsize = (self.boxw, self.boxh)  
+        self.setMinimumSize (QSize(self.boxw, self.boxh))
 
-    def initTile(self, tileset, x, y, boxSize, tileType, scale = 1):
-        self.tileType = tileType
-        self.boxSize = boxSize
+    def init(self, bcset, boxsize, charType, scale = 1):
+        self.charType = charType
+        self.boxsize = boxsize
+        self.boxw = self.boxsize[0]
+        self.boxh = self.boxsize[1]
 
         if(scale==2):
             tempscale=1
@@ -149,22 +217,150 @@ class CharaTile(QLabel):
         else:
             tempscale=0
 
-        Composite = clearTile.tileset[0][tempscale]
-
-        Composite = Image.alpha_composite(Composite, tileset[ tileType[i] ][tempscale]) 
-   
-
+        Composite = bcset[charType[0]][charType[1]][tempscale]
         pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
         self.setPixmap(pixmap)
 
+    def mousePressEvent(self, ev):
+        if ev.button() == QtCore.Qt.RightButton:
+            self.emit(SIGNAL('rightClicked()'))
+        else:
+            self.emit(SIGNAL('clicked()'))
 
+class csetAItem(QtGui.QListWidgetItem):
+    def __init__(self, charType, bcset, scale=1):
+        super(csetAItem, self).__init__()
+
+        if(scale==2):
+            tempscale=1
+        elif(scale==0.5):
+            tempscale=2
+        else:
+            tempscale=0
+
+        Composite = bcset[charType[0]][charType[1]][tempscale]
+        pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
+
+        f=QFont ()
+        f.setPointSize(1)
+        self.setFont(f)
+
+        self.setIcon(QIcon(pixmap))
+        self.setData(Qt.UserRole, charType)
+
+    def getCharType(self):
+        return self.data(Qt.UserRole).toPyObject()
+
+
+class animatedCharaTile(QLabel):
+    def __init(self, parent):
+        QLabel.__init__(self, parent)
+
+        self.bcset = bcset
+        self.charType = []
+        self.boxw = 32
+        self.boxh = 64
+        self.boxsize = (self.boxw, self.boxh)  
+        self.setMinimumSize (QSize(self.boxw*2, self.boxh*2))
+
+    def setACTImage(self, charType):
+        self.charType = charType
+        scale = self.scale        
+
+        if(scale==2):
+            tempscale=1
+        elif(scale==0.5):
+            tempscale=2
+        else:
+            tempscale=0
+
+        Composite = self.bcset[charType[0]][charType[1]][tempscale]
+        pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
+        self.setPixmap(pixmap)
+
+    def setAnimArray(self,bcset, aarray, scale = 1):
+        self.aarray = aarray
+        self.bcset = bcset
+        self.scale = scale
+        self._current_frame = 0
+        self.play()
+
+    def play(self, interval=100):
+        self._timer = QtCore.QTimer(interval=interval,
+                                    timeout=self._animation_step)
+        self._timer.start()
+
+    def _animation_step(self):    
+        if(len(self.aarray)>0):
+            self.setACTImage(self.aarray[self._current_frame])
+            self._current_frame += 1
+            if self._current_frame >= len(self.aarray):
+                self._current_frame = 0
+        
 
 
 class CharasetEditorWidget(QWidget):
-    def __init__(self, pSettings, parent=None, **kwargs):
+    def __init__(self, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
 
+        self.HBox = QHBoxLayout(self)
+        self.HBox.setAlignment(Qt.AlignTop)
+
+        self.palette = CharaPalette("../Game/img/person.png")
+        self.connect(self.palette, SIGNAL('clicked()'), self.animselected)
+        self.scrollArea = QtGui.QScrollArea()
+        self.scrollArea.setWidget(self.palette)
+        self.scrollArea.setMinimumWidth(self.palette.boxw*self.palette.scale*3+16)
+        self.scrollArea.setMinimumHeight(self.palette.boxh*self.palette.scale*4+16)
+
+        self.animList = QListWidget()
+        self.animList.setIconSize(QSize(64,128))
+        self.animList.setFlow(QListWidget.LeftToRight)
+        self.animList.setMinimumWidth(self.palette.boxw*self.palette.scale*4+48)
+        self.animList.setMinimumHeight(self.palette.boxh*self.palette.scale*2+16)
+        self.animList.setMaximumHeight(self.palette.boxh*self.palette.scale*2+16)
+        self.animList.setDragDropMode(QAbstractItemView.InternalMove)
+
+        animListModel = self.animList.model()
+        animListModel.layoutChanged.connect(self.animListUpdated)
+        animListModel.rowsInserted.connect(self.animListUpdated)
+
+        self.animNames = QListWidget()
+
+        self.animPreview = animatedCharaTile()
+
+        VBoxCharaPalette = QVBoxLayout()
+        VBoxCharaPalette.addWidget(QLabel("Available frames:"))
+        VBoxCharaPalette.addWidget(self.scrollArea)
+
+        VBoxCharaAnim = QVBoxLayout()
+
+        VBoxCharaAnim.addWidget(QLabel("Animation Sequence:"))
+        VBoxCharaAnim.addWidget(self.animNames)
+        VBoxCharaAnim.addWidget(self.animPreview)
+        VBoxCharaAnim.addWidget(QLabel("Animation Frames:"))
+        VBoxCharaAnim.addWidget(self.animList)
+
         
+        self.HBox.addLayout(VBoxCharaPalette)
+        self.HBox.addLayout(VBoxCharaAnim)
+    
+    def animselected(self):
+        self.animList.addItem(csetAItem(self.palette.rValue[0], self.palette.rValue[1], self.palette.rValue[2] ) )
+        print(self.palette.rValue[0])
+
+    def animListUpdated(self):
+        animArray = []
+        i = 0
+        while i < self.animList.count():
+            item = self.animList.item(i)
+            animArray.append(item.getCharType())
+            i += 1
+
+        print(animArray)
+        self.animPreview.setAnimArray(self.palette.myBC.bcset, animArray)
+        
+
 
 class CharasPaletteWidget(QWidget):
     def __init__(self,pMap, pSettings, parent=None, **kwargs):
@@ -173,3 +369,14 @@ class CharasPaletteWidget(QWidget):
 class CharasEditorWidget(QWidget):
     def __init__(self,pMap, pSettings, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
+
+
+if __name__=="__main__":
+    from sys import argv, exit
+
+    a=QApplication(argv)
+    m=CharasetEditorWidget()
+    a.processEvents()
+    m.show()
+    m.raise_()
+    exit(a.exec_())
