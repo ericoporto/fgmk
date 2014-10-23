@@ -227,9 +227,22 @@ class CharaTile(QLabel):
         else:
             self.emit(SIGNAL('clicked()'))
 
-class csetAItem(QtGui.QListWidgetItem):
+class AnimNamesItem(QtGui.QListWidgetItem):
+    def __init__(self, aname):
+        super(AnimNamesItem, self).__init__(aname)
+
+        self.aname = aname
+        self.aarray = []
+
+    def setAarray(self, aarray):
+        self.aarray = aarray
+
+    def getAarray(self):
+        return self.aarray
+
+class CsetAItem(QtGui.QListWidgetItem):
     def __init__(self, charType, bcset, scale=1):
-        super(csetAItem, self).__init__()
+        super(CsetAItem, self).__init__()
 
         if(scale==2):
             tempscale=1
@@ -252,16 +265,20 @@ class csetAItem(QtGui.QListWidgetItem):
         return self.data(Qt.UserRole).toPyObject()
 
 
-class animatedCharaTile(QLabel):
-    def __init(self, parent):
+class AnimatedCharaTile(QLabel):
+    def __init__(self, parent = None):
         QLabel.__init__(self, parent)
 
-        self.bcset = bcset
         self.charType = []
         self.boxw = 32
         self.boxh = 64
+        self.scale = 2
         self.boxsize = (self.boxw, self.boxh)  
         self.setMinimumSize (QSize(self.boxw*2, self.boxh*2))
+        self._timer = QtCore.QTimer(interval=100,
+                                    timeout=self._animation_step)
+
+        self.clearAnim()
 
     def setACTImage(self, charType):
         self.charType = charType
@@ -278,16 +295,21 @@ class animatedCharaTile(QLabel):
         pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
         self.setPixmap(pixmap)
 
-    def setAnimArray(self,bcset, aarray, scale = 1):
+    def clearAnim(self):
+        self._timer.stop()
+        pixmap = QPixmap(self.boxw*self.scale, self.boxh*self.scale)
+        pixmap.fill(Qt.white)
+        self.setPixmap(pixmap)
+
+
+    def setAnimArray(self,bcset, aarray, scale = 2):
         self.aarray = aarray
         self.bcset = bcset
         self.scale = scale
         self._current_frame = 0
         self.play()
 
-    def play(self, interval=100):
-        self._timer = QtCore.QTimer(interval=interval,
-                                    timeout=self._animation_step)
+    def play(self):
         self._timer.start()
 
     def _animation_step(self):    
@@ -302,6 +324,8 @@ class animatedCharaTile(QLabel):
 class CharasetEditorWidget(QWidget):
     def __init__(self, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
+
+        self.updating = False
 
         self.HBox = QHBoxLayout(self)
         self.HBox.setAlignment(Qt.AlignTop)
@@ -320,45 +344,116 @@ class CharasetEditorWidget(QWidget):
         self.animList.setMinimumHeight(self.palette.boxh*self.palette.scale*2+16)
         self.animList.setMaximumHeight(self.palette.boxh*self.palette.scale*2+16)
         self.animList.setDragDropMode(QAbstractItemView.InternalMove)
+        self.animListDel = QPushButton("Delete Frames")
+        self.animListDel.clicked.connect(self.animListDelAction)
 
         animListModel = self.animList.model()
         animListModel.layoutChanged.connect(self.animListUpdated)
         animListModel.rowsInserted.connect(self.animListUpdated)
 
-        self.animNames = QListWidget()
 
-        self.animPreview = animatedCharaTile()
+        self.animNamesEntry = QLineEdit()
+        self.animNamesAdd = QPushButton("Add animation")
+        self.animNamesAdd.clicked.connect(self.animNamesAddAction)
+        self.animNamesCBNF = QCheckBox("No facing")
+        self.animNamesDel = QPushButton("Delete")
+        self.animNamesDel.clicked.connect(self.animNamesDelAction)
+        self.animNames = QListWidget()
+        self.animNames.itemSelectionChanged.connect(self.animNamesSelectionChanged)
+
+        self.animPreview = AnimatedCharaTile()
 
         VBoxCharaPalette = QVBoxLayout()
         VBoxCharaPalette.addWidget(QLabel("Available frames:"))
         VBoxCharaPalette.addWidget(self.scrollArea)
 
+        HBoxANE = QHBoxLayout()
+        HBoxANE.addWidget(self.animNamesEntry)
+        HBoxANE.addWidget(self.animNamesAdd)
+        HBoxANE.addWidget(self.animNamesCBNF)
+        HBoxANE.addWidget(self.animNamesDel)
+
+        HBoxAnim = QHBoxLayout()
+        HBoxAnim.addWidget(self.animPreview)
+        HBoxAnim.addWidget(self.animListDel)
+
         VBoxCharaAnim = QVBoxLayout()
 
         VBoxCharaAnim.addWidget(QLabel("Animation Sequence:"))
+        VBoxCharaAnim.addLayout(HBoxANE)
         VBoxCharaAnim.addWidget(self.animNames)
-        VBoxCharaAnim.addWidget(self.animPreview)
+        VBoxCharaAnim.addLayout(HBoxAnim)
         VBoxCharaAnim.addWidget(QLabel("Animation Frames:"))
         VBoxCharaAnim.addWidget(self.animList)
-
         
         self.HBox.addLayout(VBoxCharaPalette)
         self.HBox.addLayout(VBoxCharaAnim)
+
+    def animNamesDelAction(self):
+        if (len(self.animNames.selectedItems())>0):
+            for item in self.animNames.selectedItems():
+                itemIndex = self.animNames.row(item)
+                self.animNames.takeItem(itemIndex)
+        else:
+            self.animNames.clear()  
+
+        self.updating = True
+        self.animList.clear()
+        self.animPreview.clearAnim()
+        self.updating = False
+
+        self.animNamesSelectionChanged()
+
+    def animListDelAction(self):
+        if (len(self.animList.selectedItems())>0):
+            for item in self.animList.selectedItems():
+                itemIndex = self.animList.row(item)
+                self.animList.takeItem(itemIndex)
+        else:
+            self.animList.clear()  
+
+        self.animListUpdated()    
+
+    def animNamesSelectionChanged(self):
+        self.animPreview.clearAnim()
+
+        if (len(self.animNames.selectedItems())>0):
+            animArray = self.animNames.selectedItems()[0].getAarray()
+            scale = 2
+            bcset = self.palette.myBC.bcset
+
+            self.updating = True
+
+            self.animList.clear()  
+            if( len(animArray)> 0):
+                for item in animArray:
+                    self.animList.addItem(CsetAItem(item, bcset, 2) )
+
+            self.updating = False
+            self.animPreview.setAnimArray(bcset, animArray)
+
+    def animNamesAddAction(self):
+        self.animNames.addItem(AnimNamesItem(self.animNamesEntry.text()) ) 
     
     def animselected(self):
-        self.animList.addItem(csetAItem(self.palette.rValue[0], self.palette.rValue[1], self.palette.rValue[2] ) )
+        self.animList.addItem(CsetAItem(self.palette.rValue[0], self.palette.rValue[1], self.palette.rValue[2] ) )
         print(self.palette.rValue[0])
 
     def animListUpdated(self):
-        animArray = []
-        i = 0
-        while i < self.animList.count():
-            item = self.animList.item(i)
-            animArray.append(item.getCharType())
-            i += 1
+        if(self.updating == False):
+            if (self.animList.count() > 0):
+                animArray = []
+                i = 0
+                while i < self.animList.count():
+                    item = self.animList.item(i)
+                    animArray.append(item.getCharType())
+                    i += 1
 
-        print(animArray)
-        self.animPreview.setAnimArray(self.palette.myBC.bcset, animArray)
+                self.animPreview.setAnimArray(self.palette.myBC.bcset, animArray)
+                self.animNames.selectedItems()[0].setAarray(animArray)
+            else:
+                self.animPreview.clearAnim()
+                self.animNames.selectedItems()[0].setAarray([])
         
 
 
