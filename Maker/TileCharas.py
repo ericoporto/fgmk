@@ -228,11 +228,20 @@ class CharaTile(QLabel):
             self.emit(SIGNAL('clicked()'))
 
 class AnimNamesItem(QtGui.QListWidgetItem):
-    def __init__(self, aname):
+    def __init__(self, aname, isgroup = False, isparent = False):
         super(AnimNamesItem, self).__init__(aname)
 
+        self.isgroup = isgroup
+        self.isparent = isparent
+        self.ischildof = False
         self.aname = aname
         self.aarray = []
+
+    def setIschildof(self,parent):
+        self.ischildof = parent
+
+    def getIschildof(self):
+        return self.ischildof
 
     def setAarray(self, aarray):
         self.aarray = aarray
@@ -355,7 +364,7 @@ class CharasetEditorWidget(QWidget):
         self.animNamesEntry = QLineEdit()
         self.animNamesAdd = QPushButton("Add animation")
         self.animNamesAdd.clicked.connect(self.animNamesAddAction)
-        self.animNamesCBNF = QCheckBox("No facing")
+        self.animNamesCheckBNF = QCheckBox("No facing")
         self.animNamesDel = QPushButton("Delete")
         self.animNamesDel.clicked.connect(self.animNamesDelAction)
         self.animNames = QListWidget()
@@ -370,7 +379,7 @@ class CharasetEditorWidget(QWidget):
         HBoxANE = QHBoxLayout()
         HBoxANE.addWidget(self.animNamesEntry)
         HBoxANE.addWidget(self.animNamesAdd)
-        HBoxANE.addWidget(self.animNamesCBNF)
+        HBoxANE.addWidget(self.animNamesCheckBNF)
         HBoxANE.addWidget(self.animNamesDel)
 
         HBoxAnim = QHBoxLayout()
@@ -392,8 +401,25 @@ class CharasetEditorWidget(QWidget):
     def animNamesDelAction(self):
         if (len(self.animNames.selectedItems())>0):
             for item in self.animNames.selectedItems():
-                itemIndex = self.animNames.row(item)
-                self.animNames.takeItem(itemIndex)
+                if(item.isparent):
+                    for itemIndex in xrange(self.animNames.count()):
+                        if(self.animNames.item(itemIndex).ischildof == item):
+                            self.animNames.takeItem(itemIndex)
+
+                    itemIndex = self.animNames.row(item)
+                    self.animNames.takeItem(itemIndex)
+                elif(item.ischildof):
+                    itemIndex = self.animNames.row(item.ischildof)
+                    self.animNames.takeItem(itemIndex)
+
+                    for itemIndex in xrange(self.animNames.count()):
+                        if(self.animNames.item(itemIndex).ischildof == item.ischildof):
+                            if(self.animNames.item(itemIndex) != item):
+                                self.animNames.takeItem(itemIndex)
+
+                    itemIndex = self.animNames.row(item)
+                    self.animNames.takeItem(itemIndex)
+
         else:
             self.animNames.clear()  
 
@@ -406,9 +432,9 @@ class CharasetEditorWidget(QWidget):
 
     def animListDelAction(self):
         if (len(self.animList.selectedItems())>0):
-            for item in self.animList.selectedItems():
-                itemIndex = self.animList.row(item)
-                self.animList.takeItem(itemIndex)
+                for item in self.animList.selectedItems():
+                    itemIndex = self.animList.row(item)
+                    self.animList.takeItem(itemIndex)
         else:
             self.animList.clear()  
 
@@ -418,22 +444,38 @@ class CharasetEditorWidget(QWidget):
         self.animPreview.clearAnim()
 
         if (len(self.animNames.selectedItems())>0):
-            animArray = self.animNames.selectedItems()[0].getAarray()
-            scale = 2
-            bcset = self.palette.myBC.bcset
+            if(self.animNames.selectedItems()[0].isgroup):
+                curRow = self.animNames.currentRow()
+                curRow += 1
+                self.animNames.setCurrentRow(curRow)
+            
+            if(self.animNames.selectedItems()[0].isgroup==False):
+                animArray = self.animNames.selectedItems()[0].getAarray()
+                scale = 2
+                bcset = self.palette.myBC.bcset
 
-            self.updating = True
+                self.updating = True
 
-            self.animList.clear()  
-            if( len(animArray)> 0):
-                for item in animArray:
-                    self.animList.addItem(CsetAItem(item, bcset, 2) )
+                self.animList.clear()  
+                if( len(animArray)> 0):
+                    for item in animArray:
+                        self.animList.addItem(CsetAItem(item, bcset, 2) )
 
-            self.updating = False
-            self.animPreview.setAnimArray(bcset, animArray)
+                self.updating = False
+                self.animPreview.setAnimArray(bcset, animArray)
 
     def animNamesAddAction(self):
-        self.animNames.addItem(AnimNamesItem(self.animNamesEntry.text()) ) 
+
+        if self.animNamesCheckBNF.isChecked():
+            self.animNames.addItem(AnimNamesItem(self.animNamesEntry.text(), False, True) ) 
+        else: 
+            parentItem = AnimNamesItem(self.animNamesEntry.text(), True, True)
+            self.animNames.addItem(parentItem ) 
+            for i in xrange(len(facing)):
+                itemToAdd = AnimNamesItem("    "+facing[i])
+                itemToAdd.setIschildof(parentItem)
+                self.animNames.addItem(itemToAdd) 
+
     
     def animselected(self):
         self.animList.addItem(CsetAItem(self.palette.rValue[0], self.palette.rValue[1], self.palette.rValue[2] ) )

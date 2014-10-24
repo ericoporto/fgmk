@@ -334,8 +334,6 @@ class ExtendedQLabel(QLabel):
         self.boxSize = 32
         self.setMinimumSize (QSize(self.boxSize, self.boxSize))
 
-        self.setMouseTracking(True)
-
     def initTile(self, tileset, x, y, boxSize, tileType, scale = 1):
         self.tileType = tileType
         self.tileX = x

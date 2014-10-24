@@ -24,6 +24,7 @@ def servePage(urlToServe):
     try:
         httpdGame = serverClass((ip,port), handlerClass)
     except:
+        os.chdir(tempOrigiCurDir)
         return False
     httpdAdm = serverClass((admIp,admPort), handlerClass) 
 

@@ -272,7 +272,8 @@ class ActionsWidget(QDialog):
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop) 
 
-        f = open( "actions/actionsList.json" , "rb" )
+        filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),"actions/actionsList.json")
+        f = open( filepath, "rb" )
         e = json.load(f)
         f.close()
 
