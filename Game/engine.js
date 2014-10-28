@@ -337,7 +337,7 @@ feedbackEng = {
 
 var player = {};
 player.setup = function() {
-    player = resources.playerCharaset;
+    player['charaset'] = resources.playerCharaset;
     player['mapx'] = init['Player']['initPosX'];
     player['mapy'] = init['Player']['initPosY'];
     player['facing'] = init['Player']['facing'];
