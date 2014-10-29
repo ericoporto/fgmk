@@ -14,6 +14,7 @@ import actionDialog
 import TXWdgt
 from flowlayout import FlowLayout as FlowLayout
 import fifl
+import TileCharas
 
 sSettings = { "gamefolder": "" }
 
@@ -721,6 +722,7 @@ class MainWindow(QMainWindow):
 
         projectMenu.addAction('New &Project', self.newProject, '')
         projectMenu.addAction('Set starting &position...', self.selectStartPosition, '')
+        projectMenu.addAction('Edit &charasets...', self.editCharasets, '')
         projectMenu.addAction('Run Project', self.runServer, 'f5')
                 
         self.viewMenu = self.menubar.addMenu('&View')
@@ -774,6 +776,12 @@ class MainWindow(QMainWindow):
         self.showInternalNavigator()
         
         self.setMenuBar(self.menubar)
+
+    def editCharasets(self):
+        global sSettings
+        myCharasetEditor = TileCharas.CharasetEditorWidget(self, sSettings)
+        if myCharasetEditor.exec_() == QtGui.QDialog.Accepted:
+            print(myCharasetEditor)
 
     def changeToFullscreen(self):
         if self.fullscreenViewAction.isChecked():

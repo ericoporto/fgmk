@@ -58,13 +58,13 @@ class CharasetFormat(BaseFormat):
         self.new()
 
     def new(self):
-        self.jsonTree = { "Charasets": {} }
+        self.jsonTree = { "Charaset": {} }
 
     def setTileImage(self, tileImage):
-        self.jsonTree["Charasets"]["tileImage"] = tileImage
+        self.jsonTree["Charaset"]["tileImage"] = tileImage
 
     def addCharaset(self, name, jsonTree = {} ):
-        self.jsonTree["Charasets"][name] = jsonTree
+        self.jsonTree["Charaset"][name] = jsonTree
 
 
 
@@ -346,9 +346,9 @@ def isParent(jsonTreeItem):
 
     return False
 
-class CharasetEditorWidget(QWidget):
+class CharasetEditorWidget(QDialog):
     def __init__(self, parent=None, ssettings={}, **kwargs):
-        QWidget.__init__(self, parent, **kwargs)
+        QDialog.__init__(self, parent, **kwargs)
 
         self.cset = CharasetFormat() 
 
@@ -472,7 +472,14 @@ class CharasetEditorWidget(QWidget):
         self.animNames.setEnabled(False)
 
         if "gamefolder" in self.ssettings:
-            print self.ssettings["gamefolder"]
+            for file in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                if file.endswith(".json"):
+                    break
+
+            file = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, file)
+            print(file)
+            if(os.path.isfile(file)):
+                self.__charasetOpen(file)
         
 
     def csetsAddAction(self):
@@ -518,24 +525,26 @@ class CharasetEditorWidget(QWidget):
 
     def charasetOpen(self):
 
-        self.csetsList.clear()
-        self.animNames.clear()
-        self.animList.clear()
-
         if(self.ssettings == {} ):
             filepath =  os.path.expanduser("~")
+        else:
+            if "gamefolder" in self.ssettings:
+                filepath = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)
        
         filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', filepath ) )
-        if os.path.isfile(filename):
-            self.__charasetOpen(filename)
+        self.__charasetOpen(filename)
 
     def __charasetOpen(self, filename):
-        self.cset.load(filename)
-        self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
-        self.__imgOpen(os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
-        for charset in self.cset.jsonTree["Charaset"]:
-            if(charset!="tileImage"):
-                self.csetsList.addItem(csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
+        if os.path.isfile(filename):
+            self.csetsList.clear()
+            self.animNames.clear()
+            self.animList.clear()
+            self.cset.load(filename)
+            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
+            self.__imgOpen(os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
+            for charset in self.cset.jsonTree["Charaset"]:
+                if(charset!="tileImage"):
+                    self.csetsList.addItem(csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
 
     def charasetSave(self):
         self.cset.new()
