@@ -3,6 +3,7 @@ import server
 import sys
 import json
 import TileXtra
+import tMat
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt4.QtGui import *
@@ -19,12 +20,17 @@ GAMEFOLDER = "gamefolder"
 class BaseFormat:
     def __init__( self ):
         self.jsonTree = {};
+        self.filename = ""
 
     def new(self):
         self.jsonTree = {};
 
-    def save( self , charsn):
-        f = open( charsn , "wb" )
+    def save( self , charsn = None):
+        if(charsn == None):
+             chartosave = self.filename
+        else:
+            chartosave = charsn
+        f = open( chartosave , "wb" )
         tMat.fwriteKeyVals(self.jsonTree, f)
         f.close()
 
@@ -39,6 +45,7 @@ class BaseFormat:
         f = open( charsn , "rb" )
         self.jsonTree = json.load(f)
         f.close()
+        self.filename = charsn
 
 
 class CharasetFormat(BaseFormat):
@@ -56,27 +63,10 @@ class CharasetFormat(BaseFormat):
     def setTileImage(self, tileImage):
         self.jsonTree["Charasets"]["tileImage"] = tileImage
 
-    def addCharaset(self, name, tileImage, stateSet = standardStateset[0]):
-        self.jsonTree["Charasets"][name] = {   "currentSet": stateSet,
-	                                          stateSet:{}
-                                              } 
+    def addCharaset(self, name, jsonTree = {} ):
+        self.jsonTree["Charasets"][name] = jsonTree
 
-    def addToStateset(self, Charaset, name = standardMovement[0],  stateSet = standardStateset[0]):
-        self.jsonTree["Charasets"][Charaset][stateSet][name] ={}
 
-    def addAnim(self, Charaset, anim,  nfacing = 0, movement = standardMovement[0], stateSet = standardStateset[0]):
-        self.jsonTree["Charasets"][Charaset][stateSet][movement][facing[nfacing]] = anim
-
-    def getImage(self, Charaset, anim = 0,  nfacing = facing[3], movement = standardMovement[0], stateSet = standardStateset[0]):
-        cropPosition =  self.jsonTree["Charasets"][Charaset][stateSet][movement][nfacing][anim]
-        for i in xrange(len(cropPosition)):
-            cropPosition[i] = cropPosition[i]*self.boxsize
-
-        returnValue = { "tileImage" :  self.jsonTree["Charasets"][Charaset]["tileImage"],
-                        "cropPosition" :  cropPosition,
-                        "size" : self.size }
-
-        return returnValue
 
 
 class CharasFormat(BaseFormat):
@@ -364,6 +354,8 @@ class CharasetEditorWidget(QWidget):
 
         self.ssettings = ssettings
 
+        self.tileImage = ""
+
         self.updating = False
 
         self.HBox = QHBoxLayout(self)
@@ -479,6 +471,10 @@ class CharasetEditorWidget(QWidget):
         self.animNamesAdd.setEnabled(False)
         self.animNames.setEnabled(False)
 
+        if "gamefolder" in self.ssettings:
+            print self.ssettings["gamefolder"]
+        
+
     def csetsAddAction(self):
         charsetName = str(self.csetsEntry.text()).strip()
         jsonTree = {}
@@ -531,20 +527,25 @@ class CharasetEditorWidget(QWidget):
        
         filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', filepath ) )
         if os.path.isfile(filename):
-            self.cset.load(filename)
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
-            self.__imgOpen(os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
-            for charset in self.cset.jsonTree["Charaset"]:
-                if(charset!="tileImage"):
-                    self.csetsList.addItem(csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
+            self.__charasetOpen(filename)
+
+    def __charasetOpen(self, filename):
+        self.cset.load(filename)
+        self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
+        self.__imgOpen(os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
+        for charset in self.cset.jsonTree["Charaset"]:
+            if(charset!="tileImage"):
+                self.csetsList.addItem(csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
 
     def charasetSave(self):
         self.cset.new()
 
-        animation = {}
-        for itemIndex in xrange(self.animNames.count()):
-            if(self.animNames.item(itemIndex).isparent):
-                animation[self.animNames.item(itemIndex).aname]={}
+        self.cset.setTileImage(self.tileImage)
+        for itemIndex in xrange(self.csetsList.count()):
+            self.cset.addCharaset(str(self.csetsList.item(itemIndex).aname),self.csetsList.item(itemIndex).jsonTree)
+
+        
+        self.cset.save()
 
     def imgOpen(self):
 
@@ -555,12 +556,14 @@ class CharasetEditorWidget(QWidget):
         if os.path.isfile(filename):
             self.__imgOpen(filename)
 
+
     def __imgOpen(self,filename):
         self.palette.update(filename)
         self.palImageFile.setText(filename)
 
         self.animList.clear()
         self.animNames.clear()
+        self.tileImage = os.path.basename(filename)
             
     def animNamesChanged(self, dummy):
 
