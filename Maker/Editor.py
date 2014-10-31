@@ -14,7 +14,7 @@ import actionDialog
 import TXWdgt
 from flowlayout import FlowLayout as FlowLayout
 import fifl
-import TileCharas
+import TileCharaset
 
 sSettings = { "gamefolder": "" }
 
@@ -779,7 +779,7 @@ class MainWindow(QMainWindow):
 
     def editCharasets(self):
         global sSettings
-        myCharasetEditor = TileCharas.CharasetEditorWidget(self, sSettings)
+        myCharasetEditor = TileCharaset.CharasetEditorWidget(self, sSettings)
         if myCharasetEditor.exec_() == QtGui.QDialog.Accepted:
             print(myCharasetEditor)
 

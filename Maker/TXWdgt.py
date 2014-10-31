@@ -29,7 +29,7 @@ def saveInitFile(gamefolder, initFileJsonTree):
     return initFileJsonTree
 
 def selectStartingPosition(parent, psSettings):
-    myTeleporDialog = actionDialog.teleport(psSettings["gamefolder"],parent, None, "select starting position")
+    myTeleporDialog = actionDialog.teleport(psSettings["gamefolder"],parent, None, False, "select starting position")
     if myTeleporDialog.exec_() == QtGui.QDialog.Accepted:
         returnActDlg = str(myTeleporDialog.getValue())
         position=returnActDlg.split(';')
@@ -265,9 +265,10 @@ class newFile(QDialog):
         return self.returnValue
 
 class ActionsWidget(QDialog):
-    def __init__(self, psSettings, parent=None, **kwargs):
+    def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
         QDialog.__init__(self, parent, **kwargs)
-        self.psSettings=psSettings       
+        self.psSettings=psSettings  
+        self.ischaras = ischaras     
 
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop) 
@@ -296,7 +297,11 @@ class ActionsWidget(QDialog):
         self.returnValue = buttonThatSent.text()
 
         newDialogFromName = getattr(actionDialog, str(self.returnValue))
-        self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
+        if(self.ischaras is False):
+            self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
+        else:
+            self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self,None,True)
+
         if self.myActionsDialog.exec_() == QtGui.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
 

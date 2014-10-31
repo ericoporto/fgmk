@@ -63,9 +63,33 @@ class CharasetFormat(BaseFormat):
     def setTileImage(self, tileImage):
         self.jsonTree["Charaset"]["tileImage"] = tileImage
 
+    def getTileImage(self):
+        return self.jsonTree["Charaset"]["tileImage"] 
+
     def addCharaset(self, name, jsonTree = {} ):
         self.jsonTree["Charaset"][name] = jsonTree
 
+    def getCharasets(self):
+        charasetsa = self.jsonTree["Charaset"]
+        excludes = ["tileImage"]
+        resultset = [key for key, value in charasetsa.items() if key not in excludes]
+        return sorted(resultset)
+
+    def getAnimation(self,charaset):
+        csetTree = self.jsonTree["Charaset"][charaset]
+        csetTL1 = sorted(csetTree)
+        tests = standardMovement[:]
+        tests.append(sorted(csetTree)[0])
+        for test in tests:
+            if test in csetTL1:
+                if (isinstance(csetTree[test],list)):
+                    return csetTree[test]
+                else:
+                    csetTL2 = sorted(csetTree[test])
+                    for face in sorted(facing):
+                        if face in csetTL2:
+                             return csetTree[test][face]
+        
 
 
 
@@ -346,6 +370,61 @@ def isParent(jsonTreeItem):
 
     return False
 
+
+class CharasetSelector(QWidget):
+    def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.VBox = QVBoxLayout(self)
+        self.ssettings = ssettings
+
+        if(self.ssettings == {} ):
+            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
+
+        if (cset is not None):
+            self.cset = cset
+        else:
+            self.cset = CharasetFormat()
+            if "gamefolder" in self.ssettings:
+                for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                    if f.endswith(".json"):
+                        break
+
+                f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
+                if(os.path.isfile(f)):
+                    self.cset.load(f)
+
+        self.csetList = QListWidget()
+        for charaset in self.cset.getCharasets():
+            self.csetList.addItem(charaset)
+
+
+
+        fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+        self.myBC= BaseCharaset(fimg)
+
+        self.previewer = AnimatedCharaTile()
+
+        self.VBox.addWidget(self.previewer)
+        self.VBox.addWidget(self.csetList)
+
+        self.csetList.itemSelectionChanged.connect(self.changed)
+        self.csetList.setCurrentRow(0)
+
+    def changed(self):
+        row = self.csetList.row(self.csetList.selectedItems()[0])
+        charaset = self.cset.getCharasets()[row]
+        aarray = self.cset.getAnimation(charaset)
+
+        self.previewer.setAnimArray(self.myBC.bcset, aarray)
+
+    def getValue(self):
+        row = self.csetList.row(self.csetList.selectedItems()[0])
+        charaset = self.cset.getCharasets()[row]
+        return charaset
+
+
+
 class CharasetEditorWidget(QDialog):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         QDialog.__init__(self, parent, **kwargs)
@@ -472,14 +551,13 @@ class CharasetEditorWidget(QDialog):
         self.animNames.setEnabled(False)
 
         if "gamefolder" in self.ssettings:
-            for file in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
-                if file.endswith(".json"):
+            for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                if f.endswith(".json"):
                     break
 
-            file = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, file)
-            print(file)
-            if(os.path.isfile(file)):
-                self.__charasetOpen(file)
+            f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
+            if(os.path.isfile(f)):
+                self.__charasetOpen(f)
         
 
     def csetsAddAction(self):
@@ -724,6 +802,7 @@ if __name__=="__main__":
     from sys import argv, exit
 
     a=QApplication(argv)
+    #m=CharasetSelector()
     m=CharasetEditorWidget()
     a.processEvents()
     m.show()

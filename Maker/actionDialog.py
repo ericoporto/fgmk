@@ -21,9 +21,10 @@ EVENTSLAYER = 4
 
    	
 class changeTile(QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
+        self.nothis = nothis
         self.gamefolder = gamefolder
         self.edit = edit
         self.parent = parent
@@ -44,7 +45,11 @@ class changeTile(QDialog):
 
         self.colisionList = [ "keep","noColision","collidable"]
 
-        self.levelsList = ["this"]
+        if(self.nothis is False):
+            self.levelsList = ["this"]
+        else:
+            self.levelsList = []            
+
         for level in self.initFile['LevelsList']:
             self.levelsList.append(level)
 
@@ -52,12 +57,18 @@ class changeTile(QDialog):
             self.comboBox.addItem (str(level))
 
         self.scrollArea = QtGui.QScrollArea()
-        if(self.edit == None):
-            self.currentLevel = self.parent.parent.parent.myMap
-            self.currentTileSet = self.parent.parent.parent.myTileSet
+
+        if(self.nothis is False):
+            if(self.edit == None):
+                self.currentLevel = self.parent.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.myTileSet
         else:
-            self.currentLevel = self.parent.parent.myMap
-            self.currentTileSet = self.parent.parent.myTileSet
+            self.currentLevel=TileXtra.MapFormat()
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) ) 
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)   
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(self.currentLevel,self.currentTileSet,self)
 
@@ -194,9 +205,10 @@ class changeTile(QDialog):
         return text
 
 class teleport(QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, selectStartPosition=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, selectStartPosition=None,  **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
+        self.nothis = nothis
         self.selectStartPosition = selectStartPosition
         self.gamefolder = gamefolder
         self.edit = edit
@@ -211,7 +223,12 @@ class teleport(QDialog):
 
         self.comboBox = QComboBox()
 
-        self.levelsList = ["this"]
+        if(self.nothis is False):
+            self.levelsList = ["this"]
+        else:
+            self.levelsList = []            
+
+
         for level in self.initFile['LevelsList']:
             self.levelsList.append(level)
 
@@ -219,17 +236,22 @@ class teleport(QDialog):
             self.comboBox.addItem (str(level))
 
         self.scrollArea = QtGui.QScrollArea()
-    
-        if(self.selectStartPosition==None):
-            if(self.edit == None):
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+
+        if(self.nothis is False):
+            if(self.selectStartPosition==None):
+                if(self.edit == None):
+                    self.currentLevel = self.parent.parent.parent.myMap
+                    self.currentTileSet = self.parent.parent.parent.myTileSet
+                else:
+                    self.currentLevel = self.parent.parent.myMap
+                    self.currentTileSet = self.parent.parent.myTileSet
             else:
-                self.currentLevel = self.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.myTileSet
+                self.currentLevel = self.parent.myMap
+                self.currentTileSet = self.parent.myTileSet
         else:
-            self.currentLevel = self.parent.myMap
-            self.currentTileSet = self.parent.myTileSet
+            self.currentLevel=TileXtra.MapFormat()
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) ) 
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)               
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(self.currentLevel,self.currentTileSet,self)
 
@@ -264,6 +286,9 @@ class teleport(QDialog):
             for idx, val in enumerate(self.levelsList):
                 if(val==edit[2]):
                     self.comboBox.setCurrentIndex(idx)
+                    break
+
+            self.updateMap(idx)
 
 
     def setTeleportPlace(self):
@@ -295,7 +320,7 @@ class teleport(QDialog):
         return text
 
 class showText(QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
     	self.VBox = QVBoxLayout(self)
@@ -329,7 +354,7 @@ class showText(QDialog):
         return textToReturn
 
 class fadeIn(QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QVBoxLayout(self)
@@ -376,7 +401,7 @@ class fadeIn(QDialog):
         return effecToReturn+';'+keepEffect
 
 class fadeOut(QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QVBoxLayout(self)
@@ -424,7 +449,7 @@ class fadeOut(QDialog):
         return effecToReturn+';'+keepEffect
 
 class noEffect(QDialog):
-    def __init__(self, gamefolder, parent=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
 
         self.accept
