@@ -14,6 +14,151 @@ from flowlayout import FlowLayout as FlowLayout
 import fifl
 import TileCharaset
 
+# moves will be step and face, for all possibilities TileCharaset.facing
+# so a radio to select move or face and for buttons - one for each direction.
+# also a follow chara option will be added next and a random movement
+
+moves = {"move":TileCharaset.facing , "face":TileCharaset.facing, "random":"move", "follow": "player"}
+
+class MoveButtons(QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.Grid = QGridLayout(self)
+
+        self.Grid.setHorizontalSpacing(0)
+        self.Grid.setVerticalSpacing(0)
+        self.Grid.setSpacing(0)
+        self.Grid.setContentsMargins(0, 0, 0, 0)
+
+        self.setFixedSize(150, 150)
+
+        self.dirbuttons = []
+        self.signal = {}
+
+        for i in TileCharaset.facing:
+            self.signal[i] = 'button'+i+'()'
+            self.dirbuttons.append(QPushButton(i))
+            self.dirbuttons[-1].setObjectName(i)
+            self.dirbuttons[-1].setFixedSize(50, 50)
+            self.dirbuttons[-1].clicked.connect(self.bclicked)
+            if i == "up":
+                self.Grid.addWidget(self.dirbuttons[-1], 0, 1)
+            if i == "down":
+                self.Grid.addWidget(self.dirbuttons[-1], 2, 1)
+            if i == "left":
+                self.Grid.addWidget(self.dirbuttons[-1], 1, 0)
+            if i == "right":
+                self.Grid.addWidget(self.dirbuttons[-1], 1, 2)
+
+    def bclicked(self):
+        direction = str(self.sender().objectName())
+        self.emit(SIGNAL(self.signal[direction]))
+
+class MoveWidget(QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.VBox = QVBoxLayout(self)
+        self.dirButtons = MoveButtons()
+        self.connect(self.dirButtons, SIGNAL('buttonup()'), self.upbclick) 
+        self.connect(self.dirButtons, SIGNAL('buttondown()'), self.downbclick) 
+        self.connect(self.dirButtons, SIGNAL('buttonleft()'), self.leftbclick) 
+        self.connect(self.dirButtons, SIGNAL('buttonright()'), self.rightbclick) 
+
+        self.radiomove = QRadioButton("move")
+        self.radioface = QRadioButton("face")
+        self.random = QPushButton("random")
+        self.follow = QPushButton("follow")
+
+
+        self.radioface.setToolTip("Face a direction is when a chara looks at certain direction.")
+        self.follow.setToolTip("Chara will make one movement or face in the player direction.")
+        self.random.setToolTip("Chara will face or move in a random direction, one time.")
+
+
+        self.random.clicked.connect(self.randombclick)
+        self.follow.clicked.connect(self.followbclick)
+
+        self.movList = QListWidget(self)
+        self.movList.setDragDropMode(QAbstractItemView.InternalMove)
+
+        self.deselectbutton = QPushButton("deselect")
+        self.deletebutton = QPushButton("delete")
+
+        self.deselectbutton.clicked.connect(self.deselectbclick)
+        self.deletebutton.clicked.connect(self.deletebclick)
+
+        HBoxB = QHBoxLayout()
+        HBoxB.addWidget(self.deselectbutton)
+        HBoxB.addWidget(self.deletebutton)
+
+        VBoxR = QVBoxLayout()
+
+        VBoxR.addWidget(self.radiomove)
+        VBoxR.addWidget(self.radioface)
+        VBoxR.addWidget(self.random)
+        VBoxR.addWidget(self.follow)
+
+        HBoxT = QHBoxLayout()
+        HBoxT.addWidget(self.dirButtons)
+        HBoxT.addLayout(VBoxR)
+
+        self.VBox.addLayout(HBoxT)
+        self.VBox.addWidget(self.movList)
+        self.VBox.addLayout(HBoxB)
+
+    def deletebclick(self):
+        if(self.movList.selectedItems()):
+            for item in self.movList.selectedItems():
+                itemIndex = self.movList.row(item)
+                self.movList.takeItem(itemIndex)
+        else:
+            for itemIndex in xrange(self.movList.count()):
+                self.movList.takeItem(0)
+
+
+    def deselectbclick(self):
+        for i in range(self.movList.count()):
+            item = self.movList.item(i)
+            self.movList.setItemSelected(item, False)
+
+    def randombclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("facerandom")
+        else:
+            self.movList.addItem("moverandom")
+
+    def followbclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("facefollow")
+        else:
+            self.movList.addItem("movefollow")
+
+    def upbclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("faceup")
+        else:
+            self.movList.addItem("moveup")
+
+    def downbclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("facedown")
+        else:
+            self.movList.addItem("movedown")
+
+    def leftbclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("faceleft")
+        else:
+            self.movList.addItem("moveleft")
+
+    def rightbclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem("faceright")
+        else:
+            self.movList.addItem("moveright")
+
 class ActionsWidget(QWidget):
     def __init__(self, parent=None, ssettings={}, ischara=False , **kwargs):
         QWidget.__init__(self, parent, **kwargs)
@@ -188,7 +333,8 @@ if __name__=="__main__":
     from sys import argv, exit
 
     a=QApplication(argv)
-    m=CharaEditor()
+    #m=CharaEditor()
+    m=MoveWidget()
     a.processEvents()
     m.show()
     m.raise_()
