@@ -11,6 +11,8 @@ from PyQt4.QtCore import *
 from PyQt4 import QtGui, QtCore
 import fifl
 
+### TODO fix enter on QLineEdit
+
 facing = ["up","left","down","right"]
 standardStateset = ["normalSet"]
 standardMovement = ["standing","walking"]
@@ -90,26 +92,6 @@ class CharasetFormat(BaseFormat):
                         if face in csetTL2:
                              return csetTree[test][face]
         
-
-
-
-class CharasFormat(BaseFormat):
-    def __init__( self ):
-        BaseFormat.__init__(self)
-
-        self.new()
-
-    def new(self):
-        self.jsonTree = { "Charas": {} }
-
-    def addChara(self, name, charaFile, charaSet, facing = "back"):
-
-        self.jsonTree["Charas"][name]= {    "charaFile": charaFile, 
-                                            "charaSet": charaSet, 
-                                            "facing": facing,
-                                            "stateActions": {}
-                                            } 
-
 
 class BaseCharaset:
     def __init__( self , image_file):

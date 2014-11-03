@@ -20,6 +20,32 @@ import TileCharaset
 
 moves = {"move":TileCharaset.facing , "face":TileCharaset.facing, "random":"move", "follow": "player"}
 
+class CharasFormat(TileCharaset.BaseFormat):
+    def __init__( self ):
+        TileCharaset.BaseFormat.__init__(self)
+
+        self.new()
+
+    def new(self):
+        self.jsonTree = { "Charas": {} }
+
+    def addChara(self, name, charaFile = "", charaSet = "", facing = "down"):
+
+        self.jsonTree["Charas"][name]= {    "charaFile": charaFile, 
+                                            "charaSet": charaSet, 
+                                            "facing": facing,
+                                            "actions":[],
+                                            "movements":[]
+                                            } 
+
+    def addMovements(self, name, movements):
+        self.jsonTree["Charas"][name]["movements"] = movements
+
+    def addActions(self, name, actions):
+        self.jsonTree["Charas"][name]["actions"] = actions
+
+
+
 class MoveButtons(QWidget):
     def __init__(self, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
@@ -54,6 +80,24 @@ class MoveButtons(QWidget):
     def bclicked(self):
         direction = str(self.sender().objectName())
         self.emit(SIGNAL(self.signal[direction]))
+
+class MoveItem(QtGui.QListWidgetItem):
+    def __init__(self, moveorface, direction = ""):
+        super(MoveItem, self).__init__(moveorface+direction)
+
+        if (direction == ""):
+            self.direction = moveorface[4:]
+            self.moveorface = moveorface[0:4]
+        else:
+            self.moveorface = moveorface
+            self.direction = direction
+        movearray = [str(self.moveorface) , str(self.direction)]
+        self.setData(Qt.UserRole, movearray)
+
+    def getMarray(self):
+        movearray = self.data(Qt.UserRole).toPyObject()
+        return [str(movearray[0]),str(movearray[1])]
+
 
 class MoveWidget(QWidget):
     def __init__(self, parent=None, **kwargs):
@@ -108,6 +152,16 @@ class MoveWidget(QWidget):
         self.VBox.addWidget(self.movList)
         self.VBox.addLayout(HBoxB)
 
+        self.radiomove.toggle()
+
+    def getValue(self):
+        movements = []
+        for itemIndex in xrange(self.movList.count()):
+            itemArray = self.movList.item(itemIndex).getMarray()
+            movements.append(itemArray)
+            
+        return movements
+
     def deletebclick(self):
         if(self.movList.selectedItems()):
             for item in self.movList.selectedItems():
@@ -122,42 +176,43 @@ class MoveWidget(QWidget):
         for i in range(self.movList.count()):
             item = self.movList.item(i)
             self.movList.setItemSelected(item, False)
+        self.getValue()
 
     def randombclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("facerandom")
+            self.movList.addItem(MoveItem("facerandom"))
         else:
-            self.movList.addItem("moverandom")
+            self.movList.addItem(MoveItem("moverandom"))
 
     def followbclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("facefollow")
+            self.movList.addItem(MoveItem("facefollow"))
         else:
-            self.movList.addItem("movefollow")
+            self.movList.addItem(MoveItem("movefollow"))
 
     def upbclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("faceup")
+            self.movList.addItem(MoveItem("faceup"))
         else:
-            self.movList.addItem("moveup")
+            self.movList.addItem(MoveItem("moveup"))
 
     def downbclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("facedown")
+            self.movList.addItem(MoveItem("facedown"))
         else:
-            self.movList.addItem("movedown")
+            self.movList.addItem(MoveItem("movedown"))
 
     def leftbclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("faceleft")
+            self.movList.addItem(MoveItem("faceleft"))
         else:
-            self.movList.addItem("moveleft")
+            self.movList.addItem(MoveItem("moveleft"))
 
     def rightbclick(self):
         if(self.radioface.isChecked()):
-            self.movList.addItem("faceright")
+            self.movList.addItem(MoveItem("faceright"))
         else:
-            self.movList.addItem("moveright")
+            self.movList.addItem(MoveItem("moveright"))
 
 class ActionsWidget(QWidget):
     def __init__(self, parent=None, ssettings={}, ischara=False , **kwargs):
@@ -307,25 +362,90 @@ class ActionsWidget(QWidget):
 
         return allactions
 
+class CharaItem(QtGui.QListWidgetItem):
+    def __init__(self, aname, jsonTree = {}):
+        super(CharaItem, self).__init__(aname)
+
+        self.aname = aname
+        self.jsonTree = jsonTree
+
+class CharaList(QWidget):
+    def __init__(self, parent=None, ssettings={}, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.VBox = QVBoxLayout(self)
+
+        self.charaslist = QListWidget()
+        self.charaentry = QLineEdit()
+        self.addbutton = QPushButton("add")
+        self.delbutton = QPushButton("del")
+
+        self.addbutton.clicked.connect(self.charaslistAddAction)
+        self.delbutton.clicked.connect(self.charaslistDelAction)
+        self.charaslist.itemSelectionChanged.connect(self.charaslistSelectionChanged)
+
+        HBox = QHBoxLayout()
+        HBox.addWidget(self.charaentry)
+        HBox.addWidget(self.addbutton)
+        HBox.addWidget(self.delbutton)
+
+        self.VBox.addLayout(HBox)
+        self.VBox.addWidget(self.charaslist)
+
+    def charaslistAddAction(self):
+        charaName = str(self.charaentry.text()).strip()
+        self.charaslist.addItem(CharaItem(charaName))
+
+    def charaslistDelAction(self):
+        if (len(self.charaslist.selectedItems())>0):
+            for item in self.charaslist.selectedItems():        
+                itemIndex = self.charaslist.row(item)
+                self.charaslist.takeItem(itemIndex)
+
+    def charaslistSelectionChanged(self):
+        if (len(self.charaslist.selectedItems())>0):
+            jsonTree = self.charaslist.selectedItems()[0].jsonTree
+            name = self.charaslist.selectedItems()[0].aname
+            self.returnvalue = {"name": name, "jsonTree":jsonTree}
+        else:
+            self.returnvalue = {"name": None, "jsonTree":{}}
+
+        self.emit(SIGNAL("SelectionChanged()"))
+
+    def clear(self):
+        self.charaslist.clear()
+
+    def getAll(self):
+        items = []
+        for itemIndex in xrange(self.charaslist.count()):
+            items.append(str(self.charaslist.item(itemIndex).aname),self.charaslist.item(itemIndex).jsonTree)
+
+        return items
+
 
 class CharaEditor(QWidget):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
 
-        self.HBox = QHBoxLayout(self)
+        self.layout = QHBoxLayout(self)
         
+        self.charalist = CharaList()
         self.csetSelector = TileCharaset.CharasetSelector(self, ssettings)
-        self.HBox.addWidget(self.csetSelector)
+        self.movement = MoveWidget()
 
         self.actions = ActionsWidget(parent,ssettings,True)
         self.actions.setAllState(True)
-        self.HBox.addWidget(self.actions)
-
         self.testButton = QPushButton("test", self)
-        self.testButton.clicked.connect(self.getAllActions)
-        self.HBox.addWidget(self.testButton)
+        self.testButton.clicked.connect(self.getAll)
+
+        self.layout.addWidget(self.charalist)
+        self.layout.addWidget(self.csetSelector)
+        self.layout.addWidget(self.movement)
+        self.layout.addWidget(self.actions)
+        self.layout.addWidget(self.testButton)
     
-    def getAllActions(self):
+    def getAll(self):
+        chara = CharasFormat()
         print(self.actions.getAllActions())
 
 
@@ -333,8 +453,8 @@ if __name__=="__main__":
     from sys import argv, exit
 
     a=QApplication(argv)
-    #m=CharaEditor()
-    m=MoveWidget()
+    m=CharaEditor()
+    #m=MoveWidget()
     a.processEvents()
     m.show()
     m.raise_()
