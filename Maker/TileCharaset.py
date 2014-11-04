@@ -393,6 +393,10 @@ class CharasetSelector(QWidget):
         self.csetList.itemSelectionChanged.connect(self.changed)
         self.csetList.setCurrentRow(0)
 
+    def reset(self):
+        if(self.csetList.count()>0):
+            self.csetList.setCurrentRow(0)
+
     def changed(self):
         row = self.csetList.row(self.csetList.selectedItems()[0])
         charaset = self.cset.getCharasets()[row]
@@ -400,9 +404,14 @@ class CharasetSelector(QWidget):
 
         self.previewer.setAnimArray(self.myBC.bcset, aarray)
 
+    def select(self,item):
+        for itemIndex in xrange(self.csetList.count()):
+            if (self.cset.getCharasets()[itemIndex] == item):
+                self.csetList.setCurrentRow(itemIndex)
+
     def getValue(self):
         row = self.csetList.row(self.csetList.selectedItems()[0])
-        charaset = self.cset.getCharasets()[row]
+        charaset = str(self.cset.getCharasets()[row])
         return charaset
 
 
@@ -440,6 +449,7 @@ class CharasetEditorWidget(QDialog):
         self.csetsAddButton = QPushButton("Add")
         self.csetsDelButton = QPushButton("Delete")
         self.csetsAddButton.clicked.connect(self.csetsAddAction)
+        self.csetsEntry.returnPressed.connect(self.csetsAddAction)
         self.csetsDelButton.clicked.connect(self.csetsDelAction)
         HBoxEntry = QHBoxLayout()
         HBoxEntry.addWidget(self.csetsEntry)
@@ -484,6 +494,7 @@ class CharasetEditorWidget(QDialog):
 
 
         self.animNamesEntry = QLineEdit()
+        self.animNamesEntry.returnPressed.connect(self.animNamesAddAction)
         self.animNamesAdd = QPushButton("Add animation")
         self.animNamesAdd.clicked.connect(self.animNamesAddAction)
         self.animNamesCheckBNF = QCheckBox("No facing")

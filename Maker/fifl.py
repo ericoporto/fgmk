@@ -8,3 +8,4 @@ CHARASETS = os.path.join(DESCRIPTORS, "charaset")
 FONT = os.path.join("font")
 
 GAMESETTINGS = "init.json"
+CHARAS = "charas.json"

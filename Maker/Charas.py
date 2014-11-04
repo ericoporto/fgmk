@@ -29,13 +29,11 @@ class CharasFormat(TileCharaset.BaseFormat):
     def new(self):
         self.jsonTree = { "Charas": {} }
 
-    def addChara(self, name, charaFile = "", charaSet = "", facing = "down"):
+    def addChara(self, name, charaset = "", actions = {}, movements=[]):
 
-        self.jsonTree["Charas"][name]= {    "charaFile": charaFile, 
-                                            "charaSet": charaSet, 
-                                            "facing": facing,
-                                            "actions":[],
-                                            "movements":[]
+        self.jsonTree["Charas"][name]= {    "charaset": charaset, 
+                                            "actions":actions,
+                                            "movements":movements
                                             } 
 
     def addMovements(self, name, movements):
@@ -154,6 +152,14 @@ class MoveWidget(QWidget):
 
         self.radiomove.toggle()
 
+    def setList(self,listToSet):
+        self.movList.clear()
+        for move in listToSet:
+            self.movList.addItem(MoveItem(move[0],move[1]))
+
+    def clear(self):
+        self.movList.clear()
+
     def getValue(self):
         movements = []
         for itemIndex in xrange(self.movList.count()):
@@ -176,7 +182,7 @@ class MoveWidget(QWidget):
         for i in range(self.movList.count()):
             item = self.movList.item(i)
             self.movList.setItemSelected(item, False)
-        self.getValue()
+        #self.getValue()
 
     def randombclick(self):
         if(self.radioface.isChecked()):
@@ -261,7 +267,6 @@ class ActionsWidget(QWidget):
 
         for checkbox in self.checkboxes:
             VBoxButtons.addWidget(checkbox)
-            checkbox.stateChanged.connect(self.checkboxesChanged)
 
         self.ActionList.setDragDropMode(QAbstractItemView.InternalMove)
 
@@ -272,6 +277,22 @@ class ActionsWidget(QWidget):
 
         if(self.ssettings == {} ):
             self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
+
+    def setList(self,actionToSet):
+        atype = actionToSet['type']
+        for i in xrange(len(atype)):
+            if(atype[i]):
+                self.checkboxes[i].setCheckState(Qt.Checked)
+            else:
+                self.checkboxes[i].setCheckState(Qt.Unchecked)
+
+        listToSet = actionToSet['list']
+        self.ActionList.clear()
+        for action in listToSet:
+            self.ActionList.addItem(TileXtra.actionItem(action))
+
+    def clear(self):
+        self.ActionList.clear()
 
     def setAllState(self, state):
         self.addActionButton.setEnabled(state)
@@ -314,12 +335,7 @@ class ActionsWidget(QWidget):
         for i in range(self.ActionList.count()):
             item = self.ActionList.item(i)
             self.ActionList.setItemSelected(item, False)
-
-    def checkboxesChanged(self, newState):
-            checkboxesStates = []
-            for checkbox in self.checkboxes:
-                checkboxesStates.append(int(checkbox.isChecked()))
-            
+           
     def addAction(self):
         self.myActionsWidget = TXWdgt.ActionsWidget(self.ssettings,self,self.ischara)
         if self.myActionsWidget.exec_() == QtGui.QDialog.Accepted:
@@ -354,17 +370,27 @@ class ActionsWidget(QWidget):
             self.editActionButton.setEnabled(False)
             self.deselectActionButton.setEnabled(False)
 
-    def getAllActions(self):
+    def getValue(self):
 
         allactions = []
         for itemIndex in xrange(self.ActionList.count()):
             allactions.append(self.ActionList.item(itemIndex).getAction())
 
-        return allactions
+        onclick = self.checkboxes[0].isChecked()
+        onover = self.checkboxes[1].isChecked()
+
+        actiontype = [onclick,onover]
+
+        returnvalue = {'list':allactions, 'type':actiontype }
+
+        return returnvalue
 
 class CharaItem(QtGui.QListWidgetItem):
     def __init__(self, aname, jsonTree = {}):
         super(CharaItem, self).__init__(aname)
+
+        if(jsonTree == {}):
+             jsonTree = {'movements': [], 'actions': {'type': [], 'list': []}, 'charaset': ''}
 
         self.aname = aname
         self.jsonTree = jsonTree
@@ -383,6 +409,7 @@ class CharaList(QWidget):
         self.addbutton.clicked.connect(self.charaslistAddAction)
         self.delbutton.clicked.connect(self.charaslistDelAction)
         self.charaslist.itemSelectionChanged.connect(self.charaslistSelectionChanged)
+        self.charaentry.returnPressed.connect(self.charaslistAddAction)
 
         HBox = QHBoxLayout()
         HBox.addWidget(self.charaentry)
@@ -391,10 +418,16 @@ class CharaList(QWidget):
 
         self.VBox.addLayout(HBox)
         self.VBox.addWidget(self.charaslist)
+        self.charaslistSelectionChanged()
 
     def charaslistAddAction(self):
         charaName = str(self.charaentry.text()).strip()
-        self.charaslist.addItem(CharaItem(charaName))
+        if (len(charaName)>0):
+            for itemIndex in xrange(self.charaslist.count()):
+                if (str(self.charaslist.item(itemIndex).aname) == charaName):
+                    return
+
+            self.charaslist.addItem(CharaItem(charaName))
 
     def charaslistDelAction(self):
         if (len(self.charaslist.selectedItems())>0):
@@ -408,19 +441,43 @@ class CharaList(QWidget):
             name = self.charaslist.selectedItems()[0].aname
             self.returnvalue = {"name": name, "jsonTree":jsonTree}
         else:
-            self.returnvalue = {"name": None, "jsonTree":{}}
+            self.returnvalue = {'name': None,  'jsonTree':{'charaset':"",'actions':{},'movements':[]}}
 
         self.emit(SIGNAL("SelectionChanged()"))
+
+    def setSelected(self,jsonTree):
+        if (len(self.charaslist.selectedItems())>0):
+            self.charaslist.selectedItems()[0].jsonTree = jsonTree
+
+    def setItem(self,itemTree):
+        for itemIndex in xrange(self.charaslist.count()):
+            if (str(self.charaslist.item(itemIndex).aname) == itemTree["name"]):
+                self.charaslist.item(itemIndex).jsonTree = itemTree["jsonTree"]
+                
 
     def clear(self):
         self.charaslist.clear()
 
-    def getAll(self):
-        items = []
+    def getCharas(self):
+        charas = CharasFormat()
         for itemIndex in xrange(self.charaslist.count()):
-            items.append(str(self.charaslist.item(itemIndex).aname),self.charaslist.item(itemIndex).jsonTree)
+            charaname = str(self.charaslist.item(itemIndex).aname)
+            jt = self.charaslist.item(itemIndex).jsonTree
+            charas.addChara(charaname,jt["charaset"],jt["actions"],jt["movements"])
 
-        return items
+        return charas
+
+    def deselect(self):
+        for i in range(self.charaslist.count()):
+            item = self.charaslist.item(i)
+            self.charaslist.setItemSelected(item, False)
+
+    def setList(self,dictToSet):
+        self.charaslist.clear()
+        for chara in dictToSet:
+            charaName = chara
+            jsonTree = dictToSet[chara]
+            self.charaslist.addItem(CharaItem(charaName,jsonTree))
 
 
 class CharaEditor(QWidget):
@@ -443,10 +500,60 @@ class CharaEditor(QWidget):
         self.layout.addWidget(self.movement)
         self.layout.addWidget(self.actions)
         self.layout.addWidget(self.testButton)
+
+        self.connect(self.charalist,SIGNAL('SelectionChanged()'), self.charaSelectionChanged)
+
+        self.oldSelection = self.charalist.returnvalue
+
+        if "gamefolder" in ssettings:
+            filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
+            self.__Open(filetoopen)
+
+    def __Open(self,charafile = None):
+        if(charafile == None):
+            charafile = self.charafile
+
+        self.charafile = charafile
+        charas = CharasFormat()
+        charas.load(charafile)
+        self.charalist.setList(charas.jsonTree["Charas"])
+
+    def __Save(self,charafile = None):
+        if(charafile == None):
+            charafile = self.charafile
+
+        charas = self.charalist.getCharas()
+        charas.save(charafile)
+
     
     def getAll(self):
-        chara = CharasFormat()
-        print(self.actions.getAllActions())
+        charas = {}
+        charas = self.charalist.getCharas()
+        print(charas.jsonTree)
+
+
+    def charaSelectionChanged(self):
+        newSelection = self.charalist.returnvalue
+        
+        if(self.oldSelection['name'] == None):
+            self.oldSelection['name'] = newSelection['name']
+        else:
+            charaset = self.csetSelector.getValue()
+            movements = self.movement.getValue()
+            actions = self.actions.getValue()
+            self.oldSelection["jsonTree"] = { "charaset":charaset,"movements":movements,"actions":actions }
+            self.charalist.setItem(self.oldSelection)
+
+        if(newSelection['jsonTree'] == {}):
+            self.movement.clear()
+            self.actions.clear()
+            self.csetSelector.reset()
+        else:
+            self.csetSelector.select(newSelection['jsonTree']['charaset'])
+            self.movement.setList(newSelection['jsonTree']['movements'])
+            self.actions.setList(newSelection['jsonTree']['actions'])
+
+        self.oldSelection = newSelection
 
 
 if __name__=="__main__":
