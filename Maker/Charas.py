@@ -348,7 +348,6 @@ class ActionsWidget(QWidget):
                 self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
 
     def removeAction(self):
-
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
             self.ActionList.takeItem(itemIndex)
@@ -479,10 +478,53 @@ class CharaList(QWidget):
             jsonTree = dictToSet[chara]
             self.charaslist.addItem(CharaItem(charaName,jsonTree))
 
-
-class CharaEditor(QWidget):
+class CharaSelector(QWidget):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
+
+        self.layout = QHBoxLayout(self)
+        self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings)
+        self.charaqlist = QListWidget()
+
+        self.charaqlist.itemSelectionChanged.connect(self.selectionChanged)
+
+        self.layout.addWidget(self.csetprev)
+        self.layout.addWidget(self.charaqlist)
+
+        if "gamefolder" in ssettings:
+            filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
+            self.__Open(filetoopen)
+
+    def setList(self,dictToSet):
+        self.charaqlist.clear()
+        for chara in dictToSet:
+            charaName = chara
+            jsonTree = dictToSet[chara]
+            self.charaqlist.addItem(CharaItem(charaName,jsonTree))
+
+    def __Open(self,charafile = None):
+        if(charafile == None):
+            charafile = self.charafile
+
+        self.charafile = charafile
+        charas = CharasFormat()
+        charas.load(charafile)
+        self.setList(charas.jsonTree["Charas"])
+
+    def selectionChanged(self):
+        if(self.charaqlist.selectedItems()):
+            charaset = str(self.charaqlist.selectedItems()[0].jsonTree["charaset"])
+            self.csetprev.select(charaset)
+
+    def whoIsSelected(self):
+        if(self.charaqlist.selectedItems()):
+            charaset = str(self.charaqlist.selectedItems()[0].jsonTree["charaset"])
+            return charaset
+
+
+class CharaEditor(QDialog):
+    def __init__(self, parent=None, ssettings={}, **kwargs):
+        QDialog.__init__(self, parent, **kwargs)
 
         self.layout = QHBoxLayout(self)
         
@@ -492,14 +534,23 @@ class CharaEditor(QWidget):
 
         self.actions = ActionsWidget(parent,ssettings,True)
         self.actions.setAllState(True)
-        self.testButton = QPushButton("test", self)
-        self.testButton.clicked.connect(self.getAll)
+        self.reopen = QPushButton("Reopen", self)
+        self.reopen.clicked.connect(self.reopenfile)
+        self.save = QPushButton("Save", self)
+        self.save.clicked.connect(self.savefile)
 
-        self.layout.addWidget(self.charalist)
+        HBoxRS = QHBoxLayout()
+        HBoxRS.addWidget(self.reopen)
+        HBoxRS.addWidget(self.save)
+
+        VBox = QVBoxLayout()
+        VBox.addWidget(self.charalist)        
+        VBox.addLayout(HBoxRS)
+
+        self.layout.addLayout(VBox)
         self.layout.addWidget(self.csetSelector)
         self.layout.addWidget(self.movement)
         self.layout.addWidget(self.actions)
-        self.layout.addWidget(self.testButton)
 
         self.connect(self.charalist,SIGNAL('SelectionChanged()'), self.charaSelectionChanged)
 
@@ -508,6 +559,13 @@ class CharaEditor(QWidget):
         if "gamefolder" in ssettings:
             filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
             self.__Open(filetoopen)
+
+    def reopenfile(self):
+        self.__Open()
+
+    def savefile(self):
+        self.__Save()
+
 
     def __Open(self,charafile = None):
         if(charafile == None):
@@ -560,8 +618,9 @@ if __name__=="__main__":
     from sys import argv, exit
 
     a=QApplication(argv)
-    m=CharaEditor()
+    #m=CharaEditor()
     #m=MoveWidget()
+    m=CharaSelector()
     a.processEvents()
     m.show()
     m.raise_()

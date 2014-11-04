@@ -380,8 +380,6 @@ class CharasetSelector(QWidget):
         for charaset in self.cset.getCharasets():
             self.csetList.addItem(charaset)
 
-
-
         fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
         self.myBC= BaseCharaset(fimg)
 
@@ -413,6 +411,46 @@ class CharasetSelector(QWidget):
         row = self.csetList.row(self.csetList.selectedItems()[0])
         charaset = str(self.cset.getCharasets()[row])
         return charaset
+
+
+class CharasetPreviewer(QWidget):
+    def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+        self.VBox = QVBoxLayout(self)
+        self.ssettings = ssettings
+
+        if(self.ssettings == {} ):
+            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
+
+        if (cset is not None):
+            self.cset = cset
+        else:
+            self.cset = CharasetFormat()
+            if "gamefolder" in self.ssettings:
+                for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                    if f.endswith(".json"):
+                        break
+
+                f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
+                if(os.path.isfile(f)):
+                    self.cset.load(f)
+
+        fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+        self.myBC= BaseCharaset(fimg)
+
+        self.previewer = AnimatedCharaTile()
+
+        self.VBox.addWidget(self.previewer)
+
+    def select(self,item):
+        charasets = self.cset.getCharasets()
+        for charaset in charasets:
+            if (charaset == item):
+                aarray = self.cset.getAnimation(charaset)
+                self.previewer.setAnimArray(self.myBC.bcset, aarray)
+                return True
+
+        return False
 
 
 
