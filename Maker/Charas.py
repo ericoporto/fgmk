@@ -42,6 +42,9 @@ class CharasFormat(TileCharaset.BaseFormat):
     def addActions(self, name, actions):
         self.jsonTree["Charas"][name]["actions"] = actions
 
+    def getCharaset(self,name):
+        return self.jsonTree["Charas"][name]["charaset"]
+
 
 
 class MoveButtons(QWidget):
@@ -482,6 +485,8 @@ class CharaSelector(QWidget):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
 
+        self.ssettings = ssettings
+
         self.layout = QHBoxLayout(self)
         self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings)
         self.charaqlist = QListWidget()
@@ -491,8 +496,13 @@ class CharaSelector(QWidget):
         self.layout.addWidget(self.csetprev)
         self.layout.addWidget(self.charaqlist)
 
-        if "gamefolder" in ssettings:
-            filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
+        self.update()
+
+
+    def update(self):
+
+        if "gamefolder" in self.ssettings:
+            filetoopen = os.path.join(self.ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
             self.__Open(filetoopen)
 
     def setList(self,dictToSet):
@@ -516,10 +526,47 @@ class CharaSelector(QWidget):
             charaset = str(self.charaqlist.selectedItems()[0].jsonTree["charaset"])
             self.csetprev.select(charaset)
 
-    def whoIsSelected(self):
+    def getSelected(self):
         if(self.charaqlist.selectedItems()):
-            charaset = str(self.charaqlist.selectedItems()[0].jsonTree["charaset"])
-            return charaset
+            charaname = str(self.charaqlist.selectedItems()[0].aname)
+            return charaname
+
+
+class MiniCharaTile(QWidget):
+    def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+    
+        self.chara = chara
+        self.position = position
+
+        if "gamefolder" in ssettings:
+            filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
+            charas = self.__Open(filetoopen)
+            charaset = charas.getCharaset(chara)
+            
+            self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings,None,1)
+            self.csetprev.select(charaset)
+            self.whsize = self.csetprev.whsize
+            self.setFixedSize(self.whsize)
+
+        else:
+            return False
+
+    def mousePressEvent(self, ev):
+        if ev.button() == QtCore.Qt.RightButton:
+            self.emit(SIGNAL('rightClicked()'))
+        else:
+            self.emit(SIGNAL('clicked()'))
+
+    def __Open(self,charafile = None):
+        if(charafile == None):
+            charafile = self.charafile
+
+        self.charafile = charafile
+        charas = CharasFormat()
+        charas.load(charafile)
+        return charas
+
 
 
 class CharaEditor(QDialog):
@@ -620,7 +667,8 @@ if __name__=="__main__":
     a=QApplication(argv)
     #m=CharaEditor()
     #m=MoveWidget()
-    m=CharaSelector()
+    #m=CharaSelector()
+    m=MiniCharaTile(None,{"gamefolder":"../Game"},"WeirdGuy")
     a.processEvents()
     m.show()
     m.raise_()

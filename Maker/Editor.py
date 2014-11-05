@@ -577,6 +577,36 @@ class LayerWidget(QWidget):
         changeLayerCurrent(layerNumber)
 
 
+class CharasPalWidget(QWidget):
+    def __init__(self, mapWdgt,parent=None, charaInstance=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+        global sSettings
+
+        self.mapWdgt = mapWdgt
+        self.parent = parent
+
+        self.vbox = QVBoxLayout(self)
+
+        self.addbutton = QPushButton("add")
+        self.addbutton.clicked.connect(self.addaction)
+        self.vbox.addWidget(self.addbutton)
+
+    def reinit(self):
+        global sSettings
+        self.myCharaSelector = Charas.CharaSelector(self,sSettings)
+
+
+        self.vbox.addWidget(self.myCharaSelector)
+        self.show()
+
+
+    def update(self):
+        self.myCharaSelector.update()
+
+    def addaction(self):
+        global sSettings
+        item = Charas.MiniCharaTile(None,sSettings,"WeirdGuy")
+        self.mapWdgt.Grid.addWidget(item, 2, 2)
 
 
 class PaletteWidget(QWidget):
@@ -757,6 +787,15 @@ class MainWindow(QMainWindow):
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
+
+
+        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self)
+        self.charasDockWdgt=QDockWidget("Charas", self)
+        self.charasDockWdgt.setWidget(self.myCharasPalWidget)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
+
+        self.viewMenu.addAction(self.charasDockWdgt.toggleViewAction())
+
         self.gridViewAction = QtGui.QAction('grid', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.gridViewAction )
         self.connect(self.gridViewAction , SIGNAL('changed()'), self.changeGridMargin)
@@ -932,6 +971,7 @@ class MainWindow(QMainWindow):
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
+            self.myCharasPalWidget.reinit()
             self.reloadWebview()
 
     def helpAbout(self):

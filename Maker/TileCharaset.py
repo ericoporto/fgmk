@@ -286,15 +286,16 @@ class CsetAItem(QtGui.QListWidgetItem):
 
 
 class AnimatedCharaTile(QLabel):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, scale = 2):
         QLabel.__init__(self, parent)
 
         self.charType = []
         self.boxw = 32
         self.boxh = 64
-        self.scale = 2
+        self.scale = scale
         self.boxsize = (self.boxw, self.boxh)  
-        self.setMinimumSize (QSize(self.boxw*2, self.boxh*2))
+        self.whsize = QSize(self.boxw*scale, self.boxh*scale)
+        self.setFixedSize (self.whsize)
         self._timer = QtCore.QTimer(interval=100,
                                     timeout=self._animation_step)
 
@@ -322,10 +323,9 @@ class AnimatedCharaTile(QLabel):
         self.setPixmap(pixmap)
 
 
-    def setAnimArray(self,bcset, aarray, scale = 2):
+    def setAnimArray(self,bcset, aarray):
         self.aarray = aarray
         self.bcset = bcset
-        self.scale = scale
         self._current_frame = 0
         self.play()
 
@@ -414,9 +414,9 @@ class CharasetSelector(QWidget):
 
 
 class CharasetPreviewer(QWidget):
-    def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
+    def __init__(self, parent=None, ssettings={}, cset=None, scale=2, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
-        self.VBox = QVBoxLayout(self)
+
         self.ssettings = ssettings
 
         if(self.ssettings == {} ):
@@ -438,9 +438,10 @@ class CharasetPreviewer(QWidget):
         fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
         self.myBC= BaseCharaset(fimg)
 
-        self.previewer = AnimatedCharaTile()
+        self.previewer = AnimatedCharaTile(self,scale)
+        self.whsize = self.previewer.whsize
+        self.setFixedSize(self.whsize)
 
-        self.VBox.addWidget(self.previewer)
 
     def select(self,item):
         charasets = self.cset.getCharasets()
