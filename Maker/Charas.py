@@ -496,14 +496,14 @@ class CharaSelector(QWidget):
         self.layout.addWidget(self.csetprev)
         self.layout.addWidget(self.charaqlist)
 
-        self.update()
-
-
     def update(self):
 
         if "gamefolder" in self.ssettings:
-            filetoopen = os.path.join(self.ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
-            self.__Open(filetoopen)
+            if (self.ssettings["gamefolder"] != ""):
+                filetoopen = os.path.join(self.ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
+                self.__Open(filetoopen)
+
+                self.csetprev.update()
 
     def setList(self,dictToSet):
         self.charaqlist.clear()
@@ -530,6 +530,8 @@ class CharaSelector(QWidget):
         if(self.charaqlist.selectedItems()):
             charaname = str(self.charaqlist.selectedItems()[0].aname)
             return charaname
+        else:
+            return None
 
 
 class MiniCharaTile(QWidget):
@@ -551,6 +553,9 @@ class MiniCharaTile(QWidget):
 
         else:
             return False
+
+    def stop(self):
+        self.csetprev.stop()
 
     def mousePressEvent(self, ev):
         if ev.button() == QtCore.Qt.RightButton:

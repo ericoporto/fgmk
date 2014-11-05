@@ -99,6 +99,8 @@ class MapFormat:
 
         self.listOfActions = dict()
 
+        self.listOfCharas = []
+
     def new(self, tlevelName, levelWidth, levelHeight, levelPalette = None):
         
         if levelPalette is None:
@@ -118,7 +120,8 @@ class MapFormat:
                             "tileImage": levelPalette['tileImage'],
                             "tilesAnimated": levelPalette['tilesAnimated'],
                             "eventsType":self.listOfEventsTypes,
-                            "eventsActions":self.listOfActions
+                            "eventsActions":self.listOfActions,
+                            "charas":self.listOfCharas
                             }
                         }
         self.LayersMapTiles = np.array(( self.jsonTree['Level'][LayersName[0]],
@@ -150,7 +153,8 @@ class MapFormat:
                             "tileImage": self.tileImage,
                             "tilesAnimated":self.tilesAnimated,
                             "eventsType":self.listOfEventsTypes,
-                            "eventsActions":self.listOfActions
+                            "eventsActions":self.listOfActions,
+                            "charas":self.listOfCharas
                             }
                         }
 
@@ -173,7 +177,8 @@ class MapFormat:
                             "tileImage": self.tileImage,
                             "eventsType":self.listOfEventsTypes,
                             "eventsActions":self.listOfActions,
-                            "tilesAnimated":self.tilesAnimated
+                            "tilesAnimated":self.tilesAnimated,
+                            "charas":self.listOfCharas
                             }
                         }
         #f.write("var " + self.levelName + "= {};\n")
@@ -209,9 +214,22 @@ class MapFormat:
         if ('eventsActions' in self.jsonTree['Level']):
             self.listOfActions = self.jsonTree['Level']['eventsActions']
 
+        if ('charas' in self.jsonTree['Level']):
+            self.listOfCharas = self.jsonTree['Level']['charas']
+
         self.levelName = self.jsonTree['Level']['levelName']
         #print(self.palette)
         f.close()
+
+    def insertChara(self, x, y, chara):
+        self.listOfCharas.append([chara, x, y])
+
+    def removeChara(self, x, y):
+        for char in self.listOfCharas:
+            if (char[1] == x and char[2] == y):
+                break
+
+        self.listOfCharas.remove(char)
 
     def setTile(self, x, y, layer, tiletype):
         self.LayersMapTiles[layer][y][x] = tiletype

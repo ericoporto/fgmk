@@ -66,7 +66,10 @@ class CharasetFormat(BaseFormat):
         self.jsonTree["Charaset"]["tileImage"] = tileImage
 
     def getTileImage(self):
-        return self.jsonTree["Charaset"]["tileImage"] 
+        if "tileImage" in self.jsonTree["Charaset"]:
+            return self.jsonTree["Charaset"]["tileImage"]
+        else:
+            return False
 
     def addCharaset(self, name, jsonTree = {} ):
         self.jsonTree["Charaset"][name] = jsonTree
@@ -96,33 +99,42 @@ class CharasetFormat(BaseFormat):
 class BaseCharaset:
     def __init__( self , image_file):
 
-        self.init(image_file)
         self.imgFile = image_file
+        self.hasimage = self.init(image_file)
+
 
     def init( self , image_file):
-        self.bcset = []
-        self.boxw = 32
-        self.boxh = 64
-        self.boxsize = (self.boxw, self.boxh)        
-        self.imageFile = Image.open( image_file )
-        if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] ==0 :
-            currentx = 0
-            currenty = 0
-            tilei = 0
-            yj = 0
-            while currenty < self.imageFile.size[1]:
-                self.bcset.append([]) 
-                while currentx < self.imageFile.size[0]:
-                    imageTemp = self.imageFile.crop((currentx,currenty,currentx + self.boxw, currenty + self.boxh))
-                    self.bcset[yj].append([imageTemp,imageTemp.resize((self.boxw*2, self.boxh*2), Image.NEAREST) , imageTemp.resize((int(self.boxw*0.5), int(self.boxh*0.5)), Image.NEAREST)]  )
-                    currentx += self.boxw
+        if(image_file == None):
+            return False
 
-                yj += 1
-                currenty += self.boxh
+        if(os.path.isfile(image_file)):
+            self.bcset = []
+            self.boxw = 32
+            self.boxh = 64
+            self.boxsize = (self.boxw, self.boxh)        
+            self.imageFile = Image.open( image_file )
+            if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] ==0 :
                 currentx = 0
+                currenty = 0
+                tilei = 0
+                yj = 0
+                while currenty < self.imageFile.size[1]:
+                    self.bcset.append([]) 
+                    while currentx < self.imageFile.size[0]:
+                        imageTemp = self.imageFile.crop((currentx,currenty,currentx + self.boxw, currenty + self.boxh))
+                        self.bcset[yj].append([imageTemp,imageTemp.resize((self.boxw*2, self.boxh*2), Image.NEAREST) , imageTemp.resize((int(self.boxw*0.5), int(self.boxh*0.5)), Image.NEAREST)]  )
+                        currentx += self.boxw
 
-        else:
-            print ("error:Your file width and height are not good to {0}x{1} pixel charaset!".format(self.boxw,self.boxh))
+                    yj += 1
+                    currenty += self.boxh
+                    currentx = 0
+
+                return True
+
+            else:
+                print ("error:Your file width and height are not good to {0}x{1} pixel charaset!".format(self.boxw,self.boxh))
+
+        return False
 
     def getTileSetImage(self, TileType):
         #print(TileType)
@@ -367,21 +379,10 @@ class CharasetSelector(QWidget):
             self.cset = cset
         else:
             self.cset = CharasetFormat()
-            if "gamefolder" in self.ssettings:
-                for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
-                    if f.endswith(".json"):
-                        break
-
-                f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
-                if(os.path.isfile(f)):
-                    self.cset.load(f)
 
         self.csetList = QListWidget()
-        for charaset in self.cset.getCharasets():
-            self.csetList.addItem(charaset)
-
-        fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
-        self.myBC= BaseCharaset(fimg)
+        self.myBC= BaseCharaset(None)
+        self.update()
 
         self.previewer = AnimatedCharaTile()
 
@@ -391,16 +392,37 @@ class CharasetSelector(QWidget):
         self.csetList.itemSelectionChanged.connect(self.changed)
         self.csetList.setCurrentRow(0)
 
+    def update(self):
+        if "gamefolder" in self.ssettings:
+            for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                if f.endswith(".json"):
+                    break
+
+            f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
+            if(os.path.isfile(f)):
+                self.cset.load(f)
+
+                self.csetList.clear()
+
+                for charaset in self.cset.getCharasets():
+                    self.csetList.addItem(charaset)
+
+        if(self.cset.getTileImage()):
+            fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+            self.myBC.init(fimg)
+       
+
     def reset(self):
         if(self.csetList.count()>0):
             self.csetList.setCurrentRow(0)
 
     def changed(self):
-        row = self.csetList.row(self.csetList.selectedItems()[0])
-        charaset = self.cset.getCharasets()[row]
-        aarray = self.cset.getAnimation(charaset)
+        if(self.csetList.selectedItems()>0 and self.myBC.hasimage):
+            row = self.csetList.row(self.csetList.selectedItems()[0])
+            charaset = self.cset.getCharasets()[row]
+            aarray = self.cset.getAnimation(charaset)
 
-        self.previewer.setAnimArray(self.myBC.bcset, aarray)
+            self.previewer.setAnimArray(self.myBC.bcset, aarray)
 
     def select(self,item):
         for itemIndex in xrange(self.csetList.count()):
@@ -426,22 +448,33 @@ class CharasetPreviewer(QWidget):
             self.cset = cset
         else:
             self.cset = CharasetFormat()
-            if "gamefolder" in self.ssettings:
-                for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
-                    if f.endswith(".json"):
-                        break
 
-                f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
-                if(os.path.isfile(f)):
-                    self.cset.load(f)
 
-        fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
-        self.myBC= BaseCharaset(fimg)
+        self.cset.getTileImage()
+        self.myBC= BaseCharaset(None)
+        self.update()
 
         self.previewer = AnimatedCharaTile(self,scale)
         self.whsize = self.previewer.whsize
         self.setFixedSize(self.whsize)
 
+    def update(self):
+        if "gamefolder" in self.ssettings and (self.ssettings["gamefolder"] != ""):
+            for f in os.listdir(os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)):
+                if f.endswith(".json"):
+                    break
+
+            f = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS, f)
+            if(os.path.isfile(f)):
+                self.cset.load(f)
+
+
+        if(self.cset.getTileImage()):
+            fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+            self.myBC.init(fimg)
+
+    def stop(self):
+        self.previewer.clearAnim()
 
     def select(self,item):
         charasets = self.cset.getCharasets()

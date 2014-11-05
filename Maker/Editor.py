@@ -172,9 +172,18 @@ class MapWidget(QWidget):
                     self.toolRect(self.currentTile, firstClickX, firstClickY)
                 firstClickX = None
                 firstClickY = None
+
+        elif theClickedTool == 5:
+        #charaplacer
+            charaX = self.sender().tileX
+            charaY = self.sender().tileY
+            self.parent.myCharasPalWidget.addCharaAction((charaX,charaY))             
+            
         else:
                 firstClickX = None
                 firstClickY = None
+
+
 
     def wheelScrolledTileInMap(self, scrollAmount):
         scrollAmount /= abs(scrollAmount)
@@ -201,6 +210,8 @@ class MapWidget(QWidget):
         self.changeTileType(changeTypeTo)
         if(self.currentLayer == EVENTSLAYER):
             self.parent.myEventsWidget.updateEventsList()
+
+
 
     def changeTileType(self, changeTypeTo):
         command = TXWdgt.CommandCTTileType(self.parent, self.sender(), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
@@ -236,12 +247,13 @@ class ToolsWidget(QWidget):
         self.FBox = FlowLayout(self)
 
         TOOLSTARTINGTILE = 6
-        ToolsName = ["pen", "dropper", "bucket", "line","rectangle"]
+        ToolsName = ["pen", "dropper", "bucket", "line","rectangle","charaplacer"]
         ToolsHelp = ["click to change tile to selected tile", 
                      "click to get tile type and set to selected tile", 
                      "click to fill area with selected tile", 
                      "click once to set starting point and again to set ending point",
-                     "click once to set first corner and again to set opposing corner"]
+                     "click once to set first corner and again to set opposing corner",
+                     "places a chara on a selected spot"]
         self.MaxTools = len(ToolsName)
         self.ToolTile = []
         
@@ -270,6 +282,8 @@ class ToolsWidget(QWidget):
             leftClickTool = 3
         elif str(self.sender().objectName())  == "rectangle":
             leftClickTool = 4
+        elif str(self.sender().objectName())  == "charaplacer":
+            leftClickTool = 5
  
         self.updateToolTiles()
         self.show()
@@ -287,6 +301,8 @@ class ToolsWidget(QWidget):
             rightClickTool = 3
         elif str(self.sender().objectName())  == "rectangle":
             rightClickTool = 4
+        elif str(self.sender().objectName())  == "charaplacer":
+            rightClickTool = 5
 
         self.updateToolTiles()
         self.show()
@@ -578,35 +594,81 @@ class LayerWidget(QWidget):
 
 
 class CharasPalWidget(QWidget):
-    def __init__(self, mapWdgt,parent=None, charaInstance=None, **kwargs):
+    def __init__(self, mapWdgt,pMap,parent=None, charaInstance=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
         global sSettings
 
         self.mapWdgt = mapWdgt
+        self.pMap = pMap
         self.parent = parent
 
         self.vbox = QVBoxLayout(self)
 
-        self.addbutton = QPushButton("add")
-        self.addbutton.clicked.connect(self.addaction)
-        self.vbox.addWidget(self.addbutton)
-
-    def reinit(self):
-        global sSettings
+        self.charaslist = []
         self.myCharaSelector = Charas.CharaSelector(self,sSettings)
-
-
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
 
-
-    def update(self):
+    def reinit(self):
+        global sSettings
         self.myCharaSelector.update()
 
-    def addaction(self):
+    def addCharaAction(self, position = (0,0) , chara = None ):
         global sSettings
-        item = Charas.MiniCharaTile(None,sSettings,"WeirdGuy")
-        self.mapWdgt.Grid.addWidget(item, 2, 2)
+        if ( chara == None):
+            chara = self.myCharaSelector.getSelected()
+
+        if (chara != None):
+            if(self.positionEmpty(position)):
+                item = Charas.MiniCharaTile(None,sSettings,chara)
+                self.connect(item, SIGNAL('rightClicked()'), self.autodelete)
+                self.mapWdgt.Grid.addWidget(item, position[1], position[0])
+                self.pMap.insertChara(position[0],position[1],chara)
+                self.charaslist.append((chara,position,item))
+
+    def autodelete(self):
+        item = self.sender()
+        for charaplaced in self.charaslist:
+            if(charaplaced[2] == item):
+                charaplaced[2].stop()
+                self.pMap.removeChara(charaplaced[1][0],charaplaced[1][1])
+                self.mapWdgt.Grid.removeWidget(charaplaced[2])
+                charaplaced[2].deleteLater()
+                break
+
+        self.charaslist.remove(charaplaced)
+
+    def getCharasList(self):
+        charaslist = []
+        for charaplaced in self.charaslist:
+            charaslist.append(charaplaced[0],charaplaced[1][0],charaplaced[1][1])
+
+        return  charaslist
+
+
+    def deletePosition(self, position = (0,0)):
+        for charaplaced in self.charaslist:
+            if(charaplaced[1] == position):
+                charaplaced[2].stop()
+                self.mapWdgt.Grid.removeWidget(charaplaced[2])
+                charaplaced[2].deleteLater()
+                break
+
+        self.charaslist.remove(charaplaced)
+         
+
+
+
+    def positionEmpty(self,position):
+        for charaplaced in self.charaslist:
+            if(charaplaced[1] == position):
+                return False
+        
+        else:
+            return True
+
+    def getSelected(self):
+        return self.myCharaSelector.getSelected()
 
 
 class PaletteWidget(QWidget):
@@ -789,7 +851,7 @@ class MainWindow(QMainWindow):
 
 
 
-        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self)
+        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self.myMap, self)
         self.charasDockWdgt=QDockWidget("Charas", self)
         self.charasDockWdgt.setWidget(self.myCharasPalWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
