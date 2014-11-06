@@ -554,6 +554,8 @@ class MiniCharaTile(QWidget):
         else:
             return False
 
+        self.setToolTip(chara)
+
     def stop(self):
         self.csetprev.stop()
 

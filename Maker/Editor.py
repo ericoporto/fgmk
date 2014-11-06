@@ -611,7 +611,17 @@ class CharasPalWidget(QWidget):
 
     def reinit(self):
         global sSettings
+        for charaplaced in self.charaslist:
+            charaplaced[2].stop()
+            self.mapWdgt.Grid.removeWidget(charaplaced[2])
+            charaplaced[2].deleteLater()
+
         self.myCharaSelector.update()
+        self.charaslist = []
+
+        charalist = self.pMap.getCharaList()
+        for char in charalist:
+            self.addCharaAction((char[1],char[2]),char[0])
 
     def addCharaAction(self, position = (0,0) , chara = None ):
         global sSettings
@@ -992,8 +1002,6 @@ class MainWindow(QMainWindow):
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
         self.undoStack.clear()
-
-    
 
     def saveFile(self):
         global sSettings

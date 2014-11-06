@@ -218,8 +218,11 @@ class MapFormat:
             self.listOfCharas = self.jsonTree['Level']['charas']
 
         self.levelName = self.jsonTree['Level']['levelName']
-        #print(self.palette)
+
         f.close()
+
+    def getCharaList(self):
+        return self.listOfCharas
 
     def insertChara(self, x, y, chara):
         self.listOfCharas.append([chara, x, y])
