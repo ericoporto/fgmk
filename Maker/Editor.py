@@ -828,6 +828,14 @@ class MainWindow(QMainWindow):
 
         self.viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
 
+        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self.myMap, self)
+        self.charasDockWdgt=QDockWidget("Charas", self)
+        self.charasDockWdgt.setWidget(self.myCharasPalWidget)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
+        self.tabifyDockWidget(self.charasDockWdgt, self.paletteDockWdgt)
+
+        self.viewMenu.addAction(self.charasDockWdgt.toggleViewAction())
+
         self.myLayerWidget = LayerWidget(self)
         self.layerDockWdgt=QDockWidget("Layers", self)
         self.layerDockWdgt.setWidget(self.myLayerWidget)
@@ -848,15 +856,6 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.BottomDockWidgetArea, self.eventsDockWdgt)
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
-
-
-
-        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self.myMap, self)
-        self.charasDockWdgt=QDockWidget("Charas", self)
-        self.charasDockWdgt.setWidget(self.myCharasPalWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
-
-        self.viewMenu.addAction(self.charasDockWdgt.toggleViewAction())
 
         self.gridViewAction = QtGui.QAction('grid', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.gridViewAction )
@@ -991,6 +990,7 @@ class MainWindow(QMainWindow):
         m.gridViewAction.setChecked(False) #### gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
+        self.myCharasPalWidget.reinit()
         self.undoStack.clear()
 
     
