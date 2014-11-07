@@ -78,7 +78,7 @@ jsonLevelGet = function(urlToGet) {
   return JSON.parse(json);          // faz o parse da string e retorna objeto
 }
 
-//window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
+window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
 
 var init = jsonLevelGet(descriptors+'init.json');
 
