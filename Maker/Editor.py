@@ -1045,7 +1045,8 @@ class MainWindow(QMainWindow):
             self.reloadWebview()
 
     def helpAbout(self):
-        QMessageBox.about(self, "About...", "Made by Erico\nWith help from the internet")
+        credits = "Made by Erico\nWith help from the internet.\nHigly based in Tsubasa's Redo, and inspired in Enterbrain's RPG Maker 2000.\nThanks Nintendo for making the SNES."
+        QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
         quit_msg = "Do you want to save changes?"
