@@ -101,6 +101,10 @@
         "79":  [  4, 13],
         "78":  [  3, 13]
         },
+    "charas": 
+        [["WeirdGuy",  9,  8],
+         ["WeirdGuy",  9,  8],
+         ["WeirdGuy", 12,  5]],
     "tileImage": "img/tile.png",
     "tilesAnimated": 
         {

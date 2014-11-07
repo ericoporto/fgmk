@@ -1,3 +1,5 @@
+var chars = []
+
 var menus = {
     allMenus : [],
     isAnyMenuEnabled : function() {
@@ -334,6 +336,53 @@ feedbackEng = {
 };
 
 
+function charalist(){
+    if ("charas" in engine.currentLevel["Level"] ) {
+        listofcharas = engine.currentLevel["Level"]["charas"]
+        var count = listofcharas.length;
+        var returnvalue = []
+
+        for(var i = 0; i < count; i++) {
+            var item = listofcharas[i];
+            returnvalue.push(new char(item[0],item[1],item[2]))
+        }
+    
+        return returnvalue
+    } else {
+        return []
+    }
+}
+
+function char(chara, x, y) {
+    this['chara'] = resources['charas'][chara]
+    this['charaset'] = resources['charasets'][this['chara']['charaset']]
+    this['facing'] = 'down';
+    this['steps'] = 0;
+    this['mapx'] = x*32;
+    this['mapy'] = (y-1)*32;
+    this['update'] = function(){
+        if(printer.isShown) return;
+        var px = Math.floor(this.mapx/32), 
+            py = Math.floor(this.mapy/32)+1;
+
+        if(this.steps == 0){
+
+
+        }else{
+            this.steps -= 2;
+            if(this.facing == "up"){
+	            this.mapy -= 2;
+            }else if(this.facing == "left"){
+	            this.mapx -= 2;
+            }else if(this.facing == "right"){
+	            this.mapx += 2;
+            }else if(this.facing = "down"){
+	            this.mapy += 2;
+            }	
+
+        }
+    };
+}
 
 var player = {};
 player.setup = function() {
@@ -345,128 +394,128 @@ player.setup = function() {
     player['running'] = false;
     player['update'] = function(){
 	
-        if(printer.isShown) return;
+    if(printer.isShown) return;
 
-        var px = Math.floor(player.mapx/32), 
-	        py = Math.floor(player.mapy/32)+1;
-	
-        if(player.steps == 0){
+    var px = Math.floor(player.mapx/32), 
+        py = Math.floor(player.mapy/32)+1;
+
+    if(player.steps == 0){
 
 
-	        if(HID.inputs["up"].active){
-		        player.facing = "up";
-                if(py> 0){7
-		            if(engine.currentLevel["Level"]["colision"][py-1][px] == 0){
-			            player.steps = 32;
-                        if(engine.currentLevel["Level"]["events"][py-1][px] != 0)
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[0,1],[py-1,px])
-		            } else {
-                        feedbackEng.play('stop');
-                    }
-                } else {
-                        feedbackEng.play('stop');
+        if(HID.inputs["up"].active){
+	        player.facing = "up";
+            if(py> 0){7
+	            if(engine.currentLevel["Level"]["colision"][py-1][px] == 0){
+		            player.steps = 32;
+                    if(engine.currentLevel["Level"]["events"][py-1][px] != 0)
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[0,1],[py-1,px])
+	            } else {
+                    feedbackEng.play('stop');
                 }
-	        }else if(HID.inputs["left"].active){
-		        player.facing = "left";
-                if(px>0){
-		            if(engine.currentLevel["Level"]["colision"][py][px-1] == 0){
-			            player.steps = 32;
-                        if(engine.currentLevel["Level"]["events"][py][px-1] != 0)
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[0,1],[py,px-1])
-		            } else {
-                        feedbackEng.play('stop');
-                    }
-                } else {
-                        feedbackEng.play('stop');
-                }
-	        }else if(HID.inputs["right"].active){
-		        player.facing = "right";
-		        if(px< engine.currentLevel["Level"]["colision"].length){
-		            if(engine.currentLevel["Level"]["colision"][py][px+1] == 0){
-			            player.steps = 32;
-                        if(engine.currentLevel["Level"]["events"][py][px+1] != 0)
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[0,1],[py,px+1])
-		            } else {
-                        feedbackEng.play('stop');
-                    }
-                } else {
-                        feedbackEng.play('stop');
-                }
-	        }else if(HID.inputs["down"].active){
-		        player.facing = "down";
-                if(py< engine.currentLevel["Level"]["colision"][0].length -1){
-		            if(engine.currentLevel["Level"]["colision"][py+1][px] == 0){
-			            player.steps = 32;
-                        if(engine.currentLevel["Level"]["events"][py+1][px] != 0)
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[0,1],[py+1,px])
-		            } else {
-                        feedbackEng.play('stop');
-                    }
-                } else {
-                        feedbackEng.play('stop');
-                }
-	        }else if(HID.inputs["accept"].active){
-                if(player.facing == "up"){
-                    if(py-1> 0)
-                        if(engine.currentLevel["Level"]["events"][py-1][px] != 0) {
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[1,0],[py-1,px])
-                            HID.inputs["accept"].active = false
-                            engine.waitTime(400);
-                            }
-                }else if(player.facing == "left"){
-                    if(px-1>0)
-                        if(engine.currentLevel["Level"]["events"][py][px-1] != 0) {
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[1,0],[py,px-1]) 
-                            HID.inputs["accept"].active = false
-                            engine.waitTime(400);
-                            }
-                }else if(player.facing == "right"){
-                    if(px+1< engine.currentLevel["Level"]["events"].length)
-                        if(engine.currentLevel["Level"]["events"][py][px+1] != 0) {
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[1,0],[py,px+1])
-                            HID.inputs["accept"].active = false
-                            engine.waitTime(400);
-                            }
-                }else if(player.facing = "down"){
-                    if(py+1< engine.currentLevel["Level"]["events"][0].length -1)
-                        if(engine.currentLevel["Level"]["events"][py+1][px] != 0) {
-                            eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[1,0],[py+1,px])
-                            HID.inputs["accept"].active = false
-                            engine.waitTime(400);
-                            }
-                }   
-	        }else if(HID.inputs["cancel"].active){
-                HID.inputs["cancel"].active = false
-                mapMenu.activate()
+            } else {
+                    feedbackEng.play('stop');
             }
-
-		
-	
-        }else{
-	        player.steps -= 2;
-	        if(player.facing == "up"){
-		        player.mapy -= 2;
-	        }else if(player.facing == "left"){
-		        player.mapx -= 2;
-	        }else if(player.facing == "right"){
-		        player.mapx += 2;
-	        }else if(player.facing = "down"){
-		        player.mapy += 2;
-	        }	
-
-	        if(player.running)  
-                if (!(player.steps==0)) {
-	                player.steps -= 2;
-	                if(player.facing == "up"){
-		                player.mapy -= 2;
-	                }else if(player.facing == "left"){
-		                player.mapx -= 2;
-	                }else if(player.facing == "right"){
-		                player.mapx += 2;
-	                }else if(player.facing = "down"){
-		                player.mapy += 2;
-	                }
+        }else if(HID.inputs["left"].active){
+	        player.facing = "left";
+            if(px>0){
+	            if(engine.currentLevel["Level"]["colision"][py][px-1] == 0){
+		            player.steps = 32;
+                    if(engine.currentLevel["Level"]["events"][py][px-1] != 0)
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[0,1],[py,px-1])
+	            } else {
+                    feedbackEng.play('stop');
                 }
+            } else {
+                    feedbackEng.play('stop');
+            }
+        }else if(HID.inputs["right"].active){
+	        player.facing = "right";
+	        if(px< engine.currentLevel["Level"]["colision"].length){
+	            if(engine.currentLevel["Level"]["colision"][py][px+1] == 0){
+		            player.steps = 32;
+                    if(engine.currentLevel["Level"]["events"][py][px+1] != 0)
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[0,1],[py,px+1])
+	            } else {
+                    feedbackEng.play('stop');
+                }
+            } else {
+                    feedbackEng.play('stop');
+            }
+        }else if(HID.inputs["down"].active){
+	        player.facing = "down";
+            if(py< engine.currentLevel["Level"]["colision"][0].length -1){
+	            if(engine.currentLevel["Level"]["colision"][py+1][px] == 0){
+		            player.steps = 32;
+                    if(engine.currentLevel["Level"]["events"][py+1][px] != 0)
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[0,1],[py+1,px])
+	            } else {
+                    feedbackEng.play('stop');
+                }
+            } else {
+                    feedbackEng.play('stop');
+            }
+        }else if(HID.inputs["accept"].active){
+            if(player.facing == "up"){
+                if(py-1> 0)
+                    if(engine.currentLevel["Level"]["events"][py-1][px] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[1,0],[py-1,px])
+                        HID.inputs["accept"].active = false
+                        engine.waitTime(400);
+                        }
+            }else if(player.facing == "left"){
+                if(px-1>0)
+                    if(engine.currentLevel["Level"]["events"][py][px-1] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[1,0],[py,px-1]) 
+                        HID.inputs["accept"].active = false
+                        engine.waitTime(400);
+                        }
+            }else if(player.facing == "right"){
+                if(px+1< engine.currentLevel["Level"]["events"].length)
+                    if(engine.currentLevel["Level"]["events"][py][px+1] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[1,0],[py,px+1])
+                        HID.inputs["accept"].active = false
+                        engine.waitTime(400);
+                        }
+            }else if(player.facing = "down"){
+                if(py+1< engine.currentLevel["Level"]["events"][0].length -1)
+                    if(engine.currentLevel["Level"]["events"][py+1][px] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[1,0],[py+1,px])
+                        HID.inputs["accept"].active = false
+                        engine.waitTime(400);
+                        }
+            }   
+        }else if(HID.inputs["cancel"].active){
+            HID.inputs["cancel"].active = false
+            mapMenu.activate()
+        }
+
+	
+
+    }else{
+        player.steps -= 2;
+        if(player.facing == "up"){
+	        player.mapy -= 2;
+        }else if(player.facing == "left"){
+	        player.mapx -= 2;
+        }else if(player.facing == "right"){
+	        player.mapx += 2;
+        }else if(player.facing = "down"){
+	        player.mapy += 2;
+        }	
+
+        if(player.running)  
+            if (!(player.steps==0)) {
+                player.steps -= 2;
+                if(player.facing == "up"){
+	                player.mapy -= 2;
+                }else if(player.facing == "left"){
+	                player.mapx -= 2;
+                }else if(player.facing == "right"){
+	                player.mapx += 2;
+                }else if(player.facing = "down"){
+	                player.mapy += 2;
+                }
+            }
         }
     };
 }
@@ -559,6 +608,8 @@ engine.teleport = function(param) {
     player.facing = "down";
     HID.cleanInputs()
     HID.clearInputs()
+    chars = new charalist();
+    chars.push(player)
 }
 
 engine.changeTile = function(param) {

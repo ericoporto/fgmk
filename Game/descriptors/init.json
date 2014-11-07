@@ -6,14 +6,20 @@
         "level1": "level1.json", 
         "level2": "level2.json"
     }, 
+    "CharasetFileList": {
+        "charaset1": "charaset1.json"
+    }, 
+    "CharasFileList": {
+        "charas1": "charas1.json"
+    }, 
     "Player": {
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
         "initPosX": 224, 
-        "initPosY": 192
+        "initPosY": 288
     }, 
     "World": {
-        "initLevel": "insideLevel0"
+        "initLevel": "level0"
     }
 }

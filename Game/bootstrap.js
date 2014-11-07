@@ -1,13 +1,17 @@
 var bootstrap = {};
 var descriptors = "descriptors/"
 var charaset = "charaset/"
-var levels = "levels/"
+var levelsFolder = "levels/"
+var charasetsFolder = "charaset/"
+var charasFolder = "charas/"
 var resources = {
 	tileset: null,
     playerChara: null,
     printerset: null,
     playerCharaset: null,
-    levels: {}
+    levels: {},
+    charasets: {},
+    charas: {}
 };
 
 window.forceMobile=false
@@ -42,13 +46,28 @@ resources.harvest = function(){
     this.printerset = document.getElementById("printerimg");
 
 
-    this.playerCharaset = jsonLevelGet(descriptors+charaset+init['Player']['charaFile'])['Charaset'][init['Player']['charaSet']];
+
     LevelsList = init['LevelsList']
     for (var level in LevelsList) {
         var levelItem = LevelsList[level]
-
-        resources['levels'][level] = jsonLevelGet(descriptors+levels+levelItem);        
+        console.log(descriptors+levelsFolder+levelItem)
+        resources['levels'][level] = jsonLevelGet(descriptors+levelsFolder+levelItem);        
     }
+    CharasetFileList = init['CharasetFileList']
+    for (var charasetfilep in CharasetFileList) {
+        var charasetfile = CharasetFileList[charasetfilep]
+        console.log(descriptors+charasetsFolder+charasetfile)
+        resources['charasets'] = jsonLevelGet(descriptors+charasetsFolder+charasetfile)['Charaset'];        
+    }
+    //CharasFileList = init['CharasFileList']
+    //for (var charasfilep in CharasFileList) {
+    //    var charasfile = CharasFileList[charasfilep]
+    //    console.log(descriptors+charasFolder+charasfile)
+    //    resources['charas'] = jsonLevelGet(descriptors+charasFolder+charasfile)['Charas'];        
+    //}
+
+    resources['charas'] = jsonLevelGet(descriptors+"charas.json")['Charas']; 
+    this.playerCharaset = resources['charasets'][init['Player']['charaSet']];
 }
 
 jsonLevelGet = function(urlToGet) {
@@ -59,7 +78,7 @@ jsonLevelGet = function(urlToGet) {
   return JSON.parse(json);          // faz o parse da string e retorna objeto
 }
 
-window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
+//window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
 
 var init = jsonLevelGet(descriptors+'init.json');
 
@@ -83,6 +102,8 @@ bootstrap.onLoadDOM = function(){
 		engine.loop();
 		screen.loop();
         debug.FPS.loop();
+        chars = new charalist();
+        chars.push(player)
 	}catch (err){
 		alert("onLoadDOM "+err);
 	}

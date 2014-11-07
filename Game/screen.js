@@ -515,6 +515,26 @@ screen.drawEffects = function(){
     }
 };
 
+function compareChars(a,b) {
+    if(a.mapy == b.mapy)
+    {
+        return (a.mapx < b.mapx) ? -1 : (a.mapx > b.mapx) ? 1 : 0;
+    }
+    else
+    {
+        return (a.mapy < b.mapy) ? -1 : 1;
+    }
+}
+
+camera.drawChars = function() {
+    chars.sort(compareChars)
+    var count = chars.length;
+    for(var i = 0; i < count; i++) {
+        var item = chars[i];
+        camera.drawChar(item)
+    }
+}
+
 screen.drawMenu = function(menu){
     var maxItems = menu.itemsLength
     var maxItemStringLength = menu.maxItemStringSize()
@@ -580,7 +600,8 @@ screen.loop = function(){
 			    camera.drawMapLayer(this.engine.currentLevel, "layer2");
 
             if(debug.showLayer.layer3)
-    			camera.drawChar(player);	
+                camera.drawChars();
+    			//camera.drawChar(player);	
 
             if(debug.showLayer.layer4)
     			camera.drawMapLayer(this.engine.currentLevel, "layer4");
