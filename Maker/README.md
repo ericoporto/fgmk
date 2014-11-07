@@ -20,7 +20,7 @@ Then cd to this folder and use
 Running in Windows:
 -------------------
 I've successfully tested using ActiveState ActivePyton 2.7 for Windows x86. 
-I use the latest binary installer for Py2.7 and x32 windows available [here](http://www.riverbankcomputing.com/software/pyqt/download)
+I use the latest binary installer for PyQt Py2.7 and x32 windows available [here](http://www.riverbankcomputing.com/software/pyqt/download)
 In windows, cd to \Python27\Scripts and use pypm: 
 pypm.exe install Pillow
 pypm.exe install Numpy
