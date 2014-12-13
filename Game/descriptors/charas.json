@@ -1,13 +1,33 @@
-{ "Charas":
+
+{
+"Charas":
     {
-        "WeirdGuy": {
-            "charaset": "person2", 
-            "actions": {"list": [["fadeOut","pixelizeFadeOut;keepEffect"],
-                       ["teleport","4;9;level0"],
-                       ["fadeIn","pixelizeFadeIn;doNotKeep"]],
-                        "type":[1,0]
-                        },
-            "movements":[["move", "right"], ["move", "left"]]
+    "WeirdGuy":
+        {
+        "movements":
+            [["move","right"],
+             ["move","left"]],
+        "actions":
+            {
+            "type":  [  1,  0],
+            "list":
+                [["showText","can't find my contact lenses..."]]
+            },
+        "charaset": "person2"
+        },
+    "OtherWeird":
+        {
+        "movements":
+            [["face","up"],
+             ["face","left"],
+             ["face","down"],
+             ["face","right"]],
+        "actions":
+            {
+            "type":  [  1,  0],
+            "list":  [["showText","spinning spinning"]]
+            },
+        "charaset": "person2"
         }
     }
 }

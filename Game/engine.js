@@ -373,6 +373,7 @@ function char(chara, x, y) {
     this['charaset'] = resources['charasets'][this['chara']['charaset']]
     this['facing'] = 'down';
     this['steps'] = 0;
+    this['waits'] = 0;
     this['mapx'] = x*32;
     this['mapy'] = (y-1)*32;
     this['movstack'] = clone(this['chara']['movements'])
@@ -381,28 +382,34 @@ function char(chara, x, y) {
         var px = Math.floor(this.mapx/32),
             py = Math.floor(this.mapy/32)+1;
 
-        if(this.steps == 0){
+        if(this.steps == 0 && this.waits == 0){
             if(this['movstack'].length > 0){
                 moveToDo = this['movstack'].shift();
                 if(moveToDo[0]=="move") {
                     this.facing = moveToDo[1]
                     this.steps=32
                 }
+                if(moveToDo[0]=="face") {
+                    this.facing = moveToDo[1]
+                    this.waits=16
+                }
             }else{
                 this['movstack'] = clone(this['chara']['movements'])
             }
 
-        }else{
-            this.steps -= 2;
+        }else if(this.steps>0 && this.waits == 0){
+            this.steps -= 1;
             if(this.facing == "up"){
-	            this.mapy -= 2;
+	            this.mapy -= 1;
             }else if(this.facing == "left"){
-	            this.mapx -= 2;
+	            this.mapx -= 1;
             }else if(this.facing == "right"){
-	            this.mapx += 2;
+	            this.mapx += 1;
             }else if(this.facing = "down"){
-	            this.mapy += 2;
+	            this.mapy += 1;
             }
+        } else if(this.waits>0){
+            this.waits -= 2;
         }
     };
 }
@@ -421,63 +428,29 @@ player.setup = function() {
 
     var px = Math.floor(player.mapx/32),
         py = Math.floor(player.mapy/32)+1;
+    var mapwidth=engine.currentLevel["Level"]["colision"].length;
+    var mapheight=engine.currentLevel["Level"]["colision"][0].length -1;
 
     if(player.steps == 0){
-
-
-        if(HID.inputs["up"].active){
-	        player.facing = "up";
-            if(py> 0){7
-	            if(engine.currentLevel["Level"]["colision"][py-1][px] == 0){
-		            player.steps = 32;
-                    if(engine.currentLevel["Level"]["events"][py-1][px] != 0)
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[0,1],[py-1,px])
-	            } else {
-                    feedbackEng.play('stop');
+        var dirkey = engine.dirKeyActive()
+        if(dirkey){
+            player.facing=dirkey
+            var fpos = player.facingPosition()
+            if(py>0 && px>0 && px<mapwidth && py<mapheight){
+                if(engine.currentLevel["Level"]["colision"][fpos[0]][fpos[1]] == 0 && !(engine.playerFaceChar()) ){
+                    player.steps = 32;
+                    if(engine.currentLevel["Level"]["events"][fpos[0]][fpos[1]] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][fpos[0]][fpos[1]],[0,1],fpos)
+                        HID.inputs["accept"].active = false
+                        engine.waitTime(400);
+                    }
+                } else {
+                    feedbackEng.play('stop')
                 }
             } else {
-                    feedbackEng.play('stop');
+                feedbackEng.play('stop')
             }
-        }else if(HID.inputs["left"].active){
-	        player.facing = "left";
-            if(px>0){
-	            if(engine.currentLevel["Level"]["colision"][py][px-1] == 0){
-		            player.steps = 32;
-                    if(engine.currentLevel["Level"]["events"][py][px-1] != 0)
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[0,1],[py,px-1])
-	            } else {
-                    feedbackEng.play('stop');
-                }
-            } else {
-                    feedbackEng.play('stop');
-            }
-        }else if(HID.inputs["right"].active){
-	        player.facing = "right";
-	        if(px< engine.currentLevel["Level"]["colision"].length){
-	            if(engine.currentLevel["Level"]["colision"][py][px+1] == 0){
-		            player.steps = 32;
-                    if(engine.currentLevel["Level"]["events"][py][px+1] != 0)
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[0,1],[py,px+1])
-	            } else {
-                    feedbackEng.play('stop');
-                }
-            } else {
-                    feedbackEng.play('stop');
-            }
-        }else if(HID.inputs["down"].active){
-	        player.facing = "down";
-            if(py< engine.currentLevel["Level"]["colision"][0].length -1){
-	            if(engine.currentLevel["Level"]["colision"][py+1][px] == 0){
-		            player.steps = 32;
-                    if(engine.currentLevel["Level"]["events"][py+1][px] != 0)
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[0,1],[py+1,px])
-	            } else {
-                    feedbackEng.play('stop');
-                }
-            } else {
-                    feedbackEng.play('stop');
-            }
-        }else if(HID.inputs["accept"].active){
+        } else if(HID.inputs["accept"].active){
             var charFacing = engine.playerFaceChar()
             if(charFacing){
                 eventInChar(charFacing,[1,0],[py-1,px])
@@ -494,7 +467,7 @@ player.setup = function() {
                 }
 
             }
-        }else if(HID.inputs["cancel"].active){
+        } else if(HID.inputs["cancel"].active){
             HID.inputs["cancel"].active = false
             mapMenu.activate()
         }
@@ -589,6 +562,20 @@ engine.waitTime = function(time){
     engine.waitTimeSwitch = true;
     engine.minimumWait = false;
     setTimeout(function(){engine.waitTimeSwitch = false;}, time);
+}
+
+engine.dirKeyActive = function(){
+    if(HID.inputs["up"].active)
+        return "up"
+    else if(HID.inputs["down"].active)
+        return "down"
+    else if(HID.inputs["left"].active)
+        return "left"
+    else if(HID.inputs["right"].active)
+        return "right"
+    else
+        return false
+
 }
 
 

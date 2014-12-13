@@ -29,12 +29,12 @@ class CharasFormat(TileCharaset.BaseFormat):
     def new(self):
         self.jsonTree = { "Charas": {} }
 
-    def addChara(self, name, charaset = "", actions = {}, movements=[]):
+    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[]):
 
-        self.jsonTree["Charas"][name]= {    "charaset": charaset, 
+        self.jsonTree["Charas"][name]= {    "charaset": charaset,
                                             "actions":actions,
                                             "movements":movements
-                                            } 
+                                            }
 
     def addMovements(self, name, movements):
         self.jsonTree["Charas"][name]["movements"] = movements
@@ -106,10 +106,10 @@ class MoveWidget(QWidget):
 
         self.VBox = QVBoxLayout(self)
         self.dirButtons = MoveButtons()
-        self.connect(self.dirButtons, SIGNAL('buttonup()'), self.upbclick) 
-        self.connect(self.dirButtons, SIGNAL('buttondown()'), self.downbclick) 
-        self.connect(self.dirButtons, SIGNAL('buttonleft()'), self.leftbclick) 
-        self.connect(self.dirButtons, SIGNAL('buttonright()'), self.rightbclick) 
+        self.connect(self.dirButtons, SIGNAL('buttonup()'), self.upbclick)
+        self.connect(self.dirButtons, SIGNAL('buttondown()'), self.downbclick)
+        self.connect(self.dirButtons, SIGNAL('buttonleft()'), self.leftbclick)
+        self.connect(self.dirButtons, SIGNAL('buttonright()'), self.rightbclick)
 
         self.radiomove = QRadioButton("move")
         self.radioface = QRadioButton("face")
@@ -158,6 +158,7 @@ class MoveWidget(QWidget):
     def setList(self,listToSet):
         self.movList.clear()
         for move in listToSet:
+            print(move)
             self.movList.addItem(MoveItem(move[0],move[1]))
 
     def clear(self):
@@ -168,7 +169,7 @@ class MoveWidget(QWidget):
         for itemIndex in xrange(self.movList.count()):
             itemArray = self.movList.item(itemIndex).getMarray()
             movements.append(itemArray)
-            
+
         return movements
 
     def deletebclick(self):
@@ -237,7 +238,7 @@ class ActionsWidget(QWidget):
         self.labelActionList = QLabel("List of Actions:")
         self.ActionList = QListWidget(self)
 
-        VBoxActionList = QVBoxLayout() 
+        VBoxActionList = QVBoxLayout()
         VBoxButtons = QVBoxLayout()
 
         self.addActionButton = QPushButton("Add Action", self)
@@ -311,7 +312,7 @@ class ActionsWidget(QWidget):
         while i < self.ActionList.count():
             item = self.ActionList.item(i)
             actionToAdd = item.getAction()
-            i += 1      
+            i += 1
 
     def editAction(self):
         indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
@@ -332,19 +333,19 @@ class ActionsWidget(QWidget):
             actionToAdd = [actionToEdit,str(returnActDlg)]
 
             self.ActionList.takeItem(indexOfAction)
-            self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))                          
+            self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
             item = self.ActionList.item(i)
             self.ActionList.setItemSelected(item, False)
-           
+
     def addAction(self):
         self.myActionsWidget = TXWdgt.ActionsWidget(self.ssettings,self,self.ischara)
         if self.myActionsWidget.exec_() == QtGui.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
-        
-            if not self.ActionList.selectedItems():      
+
+            if not self.ActionList.selectedItems():
                 self.ActionList.addItem(TileXtra.actionItem(actionToAdd))
             else:
                 indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
@@ -364,8 +365,8 @@ class ActionsWidget(QWidget):
                 enable = False
 
         if (enable):
-            self.removeActionButton.setEnabled(True)       
-            self.deselectActionButton.setEnabled(True)   
+            self.removeActionButton.setEnabled(True)
+            self.deselectActionButton.setEnabled(True)
             self.editActionButton.setEnabled(True)
         else:
             self.removeActionButton.setEnabled(False)
@@ -433,7 +434,7 @@ class CharaList(QWidget):
 
     def charaslistDelAction(self):
         if (len(self.charaslist.selectedItems())>0):
-            for item in self.charaslist.selectedItems():        
+            for item in self.charaslist.selectedItems():
                 itemIndex = self.charaslist.row(item)
                 self.charaslist.takeItem(itemIndex)
 
@@ -455,7 +456,7 @@ class CharaList(QWidget):
         for itemIndex in xrange(self.charaslist.count()):
             if (str(self.charaslist.item(itemIndex).aname) == itemTree["name"]):
                 self.charaslist.item(itemIndex).jsonTree = itemTree["jsonTree"]
-                
+
 
     def clear(self):
         self.charaslist.clear()
@@ -537,7 +538,7 @@ class CharaSelector(QWidget):
 class MiniCharaTile(QWidget):
     def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), **kwargs):
         QWidget.__init__(self, parent, **kwargs)
-    
+
         self.chara = chara
         self.position = position
 
@@ -545,7 +546,7 @@ class MiniCharaTile(QWidget):
             filetoopen = os.path.join(ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
             charas = self.__Open(filetoopen)
             charaset = charas.getCharaset(chara)
-            
+
             self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings,None,1)
             self.csetprev.select(charaset)
             self.whsize = self.csetprev.whsize
@@ -581,7 +582,7 @@ class CharaEditor(QDialog):
         QDialog.__init__(self, parent, **kwargs)
 
         self.layout = QHBoxLayout(self)
-        
+
         self.charalist = CharaList()
         self.csetSelector = TileCharaset.CharasetSelector(self, ssettings)
         self.movement = MoveWidget()
@@ -598,7 +599,7 @@ class CharaEditor(QDialog):
         HBoxRS.addWidget(self.save)
 
         VBox = QVBoxLayout()
-        VBox.addWidget(self.charalist)        
+        VBox.addWidget(self.charalist)
         VBox.addLayout(HBoxRS)
 
         self.layout.addLayout(VBox)
@@ -637,7 +638,7 @@ class CharaEditor(QDialog):
         charas = self.charalist.getCharas()
         charas.save(charafile)
 
-    
+
     def getAll(self):
         charas = {}
         charas = self.charalist.getCharas()
@@ -646,7 +647,7 @@ class CharaEditor(QDialog):
 
     def charaSelectionChanged(self):
         newSelection = self.charalist.returnvalue
-        
+
         if(self.oldSelection['name'] == None):
             self.oldSelection['name'] = newSelection['name']
         else:

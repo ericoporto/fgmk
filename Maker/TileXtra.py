@@ -12,7 +12,7 @@ COREIMGFOLDER = "img/core/"
 LayersName = ["layer1","layer2","layer4","colision","events"]
 NonViewable = ["colision","events"]
 LayersNameViewable = [_layer for _layer in LayersName if _layer not in NonViewable]
- 
+
 emptyTile = Image.open( COREIMGFOLDER + "emptyTile.png" )
 
 def divideRoundUp(a, b):
@@ -34,7 +34,7 @@ def tileFill( clickedX, clickedY, fullLayer, changeTToType):
         for j in range(len(binaryLayer[0])):
             if binaryLayer[i,j] == 2:
                 whatChanged.append(([j,i,changeWhatType,changeTToType]))
-                
+
     return whatChanged
 
 def tileLine( firstClickedX, firstClickedY, lastClickedX, lastClickedY,fullLayer, changeTToType):
@@ -50,7 +50,7 @@ def tileLine( firstClickedX, firstClickedY, lastClickedX, lastClickedY,fullLayer
         x = point[0]
         y = point[1]
         whatChanged.append(([x,y,fullLayer[y,x],changeTToType]))
-        
+
     return whatChanged
 
 def tileRect( firstClickedX, firstClickedY, lastClickedX, lastClickedY,fullLayer, changeTToType):
@@ -66,7 +66,7 @@ def tileRect( firstClickedX, firstClickedY, lastClickedX, lastClickedY,fullLayer
         x = point[0]
         y = point[1]
         whatChanged.append(([x,y,fullLayer[y,x],changeTToType]))
-        
+
     return whatChanged
 
 class actionItem(QtGui.QListWidgetItem):
@@ -86,7 +86,7 @@ class MapFormat:
         self.jsonTree = []
 
         self.palette = []
-        
+
         self.tileImage = ""
 
         self.levelName = ""
@@ -102,13 +102,13 @@ class MapFormat:
         self.listOfCharas = []
 
     def new(self, tlevelName, levelWidth, levelHeight, levelPalette = None):
-        
+
         if levelPalette is None:
             f = open( "paletteDefault.json" , "rb" )
             levelPalette = json.load(f)
             f.close()
 
-        self.jsonTree = { "Level": 
+        self.jsonTree = { "Level":
                             {
                             "levelName": tlevelName,
                             LayersName[0]: tMat.mnZeros(levelWidth,levelHeight),
@@ -141,7 +141,7 @@ class MapFormat:
 
         #print(self.listOfActions)
 
-        self.jsonTree = { "Level": 
+        self.jsonTree = { "Level":
                             {
                             "levelName": self.levelName,
                             LayersName[0]: self.LayersMapTiles[0,:,:].tolist(),
@@ -165,7 +165,7 @@ class MapFormat:
     def exportJS( self , mapn):
         f = open( mapn , "wb" )
 
-        self.jsonTree = { "Level": 
+        self.jsonTree = { "Level":
                             {
                             "levelName": self.levelName,
                             LayersName[0]: self.LayersMapTiles[0,:,:].tolist(),
@@ -230,9 +230,10 @@ class MapFormat:
     def removeChara(self, x, y):
         for char in self.listOfCharas:
             if (char[1] == x and char[2] == y):
+                self.listOfCharas.remove(char)
                 break
 
-        self.listOfCharas.remove(char)
+
 
     def setTile(self, x, y, layer, tiletype):
         self.LayersMapTiles[layer][y][x] = tiletype
@@ -281,7 +282,7 @@ class MapFormat:
     def getActionListOnEvent(self,event):
         if self.listOfActions.get(str(event),None) is None:
             self.listOfActions[str(event)] = []
-        return self.listOfActions[str(event)]            
+        return self.listOfActions[str(event)]
 
     def setEventType(self,event, eventType):
         if self.listOfEventsTypes.get(str(event),None) is None:
@@ -291,7 +292,7 @@ class MapFormat:
     def getEventType(self,event):
         if self.listOfEventsTypes.get(str(event),None) is None:
             self.listOfEventsTypes[str(event)] = [1,0]
-        return self.listOfEventsTypes[str(event)] 
+        return self.listOfEventsTypes[str(event)]
 
 class TileSet:
     def __init__( self , image_file, tilePalette = None):
@@ -370,22 +371,22 @@ class ExtendedQLabel(QLabel):
 
         Composite = clearTile.tileset[0][tempscale]
         try:
-            for i in range(len(tileType)-2): 
+            for i in range(len(tileType)-2):
                 if(tileType[i]):
-                    Composite = Image.alpha_composite(Composite, tileset[ tileType[i] ][tempscale]) 
+                    Composite = Image.alpha_composite(Composite, tileset[ tileType[i] ][tempscale])
             if(tileType[i+1]):
-                Composite = Image.alpha_composite(Composite, colisionSet.tileset[ tileType[i+1] ][tempscale]) 
+                Composite = Image.alpha_composite(Composite, colisionSet.tileset[ tileType[i+1] ][tempscale])
             if(tileType[i+2]):
-                Composite = Image.alpha_composite(Composite, eventSet.tileset[ tileType[i+2] ][tempscale]) 
+                Composite = Image.alpha_composite(Composite, eventSet.tileset[ tileType[i+2] ][tempscale])
         except:
-            for i in range(len(tileType)-2):  
+            for i in range(len(tileType)-2):
                 if(tileType[i]):
-                    Composite = tMat.alpha_composite(Composite, tileset[ tileType[i] ][tempscale]) 
+                    Composite = tMat.alpha_composite(Composite, tileset[ tileType[i] ][tempscale])
             if(tileType[i+1]):
-                Composite = tMat.alpha_composite(Composite, colisionSet.tileset[ tileType[i+1] ][tempscale]) 
+                Composite = tMat.alpha_composite(Composite, colisionSet.tileset[ tileType[i+1] ][tempscale])
             if(tileType[i+2]):
-                Composite = tMat.alpha_composite(Composite, eventSet.tileset[ tileType[i+2] ][tempscale]) 
-        
+                Composite = tMat.alpha_composite(Composite, eventSet.tileset[ tileType[i+2] ][tempscale])
+
         if(scale != 1 and scale !=0.5 and scale != 2):
             Composite=Composite.resize((int(boxSize*scale), int(boxSize*scale)), Image.NEAREST)
 
@@ -407,21 +408,21 @@ class ExtendedQLabel(QLabel):
 
         Composite = clearTile.tileset[0][tempscale]
         try:
-            for i in range(len(self.tileType)-2):  
+            for i in range(len(self.tileType)-2):
                 if(self.tileType[i]):
-                    Composite = Image.alpha_composite(Composite, tileset[ self.tileType[i] ][tempscale]) 
+                    Composite = Image.alpha_composite(Composite, tileset[ self.tileType[i] ][tempscale])
             if(self.tileType[i+1]):
-                Composite = Image.alpha_composite(Composite, colisionSet.tileset[ self.tileType[i+1] ][tempscale]) 
+                Composite = Image.alpha_composite(Composite, colisionSet.tileset[ self.tileType[i+1] ][tempscale])
             if(self.tileType[i+2]):
-                Composite = Image.alpha_composite(Composite, eventSet.tileset[ self.tileType[i+2] ][tempscale]) 
+                Composite = Image.alpha_composite(Composite, eventSet.tileset[ self.tileType[i+2] ][tempscale])
         except:
-            for i in range(len(self.tileType)-2): 
+            for i in range(len(self.tileType)-2):
                 if(self.tileType[i]):
-                    Composite = tMat.alpha_composite(Composite, tileset[ self.tileType[i] ][tempscale]) 
+                    Composite = tMat.alpha_composite(Composite, tileset[ self.tileType[i] ][tempscale])
             if(self.tileType[i+1]):
-                Composite = tMat.alpha_composite(Composite, colisionSet.tileset[ self.tileType[i+1] ][tempscale]) 
+                Composite = tMat.alpha_composite(Composite, colisionSet.tileset[ self.tileType[i+1] ][tempscale])
             if(self.tileType[i+2]):
-                Composite = tMat.alpha_composite(Composite, eventSet.tileset[ self.tileType[i+2] ][tempscale]) 
+                Composite = tMat.alpha_composite(Composite, eventSet.tileset[ self.tileType[i+2] ][tempscale])
 
         if(scale != 1 and scale !=0.5 and scale != 2):
             Composite=Composite.resize((int(self.boxSize*scale), int(self.boxSize*scale)), Image.NEAREST)
