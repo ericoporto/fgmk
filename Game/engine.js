@@ -1,3 +1,18 @@
+function clone (existingArray) {
+    var newObj = (existingArray instanceof Array) ? [] : {};
+    for (i in existingArray) {
+        if (i == 'clone') continue;
+        if (existingArray[i] && typeof existingArray[i] == "object") {
+            newObj[i] = clone(existingArray[i]);
+        } else {
+            newObj[i] = existingArray[i]
+        }
+    }
+    return newObj;
+}
+
+
+
 var chars = []
 
 var menus = {
@@ -56,7 +71,7 @@ function menu(_items, _index) {
 
     _index = (typeof _index === "undefined") ? null : _index;
     this.items=_items;
-    
+
     this.parent = null
     this.index = _index
     this.enabled=false;
@@ -81,10 +96,10 @@ function menu(_items, _index) {
            this.items[tempArray[i][0]].next = tempArray[i+1][0]
         } else if (i == tempArray.length-1) {
            this.items[tempArray[i][0]].previous = tempArray[i-1][0]
-           this.items[tempArray[i][0]].next = tempArray[i][0]            
+           this.items[tempArray[i][0]].next = tempArray[i][0]
         } else {
            this.items[tempArray[i][0]].previous = tempArray[i-1][0]
-           this.items[tempArray[i][0]].next = tempArray[i+1][0] 
+           this.items[tempArray[i][0]].next = tempArray[i+1][0]
         }
 
         this.items[tempArray[i][0]].itemy = 32+i*32
@@ -111,13 +126,13 @@ function menu(_items, _index) {
         return returnValue
     };
 
-    this.itemsLength = Object.keys(_items).length 
+    this.itemsLength = Object.keys(_items).length
 
-    this.exit= function(){ 
-        this._counter = 0; 
-        this.enabled = false; 
-        HID.inputs["cancel"].active = false; 
-        if(this.parent!=null) {this.parent.wait = false; this.parent.menuKeyWasPressed=32} 
+    this.exit= function(){
+        this._counter = 0;
+        this.enabled = false;
+        HID.inputs["cancel"].active = false;
+        if(this.parent!=null) {this.parent.wait = false; this.parent.menuKeyWasPressed=32}
     };
     this.activate= function(){ this.enabled = true ; if(this.parent!=null) {this.parent.wait = true; } };
     this._counter=0; //this counter is here to solve a bug with the gamepad cancel button
@@ -158,7 +173,7 @@ function menu(_items, _index) {
                             } else if ( this.selectedItem.action[i] == 'goWait') {
                                 engine.atomStack.push([function(){this.wait = true;},'']);
                             } else if ( this.selectedItem.action[i] == 'stopWait') {
-                                engine.atomStack.push([function(){this.wait = false;},'']);                            
+                                engine.atomStack.push([function(){this.wait = false;},'']);
                             } else {
                                 this.selectedItem.action[i]();
                             }
@@ -284,7 +299,7 @@ engine.waitTimeSwitch = false;
 engine.minimumWait = false;
 engine.atomStack=new Array();
 
-window.ondevicemotion = function(event) {  
+window.ondevicemotion = function(event) {
     if (event.accelerationIncludingGravity.y > 4) {
         player['running'] = false;
     }else{
@@ -307,7 +322,7 @@ feedbackEng = {
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
         if (navigator.vibrate) {
             // vibration API supported
-            this.vibrationOn = true ;     
+            this.vibrationOn = true ;
         }
         if(window.isFirefox()) {
             this.soundOn = true;
@@ -346,7 +361,7 @@ function charalist(){
             var item = listofcharas[i];
             returnvalue.push(new char(item[0],item[1],item[2]))
         }
-    
+
         return returnvalue
     } else {
         return []
@@ -360,13 +375,22 @@ function char(chara, x, y) {
     this['steps'] = 0;
     this['mapx'] = x*32;
     this['mapy'] = (y-1)*32;
+    this['movstack'] = clone(this['chara']['movements'])
     this['update'] = function(){
         if(printer.isShown) return;
-        var px = Math.floor(this.mapx/32), 
+        var px = Math.floor(this.mapx/32),
             py = Math.floor(this.mapy/32)+1;
 
         if(this.steps == 0){
-
+            if(this['movstack'].length > 0){
+                moveToDo = this['movstack'].shift();
+                if(moveToDo[0]=="move") {
+                    this.facing = moveToDo[1]
+                    this.steps=32
+                }
+            }else{
+                this['movstack'] = clone(this['chara']['movements'])
+            }
 
         }else{
             this.steps -= 2;
@@ -378,8 +402,7 @@ function char(chara, x, y) {
 	            this.mapx += 2;
             }else if(this.facing = "down"){
 	            this.mapy += 2;
-            }	
-
+            }
         }
     };
 }
@@ -393,10 +416,10 @@ player.setup = function() {
     player['steps'] = 0;
     player['running'] = false;
     player['update'] = function(){
-	
+
     if(printer.isShown) return;
 
-    var px = Math.floor(player.mapx/32), 
+    var px = Math.floor(player.mapx/32),
         py = Math.floor(player.mapy/32)+1;
 
     if(player.steps == 0){
@@ -455,41 +478,28 @@ player.setup = function() {
                     feedbackEng.play('stop');
             }
         }else if(HID.inputs["accept"].active){
-            if(player.facing == "up"){
-                if(py-1> 0)
-                    if(engine.currentLevel["Level"]["events"][py-1][px] != 0) {
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py-1][px],[1,0],[py-1,px])
+            var charFacing = engine.playerFaceChar()
+            if(charFacing){
+                eventInChar(charFacing,[1,0],[py-1,px])
+                HID.inputs["accept"].active = false
+                engine.waitTime(400);
+            }else{
+                if(py-1>0 && px-1>0 && px+1< engine.currentLevel["Level"]["events"].length && px+1< engine.currentLevel["Level"]["events"].length) {
+                    var pos = player.facingPosition()
+                    if(engine.currentLevel["Level"]["events"][pos[0]][pos[1]] != 0) {
+                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][pos[0]][pos[1]],[1,0],pos)
                         HID.inputs["accept"].active = false
                         engine.waitTime(400);
-                        }
-            }else if(player.facing == "left"){
-                if(px-1>0)
-                    if(engine.currentLevel["Level"]["events"][py][px-1] != 0) {
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px-1],[1,0],[py,px-1]) 
-                        HID.inputs["accept"].active = false
-                        engine.waitTime(400);
-                        }
-            }else if(player.facing == "right"){
-                if(px+1< engine.currentLevel["Level"]["events"].length)
-                    if(engine.currentLevel["Level"]["events"][py][px+1] != 0) {
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py][px+1],[1,0],[py,px+1])
-                        HID.inputs["accept"].active = false
-                        engine.waitTime(400);
-                        }
-            }else if(player.facing = "down"){
-                if(py+1< engine.currentLevel["Level"]["events"][0].length -1)
-                    if(engine.currentLevel["Level"]["events"][py+1][px] != 0) {
-                        eventInMap(engine.currentLevel["Level"],engine.currentLevel["Level"]["events"][py+1][px],[1,0],[py+1,px])
-                        HID.inputs["accept"].active = false
-                        engine.waitTime(400);
-                        }
-            }   
+                    }
+                }
+
+            }
         }else if(HID.inputs["cancel"].active){
             HID.inputs["cancel"].active = false
             mapMenu.activate()
         }
 
-	
+
 
     }else{
         player.steps -= 2;
@@ -501,9 +511,9 @@ player.setup = function() {
 	        player.mapx += 2;
         }else if(player.facing = "down"){
 	        player.mapy += 2;
-        }	
+        }
 
-        if(player.running)  
+        if(player.running)
             if (!(player.steps==0)) {
                 player.steps -= 2;
                 if(player.facing == "up"){
@@ -518,6 +528,43 @@ player.setup = function() {
             }
         }
     };
+}
+
+engine.playerFaceChar = function(){
+    var count = chars.length;
+    for(var i = 0; i < count; i++) {
+        var thischar = chars[i];
+        if(player!=thischar){
+            var ppx = Math.floor(player.mapx/32),
+            ppy = Math.floor(player.mapy/32)+1;
+
+            var cpx = Math.floor(thischar.mapx/32),
+            cpy = Math.floor(thischar.mapy/32)+1;
+
+            if(ppx-cpx==1 && cpy-ppy==0 && player.facing == "left")
+                return thischar
+
+            if(ppx-cpx==-1 && cpy-ppy==0 && player.facing == "right")
+                return thischar
+
+            if(ppx-cpx==0 && cpy-ppy==1 && player.facing == "down")
+                return thischar
+
+            if(ppx-cpx==0 && cpy-ppy==-1 && player.facing == "up")
+                return thischar
+
+
+        }
+    }
+    return false
+}
+
+engine.updateChars = function() {
+    var count = chars.length;
+    for(var i = 0; i < count; i++) {
+        var thischar = chars[i];
+        thischar.update()
+    }
 }
 
 engine.testWaitForKey = function(){
@@ -542,35 +589,35 @@ engine.waitTime = function(time){
     engine.waitTimeSwitch = true;
     engine.minimumWait = false;
     setTimeout(function(){engine.waitTimeSwitch = false;}, time);
-} 
+}
 
 
 engine.loop = function(){
 	try{
 		if(!this.paused){
-		
+
 			// update
 
             HID.processGamepad();
 
-            if(!engine.waitKey && !engine.waitTimeSwitch) { 
+            if(!engine.waitKey && !engine.waitTimeSwitch) {
                 if(menus.isAnyMenuEnabled()){
                     menus.updateMenuEnabled();
-                    engine.runatomStack(); 
-                } else {    
-                    player.update();
-                    engine.runatomStack(); 
+                    engine.runatomStack();
+                } else {
+                    engine.updateChars();
+                    engine.runatomStack();
                 }
             } else if (this.minimumWait) {
                 this.testWaitForKey();
             }
- 
+
 
 		}
-		
+
 		HID.clearInputs();
 		engine.timer = setTimeout("engine.loop()", 1000/46.0);
-	
+
 	}catch(err){
 		alert("engine loop error: "+err);
 	}
@@ -585,9 +632,38 @@ engine.runatomStack = function(){
             } else {
             eventToRun[0](eventToRun[1]);
             }
-        } 
-    } 
+        }
+    }
 };
+
+eventInChar = function(char,evType,position) {
+    console.log(char['chara'])
+    if (char['chara']['actions']['type'][0] == evType[0] && char['chara']['actions']['type'][1] == evType[1]) {
+        var aNmb, action, actionAndParam;
+        for (aNmb = 0; aNmb < char['chara']['actions']['list'].length ; aNmb++) {
+            actionAndParam = char['chara']['actions']['list'][aNmb];
+            translateActions(actionAndParam[0],actionAndParam[1],position);
+        }
+    }
+};
+
+player.facingPosition = function() {
+    var px = Math.floor(player.mapx/32),
+    py = Math.floor(player.mapy/32)+1;
+    var facing = player.facing
+
+    if(facing=="up")
+        return [py-1,px]
+    else if(facing=="left")
+        return [py,px-1]
+    else if(facing=="right")
+        return [py,px+1]
+    else if(facing=="down")
+        return [py+1,px]
+    console.log("error facing!")
+    return false
+
+}
 
 eventInMap = function(level,event,evType,position) {
     if (level['eventsType'][event.toString()][0] == evType[0] && level['eventsType'][event.toString()][1] == evType[1]) {
@@ -628,12 +704,12 @@ engine.changeTile = function(param) {
     if(param[3]!=-1) {
         levelToChange["Level"]["events"][param[4]][param[5]]=param[3]
     }
-    
+
     levelToChange["Level"][param[1]][param[4]][param[5]]=param[0]
 }
-    
-translateActions = function(action, param, position) {    
-    actions[action](param,position)    
+
+translateActions = function(action, param, position) {
+    actions[action](param,position)
 };
 
 var actions = {};
@@ -657,7 +733,7 @@ actions.teleport = function(param,position) {
 };
 
 actions.changeTile = function(param,position) {
-    //param[4] location (current or x,y,level)        
+    //param[4] location (current or x,y,level)
         var colisionDict = { keep: -1, noColision: 0 , collidable: 1 }
         var params3Value
         var params = param.split(';')
@@ -681,7 +757,7 @@ actions.changeTile = function(param,position) {
         if(params[4]=="current") {
             aPositionY=parseInt(position[0],10)
             aPositionX=position[1]
-            aLevel=null            
+            aLevel=null
         } else {
             aPositionX=params[4]
             aPositionY=params[5]
@@ -717,4 +793,3 @@ actions.noEffect = function(param,position) {
 engine.update = function(frameCount){
     engine.frameCount = frameCount;
 };
-

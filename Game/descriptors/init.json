@@ -1,4 +1,10 @@
 {
+    "CharasFileList": {
+        "charas1": "charas1.json"
+    }, 
+    "CharasetFileList": {
+        "charaset1": "charaset1.json"
+    }, 
     "LevelsList": {
         "big": "big.json", 
         "insideLevel0": "insideLevel0.json", 
@@ -6,20 +12,14 @@
         "level1": "level1.json", 
         "level2": "level2.json"
     }, 
-    "CharasetFileList": {
-        "charaset1": "charaset1.json"
-    }, 
-    "CharasFileList": {
-        "charas1": "charas1.json"
-    }, 
     "Player": {
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 224, 
-        "initPosY": 288
+        "initPosX": 256, 
+        "initPosY": 192
     }, 
     "World": {
-        "initLevel": "level0"
+        "initLevel": "insideLevel0"
     }
 }
