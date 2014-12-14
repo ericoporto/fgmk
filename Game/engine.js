@@ -376,13 +376,14 @@ function char(chara, x, y) {
     this['waits'] = 0;
     this['mapx'] = x*32;
     this['mapy'] = (y-1)*32;
-    this['movstack'] = clone(this['chara']['movements'])
+    this['movstack'] = clone(this['chara']['movements']);
+    this['stopped'] = false;
     this['update'] = function(){
         if(printer.isShown) return;
         var px = Math.floor(this.mapx/32),
             py = Math.floor(this.mapy/32)+1;
 
-        if(this.steps == 0 && this.waits == 0){
+        if(this.steps == 0 && this.waits == 0 && this.stopped == false){
             if(this['movstack'].length > 0){
                 moveToDo = this['movstack'].shift();
                 if(moveToDo[0]=="move") {
@@ -397,7 +398,7 @@ function char(chara, x, y) {
                 this['movstack'] = clone(this['chara']['movements'])
             }
 
-        }else if(this.steps>0 && this.waits == 0){
+        }else if(this.steps>0 && this.waits == 0 && this.stopped == false){
             this.steps -= 1;
             if(this.facing == "up"){
 	            this.mapy -= 1;
@@ -408,7 +409,7 @@ function char(chara, x, y) {
             }else if(this.facing = "down"){
 	            this.mapy += 1;
             }
-        } else if(this.waits>0){
+        } else if(this.waits>0 && this.stopped == false){
             this.waits -= 2;
         }
     };
@@ -453,9 +454,17 @@ player.setup = function() {
         } else if(HID.inputs["accept"].active){
             var charFacing = engine.playerFaceChar()
             if(charFacing){
+                charFacing.charwasfacingfirst = charFacing.facing
+                newfacing = player.charaFacingTo(charFacing)
+                if(newfacing){
+                    charFacing.facing = newfacing
+                    console.log(newfacing)
+                }
+                charFacing.stopped = true
                 eventInChar(charFacing,[1,0],[py-1,px])
                 HID.inputs["accept"].active = false
                 engine.waitTime(400);
+                //charFacing.facing = charwasfacingfirst
             }else{
                 if(py-1>0 && px-1>0 && px+1< engine.currentLevel["Level"]["events"].length && px+1< engine.currentLevel["Level"]["events"].length) {
                     var pos = player.facingPosition()
@@ -631,8 +640,32 @@ eventInChar = function(char,evType,position) {
             actionAndParam = char['chara']['actions']['list'][aNmb];
             translateActions(actionAndParam[0],actionAndParam[1],position);
         }
+        engine.atomStack.push([function(){char.stopped=false; char.facing = char.charwasfacingfirst},'']);
     }
 };
+
+player.charaFacingTo =function(chara) {
+    var ppx = Math.floor(player.mapx/32),
+    ppy = Math.floor(player.mapy/32)+1;
+    var cpx = Math.floor(chara.mapx/32),
+    cpy = Math.floor(chara.mapy/32)+1;
+
+    var resx = cpx - ppx
+    var resy = cpy - ppy
+
+    if      (resx==0 && resy <0)
+        return "down"
+    else if (resx==0 && resy >0)
+        return "up"
+    else if (resx <0 && resy==0)
+        return "right"
+    else if (resx >0 && resy==0)
+        return "left"
+
+    console.log("error facing!")
+    return false
+
+}
 
 player.facingPosition = function() {
     var px = Math.floor(player.mapx/32),
