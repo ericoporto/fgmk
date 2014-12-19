@@ -462,10 +462,12 @@ class CharaList(QWidget):
         self.charaslist.clear()
 
     def getCharas(self):
+        self.charaslistSelectionChanged()
         charas = CharasFormat()
         for itemIndex in xrange(self.charaslist.count()):
             charaname = str(self.charaslist.item(itemIndex).aname)
             jt = self.charaslist.item(itemIndex).jsonTree
+            print(jt)
             charas.addChara(charaname,jt["charaset"],jt["actions"],jt["movements"])
 
         return charas

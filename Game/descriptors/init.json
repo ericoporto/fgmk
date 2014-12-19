@@ -16,7 +16,7 @@
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 256, 
+        "initPosX": 288, 
         "initPosY": 192
     }, 
     "World": {

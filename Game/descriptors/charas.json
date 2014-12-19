@@ -1,31 +1,44 @@
 
 {
-"Charas":
+"Charas": 
     {
-    "WeirdGuy":
+    "WeirdGuy": 
         {
-        "movements":
+        "movements": 
             [["move","right"],
              ["move","left"]],
-        "actions":
+        "actions": 
             {
             "type":  [  1,  0],
-            "list":
+            "list": 
                 [["showText","can't find my contact lenses..."]]
             },
         "charaset": "person2"
         },
-    "OtherWeird":
+    "YellowGuy": 
         {
-        "movements":
+        "movements": 
+            [["face","down"]],
+        "actions": 
+            {
+            "list": 
+                [["showText","..."]],
+            "type":  [  1,  0]
+            },
+        "charaset": "yellow"
+        },
+    "OtherWeird": 
+        {
+        "movements": 
             [["face","up"],
              ["face","left"],
              ["face","down"],
              ["face","right"]],
-        "actions":
+        "actions": 
             {
-            "type":  [  1,  0],
-            "list":  [["showText","spinning spinning"]]
+            "list": 
+                [["showText","spinning spinning"]],
+            "type":  [  1,  0]
             },
         "charaset": "person2"
         }
