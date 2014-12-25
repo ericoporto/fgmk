@@ -70,7 +70,7 @@ camera.panToChara = function(chara){
 camera.drawMapLayer = function(_worldLevel, _zIndex){
 
     var targetFrame = Math.floor(screen.frameCount/4)%4;
-	
+
 	var vx = 0, vy =0,
 		currentTile, tileNumber;
 
@@ -83,18 +83,18 @@ camera.drawMapLayer = function(_worldLevel, _zIndex){
     EndX = Math.min(this.maxWorldWidth,this.x+this.width)
     EndY = Math.min(this.maxWorldHeight,this.y+this.height)
 
-	
+
 	for(vx = initX, screenx =0; vx < EndX; vx++, screenx++){
 		for(vy = initY, screeny =0; vy < EndY; vy++, screeny++){
             tileNumber = _worldLevel.Level[_zIndex][vy][vx]
-			currentTile = _worldLevel.Level.tiles[ tileNumber]; 
+			currentTile = _worldLevel.Level.tiles[ tileNumber];
             if(_worldLevel.Level.tilesAnimated[tileNumber.toString()]){
                 currentTile = _worldLevel.Level.tilesAnimated[tileNumber.toString()][targetFrame]
             }
 
 
 			if(!currentTile) continue;
-			screen.drawTile(resources.tileset, currentTile, [32*screenx-this.finex, 32*screeny-this.finey]);		
+			screen.drawTile(resources.tileset, currentTile, [32*screenx-this.finex, 32*screeny-this.finey]);
 		}
 	}
 
@@ -102,13 +102,13 @@ camera.drawMapLayer = function(_worldLevel, _zIndex){
 
 camera.drawChar = function(chara){
 
-   
+
 
 	if(chara.steps) charaAnimation = chara['charaset']["walking"][chara.facing]
     else charaAnimation =  chara['charaset']["standing"][chara.facing]
 
     var targetFrame = Math.floor(screen.frameCount/4)%charaAnimation.length;
-	
+
     var screenx = 0, screeny =0;
 
     screenx = chara.mapx-(this.x*32+this.finex)
@@ -141,11 +141,11 @@ printBox.close = function() {
 
 var screen = {};
 screen.paused = false;
-screen.WIDTH = 416; 
+screen.WIDTH = 416;
 screen.HEIGHT = 704;
-screen.GWIDTH = 416; 
+screen.GWIDTH = 416;
 screen.GHEIGHT = 416;
-screen.GSTARTX= 0; 
+screen.GSTARTX= 0;
 screen.GSTARTY = 0;
 screen.RATIO = null;
 screen.currentWidth = null;
@@ -242,12 +242,12 @@ screen.drawHID = function(){
 	this.ctx.fillRect(0, this.GHEIGHT, this.GWIDTH, this.HEIGHT - this.GHEIGHT);
 
 	var HIDItem;
-	for(var tag in HID.inputs){	
+	for(var tag in HID.inputs){
 		HIDItem = HID.inputs[tag];
 		screen.drawButton(HIDItem)
 	}
 
-    
+
 }
 
 screen.clearAll = function(){
@@ -256,7 +256,7 @@ screen.clearAll = function(){
 }
 
 
-screen.printBox = { 
+screen.printBox = {
 
     setup: function(imgPrintSet){
     this.Width = screen.GWIDTH;
@@ -276,67 +276,67 @@ screen.printBox = {
             x: 0,
             y: 0,
             sizex: 64,
-            sizey: 64    
+            sizey: 64
         },
         topLeftBox: {
             x: 64,
             y: 0,
             sizex: 16,
-            sizey: 16  
+            sizey: 16
         },
         topRightBox: {
             x: 112,
             y: 0,
             sizex: 16,
-            sizey: 16 
+            sizey: 16
         },
         bottomLeftBox: {
             x: 64,
             y: 48,
             sizex: 16,
-            sizey: 16 
+            sizey: 16
         },
         bottomRightBox: {
             x: 112,
             y: 48,
             sizex: 16,
-            sizey: 16 
+            sizey: 16
         },
         LeftBox: {
             x: 64,
             y: 16,
             sizex: 16,
-            sizey: 32 
+            sizey: 32
         },
         RightBox: {
             x: 112,
             y: 16,
             sizex: 16,
-            sizey: 32 
+            sizey: 32
         },
         TopBox: {
             x: 80,
             y: 0,
             sizex: 32,
-            sizey: 16 
+            sizey: 16
         },
         BottomBox: {
             x: 80,
             y: 48,
             sizex: 32,
-            sizey: 16 
+            sizey: 16
         },
         icon0: {
             x: 0,
             y: 96,
             sizex: 64,
-            sizey: 64 
+            sizey: 64
         },
         icon1: {
             x: 64,
             y: 96,
             sizex: 64,
-            sizey: 64 
+            sizey: 64
         }
     },
 
@@ -344,7 +344,7 @@ screen.printBox = {
     drawElement: function(element,x,y,sizex,sizey,imgPrintSet, select){
         select = (typeof select === "undefined") ? 0 : select;
         screen.ctx.drawImage(imgPrintSet,
-				    element['x']+select*64, element['y'],        
+				    element['x']+select*64, element['y'],
                     element['sizex'], element['sizey'],
 				    screen.GSTARTX+x, screen.GSTARTY+y, sizex, sizey);
     },
@@ -353,13 +353,13 @@ screen.printBox = {
         if(this.anim == 'none') {
             return
         } else if(this.anim == 'box') {
-            this.targetFrame = this.frameMax       
+            this.targetFrame = this.frameMax
         } else if(this.anim == 'fadeIn') {
             if ( this.targetFrame < this.frameMax)
                 this.targetFrame++
             else {
                 this.anim = 'box'
-                this.targetFrame = this.frameMax  
+                this.targetFrame = this.frameMax
             }
         } else if(this.anim == 'fadeOut') {
             if ( this.targetFrame > 0)
@@ -369,12 +369,12 @@ screen.printBox = {
                 return
             }
         }
-     
+
         screen.printBox.drawBox(   screen.printBox.X + screen.printBox.Width/2  - this.aSizex[this.targetFrame]/2,
                                    screen.printBox.Y + screen.printBox.Height/2 - this.aSizey[this.targetFrame]/2,
                                    this.aSizex[this.targetFrame],
                                    this.aSizey[this.targetFrame]);
-        
+
     },
 
     drawBox: function( x, y, sizex, sizey,select){
@@ -426,7 +426,7 @@ screen.printBox = {
 }
 
 screen.effectPixelize2 = function(pixelation) {
- 
+
     var imageData = this.ctx.getImageData(this.GSTARTX, this.GSTARTY, this.GWIDTH , this.GHEIGHT);
     var data = imageData.data;
 
@@ -453,6 +453,14 @@ screen.effectPixelize2 = function(pixelation) {
 screen.effectPixelize = function(pixelation) {
     this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,  this.GWIDTH , this.GHEIGHT,    this.GSTARTX, this.GSTARTY,    pixelation  ,   pixelation      )
     this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,   pixelation ,   pixelation,    this.GSTARTX, this.GSTARTY,    this.GWIDTH ,   this.GHEIGHT    )
+};
+
+screen.effectColor = function(opacity,color) {
+	this.ctx.save()
+	this.ctx.fillStyle = color;
+	this.ctx.globalAlpha=opacity;
+	this.ctx.fillRect(this.GSTARTX, this.GSTARTY, this.GWIDTH, this.GHEIGHT);
+	this.ctx.restore()
 };
 
 
@@ -494,7 +502,7 @@ screen.effects = {
 screen.drawEffects = function(){
     if(screen.effects.selected == null) {
         return
-    } 
+    }
     if (screen.effects.selected == 'pixelizeFadeIn') {
         var frameToDraw = screen.frameCount-screen.effects.startFrame
         if (frameToDraw>= screen.effects.endFrame) {
@@ -513,6 +521,24 @@ screen.drawEffects = function(){
         }
         screen.effectPixelize(screen.effects.intensity[frameToDraw])
     }
+	if (screen.effects.selected == 'blackFadeOut') {
+		var frameToDraw = screen.frameCount-screen.effects.startFrame
+		if (frameToDraw>= screen.effects.endFrame) {
+			frameToDraw = screen.effects.endFrame-1
+			if (!screen.effects.keepAfter)
+				screen.effects.noEffect()
+		}
+		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#000000')
+	}
+	if (screen.effects.selected == 'blackFadeIn') {
+		var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
+		if (frameToDraw <= 0) {
+			frameToDraw = 0
+			if (!screen.effects.keepAfter)
+				screen.effects.noEffect()
+		}
+		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#000000')
+	}
 };
 
 function compareChars(a,b) {
@@ -539,7 +565,7 @@ screen.drawMenu = function(menu){
     var maxItems = menu.itemsLength
     var maxItemStringLength = menu.maxItemStringSize()
 
-    
+
     screen.printBox.drawBox( menu['drawx'],
                              menu['drawy'] ,
                              menu['width'],
@@ -583,13 +609,13 @@ screen.drawMenu = function(menu){
 screen.loop = function(){
 
 	try{
-		
+
 		// draw
 		screen.frameCount += 1;
 		screen.clearAll();
-		
+
 		if(!screen.paused){
-		
+
 			// update
 			engine.update(screen.frameCount);
             camera.setupMap(this.engine.currentLevel)
@@ -601,7 +627,7 @@ screen.loop = function(){
 
             if(debug.showLayer.layer3)
                 camera.drawChars();
-    			//camera.drawChar(player);	
+    			//camera.drawChar(player);
 
             if(debug.showLayer.layer4)
     			camera.drawMapLayer(this.engine.currentLevel, "layer4");
@@ -614,18 +640,18 @@ screen.loop = function(){
                     screen.drawMenu(menus.allMenus[menuToDraw]);
                 }
             }
-            
+
             screen.printBox.drawBoxAnimation();
 
 			// updates
 			printer.update();
-			
-			
+
+
 		}
-				
+
         debug.FPS.draw();
 		screen.timer = setTimeout("screen.loop()", 1000/60.0);
-	
+
 	}catch(err){
 		alert("loop error: "+err);
 	}
@@ -643,7 +669,7 @@ debug.showLayer = {
 debug.FPS = {
     counter : 0,
     FPS : 0,
-    show : false, 
+    show : false,
     draw : function(){
         this.counter += 1;
         if ( this.show ) {
@@ -658,4 +684,3 @@ debug.FPS = {
 
 
 }
-
