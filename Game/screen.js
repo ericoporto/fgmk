@@ -539,6 +539,24 @@ screen.drawEffects = function(){
 		}
 		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#000000')
 	}
+	if (screen.effects.selected == 'whiteFadeOut') {
+		var frameToDraw = screen.frameCount-screen.effects.startFrame
+		if (frameToDraw>= screen.effects.endFrame) {
+			frameToDraw = screen.effects.endFrame-1
+			if (!screen.effects.keepAfter)
+				screen.effects.noEffect()
+			}
+			screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
+		}
+		if (screen.effects.selected == 'whiteFadeIn') {
+			var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
+			if (frameToDraw <= 0) {
+				frameToDraw = 0
+				if (!screen.effects.keepAfter)
+					screen.effects.noEffect()
+				}
+				screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
+			}
 };
 
 function compareChars(a,b) {

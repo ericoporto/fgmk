@@ -19,7 +19,7 @@ EVENTSLAYER = 4
 
 
 
-   	
+
 class changeTile(QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)
@@ -34,7 +34,7 @@ class changeTile(QDialog):
         self.useCurrentPlace = "current"
 
     	self.VBox = QVBoxLayout(self)
-    	self.VBox.setAlignment(Qt.AlignTop) 
+    	self.VBox.setAlignment(Qt.AlignTop)
 
     	self.LabelText1 = QLabel("Select where is the tile to change:")
     	self.LabelText2 = QLabel("Select to what type change:")
@@ -48,7 +48,7 @@ class changeTile(QDialog):
         if(self.nothis is False):
             self.levelsList = ["this"]
         else:
-            self.levelsList = []            
+            self.levelsList = []
 
         for level in self.initFile['LevelsList']:
             self.levelsList.append(level)
@@ -67,8 +67,8 @@ class changeTile(QDialog):
                 self.currentTileSet = self.parent.parent.myTileSet
         else:
             self.currentLevel=TileXtra.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) ) 
-            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)   
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) )
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(self.currentLevel,self.currentTileSet,self)
 
@@ -137,18 +137,18 @@ class changeTile(QDialog):
             if(edit[4]!=self.useCurrentPlace):
                 self.checkbox.setCheckState(Qt.Unchecked)
                 self.LineTextPlace.setText("{0};{1};{2}".format(edit[4],edit[5],edit[6]))
-                
+
                 for idx, val in enumerate(self.levelsList):
                     if(val==edit[6]):
                         self.comboBox.setCurrentIndex(idx)
 
             else:
                 self.checkbox.setCheckState(Qt.Checked)
-                
+
 
         self.VBox.addWidget(self.LabelText1)
         self.VBox.addWidget(self.comboBox)
-        self.VBox.addWidget(self.scrollArea)       
+        self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LineTextPlace)
         self.VBox.addWidget(self.checkbox)
         self.VBox.addWidget(self.LabelText2)
@@ -164,9 +164,9 @@ class changeTile(QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
-        self.setWindowTitle('Select what tile and where to change to...')   
+        self.setWindowTitle('Select what tile and where to change to...')
 
-        self.setTileToChange() 
+        self.setTileToChange()
 
     def checkboxChanged(self, newState):
         if(newState == 2):
@@ -187,8 +187,8 @@ class changeTile(QDialog):
 
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel=TileXtra.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(levelIndex)) ) 
-            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)    
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(levelIndex)) )
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)
         else:
             if(self.edit == None):
                 self.currentLevel = self.parent.parent.parent.myMap
@@ -217,7 +217,7 @@ class teleport(QDialog):
         self.initFile = TXWdgt.openInitFile(gamefolder)
 
     	self.VBox = QVBoxLayout(self)
-    	self.VBox.setAlignment(Qt.AlignTop) 
+    	self.VBox.setAlignment(Qt.AlignTop)
 
     	self.LabelText = QLabel("Select where to teleport:")
 
@@ -226,7 +226,7 @@ class teleport(QDialog):
         if(self.nothis is False):
             self.levelsList = ["this"]
         else:
-            self.levelsList = []            
+            self.levelsList = []
 
 
         for level in self.initFile['LevelsList']:
@@ -250,8 +250,8 @@ class teleport(QDialog):
                 self.currentTileSet = self.parent.myTileSet
         else:
             self.currentLevel=TileXtra.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) ) 
-            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)               
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(0)) )
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(self.currentLevel,self.currentTileSet,self)
 
@@ -269,20 +269,20 @@ class teleport(QDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.comboBox)
-        self.VBox.addWidget(self.scrollArea)       
+        self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LineText)
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
 
         if(selectStartPosition == None):
-            self.setWindowTitle('Select where to teleport...') 
+            self.setWindowTitle('Select where to teleport...')
         else:
-            self.setWindowTitle(selectStartPosition)             
+            self.setWindowTitle(selectStartPosition)
 
         if(edit != None):
             self.LineText.setText("{0};{1}".format(edit[0],edit[1]))
-            
+
             for idx, val in enumerate(self.levelsList):
                 if(val==edit[2]):
                     self.comboBox.setCurrentIndex(idx)
@@ -299,8 +299,8 @@ class teleport(QDialog):
     def updateMap(self,levelIndex):
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel=TileXtra.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(levelIndex)) ) 
-            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)    
+            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(self.gamefolder,self.comboBox.itemText(levelIndex)) )
+            self.currentTileSet = TileXtra.TileSet( self.currentLevel.tileImage,self.currentLevel.palette)
         else:
             if(self.selectStartPosition==None):
                 if(self.edit == None):
@@ -324,7 +324,7 @@ class showText(QDialog):
     	QDialog.__init__(self, parent, **kwargs)
 
     	self.VBox = QVBoxLayout(self)
-    	self.VBox.setAlignment(Qt.AlignTop) 
+    	self.VBox.setAlignment(Qt.AlignTop)
 
     	self.LabelText = QLabel("Write the text in the box below:")
 
@@ -343,7 +343,7 @@ class showText(QDialog):
             self.LineText.setPlainText(edit[0])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Write text to show in text box...')  
+        self.setWindowTitle('Write text to show in text box...')
 
     def getValue(self):
         text = str(self.LineText.toPlainText())
@@ -358,11 +358,11 @@ class fadeIn(QDialog):
     	QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop) 
+        self.VBox.setAlignment(Qt.AlignTop)
         self.LabelText = QLabel("Select the effect to use:")
         self.ListEffect = QListWidget()
 
-        effects = [["pixelize","pixelizeFadeIn"]]
+        effects = [["pixelize","pixelizeFadeIn"],["black","blackFadeIn"],["white","whiteFadeIn"]]
 
         for effect in effects:
             item = QListWidgetItem(effect[0])
@@ -383,7 +383,7 @@ class fadeIn(QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 350)
-        self.setWindowTitle('fadeIn: select the effect to apply')       
+        self.setWindowTitle('fadeIn: select the effect to apply')
 
         if(edit != None):
             for idx, val in enumerate(effects):
@@ -391,7 +391,7 @@ class fadeIn(QDialog):
                     self.ListEffect.setItemSelected(self.ListEffect.item(idx), True)
 
             if(edit[1]=='keepEffect'):
-                self.checkbox.setCheckState(Qt.Checked)   
+                self.checkbox.setCheckState(Qt.Checked)
 
     def getValue(self):
         effecToReturn = str(self.ListEffect.selectedItems()[0].whatsThis())
@@ -405,11 +405,11 @@ class fadeOut(QDialog):
     	QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop) 
+        self.VBox.setAlignment(Qt.AlignTop)
         self.LabelText = QLabel("Select the effect to use:")
         self.ListEffect = QListWidget()
 
-        effects = [["pixelize","pixelizeFadeOut"]]
+        effects = [["pixelize","pixelizeFadeOut"],["black","blackFadeOut"],["white","whiteFadeOut"]]
 
         for effect in effects:
             item = QListWidgetItem(effect[0])
@@ -430,7 +430,7 @@ class fadeOut(QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 350)
-        self.setWindowTitle('fadeOut: select the effect to apply')  
+        self.setWindowTitle('fadeOut: select the effect to apply')
 
         if(edit != None):
             for idx, val in enumerate(effects):
@@ -438,8 +438,8 @@ class fadeOut(QDialog):
                     self.ListEffect.setItemSelected(self.ListEffect.item(idx), True)
 
             if(edit[1]=='keepEffect'):
-                self.checkbox.setCheckState(Qt.Checked)                
-                 
+                self.checkbox.setCheckState(Qt.Checked)
+
 
     def getValue(self):
         effecToReturn = str(self.ListEffect.selectedItems()[0].whatsThis())
@@ -456,5 +456,3 @@ class noEffect(QDialog):
 
     def getValue(self):
         return ""
-
-    

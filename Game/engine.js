@@ -289,15 +289,7 @@ menus.setParent(mapMenu);
 
 var engine = {};
 
-engine.currentLevel = null;
-engine.levels = null;
-engine.paused = false;
-engine.frameCount = 0;
-engine.timer = null;
-engine.waitKey = false;
-engine.waitTimeSwitch = false;
-engine.minimumWait = false;
-engine.atomStack=new Array();
+
 
 window.ondevicemotion = function(event) {
     if (event.accelerationIncludingGravity.y > 4) {
@@ -512,6 +504,27 @@ player.setup = function() {
     };
 }
 
+engine.resetBlocks = function(){
+    actions.blockCounter = 0;
+    actions.blockStack = new Array();
+    actions.blockStack.push(actions.blockCounter.valueOf());
+};
+
+engine.setup = function(){
+    engine.currentLevel = null;
+    engine.levels = null;
+    engine.paused = false;
+    engine.frameCount = 0;
+    engine.timer = null;
+    engine.waitKey = false;
+    engine.waitTimeSwitch = false;
+    engine.minimumWait = false;
+    engine.atomStack=new Array();
+    engine.st = {};
+    engine.st.vars = {};
+    engine.resetBlocks()
+}
+
 engine.playerFaceChar = function(){
     var count = chars.length;
     for(var i = 0; i < count; i++) {
@@ -626,14 +639,19 @@ engine.runatomStack = function(){
             if(eventToRun[0]=="block") {
                 break
             } else {
-            eventToRun[0](eventToRun[1]);
+            eventToRun[0](eventToRun[1],eventToRun[2]);
             }
         }
     }
 };
 
+evalCondition = function( param ){
+    var value = eval(param[0])
+    return value
+}
+
 eventInChar = function(char,evType,position) {
-    console.log(char['chara'])
+    engine.resetBlocks()
     if (char['chara']['actions']['type'][0] == evType[0] && char['chara']['actions']['type'][1] == evType[1]) {
         var aNmb, action, actionAndParam;
         for (aNmb = 0; aNmb < char['chara']['actions']['list'].length ; aNmb++) {
@@ -686,6 +704,7 @@ player.facingPosition = function() {
 }
 
 eventInMap = function(level,event,evType,position) {
+    engine.resetBlocks()
     if (level['eventsType'][event.toString()][0] == evType[0] && level['eventsType'][event.toString()][1] == evType[1]) {
         var aNmb, action, actionAndParam;
         for (aNmb = 0; aNmb < level['eventsActions'][event.toString()].length ; aNmb++) {
@@ -728,11 +747,110 @@ engine.changeTile = function(param) {
     levelToChange["Level"][param[1]][param[4]][param[5]]=param[0]
 }
 
+engine.evalNum = function(number) {
+    var value = number.slice(0)
+    if(isNaN(value) ){
+        if(value.indexOf("var:")==0){
+            return engine.st.vars[value.split('var:')[1]]
+        } else {
+            return value
+        }
+    }else{
+        return +value
+    }
+}
+
+
+engine.if = function( param, blockId ) {
+    if ( engine.testVar(param)) {
+        var removeActions = false
+        for (var i = 0; i < engine.atomStack.length ; i++) {
+            if(engine.atomStack[i][0] == engine.else && engine.atomStack[i][2] == blockId) {
+                removeActions = true
+
+            }
+            if(engine.atomStack[i][0] == engine.end && engine.atomStack[i][2] == blockId) {
+                return
+            }
+            if(removeActions){
+                engine.atomStack.splice(i,1)
+                i--
+            }
+
+        }
+    } else {
+        var actToRun =[0,0,0]
+        while(engine.atomStack.length > 0 &&
+            actToRun[0] != engine.end &&
+            actToRun[0] != engine.else ||
+            actToRun[2] != blockId){
+                actToRun = engine.atomStack.shift();
+        }
+    }
+}
+
+engine.end = function () {}
+
+engine.else = function () {}
+
+engine.setVar = function(param) {
+    engine.st.vars[param[0]]= engine.evalNum(param[1])
+}
+
+engine.testVar = function(param) {
+    var var1 = engine.evalNum(param[0])
+    if(var1=="true"){
+        return true
+    } else if(var1=="false") {
+        return false
+    }
+    var operator = param[1]
+    var var2 = engine.evalNum(param[2])
+    var test = {
+        '>'  : function(a,b) {return a>b},
+        'bigger'  : function(a,b) {return a>b},
+        '<'  : function(a,b) {return a<b},
+        'smaller'  : function(a,b) {return a<b},
+        '>=' : function(a,b) {return a>=b},
+        '<=' : function(a,b) {return a<=b},
+        '==' : function(a,b) {return a==b},
+        'equal' : function(a,b) {return a==b}
+    }
+    return test[operator](var1,var2)
+}
+
 translateActions = function(action, param, position) {
     actions[action](param,position)
 };
 
 var actions = {};
+
+lastBlock = function() {
+    var value = 0
+    var bstk = actions.blockStack.slice(0)
+    if(bstk.length>1){
+        value = bstk[bstk.length-1];
+    } else if(bstk.length==1){
+        value = bstk[0];
+    }
+    return value
+}
+
+actions.if = function( param, position ) {
+    var params = param.split(';');
+    actions.blockCounter++;
+    actions.blockStack.push(actions.blockCounter.valueOf());
+    engine.atomStack.push([engine.if,params,lastBlock()] );
+}
+
+actions.else = function( param, position ) {
+    engine.atomStack.push([engine.else,'',lastBlock()] );
+}
+
+actions.end = function( param, position ) {
+    engine.atomStack.push([engine.end,'',lastBlock()] );
+    var popped = actions.blockStack.pop();
+}
 
 actions.showText = function(param,position) {
         engine.atomStack.push([printer.showText,param]);
@@ -804,6 +922,16 @@ actions.fadeOut = function(param,position) {
         for(var i=0; i < 8; i++) {
             engine.atomStack.push(["block",null]);
         }
+};
+
+actions.setVar = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.setVar,params]);
+};
+
+actions.testVar = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.testVar,params]);
 };
 
 actions.noEffect = function(param,position) {

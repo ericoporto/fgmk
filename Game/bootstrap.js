@@ -51,22 +51,22 @@ resources.harvest = function(){
     for (var level in LevelsList) {
         var levelItem = LevelsList[level]
         console.log(descriptors+levelsFolder+levelItem)
-        resources['levels'][level] = jsonLevelGet(descriptors+levelsFolder+levelItem);        
+        resources['levels'][level] = jsonLevelGet(descriptors+levelsFolder+levelItem);
     }
     CharasetFileList = init['CharasetFileList']
     for (var charasetfilep in CharasetFileList) {
         var charasetfile = CharasetFileList[charasetfilep]
         console.log(descriptors+charasetsFolder+charasetfile)
-        resources['charasets'] = jsonLevelGet(descriptors+charasetsFolder+charasetfile)['Charaset'];        
+        resources['charasets'] = jsonLevelGet(descriptors+charasetsFolder+charasetfile)['Charaset'];
     }
     //CharasFileList = init['CharasFileList']
     //for (var charasfilep in CharasFileList) {
     //    var charasfile = CharasFileList[charasfilep]
     //    console.log(descriptors+charasFolder+charasfile)
-    //    resources['charas'] = jsonLevelGet(descriptors+charasFolder+charasfile)['Charas'];        
+    //    resources['charas'] = jsonLevelGet(descriptors+charasFolder+charasfile)['Charas'];
     //}
 
-    resources['charas'] = jsonLevelGet(descriptors+"charas.json")['Charas']; 
+    resources['charas'] = jsonLevelGet(descriptors+"charas.json")['Charas'];
     this.playerCharaset = resources['charasets'][init['Player']['charaSet']];
 }
 
@@ -91,6 +91,7 @@ bootstrap.onLoadDOM = function(){
         screen.init();
         player.setup();
         camera.setupCanvas(screen.canvas);
+		engine.setup();
         screen.setEngine(engine);
         HID.setupTouchZone(screen);
 		HID.setupListeners();
