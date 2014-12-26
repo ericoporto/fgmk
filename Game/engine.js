@@ -796,6 +796,13 @@ engine.setVar = function(param) {
     engine.st.vars[param[0]]= engine.evalNum(param[1])
 }
 
+engine.varPlusOne = function(param) {
+    if(isNaN(engine.st.vars[param[0]])){
+        engine.st.vars[param[0]]=0    
+    }
+    engine.st.vars[param[0]]++
+}
+
 engine.testVar = function(param) {
     var var1 = engine.evalNum(param[0])
     if(var1=="true"){
@@ -926,6 +933,11 @@ actions.fadeOut = function(param,position) {
 actions.setVar = function(param,position) {
     var params = param.split(';')
     engine.atomStack.push([engine.setVar,params]);
+};
+
+actions.varPlusOne = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.varPlusOne,params]);
 };
 
 actions.testVar = function(param,position) {

@@ -387,7 +387,7 @@ class IF(QDialog):
             self.var2LineEdit.setText(edit[2])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Write text to show in text box...')
+        self.setWindowTitle('IF conditional...')
 
     def getValue(self):
         text = str(self.var1LineEdit.text())+";"+str(self.operLineEdit.text())+";"+str(self.var2LineEdit.text())
@@ -400,8 +400,8 @@ class setVar(QDialog):
     	self.VBox = QVBoxLayout(self)
     	self.VBox.setAlignment(Qt.AlignTop)
 
-    	self.varLabelText = QLabel("Write var name")
-        self.valLabelText = QLabel("Write value")
+    	self.varLabelText = QLabel("Write var name:")
+        self.valLabelText = QLabel("Write value:")
 
         self.varNameLineEdit = QLineEdit()
         self.valueLineEdit = QLineEdit()
@@ -422,10 +422,40 @@ class setVar(QDialog):
             self.valueLineEdit.setText(edit[1])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Write text to show in text box...')
+        self.setWindowTitle('Change var to value')
 
     def getValue(self):
         text = str(self.varNameLineEdit.text())+";"+str(self.valueLineEdit.text())
+        return text
+
+class varPlusOne(QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+    	QDialog.__init__(self, parent, **kwargs)
+
+    	self.VBox = QVBoxLayout(self)
+    	self.VBox.setAlignment(Qt.AlignTop)
+
+    	self.varLabelText = QLabel("Write var name")
+
+        self.varNameLineEdit = QLineEdit()
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.varLabelText)
+        self.VBox.addWidget(self.varNameLineEdit)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            self.varNameLineEdit.setText(edit[0])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('You can add 1 to a var.')
+
+    def getValue(self):
+        text = str(self.varNameLineEdit.text())
         return text
 
 class showText(QDialog):

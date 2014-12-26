@@ -1,5 +1,6 @@
 { "actionList": {
     "setVar":["varname","value"],
+    "varPlusOne":["varname"],
     "IF":["var1","oper","var2"],
     "END":[""],
     "ELSE":[""],
