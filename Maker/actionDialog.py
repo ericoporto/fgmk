@@ -319,6 +319,115 @@ class teleport(QDialog):
         text = str(self.LineText.text())+";"+str(self.comboBox.currentText())
         return text
 
+class END(QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+    	QDialog.__init__(self, parent, **kwargs)
+
+    	self.VBox = QVBoxLayout(self)
+    	self.VBox.setAlignment(Qt.AlignTop)
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.buttonBox)
+
+    def getValue(self):
+        return ""
+
+class ELSE(QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+    	QDialog.__init__(self, parent, **kwargs)
+
+    	self.VBox = QVBoxLayout(self)
+    	self.VBox.setAlignment(Qt.AlignTop)
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.buttonBox)
+
+    def getValue(self):
+        return ""
+
+class IF(QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+    	QDialog.__init__(self, parent, **kwargs)
+
+    	self.VBox = QVBoxLayout(self)
+    	self.VBox.setAlignment(Qt.AlignTop)
+
+    	self.var1LabelText = QLabel("Write var or value:")
+        self.operLabelText = QLabel("Operation:")
+        self.var2LabelText = QLabel("Write var or value:")
+
+        self.var1LineEdit = QLineEdit()
+        self.operLineEdit = QLineEdit()
+        self.var2LineEdit = QLineEdit()
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.var1LabelText)
+        self.VBox.addWidget(self.var1LineEdit)
+        self.VBox.addWidget(self.operLabelText)
+        self.VBox.addWidget(self.operLineEdit)
+        self.VBox.addWidget(self.var2LabelText)
+        self.VBox.addWidget(self.var2LineEdit)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            self.var1LineEdit.setText(edit[0])
+            self.operLineEdit.setText(edit[1])
+            self.var2LineEdit.setText(edit[2])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('Write text to show in text box...')
+
+    def getValue(self):
+        text = str(self.var1LineEdit.text())+";"+str(self.operLineEdit.text())+";"+str(self.var2LineEdit.text())
+        return text
+
+class setVar(QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+    	QDialog.__init__(self, parent, **kwargs)
+
+    	self.VBox = QVBoxLayout(self)
+    	self.VBox.setAlignment(Qt.AlignTop)
+
+    	self.varLabelText = QLabel("Write var name")
+        self.valLabelText = QLabel("Write value")
+
+        self.varNameLineEdit = QLineEdit()
+        self.valueLineEdit = QLineEdit()
+
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.varLabelText)
+        self.VBox.addWidget(self.varNameLineEdit)
+        self.VBox.addWidget(self.valLabelText)
+        self.VBox.addWidget(self.valueLineEdit)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            self.varNameLineEdit.setText(edit[0])
+            self.valueLineEdit.setText(edit[1])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('Write text to show in text box...')
+
+    def getValue(self):
+        text = str(self.varNameLineEdit.text())+";"+str(self.valueLineEdit.text())
+        return text
+
 class showText(QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
     	QDialog.__init__(self, parent, **kwargs)

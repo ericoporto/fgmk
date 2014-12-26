@@ -450,7 +450,6 @@ player.setup = function() {
                 newfacing = player.charaFacingTo(charFacing)
                 if(newfacing){
                     charFacing.facing = newfacing
-                    console.log(newfacing)
                 }
                 charFacing.stopped = true
                 eventInChar(charFacing,[1,0],[py-1,px])
@@ -761,15 +760,15 @@ engine.evalNum = function(number) {
 }
 
 
-engine.if = function( param, blockId ) {
+engine.IF = function( param, blockId ) {
     if ( engine.testVar(param)) {
         var removeActions = false
         for (var i = 0; i < engine.atomStack.length ; i++) {
-            if(engine.atomStack[i][0] == engine.else && engine.atomStack[i][2] == blockId) {
+            if(engine.atomStack[i][0] == engine.ELSE && engine.atomStack[i][2] == blockId) {
                 removeActions = true
 
             }
-            if(engine.atomStack[i][0] == engine.end && engine.atomStack[i][2] == blockId) {
+            if(engine.atomStack[i][0] == engine.END && engine.atomStack[i][2] == blockId) {
                 return
             }
             if(removeActions){
@@ -781,17 +780,17 @@ engine.if = function( param, blockId ) {
     } else {
         var actToRun =[0,0,0]
         while(engine.atomStack.length > 0 &&
-            actToRun[0] != engine.end &&
-            actToRun[0] != engine.else ||
+            actToRun[0] != engine.END &&
+            actToRun[0] != engine.ELSE ||
             actToRun[2] != blockId){
                 actToRun = engine.atomStack.shift();
         }
     }
 }
 
-engine.end = function () {}
+engine.END = function () {}
 
-engine.else = function () {}
+engine.ELSE = function () {}
 
 engine.setVar = function(param) {
     engine.st.vars[param[0]]= engine.evalNum(param[1])
@@ -836,19 +835,19 @@ lastBlock = function() {
     return value
 }
 
-actions.if = function( param, position ) {
+actions.IF = function( param, position ) {
     var params = param.split(';');
     actions.blockCounter++;
     actions.blockStack.push(actions.blockCounter.valueOf());
-    engine.atomStack.push([engine.if,params,lastBlock()] );
+    engine.atomStack.push([engine.IF,params,lastBlock()] );
 }
 
-actions.else = function( param, position ) {
-    engine.atomStack.push([engine.else,'',lastBlock()] );
+actions.ELSE = function( param, position ) {
+    engine.atomStack.push([engine.ELSE,'',lastBlock()] );
 }
 
-actions.end = function( param, position ) {
-    engine.atomStack.push([engine.end,'',lastBlock()] );
+actions.END = function( param, position ) {
+    engine.atomStack.push([engine.END,'',lastBlock()] );
     var popped = actions.blockStack.pop();
 }
 

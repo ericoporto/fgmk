@@ -1,50 +1,49 @@
 
 {
-"Charas":
+"Charas": 
     {
-    "WeirdGuy":
+    "WeirdGuy": 
         {
-        "movements":
+        "movements": 
             [["move","right"],
              ["move","left"]],
-        "actions":
+        "actions": 
             {
             "type":  [  1,  0],
-            "list":
-                [["showText","can't find my contact lenses..."],
-                 ["setVar", "test;1"],
-                 ["if", "var:test;equal;1"],
-                    ["showText","TRUEE.."],
-                 ["else",""],
-                    ["showText","FALSEE.."],
-                 ["end",""]]
+            "list": 
+                [["IF","var:test;equal;1"],
+                 ["showText","See you are making friends..."],
+                 ["ELSE",""],
+                 ["showText","You should talk with the guy in yellow first..."],
+                 ["END",""]]
             },
         "charaset": "person2"
         },
-    "YellowGuy":
+    "YellowGuy": 
         {
-        "movements":
+        "movements": 
             [["face","down"]],
-        "actions":
+        "actions": 
             {
-            "list":
-                [["showText","..."]],
-            "type":  [  1,  0]
+            "type":  [  1,  0],
+            "list": 
+                [["showText","..."],
+                 ["setVar","test;1"]]
             },
         "charaset": "yellow"
         },
-    "OtherWeird":
+    "OtherWeird": 
         {
-        "movements":
+        "movements": 
             [["face","up"],
              ["face","left"],
              ["face","down"],
              ["face","right"]],
-        "actions":
+        "actions": 
             {
-            "list":
-                [["showText","spinning spinning"]],
-            "type":  [  1,  0]
+            "type":  [  1,  0],
+            "list": 
+                [["showText","spinning spinning"]]
             },
         "charaset": "person2"
         }

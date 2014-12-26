@@ -41,8 +41,8 @@ def selectStartingPosition(parent, psSettings):
         else:
             initFileJsonTree["World"]["initLevel"] = str(parent.myMap.levelName)
         return [initFileJsonTree,str(position[2])]
-        
-        
+
+
 
 class CommandCTTileType(QUndoCommand):
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
@@ -63,7 +63,7 @@ class CommandCTTileType(QUndoCommand):
         self.pMap.setTile( self.tileX, self.tileY, self.Layer, self.changeTypeTo)
         self.sender.updateTileImageInMap( self.changeTypeTo, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
         #print("Type= ", self.changeTypeTo, "  X= " ,self.tileX, "  Y= " , self.tileY)
-        
+
 
     def undo(self):
         self.pMap.setTile( self.tileX, self.tileY, self.Layer, self.oldType)
@@ -83,8 +83,8 @@ class CommandCGroupTType(QUndoCommand):
         self.pmyMapWidget = child.myMapWidget
         self.pMap = pMap
         self.ptileset = ptileset
-        
-        self.listToChange = listToChange 
+
+        self.listToChange = listToChange
 
     def redo(self):
         for change in self.listToChange:
@@ -107,7 +107,7 @@ class newProject(QDialog):
         self.returnValue = { "name" : "NewFile", "baseFolder" : "" }
 
         self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop) 
+        self.VBox.setAlignment(Qt.AlignTop)
 
         HBoxFolder = QHBoxLayout()
         self.LineEditFolder = QLineEdit ()
@@ -140,7 +140,7 @@ class newProject(QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('New game project...')  
+        self.setWindowTitle('New game project...')
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
@@ -173,7 +173,7 @@ class newFile(QDialog):
         }
 
         self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop) 
+        self.VBox.setAlignment(Qt.AlignTop)
 
         HBoxFolder = QHBoxLayout()
         self.LineEditFolder = QLineEdit ()
@@ -220,7 +220,7 @@ class newFile(QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('New map...')  
+        self.setWindowTitle('New map...')
 
     def validateLineEditWidth(self):
         if int(self.LineEditWidth.text()) < 15:
@@ -267,11 +267,11 @@ class newFile(QDialog):
 class ActionsWidget(QDialog):
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
         QDialog.__init__(self, parent, **kwargs)
-        self.psSettings=psSettings  
-        self.ischaras = ischaras     
+        self.psSettings=psSettings
+        self.ischaras = ischaras
 
         self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop) 
+        self.VBox.setAlignment(Qt.AlignTop)
 
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),"actions/actionsList.json")
         f = open( filepath, "rb" )
@@ -287,7 +287,7 @@ class ActionsWidget(QDialog):
             self.actionButton[-1].clicked.connect(self.getAction)
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Select Action to add...')   
+        self.setWindowTitle('Select Action to add...')
 
         self.show()
 
@@ -296,24 +296,28 @@ class ActionsWidget(QDialog):
         buttonThatSent = self.sender()
         self.returnValue = buttonThatSent.text()
 
-        newDialogFromName = getattr(actionDialog, str(self.returnValue))
-        if(self.ischaras is False):
-            self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
-        else:
-            self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self,None,True)
-
-        if self.myActionsDialog.exec_() == QtGui.QDialog.Accepted:
-            returnActDlg = str(self.myActionsDialog.getValue())
-
-            #self.returnValue.append('|')
-            self.returnValue = [str(self.returnValue),str(returnActDlg)]
+        if(self.returnValue == "END" or self.returnValue == "ELSE"):
+            self.returnValue = [str(self.returnValue),""]
             self.accept()
+        else:
+            newDialogFromName = getattr(actionDialog, str(self.returnValue))
+            if(self.ischaras is False):
+                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
+            else:
+                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self,None,True)
+
+            if self.myActionsDialog.exec_() == QtGui.QDialog.Accepted:
+                returnActDlg = str(self.myActionsDialog.getValue())
+
+                #self.returnValue.append('|')
+                self.returnValue = [str(self.returnValue),str(returnActDlg)]
+                self.accept()
 
     def getValue(self):
         return self.returnValue
 
 
-class MiniPaletteWidget(QWidget):   
+class MiniPaletteWidget(QWidget):
     def __init__(self, pMyTileset, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
 
@@ -364,7 +368,7 @@ class MiniPaletteWidget(QWidget):
             self.connect(self.PaletteTileList[-1], SIGNAL('clicked()'), self.setTileCurrent)
 
         self.PaletteItems.resize(6*tileSetInstance.boxsize,TileXtra.divideRoundUp(len(tileSetInstance.tileset),6)*tileSetInstance.boxsize)
-    
+
     def setTileCurrent(self):
         self.setImageCurrent(self.sender().tileType[0])
         self.emit(SIGNAL('selectedTilePalette()'))
@@ -378,7 +382,7 @@ class MiniPaletteWidget(QWidget):
         return self.currentTile
 
 
-class MiniMapWidget(QWidget):   
+class MiniMapWidget(QWidget):
     def __init__(self, pMyMap, pMyTileset, parent=None, **kwargs):
         QWidget.__init__(self, parent, **kwargs)
 
@@ -419,8 +423,8 @@ class MiniMapWidget(QWidget):
 
         self.TileWidth = len(LayersMapTiles[0])
         self.TileHeight = len(LayersMapTiles[0][0])
-          
-        # for i in height    
+
+        # for i in height
         for iy in xrange(self.TileHeight):
             # for j in width
             self.TileList.append([])
@@ -441,7 +445,7 @@ class MiniMapWidget(QWidget):
         LayersMapTiles = self.pMyMap.LayersMapTiles
         boxsize = self.pMyTileset.boxsize
         scale = self.myScale
-          
+
         for i in range(self.TileWidth):
             for j in range(self.TileHeight):
 
