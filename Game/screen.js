@@ -671,7 +671,7 @@ screen.loop = function(){
 		screen.timer = setTimeout("screen.loop()", 1000/60.0);
 
 	}catch(err){
-		alert("loop error: "+err);
+		alert("screen loop error: "+err);
 	}
 }
 

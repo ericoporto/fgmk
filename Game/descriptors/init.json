@@ -6,6 +6,7 @@
         "charaset1": "charaset1.json"
     }, 
     "LevelsList": {
+        "Testmap": "Testmap.json", 
         "big": "big.json", 
         "insideLevel0": "insideLevel0.json", 
         "level0": "level0.json", 
@@ -16,10 +17,10 @@
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 288, 
+        "initPosX": 160, 
         "initPosY": 192
     }, 
     "World": {
-        "initLevel": "insideLevel0"
+        "initLevel": "Testmap"
     }
 }

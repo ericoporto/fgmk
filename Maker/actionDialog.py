@@ -466,6 +466,8 @@ class showText(QDialog):
     	self.VBox.setAlignment(Qt.AlignTop)
 
     	self.LabelText = QLabel("Write the text in the box below:")
+        self.downLabelText = QLabel(
+          "tip: you can type var:varname to get the content of that variable.")
 
         self.LineText = QPlainTextEdit()
 
@@ -476,6 +478,7 @@ class showText(QDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.LineText)
+        self.VBox.addWidget(self.downLabelText)
         self.VBox.addWidget(self.buttonBox)
 
         if(edit != None):

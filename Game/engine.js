@@ -346,6 +346,9 @@ feedbackEng = {
 function charalist(){
     if ("charas" in engine.currentLevel["Level"] ) {
         listofcharas = engine.currentLevel["Level"]["charas"]
+        if(listofcharas[0] == ""){
+            return []
+        }
         var count = listofcharas.length;
         var returnvalue = []
 
@@ -859,12 +862,13 @@ actions.END = function( param, position ) {
 }
 
 actions.preText = function(text) {
-    return text.replace(/(var:)([a-zA-Z0-9]+)/g,
+    var pretexted = text.slice(0)
+    return (text.slice(0)).replace(/(var:)([a-zA-Z0-9]+)/g,
             function(varname){return engine.evalNum(varname)} )
 }
 
 actions.showText = function(param,position) {
-        text = actions.preText(param.slice(0))
+        text = actions.preText(param)
         engine.atomStack.push([printer.showText,text]);
         var linesTotal = printer.textLines(text)
         var lineNumber ;
