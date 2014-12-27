@@ -798,7 +798,7 @@ engine.setVar = function(param) {
 
 engine.varPlusOne = function(param) {
     if(isNaN(engine.st.vars[param[0]])){
-        engine.st.vars[param[0]]=0    
+        engine.st.vars[param[0]]=0
     }
     engine.st.vars[param[0]]++
 }
@@ -858,9 +858,15 @@ actions.END = function( param, position ) {
     var popped = actions.blockStack.pop();
 }
 
+actions.preText = function(text) {
+    return text.replace(/(var:)([a-zA-Z0-9]+)/g,
+            function(varname){return engine.evalNum(varname)} )
+}
+
 actions.showText = function(param,position) {
-        engine.atomStack.push([printer.showText,param]);
-        var linesTotal = printer.textLines(param)
+        text = actions.preText(param.slice(0))
+        engine.atomStack.push([printer.showText,text]);
+        var linesTotal = printer.textLines(text)
         var lineNumber ;
         for (lineNumber = 0 ; lineNumber < linesTotal; lineNumber+=2) {
             engine.atomStack.push([engine.waitForKey,true]);

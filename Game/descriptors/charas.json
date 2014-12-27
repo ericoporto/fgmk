@@ -12,9 +12,9 @@
             "type":  [  1,  0],
             "list":
                 [["IF","var:test;bigger;0"],
-                 ["showText","See you are making friends..."],
+                 ["showText","See you are making friends... Talked var:test times!"],
                  ["ELSE",""],
-                 ["showText","You should talk with the guy in yellow first..."],
+                 ["showText","You should talk with the guy in yellow first... "],
                  ["END",""]]
             },
         "charaset": "person2"
