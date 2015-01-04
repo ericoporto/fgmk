@@ -175,6 +175,10 @@ screen.drawTile = function(tileset, tile, position) {
 				this.GSTARTX+position[0], this.GSTARTY+position[1], 32, 32);
 }
 
+screen.drawImage = function(image, position){
+	screen.ctx.drawImage(image,this.GSTARTX+position[0], this.GSTARTY+position[1])
+}
+
 screen.init = function() {
 
     this.RATIO = this.WIDTH / this.HEIGHT;
@@ -187,6 +191,8 @@ screen.init = function() {
     this.ctx = this.canvas.getContext('2d');
     this.ctx.font = '32px INFO56';
     this.resize();
+
+	this.pictureStack = new Array();
 
     this.ua = navigator.userAgent.toLowerCase();
     this.android = this.ua.indexOf('android') > -1 ? true : false;
@@ -623,6 +629,20 @@ screen.drawMenu = function(menu){
 
 }
 
+screen.showpicture = function(){
+	if(screen.pictureStack.length > 0 ){
+		for( var i = 0; i < screen.pictureStack.length; i += 1){
+			screen.drawImage(resources.pictures[screen.pictureStack[i].image],
+				screen.pictureStack[i].position)
+		}
+	}
+}
+
+screen.clearPicture = function(){
+	for (var member in screen.pictureStack) delete screen.pictureStack[member]
+
+	screen.pictureStack.length = 0
+}
 
 screen.loop = function(){
 
@@ -636,19 +656,25 @@ screen.loop = function(){
 
 			// update
 			engine.update(screen.frameCount);
-            camera.setupMap(this.engine.currentLevel)
-            if(debug.showLayer.layer1)
-			    camera.drawMapLayer(this.engine.currentLevel, "layer1");
 
-            if(debug.showLayer.layer2)
-			    camera.drawMapLayer(this.engine.currentLevel, "layer2");
+			if(this.engine.state == "map") {
+	            camera.setupMap(this.engine.currentLevel)
+	            if(debug.showLayer.layer1)
+				    camera.drawMapLayer(this.engine.currentLevel, "layer1");
 
-            if(debug.showLayer.layer3)
-                camera.drawChars();
-    			//camera.drawChar(player);
+	            if(debug.showLayer.layer2)
+				    camera.drawMapLayer(this.engine.currentLevel, "layer2");
 
-            if(debug.showLayer.layer4)
-    			camera.drawMapLayer(this.engine.currentLevel, "layer4");
+	            if(debug.showLayer.layer3)
+	                camera.drawChars();
+	    			//camera.drawChar(player);
+
+	            if(debug.showLayer.layer4)
+	    			camera.drawMapLayer(this.engine.currentLevel, "layer4");
+			} else if (this.engine.state == "startScreen") {
+				//do start screen stuff
+			}
+			screen.showpicture();
             screen.drawEffects();
             screen.drawHID();
 

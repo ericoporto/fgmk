@@ -7,16 +7,16 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="icon" sizes="192x192" href="icon.png"> 
+        <link rel="icon" sizes="192x192" href="icon.png">
 		<meta charset="UTF-8"/>
-		
-		<script type="text/javascript" src="bootstrap.js"></script>
+
 		<script type="text/javascript" src="engine.js"></script>
 		<script type="text/javascript" src="screen.js"></script>
 		<script type="text/javascript" src="hid.js"></script>
 		<script type="text/javascript" src="printer.js"></script>
-			
-        
+		<script type="text/javascript" src="title.js"></script>
+		<script type="text/javascript" src="bootstrap.js"></script>
+
 
 	</head>
 	<body onload="bootstrap.onLoadDOM()">
@@ -27,12 +27,13 @@
 		<img style="display:none" id="tile" src="img/tile.png"/>
 		<img style="display:none" id="personChara" src="img/person.png"/>
 		<img style="display:none" id="printerimg" src="img/printer.png" />
+		<img style="display:none" id="titleimg" src="img/title.png" />
 
         <audio id="audioStop" src="audio/stop.wav" preload="auto"></audio>
         <audio id="audioText" src="audio/TextboxBloop8-Bit.ogg" preload="auto"></audio>
         <audio id="audioWord" src="audio/wordBlop.wav" preload="auto"></audio>
 
 		<p style="font-family:Helvetica;font-size:20px;" id="log">log</p>
-		
+
 	</body>
 </html>

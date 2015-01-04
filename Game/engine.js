@@ -525,6 +525,7 @@ engine.setup = function(){
     engine.st = {};
     engine.st.vars = {};
     engine.resetBlocks()
+    engine.state = "startScreen"
 }
 
 engine.playerFaceChar = function(){
@@ -602,7 +603,6 @@ engine.dirKeyActive = function(){
 
 }
 
-
 engine.loop = function(){
 	try{
 		if(!this.paused){
@@ -616,7 +616,12 @@ engine.loop = function(){
                     menus.updateMenuEnabled();
                     engine.runatomStack();
                 } else {
-                    engine.updateChars();
+                    if(engine.state == "map") {
+                        engine.updateChars();
+                    } else if(engine.state == "startScreen"){
+                        title.startScreen();
+                    }
+
                     engine.runatomStack();
                 }
             } else if (this.minimumWait) {
@@ -716,8 +721,13 @@ eventInMap = function(level,event,evType,position) {
     }
 };
 
+engine.changeState = function(param) {
+    engine.state = param[0]
+}
+
 engine.teleport = function(param) {
     //param = [positionX,positionY,level]
+    engine.state = "map"
     engine.currentLevel = resources['levels'][param[2]];
     player.mapx = parseInt(param[0],10)*32 ;
 	player.mapy = (parseInt(param[1],10)-1)*32;
@@ -828,6 +838,18 @@ engine.testVar = function(param) {
     return test[operator](var1,var2)
 }
 
+engine.showPicture = function(param) {
+    var picture = {}
+    picture["image"] = param[0]
+    picture["position"] = [param[1],param[2]]
+    console.log("pushed to pyongyang")
+    screen.pictureStack.push(picture)
+}
+
+engine.stopPicture = function(param){
+    screen.clearPicture()
+}
+
 translateActions = function(action, param, position) {
     actions[action](param,position)
 };
@@ -843,6 +865,20 @@ lastBlock = function() {
         value = bstk[0];
     }
     return value
+}
+
+actions.stopPicture = function(param, position){
+    engine.atomStack.push([engine.stopPicture,''])
+}
+
+actions.showPicture = function(param, position){
+    var params = param.split(';')
+    engine.atomStack.push([engine.showPicture,params])
+}
+
+actions.changeState = function(param, position){
+    var params = param.split(';');
+    engine.atomStack.push([engine.changeState,params])
 }
 
 actions.IF = function( param, position ) {

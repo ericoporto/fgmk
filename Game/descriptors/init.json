@@ -17,10 +17,10 @@
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 160, 
+        "initPosX": 288, 
         "initPosY": 192
     }, 
     "World": {
-        "initLevel": "Testmap"
+        "initLevel": "insideLevel0"
     }
 }

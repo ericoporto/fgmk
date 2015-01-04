@@ -44,6 +44,8 @@ resources.harvest = function(){
 	this.tileset = document.getElementById("tile");
     this.playerChara = document.getElementById("personChara");
     this.printerset = document.getElementById("printerimg");
+	this.pictures = {}
+	this.pictures.title = document.getElementById("titleimg");
 
 
 
@@ -97,9 +99,10 @@ bootstrap.onLoadDOM = function(){
 		HID.setupListeners();
 		HID.setupKeyboardListeners();
         engine.currentLevel = resources['levels'][init['World']['initLevel']];
-        menus.setAllDrawables();
-        screen.printBox.setup(resources.printerset);
-        feedbackEng.setup();
+		screen.printBox.setup(resources.printerset);
+		feedbackEng.setup();
+		title.setup();
+		menus.setAllDrawables();
 		engine.loop();
 		screen.loop();
         debug.FPS.loop();

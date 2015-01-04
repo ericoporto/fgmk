@@ -41,7 +41,7 @@ var HID = {
 		    active: false,
 		    mapX: 304,
 		    mapY: 32,
-            color: '#ed1c24' ,
+            color: '#127826' ,
             gamepad: function(pad){ return pad.buttons[0].pressed; }
 	    },
 	    cancel:{
