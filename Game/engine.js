@@ -842,7 +842,6 @@ engine.showPicture = function(param) {
     var picture = {}
     picture["image"] = param[0]
     picture["position"] = [param[1],param[2]]
-    console.log("pushed to pyongyang")
     screen.pictureStack.push(picture)
 }
 

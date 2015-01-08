@@ -244,7 +244,7 @@ screen.drawButton = function(pHIDItem){
 
 screen.drawHID = function(){
 
-	this.ctx.fillStyle = '#0000ff';
+	this.ctx.fillStyle = '#221F1B';
 	this.ctx.fillRect(0, this.GHEIGHT, this.GWIDTH, this.HEIGHT - this.GHEIGHT);
 
 	var HIDItem;
@@ -332,6 +332,18 @@ screen.printBox = {
             sizex: 32,
             sizey: 16
         },
+        acceptUp: {
+            x: 0,
+            y: 64,
+            sizex: 16,
+            sizey: 16
+        },
+        acceptDown: {
+            x: 16,
+            y: 64,
+            sizex: 16,
+            sizey: 16
+        },
         icon0: {
             x: 0,
             y: 96,
@@ -344,6 +356,19 @@ screen.printBox = {
             sizex: 64,
             sizey: 64
         }
+    },
+
+    drawButtonAccept: function() {
+        var frame = Math.floor(screen.frameCount/4)%2
+        if(frame == 0) {
+            var accept = this.printSet.acceptUp
+        } else {
+            var accept = this.printSet.acceptDown
+        }
+        screen.ctx.drawImage(imgPrintSet, 
+				    accept['x'], accept['y'],
+                    accept['sizex'], accept['sizey'],
+				    screen.GSTARTX+screen.GWIDTH-32, screen.GSTARTY+screen.GHEIGHT-32, accept['sizex'], accept['sizey'])
     },
 
 
@@ -380,6 +405,9 @@ screen.printBox = {
                                    screen.printBox.Y + screen.printBox.Height/2 - this.aSizey[this.targetFrame]/2,
                                    this.aSizex[this.targetFrame],
                                    this.aSizey[this.targetFrame]);
+        if(this.anim == 'box') {
+            this.drawButtonAccept()
+        }
 
     },
 

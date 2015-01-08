@@ -1,0 +1,40 @@
+{
+"Heroes":
+    {
+    "Hero":
+        {
+        "Name":"Brave",
+        "ExpToLevel":[10,0],
+        "Pathway":
+            {
+                "0" : {"hp":6, "w":2, "r":2, "m":1, "learn":{"skill":"spin"}},
+                "1" : {"hp":1, "w":1, "r":1, "m":1, "skill":"spin"},
+                "2" : {"hp":1, "w":1, "r":1, "m":1, "skill":"spin"}
+            }
+        }
+    },
+"Skills":
+    {
+        "Frostburn":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
+        "HelpingHand":{"dl":5,"basep":1,"effect":["hpplus"]},
+        "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]}
+    },
+"Monsters":
+    {
+    "Bunny":
+        {
+            "w":1,
+            "r":2,
+            "m":0,
+            "hp":2,
+            "skill":["Bite"],
+            "target":"splash",
+            "prob":{"atk":0.5,"Bite":0.5}
+            "hplimit":
+                [{
+                    "hp":1,
+                    "target":"weakest"
+                }]
+        }
+    }
+}
