@@ -11,7 +11,8 @@ var resources = {
     playerCharaset: null,
     levels: {},
     charasets: {},
-    charas: {}
+    charas: {},
+	hms: {}
 };
 
 window.forceMobile=false
@@ -47,8 +48,6 @@ resources.harvest = function(){
 	this.pictures = {}
 	this.pictures.title = document.getElementById("titleimg");
 
-
-
     LevelsList = init['LevelsList']
     for (var level in LevelsList) {
         var levelItem = LevelsList[level]
@@ -70,6 +69,7 @@ resources.harvest = function(){
 
     resources['charas'] = jsonLevelGet(descriptors+"charas.json")['Charas'];
     this.playerCharaset = resources['charasets'][init['Player']['charaSet']];
+	this.hms = jsonLevelGet(descriptors+init["HMSFile"])
 }
 
 jsonLevelGet = function(urlToGet) {

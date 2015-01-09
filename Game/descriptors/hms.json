@@ -1,7 +1,7 @@
 {
 "Heroes":
     {
-    "Hero":
+    "hero":
         {
         "Name":"Brave",
         "ExpToLevel":[10,0],
@@ -17,24 +17,22 @@
     {
         "Frostburn":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
         "HelpingHand":{"dl":5,"basep":1,"effect":["hpplus"]},
-        "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]}
+        "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]},
+        "Bite":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]}
     },
 "Monsters":
     {
-    "Bunny":
+    "bunny":
         {
+            "Name":"Vorpal Bunny",
             "w":1,
             "r":2,
             "m":0,
             "hp":2,
             "skill":["Bite"],
             "target":"splash",
-            "prob":{"atk":0.5,"Bite":0.5}
-            "hplimit":
-                [{
-                    "hp":1,
-                    "target":"weakest"
-                }]
+            "prob":{"atk":0.5,"Bite":0.5},
+            "state":[{"target":"hero"}]
         }
     }
 }

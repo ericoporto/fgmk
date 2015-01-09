@@ -15,7 +15,7 @@ title.setup = function(){
                 action: 'exit',
                 index: 1
             }
-        });
+        },undefined,true);
     menus.setParent(title.startMenu);
     title.startMenu.activate()
     actions.showPicture("title;0;0")

@@ -1,9 +1,46 @@
 //most r play first
 //w is used to attack
 //m is used to magic
-//target:"Hero","weakest","splash","vengeful"
-battle = {}
-battle.atk = {}
+//target:"hero","weakest","splash","vengeful"
+battle = {};
+battle.atk = {};
+battle.skl = {};
+
+battle.start = function(monsterlist){
+    battle.monster = [];
+    for (var i = 0; i < monsterlist.length; i++) {
+        battle.monster[i] = clone(resources.hms.Monsters[monsterlist[i]])
+    }
+    battle.skills = resources.hms.Skills
+}
+
+battle.hAttack = function(){
+    //select action
+    //if attack or skill select target
+    //resolve
+}
+
+battle.mAttack = function(mn){
+    var mon = battle.monster[mn]
+    var attack = battle.selectFromProb(mon["prob"])
+    var damage = 0
+    if(attack=="atk")
+        damage = battle.atk.pts(mon)
+    else
+        damage = battle.skl.pts(mon,attack)
+    console.log(attack)
+    console.log(damage)
+}
+
+battle.selectFromProb = function(probdict){
+    var random = Math.random();
+    var range = 0.0;
+    for (atsk in probdict) {
+        if(range <= random && random <= range+probdict[atsk])
+            return atsk
+        range+=probdict[atsk]
+    }
+}
 
 getkey0 = function(tree,key){
     //if key exists return value, otherwise return zero

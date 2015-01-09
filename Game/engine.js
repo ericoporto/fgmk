@@ -65,12 +65,14 @@ var menus = {
     }
 };
 
-function menu(_items, _index) {
+function menu(_items, _index, _noexit) {
 
     var tempArray = [];
 
     _index = (typeof _index === "undefined") ? null : _index;
+    _noexit = (typeof _noexit === "undefined") ? false : true;
     this.items=_items;
+    this.noexit=_noexit;
 
     this.parent = null
     this.index = _index
@@ -188,7 +190,7 @@ function menu(_items, _index) {
                     }
                     this.menuKeyWasPressed=32
                 }else if(HID.inputs["cancel"].active){
-                    if(this._counter >= 20) {
+                    if(this._counter >= 20 && this.noexit == false) {
                         HID.inputs["cancel"].active = false
                         this.exit()
                         engine.waitTime(200)
