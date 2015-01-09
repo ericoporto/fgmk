@@ -29,6 +29,17 @@ for (var i = 0, max = query.length; i < max; i++)
 
 }
 
+function removeA(arr) {
+	var what, a = arguments, L = a.length, ax;
+	while (L > 1 && arr.length) {
+		what = a[--L];
+		while ((ax= arr.indexOf(what)) !== -1) {
+			arr.splice(ax, 1);
+		}
+	}
+	return arr;
+}
+
 window.mobilecheck = function() { return (window.forceMobile || window.__mobilecheck()) }
 
 window.__mobilecheck = function() {
@@ -105,6 +116,7 @@ bootstrap.onLoadDOM = function(){
 		screen.printBox.setup(resources.printerset);
 		feedbackEng.setup();
 		title.setup();
+		battle.setup();
 		menus.setAllDrawables();
 		engine.loop();
 		screen.loop();

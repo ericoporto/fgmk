@@ -16,7 +16,7 @@
     "Player": {
         "charaFile": "person.json",
         "charaSet": "person",
-        "hero":"hero",
+        "party":["hero"],
         "facing": "down",
         "initPosX": 288,
         "initPosY": 192

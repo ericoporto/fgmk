@@ -204,6 +204,15 @@ function menu(_items, _index, _noexit) {
     };
 
     this.action = this.activate;
+    this.delete = function(){
+        for (var i = 0; i < menus.allMenus.length; i++) {
+            if(menus.allMenus[i] == this){
+                menus.allMenus.splice(i,1)
+                break
+            }
+        }
+        
+    }
 
     menus.allMenus.push(this);
 
@@ -418,6 +427,7 @@ player.setup = function() {
     player['mapx'] = init['Player']['initPosX'];
     player['mapy'] = init['Player']['initPosY'];
     player['facing'] = init['Player']['facing'];
+    player['party'] = init['Player']['party']
     player['steps'] = 0;
     player['running'] = false;
     player['update'] = function(){
