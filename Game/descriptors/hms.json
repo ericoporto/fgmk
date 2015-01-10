@@ -3,13 +3,14 @@
     {
     "hero":
         {
-        "Name":"Brave",
+        "Leader":true,
+        "name":"Brave",
         "ExpToLevel":[10,0],
+        "baseStats" : {"hp":255, "w":225, "r":200, "m":120 },
         "Pathway":
             {
-                "0" : {"hp":6, "w":2, "r":2, "m":1, "learn":{"skill":"spin"}},
-                "1" : {"hp":1, "w":1, "r":1, "m":1, "skill":"spin"},
-                "2" : {"hp":1, "w":1, "r":1, "m":1, "skill":"spin"}
+                "1" : {"learn":{"skill":"Frostburn"}},
+                "2" : {"learn":{"skill":"HelpingHand"}}
             }
         }
     },
@@ -24,12 +25,12 @@
     {
     "bunny":
         {
-            "Name":"Vorpal Bunny",
-            "w":1,
-            "r":2,
-            "m":0,
-            "hp":2,
-            "skill":["Bite"],
+            "name":"Vorpal Bunny",
+            "ExpToLevel":[2,0],
+            "baseStats" : {"hp":120, "w":100, "r":120, "m":10 },
+            "Pathway":{
+                "1" : {"learn":{"skill":"Bite"}}
+            },
             "target":"splash",
             "prob":{"atk":0.5,"Bite":0.5},
             "state":[{"target":"hero"}]
