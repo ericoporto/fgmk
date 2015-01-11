@@ -14,10 +14,10 @@
                 [["IF","var:test;bigger;0"],
                  ["showText","See you are making friends... Talked var:test times!"],
                  ["ELSE",""],
-                 ["showText","You should talk with the guy in yellow first... "],
+                 ["battle","bunny"],
                  ["END",""]]
             },
-        "charaset": "person2"
+        "charaset": "bunny"
         },
     "YellowGuy":
         {
@@ -30,7 +30,7 @@
                 [["showText","..."],
                  ["varPlusOne","test"]]
             },
-        "charaset": "yellow"
+        "charaset": "skeleton"
         },
     "OtherWeird":
         {
@@ -45,7 +45,7 @@
                 [["showText","spinning spinning"]],
             "type":  [  1,  0]
             },
-        "charaset": "person2"
+        "charaset": "bear"
         }
     }
 }

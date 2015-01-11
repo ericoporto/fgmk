@@ -101,9 +101,6 @@ camera.drawMapLayer = function(_worldLevel, _zIndex){
 }
 
 camera.drawChar = function(chara){
-
-
-
 	if(chara.steps) charaAnimation = chara['charaset']["walking"][chara.facing]
     else charaAnimation =  chara['charaset']["standing"][chara.facing]
 
@@ -114,7 +111,7 @@ camera.drawChar = function(chara){
     screenx = chara.mapx-(this.x*32+this.finex)
     screeny = chara.mapy-(this.y*32+this.finey)
 
-    screen.drawChara(resources.playerChara, charaAnimation, targetFrame, [screenx, screeny])
+    screen.drawChara(resources.charasetimg, charaAnimation, targetFrame, [screenx, screeny])
 
 }
 
@@ -177,6 +174,14 @@ screen.drawTile = function(tileset, tile, position) {
 
 screen.drawImage = function(image, position){
 	screen.ctx.drawImage(image,this.GSTARTX+position[0], this.GSTARTY+position[1])
+}
+
+screen.drawMonsterImage = function(monster, position) {
+	screen.ctx.drawImage(resources.monsterimg,
+		64*monster.monsterImg[0], 64*monster.monsterImg[1],
+		64, 64,
+		this.GSTARTX+position[0], this.GSTARTY+position[1],
+		128, 128);
 }
 
 screen.init = function() {
@@ -365,7 +370,7 @@ screen.printBox = {
         } else {
             var accept = this.printSet.acceptDown
         }
-        screen.ctx.drawImage(imgPrintSet, 
+        screen.ctx.drawImage(imgPrintSet,
 				    accept['x'], accept['y'],
                     accept['sizex'], accept['sizey'],
 				    screen.GSTARTX+screen.GWIDTH-32, screen.GSTARTY+screen.GHEIGHT-32, accept['sizex'], accept['sizey'])
@@ -489,6 +494,21 @@ screen.effectPixelize = function(pixelation) {
     this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,   pixelation ,   pixelation,    this.GSTARTX, this.GSTARTY,    this.GWIDTH ,   this.GHEIGHT    )
 };
 
+screen.effectTension1 = function(intensity) {
+	this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,
+		this.GWIDTH/2 , this.GHEIGHT/2,
+		this.GSTARTX-(this.GWIDTH*intensity/128)/2 , this.GSTARTY,
+		this.GWIDTH/(4) , this.GHEIGHT)
+
+	this.ctx.drawImage(this.canvas, this.GSTARTX+this.GWIDTH/2, this.GSTARTY,
+		this.GWIDTH/2 , this.GHEIGHT/2,
+		this.GSTARTX+this.GWIDTH/2+(this.GWIDTH*intensity/128)/2  , this.GSTARTY,
+		this.GWIDTH/(4) , this.GHEIGHT)
+
+	this.ctx.fillStyle ='#000000'
+	this.ctx.fillRect(this.GSTARTX+this.GWIDTH/2-(this.GWIDTH*intensity/128)/2, this.GSTARTY, this.GWIDTH*intensity/128 , this.GHEIGHT);
+};
+
 screen.effectColor = function(opacity,color) {
 	this.ctx.save()
 	this.ctx.fillStyle = color;
@@ -541,8 +561,9 @@ screen.drawEffects = function(){
         var frameToDraw = screen.frameCount-screen.effects.startFrame
         if (frameToDraw>= screen.effects.endFrame) {
             frameToDraw = screen.effects.endFrame-1
-            if (!screen.effects.keepAfter)
+            if (!screen.effects.keepAfter) {
                 screen.effects.noEffect()
+			}
         }
         screen.effectPixelize(screen.effects.intensity[frameToDraw])
     }
@@ -550,8 +571,9 @@ screen.drawEffects = function(){
         var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
         if (frameToDraw <= 0) {
             frameToDraw = 0
-            if (!screen.effects.keepAfter)
+            if (!screen.effects.keepAfter) {
                 screen.effects.noEffect()
+			}
         }
         screen.effectPixelize(screen.effects.intensity[frameToDraw])
     }
@@ -559,8 +581,9 @@ screen.drawEffects = function(){
 		var frameToDraw = screen.frameCount-screen.effects.startFrame
 		if (frameToDraw>= screen.effects.endFrame) {
 			frameToDraw = screen.effects.endFrame-1
-			if (!screen.effects.keepAfter)
+			if (!screen.effects.keepAfter) {
 				screen.effects.noEffect()
+			}
 		}
 		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#000000')
 	}
@@ -568,8 +591,9 @@ screen.drawEffects = function(){
 		var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
 		if (frameToDraw <= 0) {
 			frameToDraw = 0
-			if (!screen.effects.keepAfter)
+			if (!screen.effects.keepAfter) {
 				screen.effects.noEffect()
+			}
 		}
 		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#000000')
 	}
@@ -577,20 +601,32 @@ screen.drawEffects = function(){
 		var frameToDraw = screen.frameCount-screen.effects.startFrame
 		if (frameToDraw>= screen.effects.endFrame) {
 			frameToDraw = screen.effects.endFrame-1
-			if (!screen.effects.keepAfter)
+			if (!screen.effects.keepAfter){
 				screen.effects.noEffect()
 			}
-			screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
 		}
-		if (screen.effects.selected == 'whiteFadeIn') {
-			var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
-			if (frameToDraw <= 0) {
-				frameToDraw = 0
-				if (!screen.effects.keepAfter)
-					screen.effects.noEffect()
-				}
-				screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
+		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
+	}
+	if (screen.effects.selected == 'whiteFadeIn') {
+		var frameToDraw = screen.effects.endFrame-screen.frameCount+screen.effects.startFrame
+		if (frameToDraw <= 0) {
+			frameToDraw = 0
+			if (!screen.effects.keepAfter) {
+				screen.effects.noEffect()
 			}
+		}
+		screen.effectColor(screen.effects.intensity[frameToDraw]/128,'#FFFFFF')
+	}
+	if (screen.effects.selected == 'tension1') {
+		var frameToDraw = screen.frameCount-screen.effects.startFrame-1
+		if (frameToDraw>= screen.effects.endFrame) {
+			frameToDraw = screen.effects.endFrame-1
+			if (!screen.effects.keepAfter){
+				screen.effects.noEffect()
+			}
+		}
+		screen.effectTension1(screen.effects.intensity[frameToDraw])
+	}
 };
 
 function compareChars(a,b) {
@@ -611,6 +647,16 @@ camera.drawChars = function() {
         var item = chars[i];
         camera.drawChar(item)
     }
+}
+
+screen.drawMonsters = function() {
+	for (var i=0; i<battle.monster.length ; i++){
+		var mon = battle.monster[i]
+		screen.drawMonsterImage(mon,
+			[screen.GWIDTH/2, screen.GHEIGHT/2]
+		)
+
+	}
 }
 
 screen.drawMenu = function(menu){
@@ -701,6 +747,8 @@ screen.loop = function(){
 	    			camera.drawMapLayer(this.engine.currentLevel, "layer4");
 			} else if (this.engine.state == "startScreen") {
 				//do start screen stuff
+			} else if (this.engine.state == "battle") {
+				screen.drawMonsters()
 			}
 			screen.showpicture();
             screen.drawEffects();

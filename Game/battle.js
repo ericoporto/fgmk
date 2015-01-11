@@ -163,7 +163,7 @@ battle.start = function(monsterlist){
 
     battle.skills = resources.hms.Skills
 
-    battle.battlemenu.activate()
+    actions.questionBox("test1;test2;test3")
 }
 
 battle.hAttack = function(){
@@ -271,4 +271,8 @@ battle.mApplyState = function(mon,st) {
     for(var k in mon.state[st]){
         mon[k] = mon.state[st][k]
     }
+}
+
+battle.update = function(){
+    
 }
