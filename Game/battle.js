@@ -163,6 +163,7 @@ battle.action.skill = function(skill){
 battle.start = function(monsterlist){
     battle.monster = [];
     battle.hero = [];
+    battle.waitherodecision = false
 
 
     for (var i = 0; i < player.party.length; i++) {
@@ -178,21 +179,34 @@ battle.start = function(monsterlist){
     battle.skills = resources.hms.Skills
 
     battle.setOrderStack();
-    battle.resolveOrder();
 
-
-    actions.questionBox("test1;test2;test3")
 }
 
 battle.resolveOrder = function() {
-    while(battle.order.length > 0){
-        var bchToAttack = battle.order.shift();
-        if(bchToAttack[1]=="hero") {
-            console.log("hero attack")
+    if(!battle.waitherodecision) {
+        if(battle.order.length > 0){
+            var bchToAttack = battle.order.shift();
+            if(bchToAttack[1]=="hero") {
+                console.log("hero attack")
+                battle.waitherodecision = true
+                battle.herodecision = "action"
+                actions.questionBox("attack;skill")
+            } else {
+                console.log("monster attack")
+                battle.mAttack(bchToAttack[0])
+                if(battle.resolveIfPartyDead()) {
+                    return
+                }
+            }
         } else {
-            console.log("monster attack")
-            battle.mAttack(bchToAttack[0])
-            battle.resolveIfPartyDead()
+            if(battle.isPartyAlive()) {
+                battle.setOrderStack()
+            }
+
+        }
+    } else {
+        if(engine.questionBoxAnswer != engine.questionBoxUndef){
+            battle.waitherodecision = false
         }
     }
 }
@@ -203,7 +217,10 @@ battle.resolveIfPartyDead = function(){
             battle.order.pop();
         }
         actions.showText("You died!")
+        actions.changeState("map")
+        return true
     }
+    return false
 }
 
 battle.setOrderStack = function(){
@@ -350,5 +367,5 @@ battle.mApplyState = function(mon,st) {
 }
 
 battle.update = function(){
-
+    battle.resolveOrder();
 }
