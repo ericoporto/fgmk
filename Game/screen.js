@@ -176,12 +176,56 @@ screen.drawImage = function(image, position){
 	screen.ctx.drawImage(image,this.GSTARTX+position[0], this.GSTARTY+position[1])
 }
 
-screen.drawMonsterImage = function(monster, position) {
+screen.drawMonster = function(monster, position) {
+	var tempalpha = screen.ctx.globalAlpha;
+
+	if(monster.flash>0) {
+
+	screen.ctx.drawImage(screen.flashColor(resources.monsterimg,'#FF0000'),
+		64*monster.monsterImg[0], 64*monster.monsterImg[1],
+		64, 64,
+		this.GSTARTX+position[0], this.GSTARTY+position[1],
+		128, 128);
+
+	screen.ctx.globalAlpha = 1 * monster.flash/10;
+
+	monster.flash--
+
+	}
+
 	screen.ctx.drawImage(resources.monsterimg,
 		64*monster.monsterImg[0], 64*monster.monsterImg[1],
 		64, 64,
 		this.GSTARTX+position[0], this.GSTARTY+position[1],
 		128, 128);
+
+	screen.ctx.globalAlpha = tempalpha
+
+	screen.ctx.fillStyle = '#ffffff';
+	screen.ctx.fillText("hp:"+monster.hp,
+		screen.GSTARTX+position[0],
+		screen.GSTARTY+position[1]-32);
+	screen.ctx.fillText(" /"+monster.hpmax,
+		screen.GSTARTX+position[0],
+		screen.GSTARTY+position[1]-8);
+}
+
+screen.flashColor = function(fg, color){
+	// create offscreen buffer,
+	var buffer = document.createElement('canvas');
+	buffer.width = fg.width;
+	buffer.height = fg.height;
+	var bx = buffer.getContext('2d');
+
+	// fill offscreen buffer with the tint color
+	bx.fillStyle = color
+	bx.fillRect(0,0,buffer.width,buffer.height);
+
+	// destination atop makes a result with an alpha channel identical to fg, but with all pixels retaining their original color *as far as I can tell*
+	bx.globalCompositeOperation = "destination-atop";
+	bx.drawImage(fg,0,0);
+
+	return buffer
 }
 
 screen.init = function() {
@@ -262,7 +306,7 @@ screen.drawHID = function(){
 }
 
 screen.clearAll = function(){
-	this.ctx.fillStyle = '#d0e7f9';
+	this.ctx.fillStyle = '#a0a7b9';
 	this.ctx.fillRect(this.GSTARTX, this.GSTARTY, this.GWIDTH, this.GHEIGHT);
 }
 
@@ -651,9 +695,9 @@ camera.drawChars = function() {
 
 screen.drawMonsters = function() {
 	for (var i=0; i<battle.monster.length ; i++){
-		var mon = battle.monster[i]
-		screen.drawMonsterImage(mon,
-			[screen.GWIDTH/2, screen.GHEIGHT/2]
+		screen.drawMonster(battle.monster[i],
+			[Math.floor((i+1)*screen.GWIDTH/(battle.monster.length+1)-64),
+			Math.floor(screen.GHEIGHT/3)]
 		)
 
 	}

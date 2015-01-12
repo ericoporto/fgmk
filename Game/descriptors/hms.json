@@ -6,7 +6,7 @@
         "Leader":true,
         "name":"Brave",
         "ExpToLevel":[10,0],
-        "baseStats" : {"hp":255, "w":225, "r":200, "m":120 },
+        "baseStats" : {"hp":500, "w":225, "r":200, "m":120 },
         "Pathway":
             {
                 "1" : {"learn":{"skill":"Frostburn"}},
@@ -35,6 +35,19 @@
             "prob":{"atk":0.5,"Bite":0.5},
             "state":[{"target":"hero"}],
             "monsterImg":[0,0]
+        },
+    "skeleton":
+        {
+            "name":"Skeleton",
+            "ExpToLevel":[2,0],
+            "baseStats" : {"hp":120, "w":100, "r":255, "m":10 },
+            "Pathway":{
+                "1" : {"learn":{"skill":"Bite"}}
+            },
+            "target":"splash",
+            "prob":{"atk":0.5,"Bite":0.5},
+            "state":[{"target":"hero"}],
+            "monsterImg":[2,0]
         }
     }
 }

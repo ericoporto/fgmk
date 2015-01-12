@@ -1,3 +1,5 @@
+//Copyright Erico 2015
+//This work must not be copied and all assets here are proprietary.
 //most r play first
 //w is used to attack
 //m is used to magic
@@ -7,14 +9,43 @@ battle.atk = {};
 battle.skl = {};
 battle.action = {};
 battle.effect = {};
-battle.maxlevel = 99;
+
+battle.setup = function(){
+
+    battle.maxlevel = 99;
+    battle.order = new Array();
+    battle.heroes = clone(resources.hms.Heroes)
+
+    for (var hero in battle.heroes) {
+        battle.initHero(battle.heroes[hero])
+    }
+
+
+
+    battle.battlemenu = new menu({
+        attack: {
+            action: [battle.action.atk],
+            index: 0
+        },
+        skill: {
+            action: [function(){ actions.showText("skill!")}],
+            index: 0
+        },
+        item: {
+            action: [function(){ actions.showText("item!")}],
+            index: 0
+        }
+    },undefined,true);
+
+}
+
 battle.initHero = function(hero){
     hero["xp"] = 0
     hero["level"] = 0
     hero["xpnextlevel"] = hero["ExpToLevel"][0]*hero["level"]+hero["ExpToLevel"][1]
     hero["skill"]=[]
     hero["hp"] = 0
-    hero["maxhp"] = 0
+    hero["hpmax"] = 0
     battle.uplevel(hero,1,true)
 }
 
@@ -22,7 +53,7 @@ battle.initMonster = function(monster){
     monster["level"] = 0
     monster["skill"]=[]
     monster["hp"] = 0
-    monster["maxhp"] = 0
+    monster["hpmax"] = 0
     battle.setMonsterLevel(monster)
     if(!("prob" in monster)) {
         var prob = {}
@@ -49,11 +80,13 @@ battle.uplevel = function(hero, leveltoup, silent){
     hero["r"]  =Math.floor(leveltoup*hero["baseStats"]["r"]/battle.maxlevel)
     hero["m"]  =Math.floor(leveltoup*hero["baseStats"]["m"]/battle.maxlevel)
     hero["hp"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
-    hero["maxhp"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
+    hero["hpmax"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
 
     for(var i = currlvl+1; i < leveltoup+1; i++) {
         var lvl = i.toString()
         var text=hero["name"]+" reached level "+lvl+"!"
+        hero["level"] = i
+        hero["xpnextlevel"] = hero["ExpToLevel"][0]*hero["level"]+hero["ExpToLevel"][1]
         if (lvl in hero["Pathway"]) {
             if ("learn" in hero["Pathway"][lvl]) {
                 var tolearn = hero["Pathway"][lvl]["learn"]
@@ -117,26 +150,7 @@ battle.diceroll = function(n){
     return result
 }
 
-battle.setup = function(){
 
-    battle.heroes = clone(resources.hms.Heroes)
-
-    battle.battlemenu = new menu({
-        attack: {
-            action: [battle.action.atk],
-            index: 0
-        },
-        skill: {
-            action: [function(){ actions.showText("skill!")}],
-            index: 0
-        },
-        item: {
-            action: [function(){ actions.showText("item!")}],
-            index: 0
-        }
-    },undefined,true);
-
-}
 
 battle.action.atk = function(){
     actions.showText("attack!")
@@ -150,6 +164,7 @@ battle.start = function(monsterlist){
     battle.monster = [];
     battle.hero = [];
 
+
     for (var i = 0; i < player.party.length; i++) {
         battle.hero[i] = battle.heroes[player.party[i]]
     }
@@ -160,10 +175,54 @@ battle.start = function(monsterlist){
     }
 
 
-
     battle.skills = resources.hms.Skills
 
+    battle.setOrderStack();
+    battle.resolveOrder();
+
+
     actions.questionBox("test1;test2;test3")
+}
+
+battle.resolveOrder = function() {
+    while(battle.order.length > 0){
+        var bchToAttack = battle.order.shift();
+        if(bchToAttack[1]=="hero") {
+            console.log("hero attack")
+        } else {
+            console.log("monster attack")
+            battle.mAttack(bchToAttack[0])
+            battle.resolveIfPartyDead()
+        }
+    }
+}
+
+battle.resolveIfPartyDead = function(){
+    if(!(battle.isPartyAlive())){
+        while(battle.order.length > 0) {
+            battle.order.pop();
+        }
+        actions.showText("You died!")
+    }
+}
+
+battle.setOrderStack = function(){
+    while(battle.order.length > 0) {
+        battle.order.pop();
+    }
+    for (var i = 0; i < player.party.length; i++) {
+        battle.order.push([battle.hero[i],"hero"]);
+    }
+    for (var i = 0; i < battle.monster.length; i++) {
+        battle.order.push([battle.monster[i],"monster"]);
+    }
+    battle.order.sort( function(a,b) {
+        if (a[0].r > b[0].r)
+            return -1;
+        if (a[0].r < b[0].r)
+            return 1;
+        return 0;
+    } );
 }
 
 battle.hAttack = function(){
@@ -173,7 +232,7 @@ battle.hAttack = function(){
 }
 
 battle.mAttack = function(mn){
-    var mon = battle.monster[mn]
+    var mon = mn
     var attack = battle.selectFromProb(mon["prob"])
     var damage = 0
     var actionType = []
@@ -196,16 +255,17 @@ battle.resolveAtk = function(bchSrc, bchVct, dmg, act){
     //for each victim, do the effect applying damage
     for (var j = 0; j < bchVct.length; j++) {
         for (var i = 0; i < act.length; i++) {
-            battle.effect[act[i]](bchVct[j],dmg)
+            battle.effect[act[i]](bchSrc,bchVct[j],dmg)
         }
     }
 }
 
-battle.effect.hpdown = function(bch,dmg){
+battle.effect.hpdown = function(bchsrc,bch,dmg){
     bch.hp = Math.max(bch.hp-dmg, 0)
+    actions.showText(bchsrc.name+" attacked "+ bch.name+" and dealt "+dmg+" damage!")
 }
 
-battle.effect.hpup = function(bch,dmg){
+battle.effect.hpup = function(bchsrc, bch,dmg){
     bch.hp = Math.min(bch.hp+dmg, bch.hpmax)
 }
 
@@ -239,14 +299,30 @@ battle.mTarget = function(monster){
     var options = battle.hero.length
     var targetProb = {}
     for (var i = 0; i < options; i++) {
-        targetProb[i] = i/options
+        targetProb[i] = 1/options
     }
 
+
+    var tries = 0
+
     while(dead){
+        tries++
         target = battle.selectFromProb(targetProb)
         dead = !battle.isAlive(battle.hero[target])
+        if(tries > 20) {
+            break
+        }
     }
+
     return battle.hero[target]
+}
+
+battle.isPartyAlive = function(bch) {
+    var test = 0
+    for (var i = 0; i < battle.hero.length; i++){
+        test += battle.isAlive(battle.hero[i])
+    }
+    return (test > 0)
 }
 
 battle.isAlive = function(bch){
@@ -274,5 +350,5 @@ battle.mApplyState = function(mon,st) {
 }
 
 battle.update = function(){
-    
+
 }
