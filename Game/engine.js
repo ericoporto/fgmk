@@ -878,12 +878,17 @@ engine.questionBox = function(param){
 
     for(var i = 0; i < param.length; i++){
         (function(i){
-            answers[param[i]] = {action: [function(){ engine.questionBoxAnswer = i},'exit'], index: i} ;
+            answers[param[i]] = {action: [function(){ engine.questionBoxAnswer = i;
+                engine.questionBoxAnswerStr = param[i]},'exit'], index: i} ;
         })(i);
     }
     engine.questionBoxMenu = new menu(answers, undefined, true)
     menus.setAllDrawables()
     engine.questionBoxMenu.activate()
+}
+
+engine.proceedBattleTurn = function(param){
+    battle.waitherodecision = false
 }
 
 translateActions = function(action, param, position) {
@@ -905,6 +910,7 @@ lastBlock = function() {
 
 actions.questionBox = function(param, position){
     var params = param.split(';')
+    engine.questionBoxAnswer = engine.questionBoxUndef
     engine.atomStack.push([engine.questionBox,params])
 }
 
@@ -1043,6 +1049,12 @@ actions.battle = function(param,position) {
     engine.atomStack.push([engine.battle,params]);
     actions.fadeIn('blackFadeIn;doNotKeep')
 };
+
+actions.proceedBattleTurn = function(param,position){
+    battle.herodecision = ""
+    engine.questionBoxAnswer = engine.questionBoxUndef
+    engine.atomStack.push([engine.proceedBattleTurn,[""]])
+}
 
 engine.update = function(frameCount){
     engine.frameCount = frameCount;

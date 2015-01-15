@@ -11,6 +11,7 @@ camera.y = 0;
 camera.finex = 0;
 camera.finey = 0;
 
+
 camera.setupMap = function(_worldLevel, _engine){
 	this.maxWorldWidth = _worldLevel["Level"]["layer1"][0].length;
 	this.maxWorldHeight = _worldLevel["Level"]["layer1"].length;
@@ -176,15 +177,32 @@ screen.drawImage = function(image, position){
 	screen.ctx.drawImage(image,this.GSTARTX+position[0], this.GSTARTY+position[1])
 }
 
+screen.flashMonster = function(monster, color){
+	monster.flashcolor = color
+	monster.flash = 10
+}
+
+screen.shakeMonster = function(monster){
+	monster.shake = 10
+}
+
 screen.drawMonster = function(monster, position) {
 	var tempalpha = screen.ctx.globalAlpha;
+	var modx = 0
+	var mody =0
+
+	if(monster.shake>0) {
+		monster.shake--
+		modx = Math.floor(8*Math.random())*4
+		mody = Math.floor(8*Math.random())*4
+	}
 
 	if(monster.flash>0) {
 
-	screen.ctx.drawImage(screen.flashColor(resources.monsterimg,'#FF0000'),
+	screen.ctx.drawImage(screen.flashColor(resources.monsterimg,monster.flashcolor),
 		64*monster.monsterImg[0], 64*monster.monsterImg[1],
 		64, 64,
-		this.GSTARTX+position[0], this.GSTARTY+position[1],
+		this.GSTARTX+position[0]+modx, this.GSTARTY+position[1]+mody,
 		128, 128);
 
 	screen.ctx.globalAlpha = 1 * monster.flash/10;
@@ -196,7 +214,7 @@ screen.drawMonster = function(monster, position) {
 	screen.ctx.drawImage(resources.monsterimg,
 		64*monster.monsterImg[0], 64*monster.monsterImg[1],
 		64, 64,
-		this.GSTARTX+position[0], this.GSTARTY+position[1],
+		this.GSTARTX+position[0]+modx, this.GSTARTY+position[1]+mody,
 		128, 128);
 
 	screen.ctx.globalAlpha = tempalpha
@@ -540,14 +558,14 @@ screen.effectPixelize = function(pixelation) {
 
 screen.effectTension1 = function(intensity) {
 	this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,
-		this.GWIDTH/2 , this.GHEIGHT/2,
+		this.GWIDTH/2 , this.GHEIGHT,
 		this.GSTARTX-(this.GWIDTH*intensity/128)/2 , this.GSTARTY,
-		this.GWIDTH/(4) , this.GHEIGHT)
+		this.GWIDTH/4 , this.GHEIGHT)
 
 	this.ctx.drawImage(this.canvas, this.GSTARTX+this.GWIDTH/2, this.GSTARTY,
-		this.GWIDTH/2 , this.GHEIGHT/2,
+		this.GWIDTH/2 , this.GHEIGHT,
 		this.GSTARTX+this.GWIDTH/2+(this.GWIDTH*intensity/128)/2  , this.GSTARTY,
-		this.GWIDTH/(4) , this.GHEIGHT)
+		this.GWIDTH/4 , this.GHEIGHT)
 
 	this.ctx.fillStyle ='#000000'
 	this.ctx.fillRect(this.GSTARTX+this.GWIDTH/2-(this.GWIDTH*intensity/128)/2, this.GSTARTY, this.GWIDTH*intensity/128 , this.GHEIGHT);

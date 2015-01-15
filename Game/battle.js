@@ -19,24 +19,6 @@ battle.setup = function(){
     for (var hero in battle.heroes) {
         battle.initHero(battle.heroes[hero])
     }
-
-
-
-    battle.battlemenu = new menu({
-        attack: {
-            action: [battle.action.atk],
-            index: 0
-        },
-        skill: {
-            action: [function(){ actions.showText("skill!")}],
-            index: 0
-        },
-        item: {
-            action: [function(){ actions.showText("item!")}],
-            index: 0
-        }
-    },undefined,true);
-
 }
 
 battle.initHero = function(hero){
@@ -164,6 +146,8 @@ battle.start = function(monsterlist){
     battle.monster = [];
     battle.hero = [];
     battle.waitherodecision = false
+    battle.bchToAttack = []
+    battle.ended = false
 
 
     for (var i = 0; i < player.party.length; i++) {
@@ -183,18 +167,31 @@ battle.start = function(monsterlist){
 }
 
 battle.resolveOrder = function() {
+    if(battle.ended) {
+        return
+    }
+
     if(!battle.waitherodecision) {
         if(battle.order.length > 0){
-            var bchToAttack = battle.order.shift();
-            if(bchToAttack[1]=="hero") {
+            battle.bchToAttack = battle.order.shift();
+            if(battle.bchToAttack[1]=="hero") {
                 console.log("hero attack")
-                battle.waitherodecision = true
+                if(battle.resolveIfSideDead()) {
+                    return
+                }
                 battle.herodecision = "action"
                 actions.questionBox("attack;skill")
+                battle.waitherodecision = true
+                if(battle.resolveIfSideDead()) {
+                    return
+                }
             } else {
                 console.log("monster attack")
-                battle.mAttack(bchToAttack[0])
-                if(battle.resolveIfPartyDead()) {
+                if(battle.resolveIfSideDead()) {
+                    return
+                }
+                battle.mAttack(battle.bchToAttack[0])
+                if(battle.resolveIfSideDead()) {
                     return
                 }
             }
@@ -205,18 +202,26 @@ battle.resolveOrder = function() {
 
         }
     } else {
-        if(engine.questionBoxAnswer != engine.questionBoxUndef){
-            battle.waitherodecision = false
-        }
+        battle.hAttack(battle.bchToAttack[0])
     }
 }
 
-battle.resolveIfPartyDead = function(){
+battle.resolveIfSideDead = function(){
     if(!(battle.isPartyAlive())){
         while(battle.order.length > 0) {
             battle.order.pop();
         }
+        battle.ended = true
         actions.showText("You died!")
+        actions.changeState("map")
+        return true
+    }
+    if(!(battle.isMonstersAlive())){
+        while(battle.order.length > 0) {
+            battle.order.pop();
+        }
+        battle.ended = true
+        actions.showText("You win!")
         actions.changeState("map")
         return true
     }
@@ -234,18 +239,47 @@ battle.setOrderStack = function(){
         battle.order.push([battle.monster[i],"monster"]);
     }
     battle.order.sort( function(a,b) {
-        if (a[0].r > b[0].r)
+        if (a[0]["r"] > b[0]["r"])
             return -1;
-        if (a[0].r < b[0].r)
+        if (a[0]["r"] < b[0]["r"])
             return 1;
         return 0;
     } );
 }
 
-battle.hAttack = function(){
+battle.hAttack = function(hero){
     //select action
     //if attack or skill select target
     //resolve
+    if(engine.questionBoxAnswer != engine.questionBoxUndef && battle.herodecision == "action"){
+        if(engine.questionBoxAnswer == 0 ) {
+            var __damage = battle.atk.pts(hero)
+            var __actionType = ["hpdown"]
+            var __target = [battle.monster[0]]
+        } else if(engine.questionBoxAnswer == 1){
+            battle.herodecision = "skill"
+            var options = hero["skill"].join(";")
+            options="back;"+options
+            actions.questionBox(options)
+        }
+    }
+    if(engine.questionBoxAnswer != engine.questionBoxUndef && battle.herodecision == "skill"){
+        if(engine.questionBoxAnswer==0) {
+            battle.herodecision = "action"
+            actions.questionBox("attack;skill")
+        } else {
+            actions.showText(engine.questionBoxAnswerStr)
+            var __damage = battle.skl.pts(hero,engine.questionBoxAnswerStr)
+            var __actionType = battle.skills[engine.questionBoxAnswerStr].effect
+            var __target = [battle.monster[0]]
+        }
+
+    }
+    if(typeof __damage !== "undefined" && typeof __actionType !== "undefined"){
+        console.log("attacked")
+        battle.resolveAtk(hero, __target, __damage, __actionType)
+        actions.proceedBattleTurn()
+    }
 }
 
 battle.mAttack = function(mn){
@@ -265,6 +299,12 @@ battle.mAttack = function(mn){
             target = battle.hero
     }
 
+    if(damage>0){
+        screen.flashMonster(mon,'#eeeeee')
+    } else {
+        screen.shakeMonster(mon)
+    }
+
     battle.resolveAtk(mon, target, damage, actionType)
 }
 
@@ -278,12 +318,12 @@ battle.resolveAtk = function(bchSrc, bchVct, dmg, act){
 }
 
 battle.effect.hpdown = function(bchsrc,bch,dmg){
-    bch.hp = Math.max(bch.hp-dmg, 0)
+    bch.hp = Math.max(bch["hp"]-dmg, 0)
     actions.showText(bchsrc.name+" attacked "+ bch.name+" and dealt "+dmg+" damage!")
 }
 
 battle.effect.hpup = function(bchsrc, bch,dmg){
-    bch.hp = Math.min(bch.hp+dmg, bch.hpmax)
+    bch.hp = Math.min(bch["hp"]+dmg, bch["hpmax"])
 }
 
 battle.mTarget = function(monster){
@@ -305,7 +345,7 @@ battle.mTarget = function(monster){
         var index = 0
         for (var i = 0; i < options; i++) {
             if(battle.hero[i].hp < minhp && battle.hero[i].hp > 0) {
-                minhp = battle.hero[i].hp
+                minhp = battle.hero[i]["hp"]
                 index = i
             }
         }
@@ -334,7 +374,7 @@ battle.mTarget = function(monster){
     return battle.hero[target]
 }
 
-battle.isPartyAlive = function(bch) {
+battle.isPartyAlive = function() {
     var test = 0
     for (var i = 0; i < battle.hero.length; i++){
         test += battle.isAlive(battle.hero[i])
@@ -342,8 +382,16 @@ battle.isPartyAlive = function(bch) {
     return (test > 0)
 }
 
+battle.isMonstersAlive = function() {
+    var test = 0
+    for (var i = 0; i < battle.monster.length; i++){
+        test += battle.isAlive(battle.monster[i])
+    }
+    return (test > 0)
+}
+
 battle.isAlive = function(bch){
-    return (bch.hp > 0)
+    return (bch["hp"] > 0)
 }
 
 battle.atk.pts = function(bch){
