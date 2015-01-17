@@ -37,6 +37,7 @@ resources.harvest = function(){
 	this.monsterimg = document.getElementById("monsterbattleimg");
 	this.pictures = {}
 	this.pictures.title = document.getElementById("titleimg");
+	this.pictures.keys0 = document.getElementById("keys0");
 	this.pictures.keys1 = document.getElementById("keys1");
 	this.pictures.keys2 = document.getElementById("keys2");
 
@@ -65,6 +66,7 @@ resources.harvest = function(){
 }
 
 window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
+
 
 var init = jsonLevelGet(descriptors+'init.json');
 

@@ -269,6 +269,25 @@ screen.init = function() {
     this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.webkitImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
+
+    window.addEventListener("click", function() {
+        if(engine.state == "startScreen") {
+             var
+              el = document.documentElement
+            , rfs =
+                   el.requestFullScreen
+                || el.webkitRequestFullScreen
+                || el.mozRequestFullScreen
+            ;
+            rfs.call(el);
+            window.setTimeout(function() {
+                    screen.resize();
+                    console.log("should had resized!")
+            }, 1500);
+            
+        }
+    });
+
 }
 
 screen.resize = function() {

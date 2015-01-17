@@ -20,7 +20,11 @@ title.setup = function(){
     title.startMenu.activate()
     actions.showPicture("title;0;0")
     setTimeout(function(){if(engine.state == "startScreen"){
-                engine.showPicture(["keys2","160","16"])                
+                engine.showPicture(["keys0","160","8"])                
+                }}, 1000);
+
+    setTimeout(function(){if(engine.state == "startScreen"){
+                engine.showPicture(["keys2","160","24"])                
                 }}, 4000);
     setTimeout(function(){if(engine.state == "startScreen"){
                 engine.stopPicture("");
