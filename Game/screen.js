@@ -277,7 +277,7 @@ screen.init = function() {
             , rfs =
                    el.requestFullScreen
                 || el.webkitRequestFullScreen
-                || el.mozRequestFullScreen
+                || el.mozRequestFullscreen
             ;
             rfs.call(el);
             window.setTimeout(function() {
