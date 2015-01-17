@@ -315,7 +315,7 @@ dist.setup = function (viewCanvas, backgroundImage, alpha) {
 
 
         ctx.putImageData(imageData, 0, 0);
-        dist.fctx.drawImage(blankcanvas,0,0,dist.bfx.w,dist.bfx.h,0,0,416,416)
+        dist.fctx.drawImage(blankcanvas,0,0,dist.bfx.w,dist.bfx.h,screen.GSTARTX,screen.GSTARTY,screen.GWIDTH,screen.GHEIGHT+31)
     }
 
 }

@@ -19,6 +19,14 @@ title.setup = function(){
     menus.setParent(title.startMenu);
     title.startMenu.activate()
     actions.showPicture("title;0;0")
+    setTimeout(function(){if(engine.state == "startScreen"){
+                engine.showPicture(["keys2","160","16"])                
+                }}, 4000);
+    setTimeout(function(){if(engine.state == "startScreen"){
+                engine.stopPicture("");
+                engine.showPicture(["title","0","0"])
+                engine.showPicture(["keys1","150","16"]);                
+                }}, 10000);
 }
 
 title.startScreen = function(){

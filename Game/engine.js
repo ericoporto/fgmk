@@ -253,20 +253,10 @@ var mapMenu =  new menu({
                     index: 2
                     }
             },1),
-        item1: {
-            action: function(){
-                   actions.showText("the player is fine, thanks!") },
-            index: 2
-            },
-        item2: {
-            action: function(){
-                   actions.showText("the player is fine, thanks!") },
-            index: 3
-            },
         item3: {
             action: function(){
                    actions.showText("the player is fine, thanks!") },
-            index: 4
+            index: 2
             },
         options: new menu({
                 showFPS: new menu({
@@ -285,13 +275,12 @@ var mapMenu =  new menu({
                     action: 'exit',
                     index: 2
                     }
-            },5),
+            },3),
         exit: {
             action: 'exit',
-            index: 6
+            index: 4
             }
     });
-    //I was here!!!!
 
 menus.setParent(mapMenu);
 

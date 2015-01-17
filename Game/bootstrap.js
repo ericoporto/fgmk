@@ -37,6 +37,8 @@ resources.harvest = function(){
 	this.monsterimg = document.getElementById("monsterbattleimg");
 	this.pictures = {}
 	this.pictures.title = document.getElementById("titleimg");
+	this.pictures.keys1 = document.getElementById("keys1");
+	this.pictures.keys2 = document.getElementById("keys2");
 
     LevelsList = init['LevelsList']
     for (var level in LevelsList) {
@@ -95,6 +97,6 @@ bootstrap.onLoadDOM = function(){
         chars = new charalist();
         chars.push(player)
 	}catch (err){
-		alert("onLoadDOM "+err);
+		alert("Error on bootstrap! "+err);
 	}
 }
