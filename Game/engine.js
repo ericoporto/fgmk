@@ -1045,6 +1045,7 @@ actions.noEffect = function(param,position) {
 actions.battle = function(param,position) {
     var params = param.split(';')
     actions.fadeOut('tension1;keepEffect')
+    dist.setup(screen.canvas,'bgimg1',1)
     actions.changeState('battle')
     engine.atomStack.push([engine.battle,params]);
     actions.fadeIn('blackFadeIn;doNotKeep')

@@ -810,6 +810,7 @@ screen.loop = function(){
 			} else if (this.engine.state == "startScreen") {
 				//do start screen stuff
 			} else if (this.engine.state == "battle") {
+				dist.test(dist.efnumb[0])
 				screen.drawMonsters()
 			}
 			screen.showpicture();
