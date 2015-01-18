@@ -29,11 +29,12 @@ class CharasFormat(TileCharaset.BaseFormat):
     def new(self):
         self.jsonTree = { "Charas": {} }
 
-    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[]):
+    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[], properties={"nocolision":0}):
 
         self.jsonTree["Charas"][name]= {    "charaset": charaset,
                                             "actions":actions,
-                                            "movements":movements
+                                            "movements":movements,
+                                            "properties":properties
                                             }
 
     def addMovements(self, name, movements):
@@ -98,6 +99,43 @@ class MoveItem(QtGui.QListWidgetItem):
     def getMarray(self):
         movearray = self.data(Qt.UserRole).toPyObject()
         return [str(movearray[0]),str(movearray[1])]
+
+class PropertiesWidget(QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QWidget.__init__(self, parent, **kwargs)
+
+        self.VBox = QVBoxLayout(self)
+        self.nocolision = QCheckBox("igone colision")
+        self.nocolision.setToolTip("This makes the object ignore the colision map.")
+        self.nocolision.setCheckState(Qt.Unchecked)
+
+        self.propertys =  {}
+        self.propertys['nocolision']=self.nocolision
+
+        for key in self.propertys:
+            self.VBox.addWidget(self.propertys[key])
+
+        self.clear()
+
+    def setList(self,listToSet):
+        for propertyy in listToSet:
+            if(propertyy == 'nocolision'):
+                if(listToSet[propertyy]==0 or listToSet[propertyy]==False):
+                    self.propertys[propertyy].setCheckState(Qt.Unchecked)
+                else:
+                    self.propertys[propertyy].setCheckState(Qt.Checked)
+
+    def clear(self):
+        for propertyy in self.propertys:
+            if(propertyy == 'nocolision'):
+                self.propertys[propertyy].setCheckState(Qt.Unchecked)
+
+    def getValue(self):
+        properties = {}
+        for key in self.propertys:
+            properties[key] = self.propertys[key].isChecked()
+
+        return properties
 
 
 class MoveWidget(QWidget):
@@ -444,7 +482,7 @@ class CharaList(QWidget):
             name = self.charaslist.selectedItems()[0].aname
             self.returnvalue = {"name": name, "jsonTree":jsonTree}
         else:
-            self.returnvalue = {'name': None,  'jsonTree':{'charaset':"",'actions':{},'movements':[]}}
+            self.returnvalue = {'name': None,  'jsonTree':{'charaset':"",'actions':{},'movements':[],'properties':{}}}
 
         self.emit(SIGNAL("SelectionChanged()"))
 
@@ -468,7 +506,7 @@ class CharaList(QWidget):
             charaname = str(self.charaslist.item(itemIndex).aname)
             jt = self.charaslist.item(itemIndex).jsonTree
             print(jt)
-            charas.addChara(charaname,jt["charaset"],jt["actions"],jt["movements"])
+            charas.addChara(charaname,jt["charaset"],jt["actions"],jt["movements"],jt["properties"])
 
         return charas
 
@@ -588,6 +626,7 @@ class CharaEditor(QDialog):
         self.charalist = CharaList()
         self.csetSelector = TileCharaset.CharasetSelector(self, ssettings)
         self.movement = MoveWidget()
+        self.properties = PropertiesWidget()
 
         self.actions = ActionsWidget(parent,ssettings,True)
         self.actions.setAllState(True)
@@ -603,6 +642,7 @@ class CharaEditor(QDialog):
         VBox = QVBoxLayout()
         VBox.addWidget(self.charalist)
         VBox.addLayout(HBoxRS)
+        VBox.addWidget(self.properties)
 
         self.layout.addLayout(VBox)
         self.layout.addWidget(self.csetSelector)
@@ -656,17 +696,20 @@ class CharaEditor(QDialog):
             charaset = self.csetSelector.getValue()
             movements = self.movement.getValue()
             actions = self.actions.getValue()
-            self.oldSelection["jsonTree"] = { "charaset":charaset,"movements":movements,"actions":actions }
+            properties = self.properties.getValue()
+            self.oldSelection["jsonTree"] = { "charaset":charaset,"movements":movements,"actions":actions, "properties":properties }
             self.charalist.setItem(self.oldSelection)
 
         if(newSelection['jsonTree'] == {}):
             self.movement.clear()
             self.actions.clear()
             self.csetSelector.reset()
+            self.properties.clear()
         else:
             self.csetSelector.select(newSelection['jsonTree']['charaset'])
             self.movement.setList(newSelection['jsonTree']['movements'])
             self.actions.setList(newSelection['jsonTree']['actions'])
+            self.properties.setList(newSelection['jsonTree']['properties'])
 
         self.oldSelection = newSelection
 

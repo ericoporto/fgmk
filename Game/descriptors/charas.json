@@ -5,11 +5,14 @@
     "WeirdGuy":
         {
         "movements":
-            [["move","right"],
-             ["move","left"]],
+            [["move","random"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
         "actions":
             {
-            "type":  [  1,  0],
+            "type":  [  0,  1],
             "list":
                 [["IF","var:test;bigger;0"],
                  ["showText","See you are making friends... Talked var:test times!"],
@@ -23,6 +26,10 @@
         {
         "movements":
             [["face","down"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
         "actions":
             {
             "type":  [  1,  0],
@@ -39,11 +46,15 @@
              ["face","left"],
              ["face","down"],
              ["face","right"]],
+        "properties":
+            {
+            "nocolision":   1
+            },
         "actions":
             {
+            "type":  [  1,  0],
             "list":
-                [["showText","spinning spinning"]],
-            "type":  [  1,  0]
+                [["showText","spinning spinning"]]
             },
         "charaset": "bear"
         }
