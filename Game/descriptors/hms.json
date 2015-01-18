@@ -17,7 +17,7 @@
 "Skills":
     {
         "Frostburn":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
-        "HelpingHand":{"dl":5,"basep":1,"effect":["hpplus"]},
+        "HelpingHand":{"dl":5,"basep":1,"effect":["hpup"]},
         "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]},
         "Bite":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]}
     },
@@ -25,7 +25,7 @@
     {
     "bunny":
         {
-            "name":"Vorpal Bunny",
+            "name":"VorpalBunny",
             "ExpToLevel":[2,0],
             "baseStats" : {"hp":120, "w":100, "r":120, "m":10 },
             "Pathway":{

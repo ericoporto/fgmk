@@ -30,7 +30,7 @@ camera.panToChara = function(chara){
     charatilex = Math.floor(chara.mapx/32);
     charatiley = Math.floor(chara.mapy/32)+1;
 
-    
+
 
     if(charatilex > this.halfWidth && charatilex < this.maxWorldWidth - this.halfWidth ) {
             this.x = charatilex;
@@ -194,6 +194,13 @@ screen.drawMonster = function(monster, position) {
 	var modx = 0
 	var mody =0
 
+	if(monster.dead){
+		return
+	}
+
+	if(monster.selected && monster.flash ==0){
+		screen.flashMonster(monster,'#111111')
+	}
 	if(monster.shake>0) {
 		monster.shake--
 		modx = Math.floor(8*Math.random())*4
@@ -282,7 +289,7 @@ screen.init = function() {
                     screen.resize();
                     console.log("should had resized!")
             }, 1500);
-            
+
         }
     });
 

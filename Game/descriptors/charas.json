@@ -17,7 +17,7 @@
                 [["IF","var:test;bigger;0"],
                  ["showText","See you are making friends... Talked var:test times!"],
                  ["ELSE",""],
-                 ["battle","bunny"],
+                 ["battle","bunny;bunny"],
                  ["END",""]]
             },
         "charaset": "bunny"

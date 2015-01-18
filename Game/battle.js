@@ -52,6 +52,8 @@ battle.initMonster = function(monster){
         }
         monster["prob"] = prob
     }
+    monster["xpreward"] = monster["ExpToLevel"][0]*monster["level"]+monster["ExpToLevel"][1]
+    monster["dead"]=false
 }
 
 battle.uplevel = function(hero, leveltoup, silent){
@@ -148,6 +150,7 @@ battle.start = function(monsterlist){
     battle.waitherodecision = false
     battle.bchToAttack = []
     battle.ended = false
+    battle.xpreward = 0;
 
 
     for (var i = 0; i < player.party.length; i++) {
@@ -190,7 +193,9 @@ battle.resolveOrder = function() {
                 if(battle.resolveIfSideDead()) {
                     return
                 }
-                battle.mAttack(battle.bchToAttack[0])
+                if(!(battle.bchToAttack[0].dead)){
+                    battle.mAttack(battle.bchToAttack[0])
+                }
                 if(battle.resolveIfSideDead()) {
                     return
                 }
@@ -222,6 +227,7 @@ battle.resolveIfSideDead = function(){
         }
         battle.ended = true
         actions.showText("You win!")
+        battle.end()
         actions.changeState("map")
         return true
     }
@@ -247,15 +253,105 @@ battle.setOrderStack = function(){
     } );
 }
 
+battle.hAct = {}
+battle.hAct.askTarget = function(){
+    engine.questionBoxAnswer = engine.questionBoxUndef
+    battle.hAct.targetting = true
+    battle.herodecision = "target"
+    var selmon = []
+    for(var i=0; i<battle.monster.length;i++){
+        if(!(battle.monster[i].dead)){
+            selmon.push(battle.monster[i])
+        }
+    }
+
+    if(selmon.length == 1){
+        selmon[0].selected = false
+        battle.hAct.targetting = false
+        battle.hAct.__target = [selmon[0]]
+        engine.questionBoxAnswer = 0
+        HID.inputs["accept"].active = false
+        return
+    }
+
+   //the selectable monsters
+    for(var i=0; i<selmon.length;i++){
+        selmon[i].selected = false
+        selmon[i].flash = 0
+
+        if ( i == 0) {
+            selmon[i].previous = selmon[0]
+            selmon[i].next = selmon[i+1]
+        } else if (i == selmon.length-1) {
+            selmon[i].previous = selmon[i-1]
+            selmon[i].next = selmon[i]
+        } else {
+            selmon[i].previous = selmon[i-1]
+            selmon[i].next = selmon[i+1]
+        }
+
+    }
+    selmon[0].selected = true
+    battle.hAct.selectedMonster = selmon[0]
+}
+
+battle.hAct.changeSelection = function(next){
+    battle.hAct.selectedMonster.selected = false
+    battle.hAct.selectedMonster = battle.hAct.selectedMonster[next]
+    battle.hAct.selectedMonster.selected = true
+}
+
+battle.hAct.targetUpdate= function(){
+    if(typeof this.keyPressed === "undefined" ){
+        this.keyPressed = 0
+    }
+
+    if(this.keyPressed==0) {
+        if(HID.inputs["up"].active){
+            battle.hAct.changeSelection('previous')
+            HID.inputs["up"].active = false
+            this.keyPressed=32
+        }else if(HID.inputs["left"].active){
+            battle.hAct.changeSelection('previous')
+            HID.inputs["left"].active = false
+            this.keyPressed=32
+        }else if(HID.inputs["right"].active){
+            battle.hAct.changeSelection('next')
+            HID.inputs["right"].active = false
+            this.keyPressed=32
+        }else if(HID.inputs["down"].active){
+            battle.hAct.changeSelection('next')
+            HID.inputs["down"].active = false
+            this.keyPressed=32
+        }else if(HID.inputs["accept"].active){
+            this.selectedMonster.selected = false
+            battle.hAct.targetting = false
+            battle.hAct.__target = [battle.hAct.selectedMonster]
+            engine.questionBoxAnswer = 0
+            HID.inputs["accept"].active = false
+            this.keyPressed=32
+        }else if(HID.inputs["cancel"].active){
+
+        }
+    } else {
+        this.keyPressed-=4
+    }
+}
+
 battle.hAttack = function(hero){
     //select action
     //if attack or skill select target
     //resolve
     if(engine.questionBoxAnswer != engine.questionBoxUndef && battle.herodecision == "action"){
         if(engine.questionBoxAnswer == 0 ) {
-            var __damage = battle.atk.pts(hero)
-            var __actionType = ["hpdown"]
-            var __target = [battle.monster[0]]
+            battle.hAct.__damage = battle.atk.pts(hero)
+            battle.hAct.__actionType = ["hpdown"]
+            if(battle.monster.length <= 1){
+                battle.hAct.__target = [battle.monster[0]]
+                var __proceed = true
+            } else {
+                battle.hAct.askTarget()
+            }
         } else if(engine.questionBoxAnswer == 1){
             battle.herodecision = "skill"
             var options = hero["skill"].join(";")
@@ -269,16 +365,22 @@ battle.hAttack = function(hero){
             actions.questionBox("attack;skill")
         } else {
             actions.showText(engine.questionBoxAnswerStr)
-            var __damage = battle.skl.pts(hero,engine.questionBoxAnswerStr)
-            var __actionType = battle.skills[engine.questionBoxAnswerStr].effect
-            var __target = [battle.monster[0]]
+            battle.hAct.__damage = battle.skl.pts(hero,engine.questionBoxAnswerStr)
+            battle.hAct.__actionType = battle.skills[engine.questionBoxAnswerStr].effect
+            battle.hAct.__target = [battle.monster[0]]
+            var __proceed = true
         }
 
     }
-    if(typeof __damage !== "undefined" && typeof __actionType !== "undefined"){
-        console.log("attacked")
-        battle.resolveAtk(hero, __target, __damage, __actionType)
-        actions.proceedBattleTurn()
+    if(engine.questionBoxAnswer != engine.questionBoxUndef && battle.herodecision == "target"){
+        var __proceed = true
+    }
+    if(typeof __proceed !== "undefined" ){
+        if(__proceed != false){
+            console.log("attacked")
+            battle.resolveAtk(hero, battle.hAct.__target, battle.hAct.__damage, battle.hAct.__actionType)
+            actions.proceedBattleTurn()
+        }
     }
 }
 
@@ -374,6 +476,21 @@ battle.mTarget = function(monster){
     return battle.hero[target]
 }
 
+battle.end = function() {
+    for (var i = 0; i < battle.hero.length; i++){
+        if(battle.isAlive(battle.hero[i])){
+            var thishero = battle.hero[i]
+            thishero.xp+=Math.floor(battle.xpreward/battle.hero.length)
+            thishero.xpnextlevel = thishero.ExpToLevel[0]*thishero.level+thishero.ExpToLevel[1]
+            while(thishero.xp > thishero.xpnextlevel){
+                var newlevel = thishero.level + 1
+                battle.uplevel(thishero,newlevel)
+                thishero.xpnextlevel = thishero.ExpToLevel[0]*thishero.level+thishero.ExpToLevel[1]
+            }
+        }
+    }
+}
+
 battle.isPartyAlive = function() {
     var test = 0
     for (var i = 0; i < battle.hero.length; i++){
@@ -382,10 +499,20 @@ battle.isPartyAlive = function() {
     return (test > 0)
 }
 
+battle.monsterDies = function(monster){
+    battle.xpreward += monster.xpreward
+}
+
 battle.isMonstersAlive = function() {
     var test = 0
     for (var i = 0; i < battle.monster.length; i++){
         test += battle.isAlive(battle.monster[i])
+        if(!(battle.isAlive(battle.monster[i]))){
+            if(!(battle.monster[i].dead)){
+                battle.monster[i].dead = true
+                battle.monsterDies(battle.monster[i])
+            }
+        }
     }
     return (test > 0)
 }
@@ -416,4 +543,8 @@ battle.mApplyState = function(mon,st) {
 
 battle.update = function(){
     battle.resolveOrder();
+    if(battle.hAct.targetting){
+        battle.hAct.targetUpdate();
+    }
+
 }
