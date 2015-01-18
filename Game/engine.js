@@ -419,6 +419,19 @@ player.setup = function() {
     player['party'] = init['Player']['party']
     player['steps'] = 0;
     player['running'] = false;
+    player['checkMapBoundaries'] = function (px, py, mapw, maph){
+        if(player.facing == "up") {
+            return (py>0)
+        } else if(player.facing == "left"){
+            return (px>0)
+        } else if(player.facing == "right") {
+            return (px<mapw)
+        } else if(player.facing == "down"){
+            return (py<maph)
+        } 
+        return True
+    }
+
     player['update'] = function(){
 
     if(printer.isShown) return;
@@ -433,7 +446,7 @@ player.setup = function() {
         if(dirkey){
             player.facing=dirkey
             var fpos = player.facingPosition()
-            if(py>0 && px>0 && px<mapwidth && py<mapheight){
+            if(player.checkMapBoundaries(px,py,mapwidth,mapheight)){
                 if(engine.currentLevel["Level"]["colision"][fpos[0]][fpos[1]] == 0 && !(engine.playerFaceChar()) ){
                     player.steps = 32;
                     if(engine.currentLevel["Level"]["events"][fpos[0]][fpos[1]] != 0) {

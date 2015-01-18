@@ -18,8 +18,9 @@ camera.setupMap = function(_worldLevel, _engine){
 }
 
 camera.setupCanvas = function(_canvas){
-    this.width = Math.floor(screen.GWIDTH/32)+1
-    this.height = Math.floor(screen.GHEIGHT/32)+1
+    this.yerror= 1-(screen.GHEIGHT/32)%2;
+    this.width = Math.floor(screen.GWIDTH/32)+1;
+    this.height = Math.floor(screen.GHEIGHT/32)+1;
     this.halfWidth = Math.floor(this.width/2);
     this.halfHeight = Math.floor(this.height/2);
 }
@@ -28,6 +29,8 @@ camera.panToChara = function(chara){
 
     charatilex = Math.floor(chara.mapx/32);
     charatiley = Math.floor(chara.mapy/32)+1;
+
+    
 
     if(charatilex > this.halfWidth && charatilex < this.maxWorldWidth - this.halfWidth ) {
             this.x = charatilex;
@@ -46,7 +49,7 @@ camera.panToChara = function(chara){
         }
     }
 
-    if(charatiley > this.halfHeight && charatiley < this.maxWorldHeight - this.halfHeight ) {
+    if(charatiley > this.halfHeight && charatiley < this.maxWorldHeight - this.halfHeight) {
             this.y = charatiley;
             this.finey = chara.mapy%32;
     } else {
@@ -55,11 +58,11 @@ camera.panToChara = function(chara){
             this.finey = chara.mapy%32;
         } else if (charatiley < this.halfHeight) {
             this.y = this.halfHeight;
-        } else if (charatiley == this.maxWorldHeight - this.halfHeight) {
-            this.y = this.maxWorldHeight - this.halfHeight;
+        } else if (charatiley == this.maxWorldHeight - this.halfHeight -this.yerror) {
+            this.y = this.maxWorldHeight - this.halfHeight-this.yerror;
             this.finey = chara.mapy%32;
         } else  {
-            this.y = this.maxWorldHeight - this.halfHeight;
+            this.y = this.maxWorldHeight - this.halfHeight-this.yerror;
         }
     }
 
@@ -272,13 +275,8 @@ screen.init = function() {
 
     window.addEventListener("click", function() {
         if(engine.state == "startScreen") {
-             var
-              el = document.documentElement
-            , rfs =
-                   el.requestFullScreen
-                || el.webkitRequestFullScreen
-                || el.mozRequestFullscreen
-            ;
+            var el = document.documentElement
+            var rfs = el.requestFullScreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
             rfs.call(el);
             window.setTimeout(function() {
                     screen.resize();
@@ -299,7 +297,7 @@ screen.resize = function() {
         this.currentHeight = window.innerHeight;
         this.currentWidth = this.currentHeight * this.RATIO;
     } else {
-        this.GHEIGHT=256;
+        this.GHEIGHT=256; //was 288
         this.currentHeight = window.innerHeight * this.HEIGHT/this.GHEIGHT
         this.currentWidth = this.currentHeight * this.RATIO;
     }
