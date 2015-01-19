@@ -153,7 +153,10 @@ battle.start = function(monsterlist){
     battle.bchToAttack = []
     battle.ended = false
     battle.xpreward = 0;
-
+    
+    if(monsterlist.length>1){
+        dist.efnumb[0]=31
+    }
 
     for (var i = 0; i < player.party.length; i++) {
         battle.hero[i] = battle.heroes[player.party[i]]

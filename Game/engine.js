@@ -970,7 +970,9 @@ engine.charAutoDelete = function(param, charatodel){
         }
     }
     console.log(chars[k])
-    chars.splice(k, 1);
+    if(chars[k] != engine.player){
+        chars.splice(k, 1);
+    }
 }
 
 engine.questionBox = function(param){
