@@ -2,7 +2,28 @@
 {
 "Charas":
     {
-    "WeirdGuy":
+    "bunny":
+        {
+        "movements":
+            [["move","follow"],
+             ["move","follow"],
+             ["move","random"],
+             ["move","random"],
+             ["move","follow"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
+        "actions":
+            {
+            "type":  [  0,  1],
+            "list":
+                [["battle","bunny"],
+                 ["charAutoDelete",""]]
+            },
+        "charaset": "bunny"
+        },
+    "bunny2":
         {
         "movements":
             [["move","random"]],
@@ -14,15 +35,12 @@
             {
             "type":  [  0,  1],
             "list":
-                [["IF","var:test;bigger;0"],
-                 ["showText","See you are making friends... Talked var:test times!"],
-                 ["ELSE",""],
-                 ["battle","bunny;bunny"],
-                 ["END",""]]
+                [["battle","bunny;bunny;bunny"],
+                 ["charAutoDelete",""]]
             },
         "charaset": "bunny"
         },
-    "YellowGuy":
+    "skeleton":
         {
         "movements":
             [["face","down"]],
@@ -39,7 +57,7 @@
             },
         "charaset": "skeleton"
         },
-    "OtherWeird":
+    "bear":
         {
         "movements":
             [["face","up"],

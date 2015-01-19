@@ -145,6 +145,8 @@ battle.action.skill = function(skill){
 }
 
 battle.start = function(monsterlist){
+    battle.holdAtomStack = engine.atomStack
+    engine.atomStack=new Array();
     battle.monster = [];
     battle.hero = [];
     battle.waitherodecision = false
@@ -166,6 +168,7 @@ battle.start = function(monsterlist){
     battle.skills = resources.hms.Skills
 
     battle.setOrderStack();
+    actions.fadeIn('blackFadeIn;doNotKeep')
 
 }
 
@@ -228,7 +231,6 @@ battle.resolveIfSideDead = function(){
         battle.ended = true
         actions.showText("You win!")
         battle.end()
-        actions.changeState("map")
         return true
     }
     return false
@@ -489,6 +491,8 @@ battle.end = function() {
             }
         }
     }
+    actions.changeState("map")
+    engine.atomStack.push([function(){engine.atomStack = battle.holdAtomStack },''])
 }
 
 battle.isPartyAlive = function() {

@@ -10,13 +10,14 @@
         "Pathway":
             {
                 "1" : {"learn":{"skill":"Frostburn"}},
-                "2" : {"learn":{"skill":"HelpingHand"}}
+                "2" : {"learn":{"skill":"Doomsday"}}
             }
         }
     },
 "Skills":
     {
         "Frostburn":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
+        "Doomsday":{"dl":5,"basep":2,"plus":-1,"effect":["hpdown"]},
         "HelpingHand":{"dl":5,"basep":1,"effect":["hpup"]},
         "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]},
         "Bite":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]}

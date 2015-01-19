@@ -377,7 +377,7 @@ engine.facingPosition = function(_char, px, py) {
     if(facing==          "up") { return [py-1,px]
     } else if(facing== "left") { return [py,px-1]
     } else if(facing=="right") { return [py,px+1]
-    } else if(facing== "down") { return [py+1,px]
+    } else  { return [py+1,px]
     }
     console.log("error facing! char: "+_char+" ;position: "+px+", "+py)
     return false
@@ -411,7 +411,7 @@ engine.charaLookToPlayer=function(chara) {
         return "up"
     }else if (resx <0 ) {
         return "right"
-    } else if (resx >0 ) {
+    } else {
         return "left"
     }
     console.log("error facing!" + resx + " , " + resy)
@@ -780,7 +780,7 @@ eventInChar = function(char,evType,position) {
         var aNmb, action, actionAndParam;
         for (aNmb = 0; aNmb < char['chara']['actions']['list'].length ; aNmb++) {
             actionAndParam = char['chara']['actions']['list'][aNmb];
-            translateActions(actionAndParam[0],actionAndParam[1],position);
+            translateActions(actionAndParam[0],actionAndParam[1],position, char);
         }
         engine.atomStack.push([function(){char.stopped=false; char.facing = char.charwasfacingfirst},'']);
         return true;
@@ -804,7 +804,7 @@ player.charaFacingTo =function(chara) {
         return "up"
     else if (resx <0 && resy==0)
         return "right"
-    else if (resx >0 && resy==0)
+    else 
         return "left"
 
     console.log("error facing!")
@@ -961,6 +961,18 @@ engine.stopPicture = function(param){
     screen.clearPicture()
 }
 
+engine.charAutoDelete = function(param, charatodel){
+    var k = -2
+    for(var i = 0; i<chars.length ; i++){
+        if(chars[i] == charatodel) {
+            k = i
+            break
+        }
+    }
+    console.log(chars[k])
+    chars.splice(k, 1);
+}
+
 engine.questionBox = function(param){
     var answers = {}
     engine.questionBoxAnswer = engine.questionBoxUndef
@@ -983,8 +995,8 @@ engine.proceedBattleTurn = function(param){
     battle.waitherodecision = false
 }
 
-translateActions = function(action, param, position) {
-    actions[action](param,position)
+translateActions = function(action, param, position, charsender) {
+    actions[action](param,position, charsender)
 };
 
 var actions = {};
@@ -998,6 +1010,11 @@ lastBlock = function() {
         value = bstk[0];
     }
     return value
+}
+
+actions.charAutoDelete = function(param, position, charatodel){
+    var params = param.split(';')
+    engine.atomStack.push([engine.charAutoDelete,params,charatodel])
 }
 
 actions.questionBox = function(param, position){
@@ -1134,13 +1151,14 @@ actions.noEffect = function(param,position) {
         engine.atomStack.push([screen.effects.noEffect,'']);
 };
 
+
+
 actions.battle = function(param,position) {
     var params = param.split(';')
     actions.fadeOut('tension1;keepEffect')
     dist.setup(screen.canvas,'bgimg1',1)
     actions.changeState('battle')
     engine.atomStack.push([engine.battle,params]);
-    actions.fadeIn('blackFadeIn;doNotKeep')
 };
 
 actions.proceedBattleTurn = function(param,position){
