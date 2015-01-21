@@ -84,9 +84,7 @@ bootstrap.onLoadDOM = function(){
         camera.setupCanvas(screen.canvas);
 		engine.setup();
         screen.setEngine(engine);
-        HID.setupTouchZone(screen);
-		HID.setupListeners();
-		HID.setupKeyboardListeners();
+		HID.setup(screen)
         engine.currentLevel = resources['levels'][init['World']['initLevel']];
 		screen.printBox.setup(resources.printerset);
 		feedbackEng.setup();

@@ -6,9 +6,9 @@ title.setup = function(){
             action: [function(){ actions.showText("let's play!");
                         actions.fadeOut("blackFadeOut;keepEffect");
                         actions.changeState("map") },
-                    'exit',
-                    function(){actions.stopPicture("")},
-                    function(){actions.fadeIn("blackFadeIn;doNotKeep")}],
+                        function(){actions.stopPicture("")},
+                        function(){actions.fadeIn("blackFadeIn;doNotKeep")},
+                    'exit'],
                 index: 0
             },
         exit: {
@@ -20,16 +20,16 @@ title.setup = function(){
     title.startMenu.activate()
     actions.showPicture("title;0;0")
     setTimeout(function(){if(engine.state == "startScreen"){
-                engine.showPicture(["keys0","160","8"])                
+                engine.showPicture(["keys0","160","8"])
                 }}, 1000);
 
     setTimeout(function(){if(engine.state == "startScreen"){
-                engine.showPicture(["keys2","160","24"])                
+                engine.showPicture(["keys2","160","24"])
                 }}, 4000);
     setTimeout(function(){if(engine.state == "startScreen"){
                 engine.stopPicture("");
                 engine.showPicture(["title","0","0"])
-                engine.showPicture(["keys1","150","16"]);                
+                engine.showPicture(["keys1","150","16"]);
                 }}, 10000);
 }
 

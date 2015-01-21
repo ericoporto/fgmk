@@ -22,6 +22,7 @@ battle.setup = function(){
 }
 
 battle.initHero = function(hero){
+    hero["side"] = "hero"
     hero["xp"] = 0
     hero["level"] = 0
     hero["xpnextlevel"] = hero["ExpToLevel"][0]*hero["level"]+hero["ExpToLevel"][1]
@@ -32,6 +33,7 @@ battle.initHero = function(hero){
 }
 
 battle.initMonster = function(monster){
+    monster["side"] = "monster"
     monster["level"] = 0
     monster["skill"]=[]
     monster["hp"] = 0
@@ -153,7 +155,7 @@ battle.start = function(monsterlist){
     battle.bchToAttack = []
     battle.ended = false
     battle.xpreward = 0;
-    
+
     if(monsterlist.length>1){
         dist.efnumb[0]=31
     }
@@ -224,7 +226,7 @@ battle.resolveIfSideDead = function(){
         }
         battle.ended = true
         actions.showText("You died!")
-        actions.changeState("map")
+        battle.end("died")
         return true
     }
     if(!(battle.isMonstersAlive())){
@@ -233,7 +235,7 @@ battle.resolveIfSideDead = function(){
         }
         battle.ended = true
         actions.showText("You win!")
-        battle.end()
+        battle.end("win")
         return true
     }
     return false
@@ -351,6 +353,7 @@ battle.hAttack = function(hero){
         if(engine.questionBoxAnswer == 0 ) {
             battle.hAct.__damage = battle.atk.pts(hero)
             battle.hAct.__actionType = ["hpdown"]
+            battle.hAct.__skill = "atk"
             if(battle.monster.length <= 1){
                 battle.hAct.__target = [battle.monster[0]]
                 var __proceed = true
@@ -373,6 +376,7 @@ battle.hAttack = function(hero){
             battle.hAct.__damage = battle.skl.pts(hero,engine.questionBoxAnswerStr)
             battle.hAct.__actionType = battle.skills[engine.questionBoxAnswerStr].effect
             battle.hAct.__target = [battle.monster[0]]
+            battle.hAct.__skill = engine.questionBoxAnswerStr
             var __proceed = true
         }
 
@@ -383,7 +387,8 @@ battle.hAttack = function(hero){
     if(typeof __proceed !== "undefined" ){
         if(__proceed != false){
             console.log("attacked")
-            battle.resolveAtk(hero, battle.hAct.__target, battle.hAct.__damage, battle.hAct.__actionType)
+            battle.resolveAtk(hero, battle.hAct.__target, battle.hAct.__damage,
+                battle.hAct.__actionType, battle.hAct.__skill)
             actions.proceedBattleTurn()
         }
     }
@@ -412,21 +417,28 @@ battle.mAttack = function(mn){
         screen.shakeMonster(mon)
     }
 
-    battle.resolveAtk(mon, target, damage, actionType)
+    battle.resolveAtk(mon, target, damage, actionType, attack)
 }
 
-battle.resolveAtk = function(bchSrc, bchVct, dmg, act){
+battle.resolveAtk = function(bchSrc, bchVct, dmg, act, skill){
     //for each victim, do the effect applying damage
     for (var j = 0; j < bchVct.length; j++) {
         for (var i = 0; i < act.length; i++) {
-            battle.effect[act[i]](bchSrc,bchVct[j],dmg)
+            battle.effect[act[i]](bchSrc,bchVct[j],dmg, skill)
         }
     }
 }
 
-battle.effect.hpdown = function(bchsrc,bch,dmg){
+battle.effect.hpdown = function(bchsrc,bch,dmg, skill){
     bch.hp = Math.max(bch["hp"]-dmg, 0)
-    actions.showText(bchsrc.name+" attacked "+ bch.name+" and dealt "+dmg+" damage!")
+    if(skill == "atk") {
+        actions.showText(bchsrc.name+" attacked "+ bch.name+" and dealt "+dmg+" damage!")
+    } else {
+        actions.showText(bchsrc.name+" used "+skill+" on "+ bch.name+" and dealt "+dmg+" damage!")
+    }
+    if(bch.side == "monster"){
+        screen.flashMonster(bch, '#bf0010')
+    }
 }
 
 battle.effect.hpup = function(bchsrc, bch,dmg){
@@ -481,7 +493,8 @@ battle.mTarget = function(monster){
     return battle.hero[target]
 }
 
-battle.end = function() {
+battle.end = function(battleresult) {
+    battle.lastresult = battleresult
     for (var i = 0; i < battle.hero.length; i++){
         if(battle.isAlive(battle.hero[i])){
             var thishero = battle.hero[i]

@@ -17,7 +17,7 @@ var HID = {
 		    active: false,
 		    mapX: 0,
 		    mapY: 96,
-            color: '#111111', 
+            color: '#111111',
             gamepad: function(pad){ return (pad.axes[0] < -HID.axeNotNull); }
 	    },
 	    down:{
@@ -89,7 +89,7 @@ var HID = {
 
                     if( HIDItem.gamepad(pad) ) {
                         HIDItem.active = true
-                    } else 
+                    } else
                         HIDItem.active = false
                 }
 
@@ -120,14 +120,14 @@ var HID = {
 	    var evtobj = window.event ? event : e ;
 	    var unicode = evtobj.charCode ? evtobj.charCode : evtobj.keyCode;
 	    var actualkey = String.fromCharCode(unicode);
-	
+
         for(var key in HID.inputs){
             var HIDItem = HID.inputs[key];
 
             if(actualkey == HIDItem.letter){
                 HIDItem.active = true;
             }
-        }	
+        }
 
     },
 
@@ -142,15 +142,15 @@ var HID = {
             if(actualkey == HIDItem.letter){
                 HIDItem.active = false;
             }
-        }	
-		
+        }
+
         for(var key in HID.debugKeys){
             var HIDItem = HID.debugKeys[key];
 
             if(actualkey == HIDItem.letter){
                 HIDItem.toggle();
             }
-        }	
+        }
 
     },
 
@@ -171,18 +171,18 @@ var HID = {
 
     handleTouchMove: function (evnt){
         evnt.preventDefault();
-	    HID.processTouches(event.touches, "move");	
+	    HID.processTouches(event.touches, "move");
     },
 
     handleTouchUp: function (evnt){
         evnt.preventDefault();
-	    HID.processTouches(event.touches, "up");	
+	    HID.processTouches(event.touches, "up");
     },
 
     processTouches: function (touches, kind){
 	    //HID.log("type:" +kind+" seed: "+Date());
 	    for(var tag in HID.inputs){
-		
+
 		    var HIDItem = HID.inputs[tag];
 		    var touched = false;
 
@@ -190,23 +190,23 @@ var HID = {
                 offsetLeft = this.screen.canvas.offsetLeft;
                 scale = this.screen.currentWidth / this.screen.WIDTH;
 
-		
+
 		    for(var i = 0; i < touches.length; i++){
-			
+
 		        var position = {x:((touches[i].pageX-offsetLeft)/scale),
 						        y:((touches[i].pageY-offsetTop)/scale)};
 
-			
-			
+
+
 			    if(position.x > HIDItem.mapX && position.y > this.offset+HIDItem.mapY){
 				    if(position.x < HIDItem.mapX+this.bsz  && position.y < this.offset+HIDItem.mapY+this.bsz){
 					    touched = true;
 				    }
 			    }
-			
+
 		    }
-		
-		    if(touched){		
+
+		    if(touched){
 			    HIDItem.active = true;
 			    if(kind == "down"){
 				    HIDItem.release = true;
@@ -214,7 +214,7 @@ var HID = {
 		    }else{
 			    HIDItem.active = false;
 		    }
-		
+
 	    }
 
         for(var menuTag in menus.allMenus) {
@@ -233,16 +233,16 @@ var HID = {
 
 
                     for(var i = 0; i < touches.length; i++){
-	
+
                         var position = {x:((touches[i].pageX-offsetLeft)/scale),
 				                        y:((touches[i].pageY-offsetTop)/scale)};
 
-	
-	
+
+
 	                    if(position.x > (screen.GSTARTX+aMenu.drawx) && position.y > (screen.GSTARTY+aMenu.drawy+menuItem.itemy-32)){
 		                    if(position.x < (screen.GSTARTX+aMenu.drawx+aMenu.width) && position.y < (screen.GSTARTY+aMenu.drawy+menuItem.itemy)){
 			                    touched = true;}}
-	
+
                     }
 
 		            if(touched){
@@ -252,7 +252,7 @@ var HID = {
 			            }
                         for( var z = 0; z < maxItems; z += 1) {
                             aMenu.items[Object.keys(aMenu.items)[z]].selected = false
-                        }		
+                        }
 			            menuItem.selected = true
                         aMenu.selectedItem = menuItem
 		            }
@@ -262,7 +262,7 @@ var HID = {
 
             }
         }
-	
+
     },
 
     setupListeners: function(){
@@ -278,6 +278,12 @@ var HID = {
             HID.clearInputs();
         });
 
+    },
+
+    setup: function(screentosetup){
+        this.setupTouchZone(screentosetup);
+        this.setupListeners();
+        this.setupKeyboardListeners();
     }
 
 };

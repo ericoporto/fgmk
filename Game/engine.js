@@ -134,9 +134,22 @@ function menu(_items, _index, _noexit) {
         this._counter = 0;
         this.enabled = false;
         HID.inputs["cancel"].active = false;
-        if(this.parent!=null) {this.parent.wait = false; this.parent.menuKeyWasPressed=32}
+        if(this.parent!=null) {
+            this.parent.wait = false;
+            this.parent.menuKeyWasPressed=32
+        } else {
+            engine.atomStack.push(engine.atomStack.push([function(){engine.atomStack = menus.holdAtomStack },'']),'')
+        }
     };
-    this.activate= function(){ this.enabled = true ; if(this.parent!=null) {this.parent.wait = true; } };
+    this.activate= function(){
+        this.enabled = true ;
+        if(this.parent!=null) {
+            this.parent.wait = true;
+        } else {
+            menus.holdAtomStack = engine.atomStack
+            engine.atomStack=new Array();
+        }
+    };
     this._counter=0; //this counter is here to solve a bug with the gamepad cancel button
     this.menuKeyWasPressed=0;
     this.update= function(){
@@ -804,7 +817,7 @@ player.charaFacingTo =function(chara) {
         return "up"
     else if (resx <0 && resy==0)
         return "right"
-    else 
+    else
         return "left"
 
     console.log("error facing!")
@@ -876,6 +889,14 @@ engine.evalNum = function(number) {
     if(isNaN(value) ){
         if(value.indexOf("var:")==0){
             return engine.st.vars[value.split('var:')[1]]
+        } else if(value.indexOf("ans:")==0){
+            if (value.split('ans:')[1] == "num"){
+                return engine.questionBoxAnswer
+            } else {
+                return engine.questionBoxAnswerStr
+            }
+        } else if(value.indexOf("lastbattle:")==0){
+            return battle.lastresult
         } else {
             return value
         }
@@ -945,7 +966,8 @@ engine.testVar = function(param) {
         '>=' : function(a,b) {return a>=b},
         '<=' : function(a,b) {return a<=b},
         '==' : function(a,b) {return a==b},
-        'equal' : function(a,b) {return a==b}
+        'equal' : function(a,b) {return a==b},
+        '=' : function(a,b) {return a==b}
     }
     return test[operator](var1,var2)
 }
@@ -989,6 +1011,7 @@ engine.questionBox = function(param){
         })(i);
     }
     engine.questionBoxMenu = new menu(answers, undefined, true)
+    menus.setParent(engine.questionBoxMenu)
     menus.setAllDrawables()
     engine.questionBoxMenu.activate()
 }
@@ -1023,6 +1046,8 @@ actions.questionBox = function(param, position){
     var params = param.split(';')
     engine.questionBoxAnswer = engine.questionBoxUndef
     engine.atomStack.push([engine.questionBox,params])
+    engine.atomStack.push(["block",null]);
+    engine.atomStack.push(["block",null]);
 }
 
 actions.stopPicture = function(param, position){
@@ -1152,7 +1177,6 @@ actions.testVar = function(param,position) {
 actions.noEffect = function(param,position) {
         engine.atomStack.push([screen.effects.noEffect,'']);
 };
-
 
 
 actions.battle = function(param,position) {
