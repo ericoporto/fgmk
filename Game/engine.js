@@ -134,6 +134,8 @@ function menu(_items, _index, _noexit) {
         this._counter = 0;
         this.enabled = false;
         HID.inputs["cancel"].active = false;
+        engine.waitTime(200)
+        
         if(this.parent!=null) {
             this.parent.wait = false;
             this.parent.menuKeyWasPressed=32
@@ -184,7 +186,7 @@ function menu(_items, _index, _noexit) {
                     } else if ( Object.prototype.toString.call(this.selectedItem.action) === '[object Array]') {
                         for(var i=0; i < this.selectedItem.action.length; i++) {
                             if ( this.selectedItem.action[i] == 'exit') {
-                                this.exit();
+                                this.exit()
                             } else if ( this.selectedItem.action[i] == 'goWait') {
                                 engine.atomStack.push([function(){this.wait = true;},'']);
                             } else if ( this.selectedItem.action[i] == 'stopWait') {
