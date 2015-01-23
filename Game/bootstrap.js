@@ -9,6 +9,7 @@ var resources = {
     playerChara: null,
     printerset: null,
     playerCharaset: null,
+	items: {},
     levels: {},
     charasets: {},
     charas: {},
@@ -63,6 +64,7 @@ resources.harvest = function(){
     resources['charas'] = jsonLevelGet(descriptors+"charas.json")['Charas'];
     this.playerCharaset = resources['charasets'][init['Player']['charaSet']];
 	this.hms = jsonLevelGet(descriptors+init["HMSFile"])
+	this.items = jsonLevelGet(descriptors+init["itemsFile"])['Items']
 }
 
 window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);

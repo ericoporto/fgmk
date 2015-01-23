@@ -81,37 +81,44 @@ function menu(_items, _index, _noexit) {
     this.wait = false
     this.isMenu = true;
 
-    for (var i = 0; i < Object.keys(this.items).length; i++) {
-        var _itemKey = Object.keys(this.items)[i];
+    this.updateOrder = function(){
 
-        tempArray[i] = [_itemKey, this.items[_itemKey].index]
+        for (var i = 0; i < Object.keys(this.items).length; i++) {
+            var _itemKey = Object.keys(this.items)[i];
 
-    }
-    tempArray.sort(function(a, b) {return a[1] - b[1]})
+            tempArray[i] = [_itemKey, this.items[_itemKey].index]
 
-    this.selectedItem = this.items[tempArray[0][0]]
+        }
+        tempArray.sort(function(a, b) {return a[1] - b[1]})
 
-    for (var i = 0; i < tempArray.length; i++) {
+        this.selectedItem = this.items[tempArray[0][0]]
 
-        if ( i == 0) {
-           this.items[tempArray[i][0]].previous = tempArray[0][0]
-           this.items[tempArray[i][0]].next = tempArray[i+1][0]
-        } else if (i == tempArray.length-1) {
-           this.items[tempArray[i][0]].previous = tempArray[i-1][0]
-           this.items[tempArray[i][0]].next = tempArray[i][0]
-        } else {
-           this.items[tempArray[i][0]].previous = tempArray[i-1][0]
-           this.items[tempArray[i][0]].next = tempArray[i+1][0]
+        for (var i = 0; i < tempArray.length; i++) {
+
+            if ( i == 0) {
+               this.items[tempArray[i][0]].previous = tempArray[0][0]
+               this.items[tempArray[i][0]].next = tempArray[i+1][0]
+            } else if (i == tempArray.length-1) {
+               this.items[tempArray[i][0]].previous = tempArray[i-1][0]
+               this.items[tempArray[i][0]].next = tempArray[i][0]
+            } else {
+               this.items[tempArray[i][0]].previous = tempArray[i-1][0]
+               this.items[tempArray[i][0]].next = tempArray[i+1][0]
+            }
+
+            this.items[tempArray[i][0]].itemy = 32+i*32
+
         }
 
-        this.items[tempArray[i][0]].itemy = 32+i*32
+        if(this.selectedItem == null)
+            this.selectedItem = this.items[Object.keys(this.items)[0]]
+
+
+        this.selectedItem.selected = true
 
     }
 
-    if(this.selectedItem == null)
-        this.selectedItem = this.items[Object.keys(this.items)[0]]
-
-    this.selectedItem.selected = true
+    this.updateOrder()
 
     this.maxItemStringSize = function() {
         var returnValue = 0
@@ -135,7 +142,7 @@ function menu(_items, _index, _noexit) {
         this.enabled = false;
         HID.inputs["cancel"].active = false;
         engine.waitTime(200)
-        
+
         if(this.parent!=null) {
             this.parent.wait = false;
             this.parent.menuKeyWasPressed=32
@@ -232,74 +239,6 @@ function menu(_items, _index, _noexit) {
     menus.allMenus.push(this);
 
 };
-
-var mapMenu =  new menu({
-        status: {
-            action: function(){
-                   actions.showText("the player is fine, thanks!") },
-            index: 0
-            },
-        test: new menu({
-                test2: new menu({
-                    yes: {
-                        action: ['goWait',function(){
-                            actions.showText("this is a yes!") }, 'stopWait', 'exit'],
-                        index: 0,
-                        icon: 'icon1'
-                        },
-
-                    no: {
-                        action: [function(){
-                            actions.showText("this is a no!") }, 'exit'],
-                        index: 1,
-                        icon: 'icon0'
-                        }
-                },0),
-
-                yes1: {
-                    action: [function(){
-                        actions.showText("this is a yes1!") }, 'exit'],
-                    index: 1
-                    },
-
-                no1: {
-                    action: [function(){
-                        actions.showText("this is a no1!") }, 'exit'],
-                    index: 2
-                    }
-            },1),
-        item3: {
-            action: function(){
-                   actions.showText("the player is fine, thanks!") },
-            index: 2
-            },
-        options: new menu({
-                showFPS: new menu({
-                    yes: {
-                        action: [function(){ debug.FPS.show = true }, 'exit'],
-                        index: 0
-                        },
-
-                    no: {
-                        action: [function(){ debug.FPS.show = false }, 'exit'],
-                        index: 1
-                        }
-                },0),
-
-                back: {
-                    action: 'exit',
-                    index: 2
-                    }
-            },3),
-        exit: {
-            action: 'exit',
-            index: 4
-            }
-    });
-
-menus.setParent(mapMenu);
-
-
 
 
 var engine = {};
@@ -609,7 +548,7 @@ player.setup = function() {
                 }
             } else if(HID.inputs["cancel"].active){
                 HID.inputs["cancel"].active = false
-                mapMenu.activate()
+                engine.mapMenu.activate()
             }
 
         }else if( player.waits == 0){
@@ -648,6 +587,73 @@ engine.setup = function(){
     engine.state = "startScreen"
     engine.questionBoxUndef = -1
     engine.questionBoxAnswer = engine.questionBoxUndef
+    engine.menuSetup()
+}
+
+engine.menuSetup = function(){
+
+    items.setup(resources.items)
+    items.menuUpdate()
+    engine.mapMenu =  new menu({
+        items: items.menu,
+        test: new menu({
+            test2: new menu({
+                yes: {
+                    action: ['goWait',function(){
+                        actions.showText("this is a yes!") }, 'stopWait', 'exit'],
+                        index: 0,
+                        icon: 'icon1'
+                    },
+
+                no: {
+                    action: [function(){
+                        actions.showText("this is a no!") }, 'exit'],
+                        index: 1,
+                        icon: 'icon0'
+                    }
+                },0),
+
+                yes1: {
+                    action: [function(){
+                        actions.showText("this is a yes1!") }, 'exit'],
+                        index: 1
+                    },
+
+                no1: {
+                    action: [function(){
+                        actions.showText("this is a no1!") }, 'exit'],
+                        index: 2
+                    }
+                },1),
+            item3: {
+                action: function(){
+                    actions.showText("the player is fine, thanks!") },
+                    index: 2
+                },
+                options: new menu({
+                    showFPS: new menu({
+                        yes: {
+                            action: [function(){ debug.FPS.show = true }, 'exit'],
+                            index: 0
+                        },
+
+                        no: {
+                            action: [function(){ debug.FPS.show = false }, 'exit'],
+                            index: 1
+                        }
+                    },0),
+
+                back: {
+                    action: 'exit',
+                    index: 2
+                }
+            },3),
+            exit: {
+                action: 'exit',
+                index: 4
+            }
+        });
+        menus.setParent(engine.mapMenu);
 }
 
 engine.playerFaceChar = function(){
