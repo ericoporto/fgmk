@@ -10,10 +10,13 @@ items.setup = function (itemsjson){
             "usable":false,
             "unique":false,
             "effect":null,
-            "staticModifier":null,
+            "statMod":null,
             "description":false,
             "name":null,
             "icon":null,
+            "category":null,
+            //common category are armor, weapon, ...
+            "action":null,
             "quantity":1
         }
     }
@@ -52,23 +55,63 @@ items.setup = function (itemsjson){
     }
 
     this.useItem = function(itemname){
+        if(this.inventory[itemname].action == null){
 
+        }
     }
 
     this.equipItem = function(itemname){
+        if(player.party.length == 1){
+            var currHero = battle.heroes[player.party[0]]
+            var heroname = player.party[0]
+            var eq_item = this.inventory[itemname]
+            if(currHero.equiped[eq_item.category]){
 
+            } else {
+                eq_item.equiped = heroname
+                currHero.equiped[eq_item.category] = itemname
+                if(eq_item.statMod){
+                    currHero.mod.w += eq_item.statMod.w
+                    currHero.mod.r += eq_item.statMod.r
+                    currHero.mod.m += eq_item.statMod.m
+                }
+            }
+        }
+
+        this.menuUpdate(engine.mapMenu)
     }
 
     this.unequipItem = function(itemname){
+        if(player.party.length == 1){
+            var currHero = battle.heroes[player.party[0]]
+            var heroname = player.party[0]
+            var eq_item = this.inventory[itemname]
+            if(currHero.equiped[eq_item.category] == itemname && eq_item.equiped == heroname){
+                if(eq_item.statMod){
+                    currHero.mod.w -= eq_item.statMod.w
+                    currHero.mod.r -= eq_item.statMod.r
+                    currHero.mod.m -= eq_item.statMod.m
+                }
+                eq_item.equiped = false
+                currHero.equiped[eq_item.category] = false
+            } else {
+                console.log("tried to unequip item, but it wasn't equiped!")
+            }
+        }
 
+        this.menuUpdate(engine.mapMenu)
     }
 
     this.lookItem = function(itemname){
-
+        if(this.inventory[itemname].description){
+            actions.showText(this.inventory[itemname].description)
+        }
     }
 
     this.dropItem = function(itemname){
+        this.subtractItem(itemname)
 
+        //will update on subtract
     }
 
     this.getMenu = function(){
@@ -77,8 +120,11 @@ items.setup = function (itemsjson){
 
     this.menuUpdate = function(mapmenu){
         if(!(typeof this.menu === "undefined")){
+            var wasenable = this.menu.enabled
+            this.menu.enabled = false
             this.menu.delete()
         } else {
+            var wasenable = false
             this.menu = {}
         }
 
@@ -154,6 +200,9 @@ items.setup = function (itemsjson){
         }
 
         menus.setAllDrawables()
+
+        this.menu.enabled = wasenable
+
     }
 
 }

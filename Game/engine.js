@@ -630,7 +630,7 @@ engine.menuSetup = function(){
                     actions.showText("the player is fine, thanks!") },
                     index: 2
                 },
-                options: new menu({
+                config: new menu({
                     showFPS: new menu({
                         yes: {
                             action: [function(){ debug.FPS.show = true }, 'exit'],

@@ -29,6 +29,8 @@ battle.initHero = function(hero){
     hero["skill"]=[]
     hero["hp"] = 0
     hero["hpmax"] = 0
+    hero["mod"] = {"w": 0, "r":0,"m":0}
+    hero["equiped"] = {"weapon": false, "armor" : false}
     battle.uplevel(hero,1,true)
 }
 

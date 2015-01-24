@@ -6,7 +6,8 @@
             "usable":true
              },
     "sword":{
-            "equipable":true
+            "equipable":true,
+            "category":"weapon"
             }
     }
 }
