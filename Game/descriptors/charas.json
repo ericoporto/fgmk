@@ -2,6 +2,24 @@
 {
 "Charas":
     {
+        "sack":
+        {
+            "movements":
+            [],
+            "properties":
+            {
+                "nocolision":   0
+            },
+            "actions":
+            {
+                "type":  [  0,  1],
+                "list":
+                [["addItem","potion"],
+                ["showText","found a potion!"],
+                ["charAutoDelete",""]]
+            },
+            "charaset": "sack"
+        },
     "bunny":
         {
         "movements":

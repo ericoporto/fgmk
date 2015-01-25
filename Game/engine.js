@@ -469,7 +469,9 @@ function char(chara, x, y) {
                     this.waits=16
                 }
             }else{
-                this['movstack'] = clone(this['chara']['movements'])
+                if(this['chara']['movements']!=[]){
+                    this['movstack'] = clone(this['chara']['movements'])
+                }
             }
 
         }else if(this.steps>0 && this.waits == 0 && this.stopped == false){
@@ -850,6 +852,12 @@ eventInMap = function(level,event,evType,position) {
     }
 };
 
+engine.addItem = function(param){
+    for (var i = 0; i < param.length ; i++) {
+        items.addItem(param[i])
+    }
+}
+
 engine.battle = function(param){
     battle.start(param)
 }
@@ -1194,6 +1202,11 @@ actions.battle = function(param,position) {
     actions.changeState('battle')
     engine.atomStack.push([engine.battle,params]);
 };
+
+actions.addItem = function(param,position){
+    var params = param.split(';')
+    engine.atomStack.push([engine.addItem,params]);
+}
 
 actions.proceedBattleTurn = function(param,position){
     battle.herodecision = ""
