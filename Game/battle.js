@@ -64,30 +64,33 @@ battle.uplevel = function(hero, leveltoup, silent){
     var silent = (typeof silent === "undefined") ? false : silent;
 
     var currlvl = hero["level"]
-    hero["w"]  =Math.floor(leveltoup*hero["baseStats"]["w"]/battle.maxlevel)
-    hero["r"]  =Math.floor(leveltoup*hero["baseStats"]["r"]/battle.maxlevel)
-    hero["m"]  =Math.floor(leveltoup*hero["baseStats"]["m"]/battle.maxlevel)
-    hero["hp"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
-    hero["hpmax"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
+    if(leveltoup > currlvl) {
+        hero["w"]  =Math.floor(leveltoup*hero["baseStats"]["w"]/battle.maxlevel)
+        hero["r"]  =Math.floor(leveltoup*hero["baseStats"]["r"]/battle.maxlevel)
+        hero["m"]  =Math.floor(leveltoup*hero["baseStats"]["m"]/battle.maxlevel)
+        hero["hp"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
+        hero["hpmax"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
 
-    for(var i = currlvl+1; i < leveltoup+1; i++) {
-        var lvl = i.toString()
-        var text=hero["name"]+" reached level "+lvl+"!"
-        hero["level"] = i
-        hero["xpnextlevel"] = hero["ExpToLevel"][0]*hero["level"]+hero["ExpToLevel"][1]
-        if (lvl in hero["Pathway"]) {
-            if ("learn" in hero["Pathway"][lvl]) {
-                var tolearn = hero["Pathway"][lvl]["learn"]
-                for (var stuff in tolearn){
-                    hero[stuff].push(tolearn[stuff])
-                    text += "\n"+hero["name"]+" learned "+tolearn[stuff]+"!"
+
+        for(var i = currlvl+1; i < leveltoup+1; i++) {
+            var lvl = i.toString()
+            var text=hero["name"]+" reached level "+lvl+"!"
+            hero["level"] = i
+            hero["xpnextlevel"] += hero["ExpToLevel"][0]*hero["level"]+hero["ExpToLevel"][1]
+            if (lvl in hero["Pathway"]) {
+                if ("learn" in hero["Pathway"][lvl]) {
+                    var tolearn = hero["Pathway"][lvl]["learn"]
+                    for (var stuff in tolearn){
+                        hero[stuff].push(tolearn[stuff])
+                        text += "\n"+hero["name"]+" learned "+tolearn[stuff]+"!"
+                    }
                 }
-            }
-            if ("forget" in hero["Pathway"][lvl]){
-                var toforget = hero["Pathway"][lvl]["forget"]
-                for (var stuff in toforget){
-                    removeA(hero[stuff],toforget[stuff])
-                    text += "\n"+hero["name"]+" forgot "+toforget[stuff]+"!"
+                if ("forget" in hero["Pathway"][lvl]){
+                    var toforget = hero["Pathway"][lvl]["forget"]
+                    for (var stuff in toforget){
+                        removeA(hero[stuff],toforget[stuff])
+                        text += "\n"+hero["name"]+" forgot "+toforget[stuff]+"!"
+                    }
                 }
             }
             if(!silent){
@@ -108,14 +111,6 @@ battle.setMonsterLevel = function(mon){
     mlevel = Math.max(mlevel-3,1)
 
     battle.uplevel(mon,mlevel,true)
-}
-
-getkey0 = function(tree,key){
-    //if key exists return value, otherwise return zero
-    if(key in tree)
-        return tree[key]
-    else
-        return 0
 }
 
 battle.selectFromProb = function(probdict){
@@ -501,11 +496,10 @@ battle.end = function(battleresult) {
         if(battle.isAlive(battle.hero[i])){
             var thishero = battle.hero[i]
             thishero.xp+=Math.floor(battle.xpreward/battle.hero.length)
-            thishero.xpnextlevel = thishero.ExpToLevel[0]*thishero.level+thishero.ExpToLevel[1]
+
             while(thishero.xp > thishero.xpnextlevel){
                 var newlevel = thishero.level + 1
                 battle.uplevel(thishero,newlevel)
-                thishero.xpnextlevel = thishero.ExpToLevel[0]*thishero.level+thishero.ExpToLevel[1]
             }
         }
     }

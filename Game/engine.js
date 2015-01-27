@@ -524,9 +524,11 @@ player.setup = function() {
                         }
                     } else {
                         feedbackEng.play('stop')
+                        HID.inputs[dirkey].active = false
                     }
                 } else {
                     feedbackEng.play('stop')
+                    HID.inputs[dirkey].active = false
                 }
             } else if(HID.inputs["accept"].active){
                 var charFacing = engine.playerFaceChar()
@@ -1007,7 +1009,7 @@ engine.charAutoDelete = function(param, charatodel){
             break
         }
     }
-    console.log(chars[k])
+
     if(chars[k] != engine.player){
         chars.splice(k, 1);
     }

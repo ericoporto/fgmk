@@ -55,7 +55,7 @@
         {
             "name":"Wild Bear",
             "ExpToLevel":[4,0],
-            "baseStats" : {"hp":480, "w":120, "r":50, "m":10 },
+            "baseStats" : {"hp":550, "w":120, "r":50, "m":10 },
             "Pathway":{
                 "1" : {"learn":{"skill":"Bite", "skill":"Scratch"}}
             },
@@ -63,6 +63,19 @@
             "prob":{"atk":0.5,"Bite":0.5},
             "state":[{"target":"hero"}],
             "monsterImg":[3,0]
+        },
+    "wilddog":
+        {
+            "name":"Wild Dog",
+            "ExpToLevel":[4,0],
+            "baseStats" : {"hp":420, "w":120, "r":120, "m":10 },
+            "Pathway":{
+                "1" : {"learn":{"skill":"Bite", "skill":"Scratch"}}
+            },
+            "target":"splash",
+            "prob":{"atk":0.2,"Bite":0.5,"Scratch":0.3},
+            "state":[{"target":"hero"}],
+            "monsterImg":[1,1]
         }
     }
 }

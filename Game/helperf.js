@@ -1,3 +1,10 @@
+getkey0 = function(tree,key){
+    //if key exists return value, otherwise return zero
+    if(key in tree)
+        return tree[key]
+        else
+            return 0
+}
 
 function removeA(arr) {
     var what, a = arguments, L = a.length, ax;

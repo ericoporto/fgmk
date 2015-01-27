@@ -54,9 +54,35 @@ items.setup = function (itemsjson){
         delete this.inventory[itemname]
     }
 
+
+
+    this.effect = {}
+    this.pts = function(itemname){
+        var baseplus = getkey0(this.inventory[itemname].effect,"basep")
+        var plus = getkey0(this.inventory[itemname].effect,"plus")
+        var attribut = getkey0(this.inventory[itemname].effect,"atr")
+
+        return Math.max(battle.diceroll(baseplus+attribut)+plus,0)
+    }
+
+    this.effect.hpup = function(target,pts){
+        target.hp = Math.min(target.hp+pts, target.hpmax)
+    }
+
     this.useItem = function(itemname){
         if(this.inventory[itemname].action == null){
+            var points = this.pts(itemname)
+            var target = []
+            target.push(battle.heroes[player.party[0]])
+            var effects = this.inventory[itemname].effect.effect
 
+            for (var j = 0; j < target.length; j++) {
+                for (var i = 0; i < effects.length; i++) {
+                    this.effect[effects[i]](target[j],points)
+                }
+            }
+
+            this.subtractItem(itemname)
         }
     }
 

@@ -94,7 +94,7 @@ bootstrap.onLoadDOM = function(){
 		battle.setup();
 		menus.setAllDrawables();
 		engine.loop();
-		screen.loop();
+		screen.requestAnimationFrame.call(window,function(){screen.loop()})
         debug.FPS.loop();
         chars = new charalist();
         chars.push(player)

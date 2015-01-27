@@ -280,6 +280,12 @@ screen.init = function() {
     this.ctx.webkitImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
 
+	this.requestAnimationFrame = window.requestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.msRequestAnimationFrame ||
+		setTimeout;
+
     window.addEventListener("click", function() {
         if(engine.state == "startScreen") {
             var el = document.documentElement
@@ -348,7 +354,7 @@ screen.drawHID = function(){
 }
 
 screen.clearAll = function(){
-	this.ctx.fillStyle = '#a0a7b9';
+	//this.ctx.fillStyle = '#a0a7b9';
 	this.ctx.fillRect(this.GSTARTX, this.GSTARTY, this.GWIDTH, this.GHEIGHT);
 }
 
@@ -492,8 +498,8 @@ screen.printBox = {
             }
         }
 
-        screen.printBox.drawBox(   screen.printBox.X + screen.printBox.Width/2  - this.aSizex[this.targetFrame]/2,
-                                   screen.printBox.Y + screen.printBox.Height/2 - this.aSizey[this.targetFrame]/2,
+        screen.printBox.drawBox(   Math.floor(screen.printBox.X + screen.printBox.Width/2  - this.aSizex[this.targetFrame]/2),
+								   Math.floor(screen.printBox.Y + screen.printBox.Height/2 - this.aSizey[this.targetFrame]/2),
                                    this.aSizex[this.targetFrame],
                                    this.aSizey[this.targetFrame]);
         if(this.anim == 'box') {
@@ -582,17 +588,20 @@ screen.effectPixelize = function(pixelation) {
 
 screen.effectTension1 = function(intensity) {
 	this.ctx.drawImage(this.canvas, this.GSTARTX, this.GSTARTY,
-		this.GWIDTH/2 , this.GHEIGHT,
-		this.GSTARTX-(this.GWIDTH*intensity/128)/2 , this.GSTARTY,
-		this.GWIDTH/4 , this.GHEIGHT)
+		Math.floor(this.GWIDTH/2) , this.GHEIGHT,
+		Math.floor(this.GSTARTX-(this.GWIDTH*intensity/128)/2 ), this.GSTARTY,
+		Math.floor(this.GWIDTH/4) , this.GHEIGHT)
 
 	this.ctx.drawImage(this.canvas, this.GSTARTX+this.GWIDTH/2, this.GSTARTY,
-		this.GWIDTH/2 , this.GHEIGHT,
-		this.GSTARTX+this.GWIDTH/2+(this.GWIDTH*intensity/128)/2  , this.GSTARTY,
-		this.GWIDTH/4 , this.GHEIGHT)
+		Math.floor(this.GWIDTH/2) , this.GHEIGHT,
+		Math.floor(this.GSTARTX+this.GWIDTH/2+(this.GWIDTH*intensity/128)/2)  , this.GSTARTY,
+		Math.floor(this.GWIDTH/4) , this.GHEIGHT)
 
 	this.ctx.fillStyle ='#000000'
-	this.ctx.fillRect(this.GSTARTX+this.GWIDTH/2-(this.GWIDTH*intensity/128)/2, this.GSTARTY, this.GWIDTH*intensity/128 , this.GHEIGHT);
+	this.ctx.fillRect(Math.floor(this.GSTARTX+this.GWIDTH/2-(this.GWIDTH*intensity/128)/2),
+		this.GSTARTY,
+		Math.floor(this.GWIDTH*intensity/128) ,
+		this.GHEIGHT);
 };
 
 screen.effectColor = function(opacity,color) {
@@ -857,7 +866,8 @@ screen.loop = function(){
 		}
 
         debug.FPS.draw();
-		screen.timer = setTimeout("screen.loop()", 1000/60.0);
+		//screen.timer = setTimeout("screen.loop()", 1000/60.0);
+		screen.requestAnimationFrame.call(window,screen.loop)
 
 	}catch(err){
 		alert("screen loop error: "+err);
