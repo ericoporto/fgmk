@@ -23,7 +23,7 @@
 
 
 	</head>
-	<body>
+	<body onload="bootstrap.onLoadDOM()">
         <div id=”gameArea”>
 		<canvas id="viewport" width="416" height="704"></canvas>
 		<font id="loading" color="white"> LOADING...</font>
@@ -43,8 +43,8 @@
         <audio id="audioWord" src="audio/wordBlop.wav" preload="auto"></audio>
 
 		<p style="font-family:Helvetica;font-size:20px;" id="log">log</p>
-		<script for="window" event="onload" language="JavaScript">
-		window.setTimeout("bootstrap.onLoadDOM()", 300);
-		</script>
+
+
+
 	</body>
 </html>

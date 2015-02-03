@@ -883,23 +883,23 @@ screen.loop = function(){
 			engine.update(screen.frameCount);
 			screen.shakeEffect()
 
-			if(this.engine.state == "map") {
-	            camera.setupMap(this.engine.currentLevel)
+			if(engine.state == "map") {
+	            camera.setupMap(engine.currentLevel)
 	            if(debug.showLayer.layer1)
-				    camera.drawMapLayer(this.engine.currentLevel, "layer1");
+				    camera.drawMapLayer(engine.currentLevel, "layer1");
 
 	            if(debug.showLayer.layer2)
-				    camera.drawMapLayer(this.engine.currentLevel, "layer2");
+				    camera.drawMapLayer(engine.currentLevel, "layer2");
 
 	            if(debug.showLayer.layer3)
 	                camera.drawChars();
 	    			//camera.drawChar(player);
 
 	            if(debug.showLayer.layer4)
-	    			camera.drawMapLayer(this.engine.currentLevel, "layer4");
-			} else if (this.engine.state == "startScreen") {
+	    			camera.drawMapLayer(engine.currentLevel, "layer4");
+			} else if (engine.state == "startScreen") {
 				//do start screen stuff
-			} else if (this.engine.state == "battle") {
+			} else if (engine.state == "battle") {
 				dist.test(dist.efnumb[0])
 				screen.drawMonsters()
 			}
