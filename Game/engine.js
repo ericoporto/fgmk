@@ -226,7 +226,7 @@ function menu(_items, _index, _noexit) {
     };
 
     this.action = this.activate;
-    this.delete = function(){
+    this.mdelete = function(){
         for (var i = 0; i < menus.allMenus.length; i++) {
             if(menus.allMenus[i] == this){
                 menus.allMenus.splice(i,1)
@@ -1019,7 +1019,7 @@ engine.questionBox = function(param){
     var answers = {}
     engine.questionBoxAnswer = engine.questionBoxUndef
     if(!(typeof engine.questionBoxMenu === "undefined")){
-        engine.questionBoxMenu.delete()
+        engine.questionBoxMenu.mdelete()
     }
 
     for(var i = 0; i < param.length; i++){

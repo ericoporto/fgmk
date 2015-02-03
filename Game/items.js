@@ -97,9 +97,12 @@ items.setup = function (itemsjson){
                 eq_item.equiped = heroname
                 currHero.equiped[eq_item.category] = itemname
                 if(eq_item.statMod){
-                    currHero.mod.w += eq_item.statMod.w
-                    currHero.mod.r += eq_item.statMod.r
-                    currHero.mod.m += eq_item.statMod.m
+                    if(!(typeof eq_item.statMod.st === "undefined")) {
+                        currHero.mod.st += eq_item.statMod.st }
+                    if(!(typeof eq_item.statMod.dx === "undefined")) {
+                        currHero.mod.dx += eq_item.statMod.dx }
+                    if(!(typeof eq_item.statMod.iq === "undefined")) {
+                        currHero.mod.iq += eq_item.statMod.iq }
                 }
             }
         }
@@ -114,9 +117,12 @@ items.setup = function (itemsjson){
             var eq_item = this.inventory[itemname]
             if(currHero.equiped[eq_item.category] == itemname && eq_item.equiped == heroname){
                 if(eq_item.statMod){
-                    currHero.mod.w -= eq_item.statMod.w
-                    currHero.mod.r -= eq_item.statMod.r
-                    currHero.mod.m -= eq_item.statMod.m
+                    if(!(typeof eq_item.statMod.st === "undefined")) {
+                        currHero.mod.st -= eq_item.statMod.st }
+                    if(!(typeof eq_item.statMod.dx === "undefined")) {
+                        currHero.mod.dx -= eq_item.statMod.dx }
+                    if(!(typeof eq_item.statMod.iq === "undefined")) {
+                        currHero.mod.iq -= eq_item.statMod.iq }
                 }
                 eq_item.equiped = false
                 currHero.equiped[eq_item.category] = false
@@ -148,7 +154,7 @@ items.setup = function (itemsjson){
         if(!(typeof this.menu === "undefined")){
             var wasenable = this.menu.enabled
             this.menu.enabled = false
-            this.menu.delete()
+            this.menu.mdelete()
         } else {
             var wasenable = false
             this.menu = {}

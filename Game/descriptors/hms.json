@@ -6,7 +6,7 @@
         "Leader":true,
         "name":"Brave",
         "ExpToLevel":[10,0],
-        "baseStats" : {"hp":500, "w":225, "r":200, "m":120 },
+        "baseStats" : {"hp":500, "st":225, "dx":200, "iq":120 },
         "Pathway":
             {
                 "1" : {"learn":{"skill":"Frostburn"}},
@@ -19,7 +19,7 @@
         "Frostburn":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
         "Doomsday":{"dl":5,"basep":2,"plus":-1,"effect":["hpdown"]},
         "HelpingHand":{"dl":5,"basep":1,"effect":["hpup"]},
-        "MagicLight":{"dl":5, "atr":"m","basep":1,"effect":["wdown","rdown"]},
+        "MagicLight":{"dl":5, "atr":"iq","basep":1,"effect":["stdown","dxdown"]},
         "Bite":{"dl":5,"basep":1,"plus":-2,"effect":["hpdown"]},
         "Scratch":{"dl":3,"basep":2,"plus":-3,"effect":["hpdown"]}
     },
@@ -29,7 +29,7 @@
         {
             "name":"VorpalBunny",
             "ExpToLevel":[2,0],
-            "baseStats" : {"hp":120, "w":100, "r":120, "m":10 },
+            "baseStats" : {"hp":120, "st":100, "dx":120, "iq":10 },
             "Pathway":{
                 "1" : {"learn":{"skill":"Bite"}}
             },
@@ -42,7 +42,7 @@
         {
             "name":"Skeleton",
             "ExpToLevel":[2,0],
-            "baseStats" : {"hp":120, "w":100, "r":255, "m":10 },
+            "baseStats" : {"hp":120, "st":100, "dx":255, "iq":10 },
             "Pathway":{
                 "1" : {"learn":{"skill":"Bite"}}
             },
@@ -55,7 +55,7 @@
         {
             "name":"Wild Bear",
             "ExpToLevel":[4,0],
-            "baseStats" : {"hp":550, "w":120, "r":50, "m":10 },
+            "baseStats" : {"hp":550, "st":120, "dx":50, "iq":10 },
             "Pathway":{
                 "1" : {"learn":{"skill":"Bite", "skill":"Scratch"}}
             },
@@ -68,7 +68,7 @@
         {
             "name":"Wild Dog",
             "ExpToLevel":[4,0],
-            "baseStats" : {"hp":420, "w":120, "r":120, "m":10 },
+            "baseStats" : {"hp":420, "st":120, "dx":120, "iq":10 },
             "Pathway":{
                 "1" : {"learn":{"skill":"Bite", "skill":"Scratch"}}
             },

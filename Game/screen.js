@@ -1,8 +1,3 @@
-
-
-window.addEventListener('resize', screen.resize, false);
-window.addEventListener('orientationchange', screen.resize, false);
-
 var camera = {};
 //camera.width = 16;
 //camera.height = 10;
@@ -73,7 +68,7 @@ camera.panToChara = function(chara){
 
 camera.drawMapLayer = function(_worldLevel, _zIndex){
 
-    var targetFrame = Math.floor(screen.frameCount/4)%4;
+    var targetFrame = Math.floor(screen.frameCount/8)%4;
 
 	var vx = 0, vy =0,
 		currentTile, tileNumber;
@@ -163,6 +158,10 @@ screen.setEngine = function(engine) {
 }
 
 screen.drawChara = function(charaset, animation, frameNumber, position) {
+	if(position[0] < this.GSTARTX-32 || position[0] > this.GWIDTH+32 || position[1] < this.GSTARTY-64 || position[1] > this.GHEIGHT+64) {
+		return
+	}
+
 	screen.ctx.drawImage(charaset,
 		32*animation[frameNumber][0], 64*animation[frameNumber][1],
 		32, 64,
@@ -258,6 +257,8 @@ screen.flashColor = function(fg, color){
 
 screen.init = function() {
 
+	window.addEventListener('resize', screen.resize, false);
+	window.addEventListener('orientationchange', screen.resize, false);
     this.RATIO = this.WIDTH / this.HEIGHT;
     this.mobile =window.mobilecheck();
     this.currentWidth = this.WIDTH;
@@ -267,6 +268,8 @@ screen.init = function() {
     this.canvas.height = this.HEIGHT;
     this.ctx = this.canvas.getContext('2d');
     this.ctx.font = '32px INFO56';
+	this.ORIGINALGSTARTX = this.GSTARTX
+	this.ORIGINALGSTARTY = this.GSTARTY
     this.resize();
 
 	this.pictureStack = new Array();
@@ -280,11 +283,33 @@ screen.init = function() {
     this.ctx.webkitImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
 
-	this.requestAnimationFrame = window.requestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.msRequestAnimationFrame ||
-		setTimeout;
+	(function() {
+		var lastTime = 0;
+		var vendors = ['ms', 'moz', 'webkit', 'o'];
+		for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+			window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+			window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+			|| window[vendors[x]+'CancelRequestAnimationFrame'];
+		}
+
+		if (!window.requestAnimationFrame)
+			window.requestAnimationFrame = function(callback, element) {
+				var currTime = new Date().getTime();
+				var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+				var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+				timeToCall);
+				lastTime = currTime + timeToCall;
+				return id;
+			};
+
+			if (!window.cancelAnimationFrame)
+				window.cancelAnimationFrame = function(id) {
+					clearTimeout(id);
+				};
+			}());
+
+	screen.requestAnimationFrame = window.requestAnimationFrame
+
 
     window.addEventListener("click", function() {
         if(engine.state == "startScreen") {
@@ -612,7 +637,38 @@ screen.effectColor = function(opacity,color) {
 	this.ctx.restore()
 };
 
+screen.shakeEffect = function(){
+	if(this.shaking) {
+		if(this.shakes > 0){
+			this.shakes--
 
+			if(this.shaking == 'h'){
+				this.GSTARTX = Math.floor( 16 * Math.sin(3*this.shakes/4) * this.shakes/16   ) + this.ORIGINALGSTARTX
+			} else {
+				this.GSTARTY = Math.floor( 16 * Math.sin(3*this.shakes/4) * this.shakes/16   ) + this.ORIGINALGSTARTY
+			}
+
+		} else if(this.shakes == 0){
+			this.shakes--
+			this.GSTARTX = this.ORIGINALGSTARTX
+			this.GSTARTY = this.ORIGINALGSTARTY
+			this.shaking = false
+		}
+	}
+}
+
+screen.shakeScreen = function( horv){
+	horv = (typeof horv === "undefined") ? 'h' : horv;
+
+	this.shakes = (typeof this.shakes === "undefined") ? 0 : this.shakes
+	this.shakes += 16
+
+	if(horv == 'h') {
+		this.shaking = 'h'
+	} else {
+		this.shaking = 'v'
+	}
+}
 
 
 screen.effects = {
@@ -825,6 +881,7 @@ screen.loop = function(){
 
 			// update
 			engine.update(screen.frameCount);
+			screen.shakeEffect()
 
 			if(this.engine.state == "map") {
 	            camera.setupMap(this.engine.currentLevel)
@@ -851,6 +908,7 @@ screen.loop = function(){
             screen.drawHID();
 
 
+
            for( var menuToDraw in menus.allMenus ) {
                 if(menus.allMenus[menuToDraw].enabled) {
                     screen.drawMenu(menus.allMenus[menuToDraw]);
@@ -866,7 +924,7 @@ screen.loop = function(){
 		}
 
         debug.FPS.draw();
-		//screen.timer = setTimeout("screen.loop()", 1000/60.0);
+		//screen.timer = setTimeout("screen.loop()", 1000/60.0); dropped..
 		screen.requestAnimationFrame.call(window,screen.loop)
 
 	}catch(err){

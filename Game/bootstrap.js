@@ -28,6 +28,9 @@ for (var i = 0, max = query.length; i < max; i++)
     if(param[0]=="forceMobile" && (param[1]=="true" ||param[1]=="True" || param[1]=="1"))
         window.forceMobile=true
 
+	if(param[0]=="debug" && (param[1]=="true" ||param[1]=="True" || param[1]=="1"))
+		window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
+
 }
 
 
@@ -66,8 +69,6 @@ resources.harvest = function(){
 	this.hms = jsonLevelGet(descriptors+init["HMSFile"])
 	this.items = jsonLevelGet(descriptors+init["itemsFile"])['Items']
 }
-
-window.addEventListener('unload', function (e) { e.preventDefault(); jsonLevelGet("http://127.0.0.1:8081/exit.json");  }, false);
 
 
 var init = jsonLevelGet(descriptors+'init.json');

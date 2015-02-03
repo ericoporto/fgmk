@@ -29,7 +29,7 @@ battle.initHero = function(hero){
     hero["skill"]=[]
     hero["hp"] = 0
     hero["hpmax"] = 0
-    hero["mod"] = {"w": 0, "r":0,"m":0}
+    hero["mod"] = {"st": 0, "dx":0,"iq":0}
     hero["equiped"] = {"weapon": false, "armor" : false}
     battle.uplevel(hero,1,true)
 }
@@ -65,9 +65,9 @@ battle.uplevel = function(hero, leveltoup, silent){
 
     var currlvl = hero["level"]
     if(leveltoup > currlvl) {
-        hero["w"]  =Math.floor(leveltoup*hero["baseStats"]["w"]/battle.maxlevel)
-        hero["r"]  =Math.floor(leveltoup*hero["baseStats"]["r"]/battle.maxlevel)
-        hero["m"]  =Math.floor(leveltoup*hero["baseStats"]["m"]/battle.maxlevel)
+        hero["st"] =Math.floor(leveltoup*hero["baseStats"]["st"]/battle.maxlevel)
+        hero["dx"] =Math.floor(leveltoup*hero["baseStats"]["dx"]/battle.maxlevel)
+        hero["iq"] =Math.floor(leveltoup*hero["baseStats"]["iq"]/battle.maxlevel)
         hero["hp"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
         hero["hpmax"] =Math.floor(leveltoup*hero["baseStats"]["hp"]/battle.maxlevel)
 
@@ -249,9 +249,9 @@ battle.setOrderStack = function(){
         battle.order.push([battle.monster[i],"monster"]);
     }
     battle.order.sort( function(a,b) {
-        if (a[0]["r"] > b[0]["r"])
+        if (a[0]["dx"] > b[0]["dx"])
             return -1;
-        if (a[0]["r"] < b[0]["r"])
+        if (a[0]["dx"] < b[0]["dx"])
             return 1;
         return 0;
     } );
@@ -538,7 +538,7 @@ battle.isAlive = function(bch){
 }
 
 battle.atk.pts = function(bch){
-    return battle.diceroll(bch["w"])
+    return battle.diceroll(bch["st"])
 }
 
 battle.skl.pts = function(bch,skill){

@@ -1,31 +1,32 @@
 {
     "CharasFileList": {
         "charas1": "charas1.json"
-    },
+    }, 
     "CharasetFileList": {
         "charaset1": "charaset1.json"
-    },
-    "HMSFile": "hms.json",
-    "itemsFile": "items.json", 
+    }, 
+    "HMSFile": "hms.json", 
     "LevelsList": {
-        "Testmap": "Testmap.json",
-        "big": "big.json",
-        "insideLevel0": "insideLevel0.json",
-        "level0": "level0.json",
-        "level1": "level1.json",
+        "Testmap": "Testmap.json", 
+        "beach": "beach.json", 
+        "big": "big.json", 
+        "insideLevel0": "insideLevel0.json", 
+        "level0": "level0.json", 
+        "level1": "level1.json", 
         "level2": "level2.json"
-    },
+    }, 
     "Player": {
-        "charaFile": "person.json",
-        "charaSet": "person",
-        "facing": "down",
-        "initPosX": 224,
-        "initPosY": 192,
+        "charaFile": "person.json", 
+        "charaSet": "person", 
+        "facing": "down", 
+        "initPosX": 288, 
+        "initPosY": 352, 
         "party": [
             "hero"
         ]
-    },
+    }, 
     "World": {
-        "initLevel": "insideLevel0"
-    }
+        "initLevel": "beach"
+    }, 
+    "itemsFile": "items.json"
 }
