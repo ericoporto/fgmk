@@ -179,6 +179,13 @@ screen.drawImage = function(image, position){
 	screen.ctx.drawImage(image,this.GSTARTX+position[0], this.GSTARTY+position[1])
 }
 
+screen.drawFace = function(faceset, tile, position, multiplix) {
+	multiplix = (typeof multiplix === "undefined") ? 2 : multiplix;
+	screen.ctx.drawImage(faceset,
+		64*tile[0], 64*tile[1], 64, 64,
+		this.GSTARTX+position[0], this.GSTARTY+position[1], 64*multiplix, 64*multiplix);
+	}
+
 screen.flashMonster = function(monster, color){
 	monster.flashcolor = color
 	monster.flash = 10
@@ -854,6 +861,46 @@ screen.drawMenu = function(menu){
 
 }
 
+screen.drawStatus = function(heroch){
+	var hero = heroch
+	var statw = screen.GWIDTH -32 - 96
+	var stath = screen.GHEIGHT-16
+	var statx = screen.GSTARTX+16 +96+8
+	var staty = screen.GSTARTY+8
+
+	screen.printBox.drawBox( statx,
+		staty,
+		statw,
+		stath);
+
+	screen.printBox.drawBox( statx,
+		staty,
+		statw,
+		stath,
+	0);
+
+	var keys = ["name","st","dx","iq","level","xp"]
+	// heroch.name,
+	// heroch.st,	heroch.dx, heroch.iq, heroch.level, heroch.xp,
+	// heroch.xpnextlevel                               heroch.hp, heroch.hpmax
+
+	for (var i=0; i < keys.length ; i++){
+		var atr = keys[i]
+		var atrval = heroch[atr]
+		if(atr != "name"){
+			screen.ctx.fillText(atr+": "+atrval, statx+16,staty+32*(1+i));
+		} else {
+			screen.ctx.fillText(atrval, statx+16,staty+32*(1+i));
+		}
+	}
+	screen.ctx.fillText("xp to next level: "+heroch.xpnextlevel, statx+16,staty+32*(1+i));
+	screen.ctx.fillText("hp: "+heroch.hp+"/"+heroch.hpmax, statx+144,staty+32*i);
+	//screen.ctx.fillText("      "+heroch.hpmax, screen.GSTARTX+32+screen.GWIDTH/2,screen.GSTARTY+32*5+16);
+	//screen.ctx.fillText(heroch.name, statx+statw/2-48,staty+32);
+	screen.drawFace(resources.faceset, heroch.face, [statx+144, staty+16])
+    screen.printBox.drawButtonAccept()
+}
+
 screen.showpicture = function(){
 	if(screen.pictureStack.length > 0 ){
 		for( var i = 0; i < screen.pictureStack.length; i += 1){
@@ -915,6 +962,9 @@ screen.loop = function(){
                 }
             }
 
+			if(battle.herotoshowstatus) {
+				screen.drawStatus(battle.herotoshowstatus)
+			}
             screen.printBox.drawBoxAnimation();
 
 			// updates

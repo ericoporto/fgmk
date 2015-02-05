@@ -7,6 +7,7 @@
         "name":"Brave",
         "ExpToLevel":[10,0],
         "baseStats" : {"hp":500, "st":225, "dx":200, "iq":120 },
+        "face":[0,0],
         "Pathway":
             {
                 "1" : {"learn":{"skill":"Frostburn"}},

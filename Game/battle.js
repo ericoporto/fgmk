@@ -13,6 +13,7 @@ battle.effect = {};
 battle.setup = function(){
 
     battle.maxlevel = 99;
+    battle.herotoshowstatus = false;
     battle.order = new Array();
     battle.heroes = clone(resources.hms.Heroes)
 

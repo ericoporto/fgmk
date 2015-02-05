@@ -9,6 +9,7 @@ var resources = {
     playerChara: null,
     printerset: null,
     playerCharaset: null,
+	faceset: null,
 	items: {},
     levels: {},
     charasets: {},
@@ -36,6 +37,7 @@ for (var i = 0, max = query.length; i < max; i++)
 
 resources.harvest = function(){
 	this.tileset = document.getElementById("tile");
+	this.faceset = document.getElementById("faceset");
     this.charasetimg = document.getElementById("charasetimg");
     this.printerset = document.getElementById("printerimg");
 	this.monsterimg = document.getElementById("monsterbattleimg");

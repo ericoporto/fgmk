@@ -600,6 +600,11 @@ engine.menuSetup = function(){
     items.menuUpdate()
     engine.mapMenu =  new menu({
         items: items.menu,
+        status: {
+            action: function(){
+                actions.showStatus("hero") },
+                index: 1
+            },
         test: new menu({
             test2: new menu({
                 yes: {
@@ -628,13 +633,9 @@ engine.menuSetup = function(){
                         actions.showText("this is a no1!") }, 'exit'],
                         index: 2
                     }
-                },1),
-            item3: {
-                action: function(){
-                    actions.showText("the player is fine, thanks!") },
-                    index: 2
-                },
-                config: new menu({
+                },2),
+
+            config: new menu({
                     showFPS: new menu({
                         yes: {
                             action: [function(){ debug.FPS.show = true }, 'exit'],
@@ -1103,6 +1104,15 @@ actions.preText = function(text) {
     return (text.slice(0)).replace(/(var:)([a-zA-Z0-9]+)/g,
             function(varname){return engine.evalNum(varname)} )
 }
+
+actions.showStatus = function(param,position) {
+    var params = param.split(';')
+    var herotoshow = battle.heroes[params[0]]
+    engine.atomStack.push([function(herotosh){battle.herotoshowstatus = herotosh},herotoshow]);
+    engine.atomStack.push([engine.waitForKey,true]);
+    engine.atomStack.push(["block",null]);
+    engine.atomStack.push([function(){battle.herotoshowstatus = false;engine.waitTime(400);},'']);
+};
 
 actions.showText = function(param,position) {
         text = actions.preText(param)
