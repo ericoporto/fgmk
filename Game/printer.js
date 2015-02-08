@@ -6,17 +6,17 @@ printer.currentLine = 0;
 printer.isShown = false;
 
 function wordWrap( str, width, brk, cut ) {
- 
+
     brk = brk || '\n';
     width = width || 75;
     cut = cut || false;
- 
+
     if (!str) { return str; }
- 
+
     var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
- 
+
     return str.match( RegExp(regex, 'g') ).join( brk );
- 
+
 }
 
 printer.textLines = function (_text){
@@ -98,14 +98,14 @@ printer.nextLine = function(){
 }
 
 printer.update = function(){
-	
+
 	var lines = null, i = 0, j = 0, l = 0, k = 0;
-	
+
 	if(printer.currentText){
-		
+
 		if(printer.dialogLines.length){
             if(printBox.isShown()){
-                screen.ctx.fillStyle = '#FFFFFF';
+
 
 
                if( Math.floor(screen.frameCount/4)%2) {
@@ -120,13 +120,10 @@ printer.update = function(){
                     }
                 }
                 for( i = printer.currentLine, j = 0; i < printer.dialogLines.length && j < 2; i += 1, j += 1){
-                    screen.ctx.fillText(printer.Line[i%2], screen.GSTARTX+screen.printBox.X+16,screen.GSTARTY+screen.printBox.Y+40+j*34);
-
-
-
+                    screen.drawText(printer.Line[i%2], screen.printBox.X+16,screen.printBox.Y+40+j*34);
                 }
             }
-			
+
 		}
 	}
 }

@@ -169,6 +169,13 @@ screen.drawChara = function(charaset, animation, frameNumber, position) {
 		32, 64);
 }
 
+screen.drawText = function(text, posx, posy){
+	screen.ctx.fillStyle = '#221100';
+	screen.ctx.fillText(text, screen.GSTARTX+posx,screen.GSTARTY+posy);
+	screen.ctx.fillStyle = '#FFFFFF';
+	screen.ctx.fillText(text, screen.GSTARTX+posx-2,screen.GSTARTY+posy-2);
+}
+
 screen.drawTile = function(tileset, tile, position) {
     screen.ctx.drawImage(tileset,
 				32*tile[0], 32*tile[1], 32, 32,
@@ -236,12 +243,8 @@ screen.drawMonster = function(monster, position) {
 	screen.ctx.globalAlpha = tempalpha
 
 	screen.ctx.fillStyle = '#ffffff';
-	screen.ctx.fillText("hp:"+monster.hp,
-		screen.GSTARTX+position[0],
-		screen.GSTARTY+position[1]-32);
-	screen.ctx.fillText(" /"+monster.hpmax,
-		screen.GSTARTX+position[0],
-		screen.GSTARTY+position[1]-8);
+	screen.drawText("hp:"+monster.hp,position[0],position[1]-32);
+    screen.drawText(" /"+monster.hpmax,position[0],position[1]-8);
 }
 
 screen.flashColor = function(fg, color){
@@ -856,7 +859,7 @@ screen.drawMenu = function(menu){
             }
 
         }
-        screen.ctx.fillText(Object.keys(menu.items)[i], screen.GSTARTX+menu['drawx']+16,screen.GSTARTY+menu['drawy']+menu.items[Object.keys(menu.items)[i]].itemy);
+		screen.drawText(Object.keys(menu.items)[i], +menu['drawx']+16,menu['drawy']+menu.items[Object.keys(menu.items)[i]].itemy);
     }
 
 }
@@ -865,8 +868,8 @@ screen.drawStatus = function(heroch){
 	var hero = heroch
 	var statw = screen.GWIDTH -32 - 96
 	var stath = screen.GHEIGHT-16
-	var statx = screen.GSTARTX+16 +96+8
-	var staty = screen.GSTARTY+8
+	var statx = 16 +96+8
+	var staty = 8
 
 	screen.printBox.drawBox( statx,
 		staty,
@@ -888,13 +891,13 @@ screen.drawStatus = function(heroch){
 		var atr = keys[i]
 		var atrval = heroch[atr]
 		if(atr != "name"){
-			screen.ctx.fillText(atr+": "+atrval, statx+16,staty+32*(1+i));
+			screen.drawText(atr+": "+atrval, statx+16,staty+32*(1+i));
 		} else {
-			screen.ctx.fillText(atrval, statx+16,staty+32*(1+i));
+			screen.drawText(atrval, statx+16,staty+32*(1+i));
 		}
 	}
-	screen.ctx.fillText("xp to next level: "+heroch.xpnextlevel, statx+16,staty+32*(1+i));
-	screen.ctx.fillText("hp: "+heroch.hp+"/"+heroch.hpmax, statx+144,staty+32*i);
+	screen.drawText("xp to next level: "+heroch.xpnextlevel, statx+16,staty+32*(1+i));
+	screen.drawText("hp: "+heroch.hp+"/"+heroch.hpmax, statx+144,staty+32*i);
 	//screen.ctx.fillText("      "+heroch.hpmax, screen.GSTARTX+32+screen.GWIDTH/2,screen.GSTARTY+32*5+16);
 	//screen.ctx.fillText(heroch.name, statx+statw/2-48,staty+32);
 	screen.drawFace(resources.faceset, heroch.face, [statx+144, staty+16])
