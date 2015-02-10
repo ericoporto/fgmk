@@ -7,26 +7,21 @@
     }, 
     "HMSFile": "hms.json", 
     "LevelsList": {
-        "Testmap": "Testmap.json", 
         "beach": "beach.json", 
-        "big": "big.json", 
-        "insideLevel0": "insideLevel0.json", 
-        "level0": "level0.json", 
-        "level1": "level1.json", 
-        "level2": "level2.json"
+        "playerhouse": "playerhouse.json"
     }, 
     "Player": {
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 288, 
-        "initPosY": 352, 
+        "initPosX": 160, 
+        "initPosY": 160, 
         "party": [
             "hero"
         ]
     }, 
     "World": {
-        "initLevel": "beach"
+        "initLevel": "playerhouse"
     }, 
     "itemsFile": "items.json"
 }

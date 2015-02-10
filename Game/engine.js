@@ -634,8 +634,8 @@ engine.teleport = function(param) {
     engine.currentLevel = resources['levels'][param[2]];
     player.mapx = parseInt(param[0],10)*32 ;
 	player.mapy = (parseInt(param[1],10)-1)*32;
-    player.steps = 32;
-    player.facing = "down";
+    player.steps = 0;
+//    player.facing = "down";
     HID.cleanInputs()
     HID.clearInputs()
     chars = new charalist();
