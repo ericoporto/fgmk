@@ -281,6 +281,7 @@ screen.init = function() {
 	this.ORIGINALGSTARTX = this.GSTARTX
 	this.ORIGINALGSTARTY = this.GSTARTY
     this.resize();
+	screen.HIDcsetup();
 
 	this.pictureStack = new Array();
 
@@ -337,9 +338,9 @@ screen.init = function() {
 }
 
 screen.resize = function() {
-    this.ctx.mozImageSmoothingEnabled = false;
-    this.ctx.webkitImageSmoothingEnabled = false;
-    this.ctx.imageSmoothingEnabled = false;
+	screen.ctx.mozImageSmoothingEnabled = false;
+	screen.ctx.webkitImageSmoothingEnabled = false;
+	screen.ctx.imageSmoothingEnabled = false;
 
     if (screen.mobile) {
         this.currentHeight = window.innerHeight;
@@ -364,27 +365,40 @@ screen.resize = function() {
 }
 
 screen.drawButton = function(pHIDItem){
-	if(pHIDItem.active)
+	if(pHIDItem.active) {
 	    this.ctx.fillStyle = '#ff9900';
-    else
-	    this.ctx.fillStyle = pHIDItem.color;
-	this.ctx.fillRect(pHIDItem.mapX, pHIDItem.mapY+this.GHEIGHT, 96, 96);
-
-    this.ctx.fillStyle = '#FFFFFF';
-    this.ctx.fillText(pHIDItem.letter,pHIDItem.mapX+32, pHIDItem.mapY+this.GHEIGHT+64);
+		this.ctx.fillRect(pHIDItem.mapX, pHIDItem.mapY+this.GHEIGHT, 96, 96);
+    }
 }
 
 screen.drawHID = function(){
-
-	this.ctx.fillStyle = '#221F1B';
-	this.ctx.fillRect(0, this.GHEIGHT, this.GWIDTH, this.HEIGHT - this.GHEIGHT);
+	screen.ctx.drawImage(screen.HIDButtons, 0, screen.GHEIGHT)
 
 	var HIDItem;
 	for(var tag in HID.inputs){
 		HIDItem = HID.inputs[tag];
 		screen.drawButton(HIDItem)
 	}
+}
 
+screen.HIDcsetup = function (){
+	screen.HIDButtons = document.createElement('canvas');
+	screen.HIDButtons.width = screen.WIDTH;
+	screen.HIDButtons.height = screen.HEIGHT-screen.GHEIGHT;
+	var hx = screen.HIDButtons.getContext('2d');
+	hx.fillStyle = '#221F1B';
+	hx.fillRect(0, 0, screen.HIDButtons.width, screen.HIDButtons.height);
+
+	var HIDItem;
+	for(var tag in HID.inputs){
+		HIDItem = HID.inputs[tag];
+
+        hx.fillStyle = HIDItem.color;
+		hx.fillRect(HIDItem.mapX, HIDItem.mapY, 96, 96);
+		hx.fillStyle = '#FFFFFF';
+		hx.fillText(HIDItem.letter,HIDItem.mapX+32, HIDItem.mapY+64);
+
+	}
 
 }
 
