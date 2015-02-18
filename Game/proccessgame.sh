@@ -11,3 +11,4 @@
 #done
 
 cat "helperf.js" "items.js" "menu.js" "engine.js" "actions.js" "screen.js" "hid.js" "printer.js" "title.js" "dist.js" "battle.js" "bootstrap.js" > concat.js
+node build.js

@@ -46,6 +46,7 @@ resources.harvest = function(){
 	this.pictures.keys0 = document.getElementById("keys0");
 	this.pictures.keys1 = document.getElementById("keys1");
 	this.pictures.keys2 = document.getElementById("keys2");
+	this.pictures.controllers = document.getElementById("controllers");
 
     LevelsList = init['LevelsList']
     for (var level in LevelsList) {

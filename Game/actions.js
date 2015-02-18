@@ -124,60 +124,66 @@ actions.changeTile = function(param,position) {
     engine.atomStack.push([engine.changeTile,[aTileType,
         aLayer, aColision, aEvent, aPositionY, aPositionX,
         aLevel ] ]);
-    };
+};
 
-    actions.fadeIn = function(param,position) {
-        var params = param.split(';')
-        engine.atomStack.push([screen.effects.fadeIn,params]);
-        for(var i=0; i < 8; i++) {
-            engine.atomStack.push(["block",null]);
-        }
-    };
-
-
-    actions.fadeOut = function(param,position) {
-        var params = param.split(';')
-        engine.atomStack.push([screen.effects.fadeOut,params]);
-        for(var i=0; i < 8; i++) {
-            engine.atomStack.push(["block",null]);
-        }
-    };
-
-    actions.setVar = function(param,position) {
-        var params = param.split(';')
-        engine.atomStack.push([engine.setVar,params]);
-    };
-
-    actions.varPlusOne = function(param,position) {
-        var params = param.split(';')
-        engine.atomStack.push([engine.varPlusOne,params]);
-    };
-
-    actions.testVar = function(param,position) {
-        var params = param.split(';')
-        engine.atomStack.push([engine.testVar,params]);
-    };
-
-    actions.noEffect = function(param,position) {
-        engine.atomStack.push([screen.effects.noEffect,'']);
-    };
-
-
-    actions.battle = function(param,position) {
-        var params = param.split(';')
-        actions.fadeOut('tension1;keepEffect')
-        dist.setup(screen.canvas,'bgimg1',1)
-        actions.changeState('battle')
-        engine.atomStack.push([engine.battle,params]);
-    };
-
-    actions.addItem = function(param,position){
-        var params = param.split(';')
-        engine.atomStack.push([engine.addItem,params]);
+actions.fadeIn = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([screen.effects.fadeIn,params]);
+    for(var i=0; i < 8; i++) {
+        engine.atomStack.push(["block",null]);
     }
+};
 
-    actions.proceedBattleTurn = function(param,position){
-        battle.herodecision = ""
-        engine.questionBoxAnswer = engine.questionBoxUndef
-        engine.atomStack.push([engine.proceedBattleTurn,[""]])
+
+actions.fadeOut = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([screen.effects.fadeOut,params]);
+    for(var i=0; i < 8; i++) {
+        engine.atomStack.push(["block",null]);
     }
+};
+
+actions.setVar = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.setVar,params]);
+};
+
+actions.varPlusOne = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.varPlusOne,params]);
+};
+
+actions.testVar = function(param,position) {
+    var params = param.split(';')
+    engine.atomStack.push([engine.testVar,params]);
+};
+
+actions.noEffect = function(param,position) {
+    engine.atomStack.push([screen.effects.noEffect,'']);
+};
+
+
+actions.battle = function(param,position) {
+    var params = param.split(';')
+    actions.fadeOut('tension1;keepEffect')
+    dist.setup(screen.canvas,'bgimg1',1)
+    actions.changeState('battle')
+    engine.atomStack.push([engine.battle,params]);
+};
+
+actions.addItem = function(param,position){
+    var params = param.split(';')
+    engine.atomStack.push([engine.addItem,params]);
+}
+
+actions.proceedBattleTurn = function(param,position){
+    battle.herodecision = ""
+    engine.questionBoxAnswer = engine.questionBoxUndef
+    engine.atomStack.push([engine.proceedBattleTurn,[""]])
+}
+
+actions.alert = function(param, position){
+    var params = param.split(';')
+
+    engine.atomStack.push([engine.alert,params])
+}

@@ -14,6 +14,7 @@ camera.setupMap = function(_worldLevel, _engine){
 
 camera.setupCanvas = function(_canvas){
     this.yerror= 1-(screen.GHEIGHT/32)%2;
+	this.xerror= 1-(screen.GWIDTH/32)%2;
     this.width = Math.floor(screen.GWIDTH/32)+1;
     this.height = Math.floor(screen.GHEIGHT/32)+1;
     this.halfWidth = Math.floor(this.width/2);
@@ -36,11 +37,13 @@ camera.panToChara = function(chara){
             this.finex = chara.mapx%32;
         } else if (charatilex < this.halfWidth) {
             this.x = this.halfWidth;
-        } else if (charatilex == this.maxWorldWidth - this.halfWidth) {
-            this.x = this.maxWorldWidth - this.halfWidth;
+			this.finex = 0
+        } else if (charatilex == this.maxWorldWidth - this.halfWidth -this.xerror) {
+            this.x = this.maxWorldWidth - this.halfWidth -this.xerror;
             this.finex = chara.mapx%32;
         } else  {
-            this.x = this.maxWorldWidth - this.halfWidth ;
+            this.x = this.maxWorldWidth - this.halfWidth -this.xerror;
+			this.finex = 30
         }
     }
 
@@ -191,7 +194,7 @@ screen.drawFace = function(faceset, tile, position, multiplix) {
 	screen.ctx.drawImage(faceset,
 		64*tile[0], 64*tile[1], 64, 64,
 		this.GSTARTX+position[0], this.GSTARTY+position[1], 64*multiplix, 64*multiplix);
-	}
+}
 
 screen.flashMonster = function(monster, color){
 	monster.flashcolor = color
@@ -356,8 +359,8 @@ screen.resize = function() {
         document.body.style.height = (window.innerHeight + 50) + 'px';
     }
 
-    this.canvas.style.width = this.currentWidth + 'px';
-    this.canvas.style.height = this.currentHeight + 'px';
+	screen.canvas.style.width = this.currentWidth + 'px';
+	screen.canvas.style.height = this.currentHeight + 'px';
 
     window.setTimeout(function() {
             window.scrollTo(0,1);
@@ -933,6 +936,16 @@ screen.clearPicture = function(){
 	screen.pictureStack.length = 0
 }
 
+screen.drawAlert = function(text,index){
+	screen.drawText(text,128,index*32+32)
+}
+
+screen.drawAlerts = function(){
+	for (var i = 0 ; i < engine.alertStack.length ; i++){
+		screen.drawAlert(engine.alertStack[i][0],i)
+	}
+}
+
 screen.loop = function(){
 
 	try{
@@ -983,6 +996,7 @@ screen.loop = function(){
 				screen.drawStatus(battle.herotoshowstatus)
 			}
             screen.printBox.drawBoxAnimation();
+			screen.drawAlerts();
 
 			// updates
 			printer.update();

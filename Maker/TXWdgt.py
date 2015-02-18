@@ -421,8 +421,8 @@ class MiniMapWidget(QWidget):
                     wdgt = None
             self.TileList = []
 
-        self.TileWidth = len(LayersMapTiles[0])
-        self.TileHeight = len(LayersMapTiles[0][0])
+        self.TileHeight = len(LayersMapTiles[0])
+        self.TileWidth = len(LayersMapTiles[0][0])
 
         # for i in height
         for iy in xrange(self.TileHeight):

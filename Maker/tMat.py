@@ -105,14 +105,15 @@ def fwriteKeyVals(data, f, indent=0):
                         f.write( "%3d" %  data[i][j] )
                     elif isinstance( data[i][j], bool):
                         f.write( "%3d" %  data[i][j] )
-                    else:
+                    elif isinstance( data[i][j], basestring):
                         dataListLf = data[i][j].split("\n")
                         dataToWrite = dataListLf[0]
                         for line in dataListLf[1:]:
                             dataToWrite += '\\n'+line
 
                         f.write( "\"" + dataToWrite + "\"")
-
+                    else:
+                        f.write(  dataToWrite )
                     f.write( "," ) if j != len(data[0])-1 else (f.write( "]," ) if i != len(data)-1 else f.write( "]" ))
                 f.write( "\n" ) if i != len(data)-1 else f.write( "]" )
         else:
@@ -128,13 +129,15 @@ def fwriteKeyVals(data, f, indent=0):
                         f.write( "%3d" % data[i] )
                     elif isinstance( data[i], bool):
                         f.write( "%3d" %  data[i][j] )
-                    else:
+                    elif isinstance( data[i], basestring):
                         dataListLf = data[i].split("\n")
                         dataToWrite = dataListLf[0]
                         for line in dataListLf[1:]:
                             dataToWrite += '\\n'+line
 
                         f.write( "\"" + dataToWrite + "\"")
+                    else:
+                        f.write( dataToWrite)
                     f.write( "," ) if i != len(data)-1 else f.write( "]" )
             else:
                 f.write( " [\"\"]" )

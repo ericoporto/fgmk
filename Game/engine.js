@@ -262,9 +262,11 @@ player.setup = function() {
         var mapwidth=engine.currentLevel["Level"]["colision"].length;
         var mapheight=engine.currentLevel["Level"]["colision"][0].length -1;
 
-        if(player.steps == 0 && this.waits == 0){
+        if(player.steps == 0 && player.waits == 0){
             var dirkey = engine.dirKeyActive()
             if(dirkey){
+                player.mapx=px*32,
+                player.mapy=(py-1)*32
                 player.facing=dirkey
                 var fpos = player.facingPosition()
                 if(player.checkMapBoundaries(px,py,mapwidth,mapheight)){
@@ -342,6 +344,7 @@ engine.setup = function(){
     engine.waitTimeSwitch = false;
     engine.minimumWait = false;
     engine.atomStack=new Array();
+    engine.alertStack = new Array();
     engine.st = {};
     engine.st.vars = {};
     engine.resetBlocks()
@@ -516,7 +519,7 @@ engine.loop = function(){
                     } else if(engine.state == "battle"){
                         battle.update()
                     }
-
+                    engine.alertupdate()
                     engine.runatomStack();
                 }
             } else if (this.minimumWait) {
@@ -640,6 +643,7 @@ engine.teleport = function(param) {
     HID.clearInputs()
     chars = new charalist();
     chars.push(player)
+    engine.waitTime(100);
 }
 
 engine.changeTile = function(param) {
@@ -804,6 +808,30 @@ engine.questionBox = function(param){
 
 engine.proceedBattleTurn = function(param){
     battle.waitherodecision = false
+}
+
+engine.alert = function(param) {
+    var textalert = actions.preText(param[0])
+    var textlife = 60
+    for (var i = 0 ; i < engine.alertStack.length ; i++){
+        if(engine.alertStack[i][0] == textalert){
+            engine.alertStack[i][1] += textlife
+            return
+        }
+    }
+    engine.alertStack.push([textalert,textlife])
+}
+
+engine.alertupdate = function(){
+    if( engine.alertStack.length>0){
+        for (var i = 0 ; i < engine.alertStack.length ; i++){
+            engine.alertStack[i][1]--
+        }
+        engine.alertStack.sort(function(a, b) {return a[1] - b[1]})
+        if(engine.alertStack[0][1]<=0){
+            engine.alertStack.pop()
+        }
+    }
 }
 
 translateActions = function(action, param, position, charsender) {

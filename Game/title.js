@@ -21,6 +21,7 @@ title.setup = function(){
     actions.showPicture("title;0;0")
     setTimeout(function(){if(engine.state == "startScreen"){
                 engine.showPicture(["keys0","160","8"])
+                engine.showPicture(["controllers","8",(screen.GHEIGHT-32).toString()])
                 }}, 1000);
 
     setTimeout(function(){if(engine.state == "startScreen"){
@@ -30,6 +31,7 @@ title.setup = function(){
                 engine.stopPicture("");
                 engine.showPicture(["title","0","0"])
                 engine.showPicture(["keys1","150","16"]);
+                engine.showPicture(["controllers","8",(screen.GHEIGHT-32).toString()])
                 }}, 10000);
 }
 

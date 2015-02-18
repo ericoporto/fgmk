@@ -271,11 +271,13 @@ var HID = {
 	    window.addEventListener('touchend', HID.handleTouchUp, false);
         window.addEventListener("gamepadconnected", function(e) {
             HID.gamepads = navigator.getGamepads();
+            actions.alert("gamepad connected!")
         });
         window.addEventListener("gamepaddisconnected", function(e) {
             HID.gamepads = [];
             HID.cleanInputs();
             HID.clearInputs();
+            actions.alert("gamepad disconnected.")
         });
 
     },
