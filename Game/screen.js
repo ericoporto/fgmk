@@ -322,6 +322,8 @@ screen.init = function() {
 				};
 			}());
 
+	screen.rains = new rain(this.ctx, this.GWIDTH,this.GHEIGHT, screen)
+
 	screen.requestAnimationFrame = window.requestAnimationFrame
 
 
@@ -974,12 +976,14 @@ screen.loop = function(){
 
 	            if(debug.showLayer.layer4)
 	    			camera.drawMapLayer(engine.currentLevel, "layer4");
+					screen.rains.DrawRain();
 			} else if (engine.state == "startScreen") {
 				//do start screen stuff
 			} else if (engine.state == "battle") {
 				dist.test(dist.efnumb[0])
 				screen.drawMonsters()
 			}
+
 			screen.showpicture();
             screen.drawEffects();
             screen.drawHID();

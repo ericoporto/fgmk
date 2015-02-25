@@ -187,3 +187,13 @@ actions.alert = function(param, position){
 
     engine.atomStack.push([engine.alert,params])
 }
+
+actions.rain = function(param, position){
+    var params = param.split(';')
+
+    if(params[0]=='start'){
+        engine.atomStack.push([function(){screen.rains.startRain() },[""]])
+    } else {
+        engine.atomStack.push([function(){screen.rains.stopRain() },[""]])
+    }
+}

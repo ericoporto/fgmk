@@ -58,22 +58,39 @@
             },
         "charaset": "bunny"
         },
-    "skeleton":
+    "skeleton1":
         {
         "movements":
-            [["face","down"]],
+            [["face","right"]],
         "properties":
             {
-            "nocolision":   0
+            "nocolision":   1
             },
         "actions":
             {
             "type":  [  1,  0],
             "list":
                 [["showText","..."],
-                 ["varPlusOne","test"]]
+                 ["rain","start"]]
             },
         "charaset": "skeleton"
+        },
+    "skeleton2":
+        {
+            "movements":
+            [["face","left"]],
+            "properties":
+            {
+                "nocolision":   1
+            },
+            "actions":
+            {
+                "type":  [  1,  0],
+                "list":
+                [["showText","!!!"],
+                ["rain","stop"]]
+            },
+            "charaset": "skeleton"
         },
     "bear":
         {
@@ -108,4 +125,3 @@
         }
     }
 }
-
