@@ -34,7 +34,7 @@ function removeA(arr) {
 
 window.mobilecheck = function() { return (window.forceMobile || window.__mobilecheck()) }
 
-jsonLevelGet = function(urlToGet) {
+jsonGet = function(urlToGet) {
   var request = new XMLHttpRequest();
   request.open('get', urlToGet, false /*async*/);
   request.send();                   // bloqueia porque async esta false

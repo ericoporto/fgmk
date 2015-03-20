@@ -10,50 +10,6 @@ window.ondevicemotion = function(event) {
     }
 };
 
-feedbackEng = {
-    once: false,
-    timer: null,
-    vibrationOn: false,
-    soundOn: false,
-    sounds: { stop: "audioStop", text: "audioText", word: "audioWord"
-    },
-    vibration: { stop: [10,5,10], text: [25], word: [10]
-    },
-    loadedSounds: {},
-    vibrate: null,
-    setup: function() {
-        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-        if (navigator.vibrate) {
-            // vibration API supported
-            this.vibrationOn = true ;
-        }
-        if(window.isFirefox()) {
-            this.soundOn = true;
-        }
-        for (var sound in this.sounds) {
-            this.loadedSounds[sound] =  document.getElementById(this.sounds[sound])
-        }
-
-    },
-    play: function(feedback) {
-        if (this.once == false) {
-            if(this.vibrationOn)
-                navigator.vibrate(this.vibration[feedback]);
-            if(this.soundOn) {
-                this.loadedSounds[feedback].cloneNode(true).play();
-            }
-            //this.once = true;
-            //this.turnOnceOffTime();
-        }
-    },
-    turnOnceOffTime: function() {
-        this.timer = setTimeout(function() {
-                                    feedbackEng.once = false;
-                                    }, 100.0);
-    }
-};
-
-
 function charalist(){
     if ("charas" in engine.currentLevel["Level"] ) {
         listofcharas = engine.currentLevel["Level"]["charas"]
