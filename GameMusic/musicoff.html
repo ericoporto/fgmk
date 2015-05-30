@@ -3,6 +3,7 @@
 <head>
 <script src="external/complex_array.js"></script>
 <script src="external/fft.js"></script>
+<script src="external/audiotob64.js"></script>
 
 <script src="song1.js"></script>
 
@@ -70,9 +71,9 @@ function music(){
             sampsound |= hex2byte(srcdata[i++])<<4
             sampsound |= hex2byte(srcdata[i++])
 
-            
-            if(sampsound>32767) sampsound = sampsound-65536   
-            temp = (sampsound)/32768  
+
+            if(sampsound>32767) sampsound = sampsound-65536
+            temp = (sampsound)/32768
 
             sample[j] = temp
             j++
@@ -89,7 +90,7 @@ function music(){
             j++
         }
 
-        console.log(fftdata)
+        //console.log(fftdata)
 
         fftdata.FFT()
         var maxv = 0
@@ -100,7 +101,7 @@ function music(){
             if(maxv<temp) {
                 maxv = temp
                 maxi = i
-            }   
+            }
         }
 
         var fundamentalfreq = maxi*samplerate/(loop[1]-loop[0])
@@ -125,9 +126,9 @@ function music(){
             var noteplaybackRate = Math.min(Math.round(samplerate*playbackRate), 170000)
             var noteplaybackRate = Math.max(noteplaybackRate, 8000)
 
-            console.log(noteplaybackRate)
-            console.log(samplelength)
-            console.log(note)
+            //console.log(noteplaybackRate)
+            //console.log(samplelength)
+            //console.log(note)
 
             var buffer = audioCtx.createBuffer(1, samplelength,noteplaybackRate);
 
@@ -136,7 +137,7 @@ function music(){
             var data = buffer.getChannelData(0)
             for(var i=0; i<samplelength; i++){
                 data[i]=sample[i]
-            }  
+            }
 
             source.buffer = buffer; // Assign our buffer to the source node buffer
 
@@ -155,18 +156,6 @@ function music(){
         }
 
     }
-
-
-
-
-
-
-
-
-    
-
-
-
 
 
     this.makesong = function(songsarr, songdata, bpm){
@@ -193,7 +182,7 @@ function music(){
             for(var k=0; k<masong.length ; k++){
                 var chank = masong[k]
                 if(i in chank){
-                    console.log(chank[i])
+                    //console.log(chank[i])
                     var _iinstrument = (1 in chank[i]) ? (chank[i][1]-1) : 1
                     var _ivolume = (2 in chank[i]) ? chank[i][2] : 0.5
 
@@ -203,20 +192,17 @@ function music(){
         }
 
 
-
         offaudioctx.oncomplete = function(e) {
-            var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
-            var song = audioCtx.createBufferSource();
-            song.buffer = e.renderedBuffer;
 
-            song.connect(audioCtx.destination);
+            var buffer   = e.renderedBuffer;
+            var UintWave = createWaveFileData(buffer);
+            var base64   = btoa(uint8ToString(UintWave));
 
-            songsarr.push(function() {
-            song.start();
-            })
-
+            songsarr.push(document.createElement('audio'))
+            songsarr[songsarr.length-1].src = "data:audio/wav;base64," + base64;
+            songsarr[songsarr.length-1].loop = true
             console.log("completed!");
-        }
+        };
 
         offaudioctx.startRendering()
 
@@ -227,7 +213,7 @@ function music(){
     this.makesong(this.songs, song1, 500)
 
     this.play = function () {
-        this.songs[0]()
+        this.songs[0].play()
     }
 
 }
@@ -235,6 +221,13 @@ function music(){
 var torun = function(){
 
     bgmusic = new music()
+    // /I can play a song in songs as audio tag.
+    // bgmusic.songs[0].play() works
+    // /as does
+    // bgmusic.songs[0].pause()
+    // /and
+    // bgmusic.songs[0].currentTime = 0
+    // /works too
 
 
     }
