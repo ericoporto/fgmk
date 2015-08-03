@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="external/complex_array.js"></script>
+<script src="external/fft.js"></script>
+<script src="external/audiotob64.js"></script>
+
+<script src="instruments/bass.js"></script>
+<script src="instruments/guitar.js"></script>
+<script src="instruments/kick.js"></script>
+<script src="instruments/hatClosed.js"></script>
+<script src="instruments/hatOpen.js"></script>
+<script src="instruments/snare.js"></script>
+
+<script src="bgmusic.js"></script>
+
+<script>
+var torun = function(){
+
+    bgmusic = new music()
+    // /I can play a song in songs as audio tag.
+    // bgmusic.songs[0].play() works
+    // /as does
+    // bgmusic.songs[0].pause()
+    // /and
+    // bgmusic.songs[0].currentTime = 0
+    // /works too
+
+
+    }
+</script>
+</head>
+<body onload="torun()">
+
+</body>
+</html>
