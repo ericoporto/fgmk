@@ -82,7 +82,7 @@ class MapWidget(QWidget):
 
         # get the background numbers and use to get the tiles
         # for i in height
-        for iy in xrange(self.TileHeight):
+        for iy in range(self.TileHeight):
             # for j in width
             self.TileList.append([])
             for jx in range(self.TileWidth):
@@ -458,7 +458,7 @@ class EventsWidget(QWidget):
 
         updatedListOfEvents = self.pMap.getTileListFromLayer(EVENTSLAYER)
         allItemsInEventsList = []
-        for index in xrange(self.EventsList.count()):
+        for index in range(self.EventsList.count()):
             allItemsInEventsList.append([self.EventsList.item(index), index])
 
         for item in allItemsInEventsList:
@@ -967,7 +967,7 @@ class MainWindow(QMainWindow):
         os.mkdir(os.path.join(projectPath,fifl.FONT))
         os.mkdir(os.path.join(projectPath,fifl.IMG))
         engineFiles = ["bootstrap.js","engine.js","game.css","hid.js","index.html","printer.js","screen.js","icon.png"]
-        engineFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Game/")
+        engineFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../Game/")
         for file in engineFiles:
             shutil.copyfile(os.path.join(engineFolder,file),os.path.join(projectPath,file))
         #copy the font

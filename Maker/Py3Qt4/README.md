@@ -1,4 +1,4 @@
-![Icon](iconTiny.png) fangamk
+![Icon](../iconTiny.png) fangamk
 =============================
 
 Maker
@@ -14,12 +14,9 @@ default browser after saving by pressing f5.
 
 Running in Linux:
 -----------------
+I made using Python 3. Needs Pillow, Numpy and PyQt4 - you can apt-get install
+python3-pyqt4 and similar (in Ubuntu) or use pip.
 
-Right now I am porting from Python 2.7 to Python 3 and from Qt4 to Qt5.
-
-Needs `pillow`, `numpy` and `PyQt` - you can `apt install python3-pyqt4` and 
-similar (in Ubuntu) or use pip.
-
-Then cd to the correspondent folder and use
+Then cd to this folder and use
 
     python3 Editor.py

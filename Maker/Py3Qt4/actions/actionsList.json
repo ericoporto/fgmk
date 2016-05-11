@@ -1,0 +1,14 @@
+{ "actionList": {
+    "setVar":["varname","value"],
+    "varPlusOne":["varname"],
+    "IF":["var1","oper","var2"],
+    "END":[""],
+    "ELSE":[""],
+    "showText":["text"],
+    "fadeIn":["effect","keepEffect"],
+    "fadeOut":["effect","keepEffect"],
+    "noEffect":[""],
+    "teleport":["positionx","positiony","level"],
+    "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]]
+    }
+}

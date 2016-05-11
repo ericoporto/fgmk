@@ -28,7 +28,7 @@
         "19":  [ 10, 13],
         "18":  [  9, 13]
         },
-    "charas":  [""],
+    "charas":  [],
     "tileImage": "img/tile.png",
     "tilesAnimated": 
         {

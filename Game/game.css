@@ -10,15 +10,9 @@ body{
     overflow:hidden;
 }
 
-#gameArea {
-    position: absolute;
-    left:     50%;
-    top:      50%;
-}
-
 canvas {
-    display: block; 
-    margin:0 auto 0 auto; 
+    display: block;
+    margin:0 auto 0 auto;
 }
 
 #viewport {
@@ -31,10 +25,3 @@ canvas {
     image-rendering: -webkit-optimize-contrast;
     -ms-interpolation-mode: nearest-neighbor;
 }
-
-
-
-
-
-
-

@@ -1,0 +1,111 @@
+
+{
+"Charas":
+    {
+        "sack":
+        {
+            "movements":
+            [],
+            "properties":
+            {
+                "nocolision":   0
+            },
+            "actions":
+            {
+                "type":  [  0,  1],
+                "list":
+                [["addItem","potion"],
+                ["showText","found a potion!"],
+                ["charAutoDelete",""]]
+            },
+            "charaset": "sack"
+        },
+    "bunny":
+        {
+        "movements":
+            [["move","follow"],
+             ["move","follow"],
+             ["move","random"],
+             ["move","random"],
+             ["move","follow"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
+        "actions":
+            {
+            "type":  [  0,  1],
+            "list":
+                [["battle","bunny"],
+                 ["charAutoDelete",""]]
+            },
+        "charaset": "bunny"
+        },
+    "bunny2":
+        {
+        "movements":
+            [["move","random"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
+        "actions":
+            {
+            "type":  [  0,  1],
+            "list":
+                [["battle","bunny;bunny;bunny"],
+                 ["charAutoDelete",""]]
+            },
+        "charaset": "bunny"
+        },
+    "skeleton":
+        {
+        "movements":
+            [["face","down"]],
+        "properties":
+            {
+            "nocolision":   0
+            },
+        "actions":
+            {
+            "type":  [  1,  0],
+            "list":
+                [["showText","..."],
+                 ["varPlusOne","test"]]
+            },
+        "charaset": "skeleton"
+        },
+    "bear":
+        {
+        "movements":
+            [["face","up"],
+             ["face","left"],
+             ["face","down"],
+             ["face","right"]],
+        "properties":
+            {
+            "nocolision":   1
+            },
+        "actions":
+            {
+            "type":  [  1,  0],
+            "list":
+                [["varPlusOne","test"],
+                 ["IF","var:test;>=;3"],
+                 [   "showText","Are you alright sir?"],
+                 [   "questionBox","Yes;Not really..."],
+                 [   "IF","ans:;==;Yes"],
+                 [        "showText","Good! Yes is very good!"],
+                 [   "ELSE",""],
+                 [        "showText","Perhaps a fight will cheer you up!"],
+                 [        "battle","bear"],
+                 [   "END",""],
+                 ["ELSE",""],
+                 [   "showText","spinning spinning"],
+                 ["END",""]]
+            },
+        "charaset": "bear"
+        }
+    }
+}
+

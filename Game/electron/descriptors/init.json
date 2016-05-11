@@ -8,18 +8,17 @@
     "HMSFile": "hms.json", 
     "LevelsList": {
         "beach": "beach.json", 
-        "desertcave": "desertcave.json", 
-        "housemiddown": "housemiddown.json", 
-        "housetopleft": "housetopleft.json", 
-        "playerhouse": "playerhouse.json", 
-        "smallforest": "smallforest.json"
+        "playerhouse": "playerhouse.json",
+        "housetopleft": "housetopleft.json",
+        "housemiddown":"housemiddown.json",
+        "smallforest":"smallforest.json"
     }, 
     "Player": {
         "charaFile": "person.json", 
         "charaSet": "person", 
         "facing": "down", 
-        "initPosX": 224, 
-        "initPosY": 224, 
+        "initPosX": 160, 
+        "initPosY": 160, 
         "party": [
             "hero"
         ]

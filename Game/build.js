@@ -23,4 +23,4 @@ var result = UglifyJS.minify('concat.js', {
 	}
 });
 
-fs.writeFileSync('concat.min.js', result.code);
+fs.writeFileSync('bgmusic.min.js', result.code);
