@@ -18,7 +18,7 @@ import fifl
 import TileCharaset
 import Charas
 
-sSettings = { "gamefolder": "" }
+sSettings = {"gamefolder": ""}
 
 COLISIONLAYER = 3
 EVENTSLAYER = 4
@@ -29,15 +29,18 @@ rightClickTool = 1
 firstClickX = None
 firstClickY = None
 
-def changeTileCurrent( changeTo ):
+
+def changeTileCurrent(changeTo):
     m.myMapWidget.currentTile = changeTo
     m.myPaletteWidget.setImageCurrent(changeTo)
 
-def changeLayerCurrent( changeTo ):
+
+def changeLayerCurrent(changeTo):
     m.myMapWidget.currentLayer = changeTo
 
 
 class MapWidget(QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -65,14 +68,14 @@ class MapWidget(QWidget):
 
     def DrawMap(self, parent):
 
-        #self.setUpdatesEnabled(False)
+        # self.setUpdatesEnabled(False)
         self.setVisible(False)
         LayersMapTiles = parent.myMap.LayersMapTiles
 
         self.TileHeight = len(LayersMapTiles[0])
         self.TileWidth = len(LayersMapTiles[0][0])
 
-        #print(LayersMapTiles)
+        # print(LayersMapTiles)
 
         if len(self.TileList) > 1:
             for collum in self.TileList:
@@ -90,16 +93,18 @@ class MapWidget(QWidget):
 
                 self.TileList[iy].append(TileXtra.ExtendedQLabel(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
-                self.TileList[iy][jx].initTile( parent.myTileSet.tileset, jx , iy, parent.myTileSet.boxsize, LayersMapTiles[:,iy,jx], self.myScale)
-                self.connect(self.TileList[iy][jx], SIGNAL('clicked()'), self.TileInMapClicked)
-                self.connect(self.TileList[iy][jx], SIGNAL('scroll(int)'), self.wheelScrolledTileInMap)
-                self.connect(self.TileList[iy][jx], SIGNAL('rightClicked()'), self.TileInMapRightClicked)
+                self.TileList[iy][jx].initTile(
+                    parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
+                self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
+                #self.connect(self.TileList[iy][jx], SIGNAL(
+                #    'scroll(int)'), self.wheelScrolledTileInMap)
+                self.TileList[iy][jx].rightClicked.connect(self.TileInMapRightClicked)
 
-
-        self.resize(self.TileWidth*parent.myTileSet.boxsize*self.myScale,self.TileHeight*parent.myTileSet.boxsize*self.myScale)
-        #self.setUpdatesEnabled(True)
+        self.resize(self.TileWidth * parent.myTileSet.boxsize * self.myScale,
+                    self.TileHeight * parent.myTileSet.boxsize * self.myScale)
+        # self.setUpdatesEnabled(True)
         self.setVisible(True)
-        #self.show()
+        # self.show()
 
     def TileInMapRightClicked(self):
         global rightClickTool
@@ -114,7 +119,7 @@ class MapWidget(QWidget):
         global firstClickY
 
         if theClickedTool == 0:
-        #pen
+            # pen
             if(self.currentLayer == COLISIONLAYER):
                 self.changeTileType(self.currentColision)
             elif(self.currentLayer == EVENTSLAYER):
@@ -124,7 +129,7 @@ class MapWidget(QWidget):
                 self.changeTileType(self.currentTile)
 
         elif theClickedTool == 1:
-        #dropper
+            # dropper
             if(self.currentLayer == COLISIONLAYER):
                 self.currentColision = self.sender().tileType[COLISIONLAYER]
             elif(self.currentLayer == EVENTSLAYER):
@@ -134,7 +139,7 @@ class MapWidget(QWidget):
                 changeTileCurrent(self.sender().tileType[self.currentLayer])
 
         elif theClickedTool == 2:
-        #bucket
+            # bucket
             if(self.currentLayer == COLISIONLAYER):
                 self.toolBucketFill(self.currentColision)
             elif(self.currentLayer == EVENTSLAYER):
@@ -144,13 +149,14 @@ class MapWidget(QWidget):
                 self.toolBucketFill(self.currentTile)
 
         if theClickedTool == 3:
-        #line
+            # line
             if firstClickX is None:
                 firstClickX = self.sender().tileX
                 firstClickY = self.sender().tileY
             else:
                 if(self.currentLayer == COLISIONLAYER):
-                    self.toolLine(self.currentColision, firstClickX, firstClickY)
+                    self.toolLine(self.currentColision,
+                                  firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolLine(self.currentEvent, firstClickX, firstClickY)
                     self.parent.myEventsWidget.updateEventsList()
@@ -159,13 +165,14 @@ class MapWidget(QWidget):
                 firstClickX = None
                 firstClickY = None
         elif theClickedTool == 4:
-        #rectangle
+            # rectangle
             if firstClickX is None:
                 firstClickX = self.sender().tileX
                 firstClickY = self.sender().tileY
             else:
                 if(self.currentLayer == COLISIONLAYER):
-                    self.toolRect(self.currentColision, firstClickX, firstClickY)
+                    self.toolRect(self.currentColision,
+                                  firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolRect(self.currentEvent, firstClickX, firstClickY)
                     self.parent.myEventsWidget.updateEventsList()
@@ -175,16 +182,14 @@ class MapWidget(QWidget):
                 firstClickY = None
 
         elif theClickedTool == 5:
-        #charaplacer
+            # charaplacer
             charaX = self.sender().tileX
             charaY = self.sender().tileY
-            self.parent.myCharasPalWidget.addCharaAction((charaX,charaY))
+            self.parent.myCharasPalWidget.addCharaAction((charaX, charaY))
 
         else:
-                firstClickX = None
-                firstClickY = None
-
-
+            firstClickX = None
+            firstClickY = None
 
     def wheelScrolledTileInMap(self, scrollAmount):
         scrollAmount /= abs(scrollAmount)
@@ -198,57 +203,66 @@ class MapWidget(QWidget):
             self.currentColision = changeTypeTo
         elif(self.currentLayer == EVENTSLAYER):
             if abs(self.sender().tileType[EVENTSLAYER] + scrollAmount) < 120:
-                changeTypeTo = abs(self.sender().tileType[EVENTSLAYER] + scrollAmount)
+                changeTypeTo = abs(self.sender().tileType[
+                                   EVENTSLAYER] + scrollAmount)
             else:
-                changeTypeTo = abs(self.sender().tileType[EVENTSLAYER] + scrollAmount -2)
+                changeTypeTo = abs(self.sender().tileType[
+                                   EVENTSLAYER] + scrollAmount - 2)
             self.currentEvent = changeTypeTo
         else:
             if abs(self.sender().tileType[self.currentLayer] + scrollAmount) < len(self.parent.myTileSet.tileset):
-                changeTypeTo = abs(self.sender().tileType[self.currentLayer] + scrollAmount)
+                changeTypeTo = abs(self.sender().tileType[
+                                   self.currentLayer] + scrollAmount)
             else:
-                changeTypeTo = abs(self.sender().tileType[self.currentLayer] + scrollAmount -2)
-            changeTileCurrent( changeTypeTo )
+                changeTypeTo = abs(self.sender().tileType[
+                                   self.currentLayer] + scrollAmount - 2)
+            changeTileCurrent(changeTypeTo)
         self.changeTileType(changeTypeTo)
         if(self.currentLayer == EVENTSLAYER):
             self.parent.myEventsWidget.updateEventsList()
 
-
-
     def changeTileType(self, changeTypeTo):
-        command = TXWdgt.CommandCTTileType(self.parent, self.sender(), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
+        command = TXWdgt.CommandCTTileType(self.parent, self.sender(
+        ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
         self.parent.undoStack.push(command)
-
 
     def toolBucketFill(self, changeTypeTo):
-        listToChange = TileXtra.tileFill(self.sender().tileX, self.sender().tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
+        listToChange = TileXtra.tileFill(self.sender().tileX, self.sender(
+        ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
+        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
+        ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
         self.parent.undoStack.push(command)
-
 
     def toolLine(self, changeTypeTo, firstX, firstY):
-        listToChange = TileXtra.tileLine(firstX, firstY, self.sender().tileX, self.sender().tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
+        listToChange = TileXtra.tileLine(firstX, firstY, self.sender().tileX, self.sender(
+        ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
+        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
+        ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
         self.parent.undoStack.push(command)
 
-
     def toolRect(self, changeTypeTo, firstX, firstY):
-        listToChange = TileXtra.tileRect(firstX, firstY, self.sender().tileX, self.sender().tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
+        listToChange = TileXtra.tileRect(firstX, firstY, self.sender().tileX, self.sender(
+        ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
+        command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
+        ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
         self.parent.undoStack.push(command)
 
 
 class ToolsWidget(QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.scale = 2
 
-        self.toolTileset = TileXtra.TileSet( TileXtra.COREIMGFOLDER + "tools.png" )
+        self.toolTileset = TileXtra.TileSet(
+            TileXtra.COREIMGFOLDER + "tools.png")
 
         self.FBox = FlowLayout(self)
 
         TOOLSTARTINGTILE = 6
-        ToolsName = ["pen", "dropper", "bucket", "line","rectangle","charaplacer"]
+        ToolsName = ["pen", "dropper", "bucket",
+                     "line", "rectangle", "charaplacer"]
         ToolsHelp = ["click to change tile to selected tile",
                      "click to get tile type and set to selected tile",
                      "click to fill area with selected tile",
@@ -260,11 +274,13 @@ class ToolsWidget(QWidget):
 
         for i in range(self.MaxTools):
             self.ToolTile.append(TileXtra.ExtendedQLabel(self))
-            self.ToolTile[-1].initTile( self.toolTileset.tileset, 0, 0, self.toolTileset.boxsize, [0,0,TOOLSTARTINGTILE+i,0,0], self.scale)
+            self.ToolTile[-1].initTile(self.toolTileset.tileset, 0, 0, self.toolTileset.boxsize, [
+                                       0, 0, TOOLSTARTINGTILE + i, 0, 0], self.scale)
             self.ToolTile[-1].setObjectName(ToolsName[i])
-            self.ToolTile[-1].setToolTip(ToolsName[i]+"\nWhen selected, "+ToolsHelp[i])
-            self.connect(self.ToolTile[-1], SIGNAL('clicked()'), self.toolLeftClicked)
-            self.connect(self.ToolTile[-1], SIGNAL('rightClicked()'), self.toolRightClicked)
+            self.ToolTile[-1].setToolTip(ToolsName[i] +
+                                         "\nWhen selected, " + ToolsHelp[i])
+            self.ToolTile[-1].clicked.connect(self.toolLeftClicked)
+            self.ToolTile[-1].rightClicked.connect(self.toolRightClicked)
             self.FBox.addWidget(self.ToolTile[-1])
 
         self.updateToolTiles()
@@ -275,15 +291,15 @@ class ToolsWidget(QWidget):
 
         if str(self.sender().objectName()) == "pen":
             leftClickTool = 0
-        elif str(self.sender().objectName())  == "dropper":
+        elif str(self.sender().objectName()) == "dropper":
             leftClickTool = 1
-        elif str(self.sender().objectName())  == "bucket":
+        elif str(self.sender().objectName()) == "bucket":
             leftClickTool = 2
-        elif str(self.sender().objectName())  == "line":
+        elif str(self.sender().objectName()) == "line":
             leftClickTool = 3
-        elif str(self.sender().objectName())  == "rectangle":
+        elif str(self.sender().objectName()) == "rectangle":
             leftClickTool = 4
-        elif str(self.sender().objectName())  == "charaplacer":
+        elif str(self.sender().objectName()) == "charaplacer":
             leftClickTool = 5
 
         self.updateToolTiles()
@@ -294,15 +310,15 @@ class ToolsWidget(QWidget):
 
         if str(self.sender().objectName()) == "pen":
             rightClickTool = 0
-        elif str(self.sender().objectName())  == "dropper":
+        elif str(self.sender().objectName()) == "dropper":
             rightClickTool = 1
-        elif str(self.sender().objectName())  == "bucket":
+        elif str(self.sender().objectName()) == "bucket":
             rightClickTool = 2
-        elif str(self.sender().objectName())  == "line":
+        elif str(self.sender().objectName()) == "line":
             rightClickTool = 3
-        elif str(self.sender().objectName())  == "rectangle":
+        elif str(self.sender().objectName()) == "rectangle":
             rightClickTool = 4
-        elif str(self.sender().objectName())  == "charaplacer":
+        elif str(self.sender().objectName()) == "charaplacer":
             rightClickTool = 5
 
         self.updateToolTiles()
@@ -319,17 +335,22 @@ class ToolsWidget(QWidget):
 
         for i in range(self.MaxTools):
             if i == leftClickTool:
-                self.ToolTile[i].updateTileImageInMap(LEFTCLICKTILE, LEFTCLICKLAYER, self.toolTileset.tileset , self.scale)
+                self.ToolTile[i].updateTileImageInMap(
+                    LEFTCLICKTILE, LEFTCLICKLAYER, self.toolTileset.tileset, self.scale)
             else:
-                self.ToolTile[i].updateTileImageInMap(0, LEFTCLICKLAYER, self.toolTileset.tileset , self.scale)
+                self.ToolTile[i].updateTileImageInMap(
+                    0, LEFTCLICKLAYER, self.toolTileset.tileset, self.scale)
             if i == rightClickTool:
-                self.ToolTile[i].updateTileImageInMap(RIGHTCLICKTILE, RIGHTCLICKLAYER, self.toolTileset.tileset, self.scale)
+                self.ToolTile[i].updateTileImageInMap(
+                    RIGHTCLICKTILE, RIGHTCLICKLAYER, self.toolTileset.tileset, self.scale)
             else:
-                self.ToolTile[i].updateTileImageInMap(0, RIGHTCLICKLAYER, self.toolTileset.tileset , self.scale)
+                self.ToolTile[i].updateTileImageInMap(
+                    0, RIGHTCLICKLAYER, self.toolTileset.tileset, self.scale)
 
 
 class EventsWidget(QWidget):
-    def __init__(self,pMap, parent=None, **kwargs):
+
+    def __init__(self, pMap, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
         global sSettings
 
@@ -386,10 +407,13 @@ class EventsWidget(QWidget):
 
         self.ActionList.setDragDropMode(QAbstractItemView.InternalMove)
 
-        self.EventsList.itemSelectionChanged.connect(self.enableButtonsBecauseEventsList)
-        self.ActionList.itemSelectionChanged.connect(self.enableButtonsBecauseActionList)
+        self.EventsList.itemSelectionChanged.connect(
+            self.enableButtonsBecauseEventsList)
+        self.ActionList.itemSelectionChanged.connect(
+            self.enableButtonsBecauseActionList)
 #        self.EventsList.itemClicked.connect(self.selectedItemFromEventsList)
-        self.EventsList.itemSelectionChanged.connect(self.selectedItemFromEventsList)
+        self.EventsList.itemSelectionChanged.connect(
+            self.selectedItemFromEventsList)
 
         ActionListModel = self.ActionList.model()
         ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
@@ -406,21 +430,25 @@ class EventsWidget(QWidget):
         self.pMap = pMap
 
     def updateActionFromWidget(self):
-        self.pMap.removeAllActionsOnEvent(self.EventsList.selectedItems()[0].whatsThis())
+        self.pMap.removeAllActionsOnEvent(
+            self.EventsList.selectedItems()[0].whatsThis())
         i = 0
         while i < self.ActionList.count():
             item = self.ActionList.item(i)
             actionToAdd = item.getAction()
-            self.pMap.addActionToEvent(actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
+            self.pMap.addActionToEvent(
+                actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
             i += 1
-        print(self.pMap.getActionListOnEvent(self.EventsList.selectedItems()[0].whatsThis()))
-
+        print(self.pMap.getActionListOnEvent(
+            self.EventsList.selectedItems()[0].whatsThis()))
 
     def editAction(self):
 
         if self.EventsList.selectedItems() is not None:
-            indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
-            actionParamToEdit = self.pMap.getActionOnEvent(indexOfAction,self.EventsList.selectedItems()[0].whatsThis())
+            indexOfAction = self.ActionList.row(
+                self.ActionList.selectedItems()[0])
+            actionParamToEdit = self.pMap.getActionOnEvent(
+                indexOfAction, self.EventsList.selectedItems()[0].whatsThis())
 
             actionToEdit = actionParamToEdit[0]
             paramOfEdit = actionParamToEdit[1]
@@ -429,15 +457,18 @@ class EventsWidget(QWidget):
 
             newDialogFromName = getattr(actionDialog, str(actionToEdit))
 
-            self.myActionsDialog = newDialogFromName(sSettings["gamefolder"],self,paramArrayOfEdit)
+            self.myActionsDialog = newDialogFromName(
+                sSettings["gamefolder"], self, paramArrayOfEdit)
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
 
-                actionToAdd = [actionToEdit,str(returnActDlg)]
+                actionToAdd = [actionToEdit, str(returnActDlg)]
 
                 self.ActionList.takeItem(indexOfAction)
-                self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
-                self.pMap.changeActionOnEvent(indexOfAction,actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
+                self.ActionList.insertItem(
+                    indexOfAction, TileXtra.actionItem(actionToAdd))
+                self.pMap.changeActionOnEvent(
+                    indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
@@ -452,8 +483,8 @@ class EventsWidget(QWidget):
 
             self.pMap.setEventType(str(self.EventsList.selectedItems()[0].whatsThis()),
                                    [int(self.checkboxes[0].isChecked()),
-                                   int(self.checkboxes[1].isChecked())
-                                   ])
+                                    int(self.checkboxes[1].isChecked())
+                                    ])
 
     def updateEventsList(self):
 
@@ -464,7 +495,7 @@ class EventsWidget(QWidget):
 
         for item in allItemsInEventsList:
             for event in updatedListOfEvents[:]:
-                if (item[0].whatsThis() == str(event)) :
+                if (item[0].whatsThis() == str(event)):
                     updatedListOfEvents.remove(event)
                     break
             else:
@@ -484,26 +515,30 @@ class EventsWidget(QWidget):
     def addAction(self):
         global sSettings
 
-        self.myActionsWidget = TXWdgt.ActionsWidget(sSettings,self)
+        self.myActionsWidget = TXWdgt.ActionsWidget(sSettings, self)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
             if self.EventsList.selectedItems() is not None:
                 if not self.ActionList.selectedItems():
                     self.ActionList.addItem(TileXtra.actionItem(actionToAdd))
-                    self.pMap.addActionToEvent(actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
+                    self.pMap.addActionToEvent(
+                        actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
                 else:
-                    indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
-                    self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
-                    self.pMap.insertActionToEvent(indexOfAction,actionToAdd,self.EventsList.selectedItems()[0].whatsThis())
+                    indexOfAction = self.ActionList.row(
+                        self.ActionList.selectedItems()[0])
+                    self.ActionList.insertItem(
+                        indexOfAction, TileXtra.actionItem(actionToAdd))
+                    self.pMap.insertActionToEvent(
+                        indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
 
     def removeAction(self):
 
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
-            self.pMap.removeActionByIndexOnEvent(itemIndex,self.EventsList.selectedItems()[0].whatsThis())
+            self.pMap.removeActionByIndexOnEvent(
+                itemIndex, self.EventsList.selectedItems()[0].whatsThis())
             self.ActionList.takeItem(itemIndex)
-
 
     def selectedItemFromEventsList(self):
         item = self.EventsList.selectedItems()[0]
@@ -516,11 +551,10 @@ class EventsWidget(QWidget):
         state = self.pMap.getEventType(item.whatsThis())
 
         for i in range(len(self.checkboxes)):
-            self.checkboxes[i].setCheckState(2*state[i])
+            self.checkboxes[i].setCheckState(2 * state[i])
             self.checkboxes[i].show()
 
         self.ActionList.show()
-
 
     def enableButtonsBecauseEventsList(self):
         if (self.EventsList.currentItem().isSelected() == True):
@@ -552,11 +586,11 @@ class EventsWidget(QWidget):
             self.editActionButton.setEnabled(False)
             self.deselectActionButton.setEnabled(False)
 
-    #def getActionListFromEvent(self):
-
+    # def getActionListFromEvent(self):
 
 
 class LayerWidget(QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -570,7 +604,7 @@ class LayerWidget(QWidget):
         for i in range(len(TileXtra.LayersName)):
             self.ButtonLayer.append(QPushButton(TileXtra.LayersName[i]))
             self.ButtonLayer[-1].setObjectName(TileXtra.LayersName[i])
-            self.connect(self.ButtonLayer[-1], SIGNAL('clicked()'), self.changeLayerTo)
+            self.ButtonLayer[-1].clicked.connect(self.changeLayerTo)
             self.VBox.addWidget(self.ButtonLayer[-1])
 
         self.setMaximumHeight(180)
@@ -578,24 +612,26 @@ class LayerWidget(QWidget):
         self.show()
 
     def changeLayerTo(self):
-        #print self.sender().objectName()
+        # print self.sender().objectName()
         if str(self.sender().objectName()) == TileXtra.LayersName[0]:
             layerNumber = 0
-        elif str(self.sender().objectName())  == TileXtra.LayersName[1]:
+        elif str(self.sender().objectName()) == TileXtra.LayersName[1]:
             layerNumber = 1
-        elif str(self.sender().objectName())  == TileXtra.LayersName[2]:
+        elif str(self.sender().objectName()) == TileXtra.LayersName[2]:
             layerNumber = 2
-        elif str(self.sender().objectName())  == TileXtra.LayersName[3]:
+        elif str(self.sender().objectName()) == TileXtra.LayersName[3]:
             layerNumber = COLISIONLAYER
-        elif str(self.sender().objectName())  == TileXtra.LayersName[4]:
+        elif str(self.sender().objectName()) == TileXtra.LayersName[4]:
             layerNumber = EVENTSLAYER
 
-        self.LabelLayer.setText("Current: %s" % str(self.sender().objectName()))
+        self.LabelLayer.setText("Current: %s" %
+                                str(self.sender().objectName()))
         changeLayerCurrent(layerNumber)
 
 
 class CharasPalWidget(QWidget):
-    def __init__(self, mapWdgt,pMap,parent=None, charaInstance=None, **kwargs):
+
+    def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
         global sSettings
 
@@ -606,7 +642,7 @@ class CharasPalWidget(QWidget):
         self.vbox = QVBoxLayout(self)
 
         self.charaslist = []
-        self.myCharaSelector = Charas.CharaSelector(self,sSettings)
+        self.myCharaSelector = Charas.CharaSelector(self, sSettings)
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
 
@@ -622,28 +658,28 @@ class CharasPalWidget(QWidget):
 
         charalist = self.pMap.getCharaList()
         for char in charalist:
-            self.addCharaAction((char[1],char[2]),char[0],False)
+            self.addCharaAction((char[1], char[2]), char[0], False)
 
-    def addCharaAction(self, position = (0,0) , chara = None , onmap=True):
+    def addCharaAction(self, position=(0, 0), chara=None, onmap=True):
         global sSettings
-        if ( chara == None):
+        if (chara == None):
             chara = self.myCharaSelector.getSelected()
 
         if (chara != None):
             if(self.positionEmpty(position)):
-                item = Charas.MiniCharaTile(None,sSettings,chara)
+                item = Charas.MiniCharaTile(None, sSettings, chara)
                 self.connect(item, SIGNAL('rightClicked()'), self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])
                 if(onmap):
-                    self.pMap.insertChara(position[0],position[1],chara)
-                self.charaslist.append((chara,position,item))
+                    self.pMap.insertChara(position[0], position[1], chara)
+                self.charaslist.append((chara, position, item))
 
     def autodelete(self):
         item = self.sender()
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
                 charaplaced[2].stop()
-                self.pMap.removeChara(charaplaced[1][0],charaplaced[1][1])
+                self.pMap.removeChara(charaplaced[1][0], charaplaced[1][1])
                 self.mapWdgt.Grid.removeWidget(charaplaced[2])
                 charaplaced[2].deleteLater()
                 break
@@ -653,12 +689,12 @@ class CharasPalWidget(QWidget):
     def getCharasList(self):
         charaslist = []
         for charaplaced in self.charaslist:
-            charaslist.append(charaplaced[0],charaplaced[1][0],charaplaced[1][1])
+            charaslist.append(charaplaced[0], charaplaced[
+                              1][0], charaplaced[1][1])
 
-        return  charaslist
+        return charaslist
 
-
-    def deletePosition(self, position = (0,0)):
+    def deletePosition(self, position=(0, 0)):
         for charaplaced in self.charaslist:
             if(charaplaced[1] == position):
                 charaplaced[2].stop()
@@ -668,10 +704,7 @@ class CharasPalWidget(QWidget):
 
         self.charaslist.remove(charaplaced)
 
-
-
-
-    def positionEmpty(self,position):
+    def positionEmpty(self, position):
         for charaplaced in self.charaslist:
             if(charaplaced[1] == position):
                 return False
@@ -684,6 +717,7 @@ class CharasPalWidget(QWidget):
 
 
 class PaletteWidget(QWidget):
+
     def __init__(self, parent=None, tileSetInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -709,12 +743,14 @@ class PaletteWidget(QWidget):
         self.drawPalette(tileSetInstance)
 
         self.CurrentTT = TileXtra.ExtendedQLabel(self)
-        self.CurrentTT.initTile(tileSetInstance.tileset, len(tileSetInstance.tileset)-1  , 0 , tileSetInstance.boxsize, [5,0,0,0,0], 4)
+        self.CurrentTT.initTile(tileSetInstance.tileset, len(
+            tileSetInstance.tileset) - 1, 0, tileSetInstance.boxsize, [5, 0, 0, 0, 0], 4)
 
         self.VBox.addWidget(scrollArea)
         self.VBox.addWidget(self.CurrentTT)
 
-        self.setMinimumSize (tileSetInstance.boxsize*6+32,tileSetInstance.boxsize+32)
+        self.setMinimumSize(tileSetInstance.boxsize * 6 +
+                            32, tileSetInstance.boxsize + 32)
 
     def drawPalette(self, tileSetInstance):
         self.tileSetInstance = tileSetInstance
@@ -725,49 +761,56 @@ class PaletteWidget(QWidget):
                 wdgt = None
             self.PaletteTileList = []
 
-        for i in range(len(tileSetInstance.tileset) ):
+        for i in range(len(tileSetInstance.tileset)):
             self.PaletteTileList.append(TileXtra.ExtendedQLabel(self))
-            self.Grid.addWidget(self.PaletteTileList[-1], i/6, i%6)
-            self.PaletteTileList[-1].initTile( tileSetInstance.tileset, i , 0 , tileSetInstance.boxsize, [i,0,0,0,0], 1)
-            self.connect(self.PaletteTileList[-1], SIGNAL('clicked()'), self.setTileCurrent)
+            self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
+            self.PaletteTileList[-1].initTile(
+                tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], 1)
+            self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
 
-        self.PaletteItems.resize(6*tileSetInstance.boxsize,TileXtra.divideRoundUp(len(tileSetInstance.tileset),6)*tileSetInstance.boxsize)
+        self.PaletteItems.resize(6 * tileSetInstance.boxsize, TileXtra.divideRoundUp(
+            len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
     def setTileCurrent(self):
-        changeTileCurrent( self.sender().tileType[0])
+        changeTileCurrent(self.sender().tileType[0])
 
     def setImageCurrent(self, imageIndex):
-        self.CurrentTT.initTile( self.tileSetInstance.tileset, 0 , 0 ,  self.tileSetInstance.boxsize, [imageIndex,0,0,0,0], 4)
+        self.CurrentTT.initTile(self.tileSetInstance.tileset, 0, 0,
+                                self.tileSetInstance.boxsize, [imageIndex, 0, 0, 0, 0], 4)
         self.CurrentTT.show()
 
+
 class ExitFSWidget(QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.parent = parent
         self.VBox = QVBoxLayout(self)
         self.ButtonExitFS = QPushButton("exit\nfullscreen")
-        self.connect(self.ButtonExitFS, SIGNAL('clicked()'), self.ExitFS)
+        self.ButtonExitFS.clicked.connect(self.ExitFS)
         self.VBox.addWidget(self.ButtonExitFS)
         self.setMaximumHeight(60)
-        #self.setMinimumHeight(60)
+        # self.setMinimumHeight(60)
         self.setMaximumWidth(90)
-        #self.setMinimumWidth(84)
+        # self.setMinimumWidth(84)
 
     def ExitFS(self):
         self.parent.fullscreenViewAction.toggle()
 
+
 class MainWindow(QMainWindow):
+
     def __init__(self, parent=None, **kwargs):
         global sSettings
         super().__init__(parent, **kwargs)
 
-        self.resize(1024,768)
+        self.resize(1024, 768)
 
         self.undoStack = QUndoStack(self)
 
         self.levelName = "newFile"
-        sSettings["workingFile"]  = self.levelName + ".json"
+        sSettings["workingFile"] = self.levelName + ".json"
 
         self.myMap = TileXtra.MapFormat()
 
@@ -775,8 +818,10 @@ class MainWindow(QMainWindow):
 
         self.scrollArea = QtWidgets.QScrollArea(self)
 
-        # get tileset file and split it in images that can be pointed through array
-        self.myTileSet = TileXtra.TileSet( self.myMap.tileImage,self.myMap.palette)
+        # get tileset file and split it in images that can be pointed through
+        # array
+        self.myTileSet = TileXtra.TileSet(
+            self.myMap.tileImage, self.myMap.palette)
         self.myMapWidget = MapWidget(self)
 
         self.scrollArea.setWidget(self.myMapWidget)
@@ -788,18 +833,18 @@ class MainWindow(QMainWindow):
     def selectStartPosition(self):
         result = TXWdgt.selectStartingPosition(self, sSettings)
 
-        doSave=False
-        if(result[1]!="this"):
-            doSave=True
+        doSave = False
+        if(result[1] != "this"):
+            doSave = True
         else:
             if result[0]["World"]["initLevel"] not in result[0]["LevelsList"]:
                 msg_msgbox = "The current level is not listed in LevelsList.\nMaybe you didn't save it or added to the list yet.\nProceed anyway?"
                 reply = QtWidgets.QMessageBox.question(self, 'Message',
-                            msg_msgbox, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                                       msg_msgbox, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
                 if reply == QtWidgets.QMessageBox.Yes:
-                    doSave=True
+                    doSave = True
             else:
-                doSave=True
+                doSave = True
 
         if(doSave):
             TXWdgt.saveInitFile(sSettings["gamefolder"], result[0])
@@ -807,7 +852,7 @@ class MainWindow(QMainWindow):
     def FancyWindow(self):
         global sSettings
 
-        self.menubar =  QtWidgets.QMenuBar(self)
+        self.menubar = QtWidgets.QMenuBar(self)
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
         projectMenu = self.menubar.addMenu('&Project')
@@ -815,7 +860,8 @@ class MainWindow(QMainWindow):
         fileMenu.addAction('&Open...', self.openFile, "Ctrl+O")
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
         fileMenu.addAction('&Save As...', self.saveFileAs, "Shift+Ctrl+S")
-        fileMenu.addAction('&Export to JS...', self.exportToJsAs, "Shift+Ctrl+E")
+        fileMenu.addAction('&Export to JS...',
+                           self.exportToJsAs, "Shift+Ctrl+E")
         fileMenu.addAction('&Exit', self.close, "Ctrl+Q")
 
         undoAction = self.undoStack.createUndoAction(self, self.tr("&Undo"))
@@ -826,7 +872,8 @@ class MainWindow(QMainWindow):
         editMenu.addAction(redoAction)
 
         projectMenu.addAction('New &Project', self.newProject, '')
-        projectMenu.addAction('Set starting &position...', self.selectStartPosition, '')
+        projectMenu.addAction('Set starting &position...',
+                              self.selectStartPosition, '')
         projectMenu.addAction('Edit &charasets...', self.editCharasets, '')
         projectMenu.addAction('Edit &charas...', self.editCharas, '')
         projectMenu.addAction('Run Project', self.runServer, 'f5')
@@ -834,14 +881,15 @@ class MainWindow(QMainWindow):
         self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = PaletteWidget(self, self.myTileSet)
-        self.paletteDockWdgt=QDockWidget("Palette", self)
+        self.paletteDockWdgt = QDockWidget("Palette", self)
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.paletteDockWdgt)
 
         self.viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
 
-        self.myCharasPalWidget = CharasPalWidget(self.myMapWidget, self.myMap, self)
-        self.charasDockWdgt=QDockWidget("Charas", self)
+        self.myCharasPalWidget = CharasPalWidget(
+            self.myMapWidget, self.myMap, self)
+        self.charasDockWdgt = QDockWidget("Charas", self)
         self.charasDockWdgt.setWidget(self.myCharasPalWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
         self.tabifyDockWidget(self.charasDockWdgt, self.paletteDockWdgt)
@@ -849,40 +897,42 @@ class MainWindow(QMainWindow):
         self.viewMenu.addAction(self.charasDockWdgt.toggleViewAction())
 
         self.myLayerWidget = LayerWidget(self)
-        self.layerDockWdgt=QDockWidget("Layers", self)
+        self.layerDockWdgt = QDockWidget("Layers", self)
         self.layerDockWdgt.setWidget(self.myLayerWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.layerDockWdgt)
 
         self.viewMenu.addAction(self.layerDockWdgt.toggleViewAction())
 
         self.myToolsWidget = ToolsWidget(self)
-        self.toolsDockWdgt=QDockWidget("Tool", self)
+        self.toolsDockWdgt = QDockWidget("Tool", self)
         self.toolsDockWdgt.setWidget(self.myToolsWidget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.toolsDockWdgt)
 
         self.viewMenu.addAction(self.toolsDockWdgt.toggleViewAction())
 
         self.myEventsWidget = EventsWidget(self.myMap, self)
-        self.eventsDockWdgt=QDockWidget("Events", self)
+        self.eventsDockWdgt = QDockWidget("Events", self)
         self.eventsDockWdgt.setWidget(self.myEventsWidget)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.eventsDockWdgt)
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
-        self.gridViewAction = QtWidgets.QAction('grid', self.viewMenu, checkable=True)
-        self.viewMenu.addAction(self.gridViewAction )
-        self.connect(self.gridViewAction , SIGNAL('changed()'), self.changeGridMargin)
+        self.gridViewAction = QtWidgets.QAction(
+            'grid', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.gridViewAction)
+        self.gridViewAction.changed.connect(self.changeGridMargin)
 
         self.myExitFSWidget = ExitFSWidget(self)
-        self.exitFSDockWdgt=QDockWidget("", self)
+        self.exitFSDockWdgt = QDockWidget("", self)
         self.exitFSDockWdgt.setWidget(self.myExitFSWidget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.exitFSDockWdgt)
         self.exitFSDockWdgt.hide()
 
-        self.fullscreenViewAction = QtWidgets.QAction('Fullscreen', self.viewMenu, checkable=True)
-        self.fullscreenViewAction.setShortcut ('f11')
-        self.viewMenu.addAction(self.fullscreenViewAction )
-        self.connect(self.fullscreenViewAction , SIGNAL('changed()'), self.changeToFullscreen)
+        self.fullscreenViewAction = QtWidgets.QAction(
+            'Fullscreen', self.viewMenu, checkable=True)
+        self.fullscreenViewAction.setShortcut('f11')
+        self.viewMenu.addAction(self.fullscreenViewAction)
+        self.fullscreenViewAction.changed.connect(self.changeToFullscreen)
 
         helpMenu = self.menubar.addMenu('&Help')
         helpMenu.addAction('About...', self.helpAbout)
@@ -915,33 +965,36 @@ class MainWindow(QMainWindow):
         if self.gridViewAction.isChecked() is True:
             self.myMapWidget.Grid.setHorizontalSpacing(1)
             self.myMapWidget.Grid.setVerticalSpacing(1)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth*((32)*self.myMapWidget.myScale+1),self.myMapWidget.TileHeight*((32)*self.myMapWidget.myScale+1))
+            self.myMapWidget.resize(self.myMapWidget.TileWidth * ((32) * self.myMapWidget.myScale + 1),
+                                    self.myMapWidget.TileHeight * ((32) * self.myMapWidget.myScale + 1))
         else:
             self.myMapWidget.Grid.setHorizontalSpacing(0)
             self.myMapWidget.Grid.setVerticalSpacing(0)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth*32*self.myMapWidget.myScale,self.myMapWidget.TileHeight*32*self.myMapWidget.myScale)
+            self.myMapWidget.resize(self.myMapWidget.TileWidth * 32 * self.myMapWidget.myScale,
+                                    self.myMapWidget.TileHeight * 32 * self.myMapWidget.myScale)
         self.myMapWidget.show()
 
     def reloadWebview(self):
-        url = "file:///"+os.path.join(sSettings["gamefolder"],"index.html?forceMobile=true")
+        url = "file:///" + \
+            os.path.join(sSettings["gamefolder"],
+                         "index.html?forceMobile=true")
         url = url.replace("\\", '/')
         self.myWebView.load(QUrl(url))
 
     def showInternalNavigator(self):
-        import PyQt4.QtWebKit as QtWebKit
+        import PyQt5.QtWebKitWidgets as QtWebKitWidgets
         global sSettings
-        self.myWebView = QtWebKit.QWebView();
+        self.myWebView = QtWebKitWidgets.QWebView()
         self.myWebView.setMinimumWidth(200)
         self.reloadWebview()
-        self.myDockWebviewWdgt=QDockWidget("Webview", self)
+        self.myDockWebviewWdgt = QDockWidget("Webview", self)
         self.myDockWebviewWdgt.setWidget(self.myWebView)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.myDockWebviewWdgt)
         actionDockWebView = self.myDockWebviewWdgt.toggleViewAction()
-        actionDockWebView.setShortcut ('f6')
+        actionDockWebView.setShortcut('f6')
         self.viewMenu.addAction(actionDockWebView)
 
         self.myDockWebviewWdgt.hide()
-
 
     def runServer(self):
         global sSettings
@@ -953,34 +1006,40 @@ class MainWindow(QMainWindow):
             returnedNFD = myNewProjectDialog.getValue()
             self.__newProject(returnedNFD)
 
-    def __newProject(self,returnedNFD):
+    def __newProject(self, returnedNFD):
         import shutil
         global sSettings
-        projectPath = os.path.join(str(returnedNFD["baseFolder"]), str(returnedNFD["name"]))
+        projectPath = os.path.join(
+            str(returnedNFD["baseFolder"]), str(returnedNFD["name"]))
         sSettings["basefolder"] = str(returnedNFD["baseFolder"])
         sSettings["gamefolder"] = projectPath
         sSettings["gamename"] = str(returnedNFD["name"])
         os.mkdir(projectPath)
-        os.mkdir(os.path.join(projectPath,fifl.DESCRIPTORS))
-        os.mkdir(os.path.join(projectPath,fifl.LEVELS))
-        os.mkdir(os.path.join(projectPath,fifl.CHARASETS))
-        os.mkdir(os.path.join(projectPath,fifl.AUDIO))
-        os.mkdir(os.path.join(projectPath,fifl.FONT))
-        os.mkdir(os.path.join(projectPath,fifl.IMG))
-        engineFiles = ["bootstrap.js","engine.js","game.css","hid.js","index.html","printer.js","screen.js","icon.png"]
-        engineFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../Game/")
+        os.mkdir(os.path.join(projectPath, fifl.DESCRIPTORS))
+        os.mkdir(os.path.join(projectPath, fifl.LEVELS))
+        os.mkdir(os.path.join(projectPath, fifl.CHARASETS))
+        os.mkdir(os.path.join(projectPath, fifl.AUDIO))
+        os.mkdir(os.path.join(projectPath, fifl.FONT))
+        os.mkdir(os.path.join(projectPath, fifl.IMG))
+        engineFiles = ["bootstrap.js", "engine.js", "game.css",
+                       "hid.js", "index.html", "printer.js", "screen.js", "icon.png"]
+        engineFolder = os.path.join(os.path.dirname(
+            os.path.abspath(__file__)), "../../Game/")
         for file in engineFiles:
-            shutil.copyfile(os.path.join(engineFolder,file),os.path.join(projectPath,file))
-        #copy the font
-        shutil.copyfile(os.path.join(engineFolder,fifl.FONT,"INFO56_0.ttf"),os.path.join(projectPath,fifl.FONT,"INFO56_0.ttf"))
+            shutil.copyfile(os.path.join(engineFolder, file),
+                            os.path.join(projectPath, file))
+        # copy the font
+        shutil.copyfile(os.path.join(engineFolder, fifl.FONT, "INFO56_0.ttf"), os.path.join(
+            projectPath, fifl.FONT, "INFO56_0.ttf"))
 
-        #copy audio
-        src = os.path.join(engineFolder,fifl.AUDIO)
+        # copy audio
+        src = os.path.join(engineFolder, fifl.AUDIO)
         src_files = os.listdir(src)
         for file_name in src_files:
             full_file_name = os.path.join(src, file_name)
             if (os.path.isfile(full_file_name)):
-                shutil.copy(full_file_name, os.path.join(projectPath,fifl.AUDIO))
+                shutil.copy(full_file_name, os.path.join(
+                    projectPath, fifl.AUDIO))
 
         self.undoStack.clear()
 
@@ -990,16 +1049,19 @@ class MainWindow(QMainWindow):
             returnedNFD = myNewFileDialog.getValue()
             self.__newFile(returnedNFD)
 
-    def __newFile(self,returnedNFD):
+    def __newFile(self, returnedNFD):
         global sSettings
         sSettings["gamefolder"] = str(returnedNFD["gameFolder"])
         self.levelName = str(returnedNFD["name"])
-        sSettings["workingFile"]  = os.path.join(sSettings["gamefolder"], self.levelName + ".json")
-        self.setWindowTitle(sSettings["workingFile"] )
-        self.myMap.new(self.levelName, returnedNFD["width"], returnedNFD["height"])
-        self.myTileSet = TileXtra.TileSet( os.path.join(sSettings["gamefolder"],self.myMap.tileImage),self.myMap.palette)
+        sSettings["workingFile"] = os.path.join(
+            sSettings["gamefolder"], self.levelName + ".json")
+        self.setWindowTitle(sSettings["workingFile"])
+        self.myMap.new(self.levelName, returnedNFD[
+                       "width"], returnedNFD["height"])
+        self.myTileSet = TileXtra.TileSet(os.path.join(
+            sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
-        m.gridViewAction.setChecked(False) #### gambiarra
+        m.gridViewAction.setChecked(False)  # gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
@@ -1014,7 +1076,8 @@ class MainWindow(QMainWindow):
 
     def saveFileAs(self):
         global sSettings
-        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.json)')
+        filename = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.json)')
         if filename != "":
             sSettings["workingFile"] = filename
             self.myMap.save(sSettings["workingFile"])
@@ -1022,24 +1085,28 @@ class MainWindow(QMainWindow):
 
     def exportToJsAs(self):
         global sSettings
-        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)')
+        filename = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)')
         if filename != "":
-            sSettings["workingFile"]  = filename
-            self.myMap.exportJS(sSettings["workingFile"] )
+            sSettings["workingFile"] = filename
+            self.myMap.exportJS(sSettings["workingFile"])
 
     def openFile(self):
         global sSettings
         if(sSettings["gamefolder"] == ""):
             sSettings["gamefolder"] = os.path.expanduser("~")
-        filename = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', sSettings["gamefolder"])
+        filename = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open File', sSettings["gamefolder"])
         if os.path.isfile(filename):
-            sSettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
+            sSettings["gamefolder"] = os.path.abspath(
+                os.path.join(os.path.dirname(str(filename)), "../../"))
             sSettings["workingFile"] = filename
-            self.setWindowTitle(sSettings["workingFile"] )
+            self.setWindowTitle(sSettings["workingFile"])
             self.myMap.load(sSettings["workingFile"])
-            self.myTileSet = TileXtra.TileSet( os.path.join(sSettings["gamefolder"],self.myMap.tileImage),self.myMap.palette)
+            self.myTileSet = TileXtra.TileSet(os.path.join(
+                sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
-            m.gridViewAction.setChecked(False) #### gambiarra
+            m.gridViewAction.setChecked(False)  # gambiarra
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
@@ -1053,7 +1120,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         quit_msg = "Do you want to save changes?"
         reply = QtWidgets.QMessageBox.question(self, 'Message',
-                     quit_msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
+                                               quit_msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
 
         if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
@@ -1064,16 +1131,15 @@ class MainWindow(QMainWindow):
             event.ignore()
 
 
-
-if __name__=="__main__":
+if __name__ == "__main__":
     from sys import argv, exit
 
-    a=QApplication(argv)
+    a = QApplication(argv)
     splash_pix = QPixmap('icon.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
-    m=MainWindow()
+    m = MainWindow()
     a.processEvents()
     m.show()
     splash.finish(m)

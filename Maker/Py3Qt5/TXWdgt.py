@@ -322,6 +322,8 @@ class MiniPaletteWidget(QWidget):
     def __init__(self, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
+        selectedTilePalette = pyqtSignal()
+
         self.VBox = QVBoxLayout(self)
 
         self.tileSetInstance = pMyTileset
@@ -366,13 +368,13 @@ class MiniPaletteWidget(QWidget):
             self.PaletteTileList.append(TileXtra.ExtendedQLabel(self))
             self.Grid.addWidget(self.PaletteTileList[-1], i/6, i%6)
             self.PaletteTileList[-1].initTile( tileSetInstance.tileset, i , 0 , tileSetInstance.boxsize, [i,0,0,0,0], self.scale)
-            self.connect(self.PaletteTileList[-1], SIGNAL('clicked()'), self.setTileCurrent)
+            self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
 
         self.PaletteItems.resize(6*tileSetInstance.boxsize,TileXtra.divideRoundUp(len(tileSetInstance.tileset),6)*tileSetInstance.boxsize)
 
     def setTileCurrent(self):
         self.setImageCurrent(self.sender().tileType[0])
-        self.emit(SIGNAL('selectedTilePalette()'))
+        self.selectedTilePalette.emit()
 
     def setImageCurrent(self, imageIndex):
         self.currentTile = imageIndex

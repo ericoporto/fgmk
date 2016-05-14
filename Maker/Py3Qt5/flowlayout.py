@@ -10,7 +10,7 @@ class FlowLayout(QtWidgets.QLayout):
         super().__init__(parent)
 
         if parent is not None:
-            self.setMargin(margin)
+            self.setContentsMargins(margin, margin, margin, margin)
 
         self.setSpacing(spacing)
 
@@ -88,4 +88,3 @@ class FlowLayout(QtWidgets.QLayout):
             lineHeight = max(lineHeight, item.sizeHint().height())
 
         return y + lineHeight - rect.y()
-
