@@ -17,8 +17,16 @@ Maker
 
 ![Screenshot](Maker/screenshot.png)
 
-The editor is right now transitioning from Python2 and Qt4 to Python 3 and Qt5,
-you can find this version [here](Maker/Py2Qt4/README.md).
+The editor is right now transitioning from Python2 and Qt4 to Python 3 and Qt5.
+
+* [Python 2.7 and PyQt4](Maker/Py2Qt4/README.md)
+    * more tested, but being deprecated
+
+* [Python 3 and PyQt4](Maker/Py3Qt4/README.md)
+    * a little tested, but only for transition
+
+* [Python 3 and PyQt5](Maker/Py3Qt5/README.md)
+    * not tested at all now, but this is the supported
 
 Right now this code is using PyQt on the maker side, so assume everything here
 is GPLv2.
