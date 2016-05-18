@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # display a tiled image from tileset with PyQt
 import os
-import server
+from extras import server
 import sys
 import json
 import TileXtra
@@ -18,6 +18,10 @@ import fifl
 import TileCharaset
 import Charas
 
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
 sSettings = {"gamefolder": ""}
 
 COLISIONLAYER = 3
@@ -31,12 +35,12 @@ firstClickY = None
 
 
 def changeTileCurrent(changeTo):
-    m.myMapWidget.currentTile = changeTo
-    m.myPaletteWidget.setImageCurrent(changeTo)
+    __mwind__.myMapWidget.currentTile = changeTo
+    __mwind__.myPaletteWidget.setImageCurrent(changeTo)
 
 
 def changeLayerCurrent(changeTo):
-    m.myMapWidget.currentLayer = changeTo
+    __mwind__.myMapWidget.currentLayer = changeTo
 
 
 class MapWidget(QWidget):
@@ -840,7 +844,7 @@ class MainWindow(QMainWindow):
             if result[0]["World"]["initLevel"] not in result[0]["LevelsList"]:
                 msg_msgbox = "The current level is not listed in LevelsList.\nMaybe you didn't save it or added to the list yet.\nProceed anyway?"
                 reply = QtWidgets.QMessageBox.question(self, 'Message',
-                                                       msg_msgbox, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                                       msg_msgbox, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if reply == QtWidgets.QMessageBox.Yes:
                     doSave = True
             else:
@@ -1061,7 +1065,7 @@ class MainWindow(QMainWindow):
         self.myTileSet = TileXtra.TileSet(os.path.join(
             sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
-        m.gridViewAction.setChecked(False)  # gambiarra
+        __mwind__.gridViewAction.setChecked(False)  # gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
@@ -1106,7 +1110,7 @@ class MainWindow(QMainWindow):
             self.myTileSet = TileXtra.TileSet(os.path.join(
                 sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
-            m.gridViewAction.setChecked(False)  # gambiarra
+            __mwind__.gridViewAction.setChecked(False)  # gambiarra
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
@@ -1120,7 +1124,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         quit_msg = "Do you want to save changes?"
         reply = QtWidgets.QMessageBox.question(self, 'Message',
-                                               quit_msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
+                                               quit_msg, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
 
         if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
@@ -1131,17 +1135,18 @@ class MainWindow(QMainWindow):
             event.ignore()
 
 
-if __name__ == "__main__":
+def Editor():
     from sys import argv, exit
+    global __mwind__
 
     a = QApplication(argv)
     splash_pix = QPixmap('icon.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
-    m = MainWindow()
+    __mwind__ = MainWindow()
     a.processEvents()
-    m.show()
-    splash.finish(m)
-    m.raise_()
+    __mwind__.show()
+    splash.finish(__mwind__)
+    __mwind__.raise_()
     exit(a.exec_())

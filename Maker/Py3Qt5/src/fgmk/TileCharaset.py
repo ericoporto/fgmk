@@ -1,5 +1,4 @@
 import os
-import server
 import sys
 import json
 import TileXtra

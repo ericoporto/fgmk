@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+
+if os.path.isdir(os.path.join(".","src")) and os.path.isfile(
+        os.path.join(".","setup.py")):
+    sys.path.append(os.path.realpath("src"))
+    sys.path.append(os.path.realpath("src/fgmk"))
+    sys.path.append(os.path.realpath("src/extras"))
+
+    from fgmk.Editor import Editor
+
+def main():
+    Editor()
+
+if __name__ == "__main__":
+    main()

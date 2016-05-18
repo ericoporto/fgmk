@@ -1,5 +1,4 @@
 import os
-import server
 import sys
 import json
 import TileXtra
@@ -722,7 +721,7 @@ if __name__=="__main__":
     #m=CharaEditor()
     #m=MoveWidget()
     #m=CharaSelector()
-    m=MiniCharaTile(None,{"gamefolder":"../Game"},"WeirdGuy")
+    m=MiniCharaTile(None,{"gamefolder":"basegame"},"WeirdGuy")
     a.processEvents()
     m.show()
     m.raise_()

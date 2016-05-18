@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 from PyQt5.QtGui import *
@@ -9,7 +10,11 @@ from PIL.ImageQt import ImageQt
 import numpy as np
 import tMat
 
-COREIMGFOLDER = "img/core/"
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
+COREIMGFOLDER = "coreimg/"
 LayersName = ["layer1", "layer2", "layer4", "colision", "events"]
 NonViewable = ["colision", "events"]
 LayersNameViewable = [
