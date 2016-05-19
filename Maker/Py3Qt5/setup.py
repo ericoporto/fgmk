@@ -48,6 +48,11 @@ setup(
     # What does your project relate to?
     keywords='game development',
 
+    # Right now, Ubuntu will fail with pyqt5 here.
+    # For Ubuntu, remove pyqt5 from here and use
+    # sudo apt install python3-pyqt5
+    # sudo apt install python3-pyqt5.qtwebkit
+
     install_requires=['numpy','pillow','pyqt5'],
 
     packages = ["fgmk"],
