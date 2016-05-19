@@ -48,11 +48,15 @@ setup(
     # What does your project relate to?
     keywords='game development',
 
-    install_requires=['numpy','pillow'],
+    install_requires=['numpy','pillow','pyqt5'],
 
     packages = ["fgmk"],
     package_dir = {"": "src"},
     scripts = ["fgmk"],
+
+    package_data = {
+        'fgmk': ['img/*.png','coreimg/*.png','actions/*.json','*.json']
+    },
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
