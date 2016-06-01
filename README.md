@@ -1,10 +1,10 @@
-![Icon](../iconTiny.png) fangamk
+![Icon](iconTiny.png) fangamk
 =============================
 
 Maker
 -----
 
-![Screenshot](../screenshot.png)
+![Screenshot](screenshot.png)
 
 This is the editor. It uses pyqt to render a rather nice view.
 
