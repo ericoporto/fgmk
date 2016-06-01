@@ -5,6 +5,7 @@ from extras import server
 import sys
 import json
 import TileXtra
+from time import time, sleep
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5.QtGui import *
