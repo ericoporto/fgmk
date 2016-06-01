@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # display a tiled image from tileset with PyQt
 import os
 from extras import server
