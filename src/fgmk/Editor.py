@@ -1140,10 +1140,14 @@ def Editor():
     global __mwind__
 
     a = QApplication(argv)
+    start = time() 
     splash_pix = QPixmap('icon.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
+    while time() - start < 1:
+        sleep(0.001)
+        a.processEvents()
     __mwind__ = MainWindow()
     a.processEvents()
     __mwind__.show()

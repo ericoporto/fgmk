@@ -1,38 +1,27 @@
-![Icon](iconTiny.png) fangamk
+![Icon](../iconTiny.png) fangamk
 =============================
-
-This is a way describe a type of game in json files, a javascipt engine to play
-it and a pyqt application to make it.
-
-Engine demo
-----------
-
-Use WASD to move and IJ to interact in this demo: https://ericoporto.github.io/builds/build00001/index.html
-
-If you are in a computer, this demo is compatible with a Xbox360 gamepad, just
-plug it in the usb port of your computer and you are good to go.
 
 Maker
 -----
 
-![Screenshot](Maker/screenshot.png)
+![Screenshot](../screenshot.png)
 
-The editor is right now transitioning from Python2 and Qt4 to Python 3 and Qt5.
+This is the editor. It uses pyqt to render a rather nice view.
 
-* [Python 2.7 and PyQt4](Maker/Py2Qt4/README.md)
-    * more tested, but being deprecated
+Currently the embedded tester only works in Linux, but you can test in your
+default browser after saving by pressing f5.
 
-* [Python 3 and PyQt4](Maker/Py3Qt4/README.md)
-    * a little tested, but only for transition
 
-* [Python 3 and PyQt5](Maker/Py3Qt5/README.md)
-    * not tested at all now, but this is the supported
+Running in Linux:
+-----------------
 
-Right now this code is using PyQt on the maker side, so assume everything here
-is GPLv2.
+Right now I am porting from Python 2.7 to Python 3 and from Qt4 to Qt5.
 
-Descriptors
------------
+Needs `pillow`, `numpy` and `PyQt5` - you can `apt install python3-pyqt5` and
+similar (in Ubuntu) or use pip.
 
-The engine plays files that are basically json files and png images organized in
-a certain folder structure. I am explaining this in the text right [here](Descriptor/README.md).
+In ubuntu 14.04 I had to install also `sudo apt install python3-pyqt5.qtwebkit`.
+
+Then cd to the correspondent folder and use
+
+    python3 Editor.py
