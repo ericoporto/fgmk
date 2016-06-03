@@ -942,8 +942,6 @@ class MainWindow(QMainWindow):
         helpMenu = self.menubar.addMenu('&Help')
         helpMenu.addAction('About...', self.helpAbout)
 
-        self.showInternalNavigator()
-
         self.setMenuBar(self.menubar)
 
     def editCharasets(self):
@@ -979,27 +977,6 @@ class MainWindow(QMainWindow):
                                     self.myMapWidget.TileHeight * 32 * self.myMapWidget.myScale)
         self.myMapWidget.show()
 
-    def reloadWebview(self):
-        url = "file:///" + \
-            os.path.join(sSettings["gamefolder"],
-                         "index.html?forceMobile=true")
-        url = url.replace("\\", '/')
-        self.myWebView.load(QUrl(url))
-
-    def showInternalNavigator(self):
-        import PyQt5.QtWebKitWidgets as QtWebKitWidgets
-        global sSettings
-        self.myWebView = QtWebKitWidgets.QWebView()
-        self.myWebView.setMinimumWidth(200)
-        self.reloadWebview()
-        self.myDockWebviewWdgt = QDockWidget("Webview", self)
-        self.myDockWebviewWdgt.setWidget(self.myWebView)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.myDockWebviewWdgt)
-        actionDockWebView = self.myDockWebviewWdgt.toggleViewAction()
-        actionDockWebView.setShortcut('f6')
-        self.viewMenu.addAction(actionDockWebView)
-
-        self.myDockWebviewWdgt.hide()
 
     def runServer(self):
         global sSettings
@@ -1077,7 +1054,6 @@ class MainWindow(QMainWindow):
         filename = sSettings["workingFile"]
         if filename != "":
             self.myMap.save(filename)
-            self.reloadWebview()
 
     def saveFileAs(self):
         global sSettings
@@ -1086,7 +1062,6 @@ class MainWindow(QMainWindow):
         if filename != "":
             sSettings["workingFile"] = filename
             self.myMap.save(sSettings["workingFile"])
-            self.reloadWebview()
 
     def exportToJsAs(self):
         global sSettings
@@ -1116,7 +1091,6 @@ class MainWindow(QMainWindow):
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
             self.myCharasPalWidget.reinit()
-            self.reloadWebview()
 
     def helpAbout(self):
         credits = "Made by Erico\nWith help from the internet.\nHigly based in Tsubasa's Redo, and inspired in Enterbrain's RPG Maker 2000.\nThanks Nintendo for making the SNES."
