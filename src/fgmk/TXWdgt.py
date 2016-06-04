@@ -435,7 +435,7 @@ class MiniMapWidget(QWidget):
                 self.TileList[iy].append(TileXtra.ExtendedQLabel(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
                 self.TileList[iy][jx].initTile( tileset, jx , iy, boxsize, LayersMapTiles[:,iy,jx], self.myScale)
-                self.connect(self.TileList[iy][jx], SIGNAL('clicked()'), self.TileClicked)
+                self.TileList[iy][jx].clicked.connect(self.TileClicked)
 
         self.resize(self.TileWidth*boxsize*self.myScale, self.TileHeight*boxsize*self.myScale)
         self.setVisible(True)

@@ -4,6 +4,7 @@ import os
 from extras import server
 import sys
 import json
+import tarfile
 import TileXtra
 from time import time, sleep
 from PIL import Image
@@ -997,31 +998,9 @@ class MainWindow(QMainWindow):
         sSettings["gamefolder"] = projectPath
         sSettings["gamename"] = str(returnedNFD["name"])
         os.mkdir(projectPath)
-        os.mkdir(os.path.join(projectPath, fifl.DESCRIPTORS))
-        os.mkdir(os.path.join(projectPath, fifl.LEVELS))
-        os.mkdir(os.path.join(projectPath, fifl.CHARASETS))
-        os.mkdir(os.path.join(projectPath, fifl.AUDIO))
-        os.mkdir(os.path.join(projectPath, fifl.FONT))
-        os.mkdir(os.path.join(projectPath, fifl.IMG))
-        engineFiles = ["bootstrap.js", "engine.js", "game.css",
-                       "hid.js", "index.html", "printer.js", "screen.js", "icon.png"]
-        engineFolder = os.path.join(os.path.dirname(
-            os.path.abspath(__file__)), "../../Game/")
-        for file in engineFiles:
-            shutil.copyfile(os.path.join(engineFolder, file),
-                            os.path.join(projectPath, file))
-        # copy the font
-        shutil.copyfile(os.path.join(engineFolder, fifl.FONT, "INFO56_0.ttf"), os.path.join(
-            projectPath, fifl.FONT, "INFO56_0.ttf"))
-
-        # copy audio
-        src = os.path.join(engineFolder, fifl.AUDIO)
-        src_files = os.listdir(src)
-        for file_name in src_files:
-            full_file_name = os.path.join(src, file_name)
-            if (os.path.isfile(full_file_name)):
-                shutil.copy(full_file_name, os.path.join(
-                    projectPath, fifl.AUDIO))
+        tar = tarfile.open("basegame.tar.gz")
+        tar.extractall(projectPath)
+        tar.close()
 
         self.undoStack.clear()
 
@@ -1076,7 +1055,7 @@ class MainWindow(QMainWindow):
         if(sSettings["gamefolder"] == ""):
             sSettings["gamefolder"] = os.path.expanduser("~")
         filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', sSettings["gamefolder"])
+            self, 'Open File', sSettings["gamefolder"], "JSON Level (*.json);;All Files (*)")[0]
         if os.path.isfile(filename):
             sSettings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
@@ -1115,7 +1094,7 @@ def Editor():
     global __mwind__
 
     a = QApplication(argv)
-    start = time() 
+    start = time()
     splash_pix = QPixmap('icon.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
