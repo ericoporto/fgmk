@@ -60,7 +60,7 @@ setup(
     scripts = ["fgmk"],
 
     package_data = {
-        'fgmk': ['img/*.png','coreimg/*.png','actions/*.json','*.json']
+        'fgmk': ['img/*.png','coreimg/*.png','actions/*.json','*.json','basegame.tar.gz']
     },
 
     # To provide executable scripts, use entry points in preference to the
