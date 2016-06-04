@@ -29,5 +29,3 @@ Dependencies
 
 This tool is written using Python 3. Needs `pillow`, `numpy` and `PyQt5` - you can `apt install python3-pyqt5` and
 similar (in Ubuntu) or use pip3. 
-
-In ubuntu 14.04 I had to install also `sudo apt install python3-pyqt5.qtwebkit`.
