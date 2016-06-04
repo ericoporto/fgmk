@@ -5,7 +5,7 @@
 
 This is an editor for making 2D SNES era RPG like games. These RPG should be HTML5 and run on most main browsers.
 
-Everything here is really a working in progress and right now I am still working in getting battles done right.
+Everything here is really a work in progress and right now I am still working in getting battles done right.
 
 Installation
 ------------
