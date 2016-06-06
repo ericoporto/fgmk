@@ -10,7 +10,7 @@ if os.path.isdir(os.path.join(".","src")) and os.path.isfile(
     sys.path.append(os.path.realpath("src/fgmk"))
     sys.path.append(os.path.realpath("src/extras"))
 
-    from fgmk.Editor import Editor
+from fgmk.Editor import Editor
 
 def main():
     Editor()
