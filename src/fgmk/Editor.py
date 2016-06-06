@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # display a tiled image from tileset with PyQt
 import os
-from extras import server
 import sys
 import json
 import tarfile
@@ -16,6 +15,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 import actionDialog
 import TXWdgt
 from flowlayout import FlowLayout as FlowLayout
+import gwserver
 import fifl
 import TileCharaset
 import Charas
@@ -981,7 +981,7 @@ class MainWindow(QMainWindow):
 
     def runServer(self):
         global sSettings
-        server.servePage(os.path.abspath(sSettings["gamefolder"]))
+        gwserver.servePage(os.path.abspath(sSettings["gamefolder"]))
 
     def newProject(self):
         myNewProjectDialog = TXWdgt.newProject(self)

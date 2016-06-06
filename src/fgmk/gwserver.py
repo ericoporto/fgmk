@@ -1,8 +1,8 @@
 import os
-import sys 
+import sys
 from threading import Thread
 import webbrowser
-#import BaseHTTPServer 
+#import BaseHTTPServer
 #import SimpleHTTPServer
 import http.server
 
@@ -27,7 +27,7 @@ def servePage(urlToServe):
     except:
         os.chdir(tempOrigiCurDir)
         return False
-    httpdAdm = serverClass((admIp,admPort), handlerClass) 
+    httpdAdm = serverClass((admIp,admPort), handlerClass)
 
     sa = httpdGame.socket.getsockname()
     sb = httpdAdm.socket.getsockname()
@@ -62,4 +62,3 @@ def servePage(urlToServe):
     #admServerThread.join()
     os.chdir(tempOrigiCurDir)
     return True
-
