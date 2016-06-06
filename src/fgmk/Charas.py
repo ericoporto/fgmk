@@ -1,14 +1,13 @@
 import os
 import sys
 import json
-import TileXtra
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionDialog, TXWdgt, fifl, TileCharaset
+from fgmk import TileXtra, actionDialog, TXWdgt, fifl, TileCharaset
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 # moves will be step and face, for all possibilities TileCharaset.facing

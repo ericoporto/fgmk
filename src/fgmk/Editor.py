@@ -4,7 +4,6 @@ import os
 import sys
 import json
 import tarfile
-import TileXtra
 from time import time, sleep
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -12,7 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit
+from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
