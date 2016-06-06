@@ -36,6 +36,8 @@ def changeTileCurrent(changeTo):
     __mwind__.myMapWidget.currentTile = changeTo
     __mwind__.myPaletteWidget.setImageCurrent(changeTo)
 
+def changeEventCurrent(changeTo):
+    __mwind__.myMapWidget.currentEvent = changeTo
 
 def changeLayerCurrent(changeTo):
     __mwind__.myMapWidget.currentLayer = changeTo
@@ -369,7 +371,17 @@ class EventsWidget(QWidget):
 
         VBoxEventsList = QVBoxLayout()
         VBoxActionList = QVBoxLayout()
+        VBoxLeftButtons = QVBoxLayout()
         VBoxButtons = QVBoxLayout()
+
+        VBoxLeftButtons.setAlignment(Qt.AlignTop)
+
+        self.labelEventsCurrent = QLabel("Event Nº")
+        self.eventSelectSpinbox = QSpinBox(self)
+        self.eventSelectSpinbox.setMinimum(1)
+        self.eventSelectSpinbox.setMaximum(100)
+        self.eventSelectSpinbox.setSingleStep(1)
+        self.eventSelectSpinbox.valueChanged.connect(changeEventCurrent)
 
         self.addActionButton = QPushButton("Add Action", self)
         self.editActionButton = QPushButton("Edit Action", self)
@@ -387,7 +399,11 @@ class EventsWidget(QWidget):
 
         self.HBox.addLayout(VBoxEventsList)
         self.HBox.addLayout(VBoxActionList)
+        self.HBox.addLayout(VBoxLeftButtons)
         self.HBox.addLayout(VBoxButtons)
+
+        VBoxLeftButtons.addWidget(self.labelEventsCurrent)
+        VBoxLeftButtons.addWidget(self.eventSelectSpinbox)
 
         VBoxEventsList.addWidget(self.labelEventsList)
         VBoxEventsList.addWidget(self.EventsList)
