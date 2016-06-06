@@ -1,15 +1,13 @@
 import os
 import sys
 import json
-import TileXtra
-import tMat
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
-import fifl
+from fgmk import fifl, TileXtra, tMat
 
 ### TODO fix enter on QLineEdit
 

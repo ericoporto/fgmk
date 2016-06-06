@@ -8,7 +8,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import numpy as np
-import tMat
+from fgmk import tMat
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)

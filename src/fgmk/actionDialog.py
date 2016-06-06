@@ -7,9 +7,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import numpy as np
-import tMat
-import TileXtra
-import TXWdgt
+from fgmk import tMat, TileXtra, TXWdgt
 
 
 COLISIONLAYER = 3

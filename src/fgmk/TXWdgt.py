@@ -8,10 +8,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import numpy as np
-import tMat
-import actionDialog
-import TileXtra
-import fifl
+from fgmk import tMat,  TileXtra, fifl
 
 def getLevelPathFromInitFile(gamefolder,levelname):
     initFile=openInitFile(gamefolder)
@@ -28,22 +25,6 @@ def saveInitFile(gamefolder, initFileJsonTree):
     initFileJsonTree = json.dump(initFileJsonTree, f, indent=4, sort_keys=True)
     f.close()
     return initFileJsonTree
-
-def selectStartingPosition(parent, psSettings):
-    myTeleporDialog = actionDialog.teleport(psSettings["gamefolder"],parent, None, False, "select starting position")
-    if myTeleporDialog.exec_() == QtWidgets.QDialog.Accepted:
-        returnActDlg = str(myTeleporDialog.getValue())
-        position=returnActDlg.split(';')
-        initFileJsonTree = openInitFile(psSettings["gamefolder"])
-        initFileJsonTree["Player"]["initPosX"] = int(position[0])*32
-        initFileJsonTree["Player"]["initPosY"] = (int(position[1])-1)*32
-        if(str(position[2]) != "this"):
-            initFileJsonTree["World"]["initLevel"] = str(position[2])
-        else:
-            initFileJsonTree["World"]["initLevel"] = str(parent.myMap.levelName)
-        return [initFileJsonTree,str(position[2])]
-
-
 
 class CommandCTTileType(QUndoCommand):
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
@@ -264,59 +245,6 @@ class newFile(QDialog):
 
     def getValue(self):
         return self.returnValue
-
-class ActionsWidget(QDialog):
-    def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
-        super().__init__(parent, **kwargs)
-        self.psSettings=psSettings
-        self.ischaras = ischaras
-
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
-
-        filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),"actions/actionsList.json")
-        f = open( filepath, "r" )
-        e = json.load(f)
-        f.close()
-
-        self.parent = parent
-        self.actionButton = []
-
-        for action in e["actionList"]:
-            self.actionButton.append(QPushButton(action, self))
-            self.VBox.addWidget(self.actionButton[-1])
-            self.actionButton[-1].clicked.connect(self.getAction)
-
-        self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Select Action to add...')
-
-        self.show()
-
-    def getAction(self):
-
-        buttonThatSent = self.sender()
-        self.returnValue = buttonThatSent.text()
-
-        if(self.returnValue == "END" or self.returnValue == "ELSE"):
-            self.returnValue = [str(self.returnValue),""]
-            self.accept()
-        else:
-            newDialogFromName = getattr(actionDialog, str(self.returnValue))
-            if(self.ischaras is False):
-                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
-            else:
-                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self,None,True)
-
-            if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
-                returnActDlg = str(self.myActionsDialog.getValue())
-
-                #self.returnValue.append('|')
-                self.returnValue = [str(self.returnValue),str(returnActDlg)]
-                self.accept()
-
-    def getValue(self):
-        return self.returnValue
-
 
 class MiniPaletteWidget(QWidget):
     def __init__(self, pMyTileset, parent=None, **kwargs):

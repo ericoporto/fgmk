@@ -12,13 +12,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
-import actionDialog
-import TXWdgt
-from flowlayout import FlowLayout as FlowLayout
-import gwserver
-import fifl
-import TileCharaset
-import Charas
+from fgmk import actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit
+from fgmk.flowlayout import FlowLayout as FlowLayout
+
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -521,7 +517,7 @@ class EventsWidget(QWidget):
     def addAction(self):
         global sSettings
 
-        self.myActionsWidget = TXWdgt.ActionsWidget(sSettings, self)
+        self.myActionsWidget = actionsWdgt.ActionsWidget(sSettings, self)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
@@ -837,7 +833,7 @@ class MainWindow(QMainWindow):
         self.FancyWindow()
 
     def selectStartPosition(self):
-        result = TXWdgt.selectStartingPosition(self, sSettings)
+        result = gameInit.selectStartingPosition(self, sSettings)
 
         doSave = False
         if(result[1] != "this"):

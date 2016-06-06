@@ -8,11 +8,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
-import actionDialog
-import TXWdgt
-from flowlayout import FlowLayout as FlowLayout
-import fifl
-import TileCharaset
+from fgmk import actionDialog, TXWdgt, fifl, TileCharaset
+from fgmk.flowlayout import FlowLayout as FlowLayout
 
 # moves will be step and face, for all possibilities TileCharaset.facing
 # so a radio to select move or face and for buttons - one for each direction.
