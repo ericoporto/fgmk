@@ -558,7 +558,7 @@ class CharasetEditorWidget(QDialog):
         self.animList.setMinimumHeight(self.palette.boxh*self.palette.scale*2+16)
         self.animList.setMaximumHeight(self.palette.boxh*self.palette.scale*2+16)
         self.animList.setDragDropMode(QAbstractItemView.InternalMove)
-        self.animListDel = QPushButton("Delete Frames")
+        self.animListDel = QPushButton("Delete Frame")
         self.animListDel.clicked.connect(self.animListDelAction)
 
         animListModel = self.animList.model()
