@@ -92,7 +92,7 @@ class actionItem(QtWidgets.QListWidgetItem):
         self.setData(Qt.UserRole, actionAndParameter)
 
     def getAction(self):
-        actionAndParameterReturn = self.data(Qt.UserRole).toPyObject()
+        actionAndParameterReturn = self.data(Qt.UserRole)
         action = str(actionAndParameterReturn[0])
         parameter = str(actionAndParameterReturn[1])
         return [action, parameter]
@@ -479,5 +479,5 @@ class ExtendedQLabel(QLabel):
         else:
             self.clicked.emit()
 
-    #def wheelEvent(self, ev):
+    ##def wheelEvent(self, ev):
     #    self.emit(SIGNAL('scroll(int)'), ev.delta())

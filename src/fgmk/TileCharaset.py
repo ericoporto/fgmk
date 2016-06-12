@@ -144,6 +144,9 @@ class BaseCharaset:
 
 
 class CharaPalette(QWidget):
+
+    clicked = pyqtSignal()
+
     def __init__(self, base_image=None ,parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -193,7 +196,7 @@ class CharaPalette(QWidget):
                 self.charasetList[iy].append(CharaTile(self))
                 self.Grid.addWidget(self.charasetList[iy][jx], iy, jx)
                 self.charasetList[iy][jx].init( self.myBC.bcset, self.boxsize, [jx,iy], self.scale)
-                self.connect(self.charasetList[iy][jx], SIGNAL('clicked()'), self.csetSinClick)
+                self.charasetList[iy][jx].clicked.connect(self.csetSinClick)
 
         self.resize(self.charWid*self.boxw*self.scale,self.charHei*self.boxh*self.scale)
 
@@ -201,7 +204,7 @@ class CharaPalette(QWidget):
 
     def csetSinClick(self):
         self.rValue = (self.sender().charType, self.myBC.bcset, self.scale)
-        self.emit(SIGNAL('clicked()'))
+        self.clicked.emit()
 
 
 class CharaTile(QLabel):
@@ -213,6 +216,9 @@ class CharaTile(QLabel):
         self.boxh = 64
         self.boxsize = (self.boxw, self.boxh)
         self.setMinimumSize (QSize(self.boxw, self.boxh))
+
+    clicked = pyqtSignal()
+    rightClicked = pyqtSignal()
 
     def init(self, bcset, boxsize, charType, scale = 1):
         self.charType = charType
@@ -232,10 +238,10 @@ class CharaTile(QLabel):
         self.setPixmap(pixmap)
 
     def mousePressEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
-            self.emit(SIGNAL('rightClicked()'))
+        if ev.button() == Qt.RightButton:
+            self.rightClicked.emit()
         else:
-            self.emit(SIGNAL('clicked()'))
+            self.clicked.emit()
 
 class csetsItem(QtWidgets.QListWidgetItem):
     def __init__(self, aname, jsonTree = {}):
@@ -268,7 +274,7 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
 
     def getAarray(self):
         #return self.aarray
-        return self.data(Qt.UserRole).toPyObject()
+        return self.data(Qt.UserRole)
 
 class CsetAItem(QtWidgets.QListWidgetItem):
     def __init__(self, charType, bcset, scale=1):
@@ -292,7 +298,7 @@ class CsetAItem(QtWidgets.QListWidgetItem):
         self.setData(Qt.UserRole, charType)
 
     def getCharType(self):
-        return self.data(Qt.UserRole).toPyObject()
+        return self.data(Qt.UserRole)
 
 
 class AnimatedCharaTile(QLabel):
@@ -415,7 +421,7 @@ class CharasetSelector(QWidget):
             self.csetList.setCurrentRow(0)
 
     def changed(self):
-        if(self.csetList.selectedItems()>0 and self.myBC.hasimage):
+        if(len(self.csetList.selectedItems())>0 and self.myBC.hasimage):
             row = self.csetList.row(self.csetList.selectedItems()[0])
             charaset = self.cset.getCharasets()[row]
             aarray = self.cset.getAnimation(charaset)
@@ -538,7 +544,7 @@ class CharasetEditorWidget(QDialog):
         VBoxCSets.addWidget(self.csetsList)
 
         self.palette = CharaPalette()
-        self.connect(self.palette, SIGNAL('clicked()'), self.animselected)
+        self.palette.clicked.connect(self.animselected)
         self.scrollArea = QtWidgets.QScrollArea()
         self.scrollArea.setWidget(self.palette)
         self.scrollArea.setMinimumWidth(self.palette.boxw*self.palette.scale*3+16)

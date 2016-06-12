@@ -685,7 +685,7 @@ class CharasPalWidget(QWidget):
         if (chara != None):
             if(self.positionEmpty(position)):
                 item = Charas.MiniCharaTile(None, sSettings, chara)
-                self.connect(item, SIGNAL('rightClicked()'), self.autodelete)
+                item.rightClicked.connect(self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])
                 if(onmap):
                     self.pMap.insertChara(position[0], position[1], chara)

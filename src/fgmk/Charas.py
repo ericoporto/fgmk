@@ -45,6 +45,11 @@ class CharasFormat(TileCharaset.BaseFormat):
 
 
 class MoveButtons(QWidget):
+    buttonup = pyqtSignal()
+    buttondown = pyqtSignal()
+    buttonleft = pyqtSignal()
+    buttonright = pyqtSignal()
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -59,9 +64,12 @@ class MoveButtons(QWidget):
 
         self.dirbuttons = []
         self.signal = {}
+        self.signal["up"] = self.buttonup
+        self.signal["down"] = self.buttondown
+        self.signal["left"] = self.buttonleft
+        self.signal["right"] = self.buttonright
 
         for i in TileCharaset.facing:
-            self.signal[i] = 'button'+i+'()'
             self.dirbuttons.append(QPushButton(i))
             self.dirbuttons[-1].setObjectName(i)
             self.dirbuttons[-1].setFixedSize(50, 50)
@@ -77,7 +85,7 @@ class MoveButtons(QWidget):
 
     def bclicked(self):
         direction = str(self.sender().objectName())
-        self.emit(SIGNAL(self.signal[direction]))
+        self.signal[direction].emit()
 
 class MoveItem(QtWidgets.QListWidgetItem):
     def __init__(self, moveorface, direction = ""):
@@ -93,7 +101,9 @@ class MoveItem(QtWidgets.QListWidgetItem):
         self.setData(Qt.UserRole, movearray)
 
     def getMarray(self):
-        movearray = self.data(Qt.UserRole).toPyObject()
+        #movearray = self.data(Qt.UserRole).toPyObject() #this was python2
+        #python3 doesn't need toPyObject (and doesn't work with it)
+        movearray = self.data(Qt.UserRole)
         return [str(movearray[0]),str(movearray[1])]
 
 class PropertiesWidget(QWidget):
@@ -140,10 +150,10 @@ class MoveWidget(QWidget):
 
         self.VBox = QVBoxLayout(self)
         self.dirButtons = MoveButtons()
-        self.connect(self.dirButtons, SIGNAL('buttonup()'), self.upbclick)
-        self.connect(self.dirButtons, SIGNAL('buttondown()'), self.downbclick)
-        self.connect(self.dirButtons, SIGNAL('buttonleft()'), self.leftbclick)
-        self.connect(self.dirButtons, SIGNAL('buttonright()'), self.rightbclick)
+        self.dirButtons.buttonup.connect(self.upbclick)
+        self.dirButtons.buttondown.connect(self.downbclick)
+        self.dirButtons.buttonleft.connect(self.leftbclick)
+        self.dirButtons.buttonright.connect(self.rightbclick)
 
         self.radiomove = QRadioButton("move")
         self.radioface = QRadioButton("face")
@@ -433,6 +443,8 @@ class CharaItem(QtWidgets.QListWidgetItem):
         self.jsonTree = jsonTree
 
 class CharaList(QWidget):
+    SelectionChanged = pyqtSignal()
+
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -480,7 +492,7 @@ class CharaList(QWidget):
         else:
             self.returnvalue = {'name': None,  'jsonTree':{'charaset':"",'actions':{},'movements':[],'properties':{}}}
 
-        self.emit(SIGNAL("SelectionChanged()"))
+        self.SelectionChanged.emit()
 
     def setSelected(self,jsonTree):
         if (len(self.charaslist.selectedItems())>0):
@@ -593,14 +605,17 @@ class MiniCharaTile(QWidget):
 
         self.setToolTip(chara)
 
+    clicked = pyqtSignal()
+    rightClicked = pyqtSignal()
+
     def stop(self):
         self.csetprev.stop()
 
     def mousePressEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
-            self.emit(SIGNAL('rightClicked()'))
+        if ev.button() == Qt.RightButton:
+            self.rightClicked.emit()
         else:
-            self.emit(SIGNAL('clicked()'))
+            self.clicked.emit()
 
     def __Open(self,charafile = None):
         if(charafile == None):
@@ -645,7 +660,7 @@ class CharaEditor(QDialog):
         self.layout.addWidget(self.movement)
         self.layout.addWidget(self.actions)
 
-        self.connect(self.charalist,SIGNAL('SelectionChanged()'), self.charaSelectionChanged)
+        self.charalist.SelectionChanged.connect(self.charaSelectionChanged)
 
         self.oldSelection = self.charalist.returnvalue
 
