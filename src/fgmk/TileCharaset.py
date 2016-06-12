@@ -260,7 +260,6 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
         self.aname = aname
         aarray = []
         self.setData(Qt.UserRole, aarray)
-        #self.aarray = []
 
     def setIschildof(self,parent):
         self.ischildof = parent
@@ -270,10 +269,8 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
 
     def setAarray(self, aarray):
         self.setData(Qt.UserRole, aarray)
-        #self.aarray = aarray
 
     def getAarray(self):
-        #return self.aarray
         return self.data(Qt.UserRole)
 
 class CsetAItem(QtWidgets.QListWidgetItem):

@@ -10,17 +10,20 @@ from PIL.ImageQt import ImageQt
 import numpy as np
 from fgmk import tMat, actionDialog, TileXtra, fifl
 
+
 class ActionsWidget(QDialog):
+
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
         super().__init__(parent, **kwargs)
-        self.psSettings=psSettings
+        self.psSettings = psSettings
         self.ischaras = ischaras
 
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop)
 
-        filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),"actions/actionsList.json")
-        f = open( filepath, "r" )
+        filepath = os.path.join(os.path.dirname(
+            os.path.abspath(__file__)), "actions/actionsList.json")
+        f = open(filepath, "r")
         e = json.load(f)
         f.close()
 
@@ -43,20 +46,22 @@ class ActionsWidget(QDialog):
         self.returnValue = buttonThatSent.text()
 
         if(self.returnValue == "END" or self.returnValue == "ELSE"):
-            self.returnValue = [str(self.returnValue),""]
+            self.returnValue = [str(self.returnValue), ""]
             self.accept()
         else:
             newDialogFromName = getattr(actionDialog, str(self.returnValue))
             if(self.ischaras is False):
-                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self)
+                self.myActionsDialog = newDialogFromName(
+                    self.psSettings["gamefolder"], self)
             else:
-                self.myActionsDialog = newDialogFromName(self.psSettings["gamefolder"],self,None,True)
+                self.myActionsDialog = newDialogFromName(
+                    self.psSettings["gamefolder"], self, None, True)
 
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
 
-                #self.returnValue.append('|')
-                self.returnValue = [str(self.returnValue),str(returnActDlg)]
+                # self.returnValue.append('|')
+                self.returnValue = [str(self.returnValue), str(returnActDlg)]
                 self.accept()
 
     def getValue(self):

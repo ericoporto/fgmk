@@ -10,23 +10,30 @@ from PIL.ImageQt import ImageQt
 import numpy as np
 from fgmk import tMat,  TileXtra, fifl
 
-def getLevelPathFromInitFile(gamefolder,levelname):
-    initFile=openInitFile(gamefolder)
-    return os.path.join(str(gamefolder), fifl.LEVELS,initFile['LevelsList'][str(levelname)])
+
+def getLevelPathFromInitFile(gamefolder, levelname):
+    initFile = openInitFile(gamefolder)
+    return os.path.join(str(gamefolder), fifl.LEVELS, initFile['LevelsList'][str(levelname)])
+
 
 def openInitFile(gamefolder):
-    f = open(os.path.join(str(gamefolder), fifl.DESCRIPTORS,fifl.GAMESETTINGS ), "r" )
+    f = open(os.path.join(str(gamefolder),
+                          fifl.DESCRIPTORS, fifl.GAMESETTINGS), "r")
     initFileJsonTree = json.load(f)
     f.close()
     return initFileJsonTree
 
+
 def saveInitFile(gamefolder, initFileJsonTree):
-    f = open(os.path.join(str(gamefolder), fifl.DESCRIPTORS,fifl.GAMESETTINGS ), "w" )
+    f = open(os.path.join(str(gamefolder),
+                          fifl.DESCRIPTORS, fifl.GAMESETTINGS), "w")
     initFileJsonTree = json.dump(initFileJsonTree, f, indent=4, sort_keys=True)
     f.close()
     return initFileJsonTree
 
+
 class CommandCTTileType(QUndoCommand):
+
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
         super().__init__(description)
 
@@ -42,18 +49,21 @@ class CommandCTTileType(QUndoCommand):
         self.ptileset = ptileset
 
     def redo(self):
-        self.pMap.setTile( self.tileX, self.tileY, self.Layer, self.changeTypeTo)
-        self.sender.updateTileImageInMap( self.changeTypeTo, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
+        self.pMap.setTile(self.tileX, self.tileY,
+                          self.Layer, self.changeTypeTo)
+        self.sender.updateTileImageInMap(
+            self.changeTypeTo, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
         #print("Type= ", self.changeTypeTo, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
-
     def undo(self):
-        self.pMap.setTile( self.tileX, self.tileY, self.Layer, self.oldType)
-        self.sender.updateTileImageInMap( self.oldType, self.Layer, self.ptileset , self.pmyMapWidget.myScale)
+        self.pMap.setTile(self.tileX, self.tileY, self.Layer, self.oldType)
+        self.sender.updateTileImageInMap(
+            self.oldType, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
         #print("Type= ", self.oldType, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
 
 class CommandCGroupTType(QUndoCommand):
+
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
         super().__init__(description)
 
@@ -71,29 +81,33 @@ class CommandCGroupTType(QUndoCommand):
     def redo(self):
         for change in self.listToChange:
             tile = self.pmyMapWidget.TileList[change[1]][change[0]]
-            self.pMap.setTile( change[0], change[1], self.Layer, change[3])
-            tile.updateTileImageInMap( change[3], self.Layer, self.ptileset , self.pmyMapWidget.myScale)
+            self.pMap.setTile(change[0], change[1], self.Layer, change[3])
+            tile.updateTileImageInMap(
+                change[3], self.Layer, self.ptileset, self.pmyMapWidget.myScale)
             #print("Type= ", change[3], "  X= " , change[0], "  Y= " , change[1])
 
     def undo(self):
         for change in self.listToChange:
             tile = self.pmyMapWidget.TileList[change[1]][change[0]]
-            self.pMap.setTile( change[0], change[1], self.Layer, change[2])
-            tile.updateTileImageInMap( change[2], self.Layer, self.ptileset , self.pmyMapWidget.myScale)
+            self.pMap.setTile(change[0], change[1], self.Layer, change[2])
+            tile.updateTileImageInMap(
+                change[2], self.Layer, self.ptileset, self.pmyMapWidget.myScale)
             #print("Type= ", change[2], "  X= " ,change[0], "  Y= " , change[1])
 
+
 class newProject(QDialog):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.returnValue = { "name" : "NewFile", "baseFolder" : "" }
+        self.returnValue = {"name": "NewFile", "baseFolder": ""}
 
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop)
 
         HBoxFolder = QHBoxLayout()
-        self.LineEditFolder = QLineEdit ()
-        self.LineEditFolder.setReadOnly(True);
+        self.LineEditFolder = QLineEdit()
+        self.LineEditFolder.setReadOnly(True)
         self.LineEditFolder.setText(str(self.returnValue["baseFolder"]))
         self.buttonFolder = QPushButton("Browse")
         self.buttonFolder.clicked.connect(self.selectGameFolder)
@@ -101,13 +115,14 @@ class newProject(QDialog):
         HBoxFolder.addWidget(self.buttonFolder)
 
         HBoxName = QHBoxLayout()
-        self.LineEditName = QLineEdit ()
+        self.LineEditName = QLineEdit()
         self.LineEditName.setText(str(self.returnValue["name"]))
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
         HBoxName.addWidget(QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+        self.buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
@@ -126,14 +141,15 @@ class newProject(QDialog):
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
-        tempStr=tempStr.title()
-        tempStr=tempStr.replace(" ", "")
+        tempStr = tempStr.title()
+        tempStr = tempStr.replace(" ", "")
         self.LineEditName.setText(tempStr)
         self.returnValue["name"] = self.LineEditName.text()
         self.validateIsOk()
 
     def selectGameFolder(self):
-        self.LineEditFolder.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")) )
+        self.LineEditFolder.setText(
+            str(QFileDialog.getExistingDirectory(self, "Select Directory")))
         self.returnValue["baseFolder"] = self.LineEditFolder.text()
         self.validateIsOk()
 
@@ -146,20 +162,22 @@ class newProject(QDialog):
     def getValue(self):
         return self.returnValue
 
+
 class newFile(QDialog):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.returnValue = { "name" : "NewFile", "width" : 15, "height" : 15, "gameFolder" : ""
+        self.returnValue = {"name": "NewFile", "width": 15, "height": 15, "gameFolder": ""
 
-        }
+                            }
 
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop)
 
         HBoxFolder = QHBoxLayout()
-        self.LineEditFolder = QLineEdit ()
-        self.LineEditFolder.setReadOnly(True);
+        self.LineEditFolder = QLineEdit()
+        self.LineEditFolder.setReadOnly(True)
         self.LineEditFolder.setText(str(self.returnValue["gameFolder"]))
         self.buttonFolder = QPushButton("Browse")
         self.buttonFolder.clicked.connect(self.selectGameFolder)
@@ -167,27 +185,29 @@ class newFile(QDialog):
         HBoxFolder.addWidget(self.buttonFolder)
 
         HBoxSize = QHBoxLayout()
-        self.LineEditWidth = QLineEdit ()
+        self.LineEditWidth = QLineEdit()
         self.LineEditWidth.setInputMask("000")
         self.LineEditWidth.setText(str(self.returnValue["width"]))
         self.LineEditWidth.editingFinished.connect(self.validateLineEditWidth)
-        self.LineEditHeight = QLineEdit ()
+        self.LineEditHeight = QLineEdit()
         self.LineEditHeight.setInputMask("000")
         self.LineEditHeight.setText(str(self.returnValue["height"]))
-        self.LineEditHeight.editingFinished.connect(self.validateLineEditHeight)
+        self.LineEditHeight.editingFinished.connect(
+            self.validateLineEditHeight)
         HBoxSize.addWidget(QLabel("Width:"))
         HBoxSize.addWidget(self.LineEditWidth)
         HBoxSize.addWidget(QLabel("Height:"))
         HBoxSize.addWidget(self.LineEditHeight)
 
         HBoxName = QHBoxLayout()
-        self.LineEditName = QLineEdit ()
+        self.LineEditName = QLineEdit()
         self.LineEditName.setText(str(self.returnValue["name"]))
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
         HBoxName.addWidget(QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+        self.buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
@@ -226,14 +246,15 @@ class newFile(QDialog):
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
-        tempStr=tempStr.title()
-        tempStr=tempStr.replace(" ", "")
+        tempStr = tempStr.title()
+        tempStr = tempStr.replace(" ", "")
         self.LineEditName.setText(tempStr)
         self.returnValue["name"] = self.LineEditName.text()
         self.validateIsOk()
 
     def selectGameFolder(self):
-        self.LineEditFolder.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")) )
+        self.LineEditFolder.setText(
+            str(QFileDialog.getExistingDirectory(self, "Select Directory")))
         self.returnValue["gameFolder"] = self.LineEditFolder.text()
         self.validateIsOk()
 
@@ -246,7 +267,9 @@ class newFile(QDialog):
     def getValue(self):
         return self.returnValue
 
+
 class MiniPaletteWidget(QWidget):
+
     def __init__(self, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -276,12 +299,14 @@ class MiniPaletteWidget(QWidget):
 
         self.currentTile = 0
         self.CurrentTT = TileXtra.ExtendedQLabel(self)
-        self.CurrentTT.initTile(self.tileSetInstance.tileset, len(self.tileSetInstance.tileset)-1  , 0 , self.tileSetInstance.boxsize, [self.currentTile,0,0,0,0], self.scale*2)
+        self.CurrentTT.initTile(self.tileSetInstance.tileset, len(self.tileSetInstance.tileset) - 1,
+                                0, self.tileSetInstance.boxsize, [self.currentTile, 0, 0, 0, 0], self.scale * 2)
 
         self.VBox.addWidget(scrollArea)
         self.VBox.addWidget(self.CurrentTT)
 
-        self.setMinimumSize (self.tileSetInstance.boxsize*(6+1)*self.scale,self.tileSetInstance.boxsize*(1+1)*self.scale)
+        self.setMinimumSize(self.tileSetInstance.boxsize * (6 + 1) *
+                            self.scale, self.tileSetInstance.boxsize * (1 + 1) * self.scale)
 
     def drawPalette(self, tileSetInstance):
         self.tileSetInstance = tileSetInstance
@@ -292,13 +317,15 @@ class MiniPaletteWidget(QWidget):
                 wdgt = None
             self.PaletteTileList = []
 
-        for i in range(len(tileSetInstance.tileset) ):
+        for i in range(len(tileSetInstance.tileset)):
             self.PaletteTileList.append(TileXtra.ExtendedQLabel(self))
-            self.Grid.addWidget(self.PaletteTileList[-1], i/6, i%6)
-            self.PaletteTileList[-1].initTile( tileSetInstance.tileset, i , 0 , tileSetInstance.boxsize, [i,0,0,0,0], self.scale)
+            self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
+            self.PaletteTileList[-1].initTile(tileSetInstance.tileset,
+                                              i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
             self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
 
-        self.PaletteItems.resize(6*tileSetInstance.boxsize,TileXtra.divideRoundUp(len(tileSetInstance.tileset),6)*tileSetInstance.boxsize)
+        self.PaletteItems.resize(6 * tileSetInstance.boxsize, TileXtra.divideRoundUp(
+            len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
     def setTileCurrent(self):
         self.setImageCurrent(self.sender().tileType[0])
@@ -306,7 +333,8 @@ class MiniPaletteWidget(QWidget):
 
     def setImageCurrent(self, imageIndex):
         self.currentTile = imageIndex
-        self.CurrentTT.initTile( self.tileSetInstance.tileset, 0 , 0 ,  self.tileSetInstance.boxsize, [imageIndex,0,0,0,0], self.scale*2)
+        self.CurrentTT.initTile(self.tileSetInstance.tileset, 0, 0,  self.tileSetInstance.boxsize, [
+                                imageIndex, 0, 0, 0, 0], self.scale * 2)
         self.CurrentTT.show()
 
     def getValue(self):
@@ -314,6 +342,7 @@ class MiniPaletteWidget(QWidget):
 
 
 class MiniMapWidget(QWidget):
+
     def __init__(self, pMyMap, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -332,10 +361,10 @@ class MiniMapWidget(QWidget):
         self.myScale = 0.5
 
         self.TileList = []
-        self.selectedPosition = [0,0]
-        self.DrawMap(parent,pMyMap,pMyTileset)
+        self.selectedPosition = [0, 0]
+        self.DrawMap(parent, pMyMap, pMyTileset)
 
-    def DrawMap(self, parent,pMyMap,pMyTileset):
+    def DrawMap(self, parent, pMyMap, pMyTileset):
         self.setVisible(False)
         self.pMyMap = pMyMap
         self.pMyTileset = pMyTileset
@@ -343,7 +372,6 @@ class MiniMapWidget(QWidget):
         LayersMapTiles = self.pMyMap .LayersMapTiles
         tileset = self.pMyTileset.tileset
         boxsize = self.pMyTileset.boxsize
-
 
         if len(self.TileList) > 1:
             for collum in self.TileList:
@@ -362,10 +390,12 @@ class MiniMapWidget(QWidget):
             for jx in range(self.TileWidth):
                 self.TileList[iy].append(TileXtra.ExtendedQLabel(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
-                self.TileList[iy][jx].initTile( tileset, jx , iy, boxsize, LayersMapTiles[:,iy,jx], self.myScale)
+                self.TileList[iy][jx].initTile(tileset, jx, iy, boxsize, LayersMapTiles[
+                                               :, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileClicked)
 
-        self.resize(self.TileWidth*boxsize*self.myScale, self.TileHeight*boxsize*self.myScale)
+        self.resize(self.TileWidth * boxsize * self.myScale,
+                    self.TileHeight * boxsize * self.myScale)
         self.setVisible(True)
 
     def TileClicked(self):
@@ -380,22 +410,22 @@ class MiniMapWidget(QWidget):
         for i in range(self.TileWidth):
             for j in range(self.TileHeight):
 
-                if (j==self.selectedPosition[1]):
-                    self.Grid.setRowMinimumHeight(j,boxsize*scale+1)
-                elif (j==self.selectedPosition[1]-1):
-                    self.Grid.setRowMinimumHeight(j,boxsize*scale+1)
+                if (j == self.selectedPosition[1]):
+                    self.Grid.setRowMinimumHeight(j, boxsize * scale + 1)
+                elif (j == self.selectedPosition[1] - 1):
+                    self.Grid.setRowMinimumHeight(j, boxsize * scale + 1)
                 else:
-                    self.Grid.setRowMinimumHeight(j,boxsize*scale)
+                    self.Grid.setRowMinimumHeight(j, boxsize * scale)
 
-                if (i==self.selectedPosition[0]):
-                    self.Grid.setColumnMinimumWidth(i,boxsize*scale+1)
-                elif (i==self.selectedPosition[0]-1):
-                    self.Grid.setColumnMinimumWidth(i,boxsize*scale+1)
+                if (i == self.selectedPosition[0]):
+                    self.Grid.setColumnMinimumWidth(i, boxsize * scale + 1)
+                elif (i == self.selectedPosition[0] - 1):
+                    self.Grid.setColumnMinimumWidth(i, boxsize * scale + 1)
                 else:
-                    self.Grid.setColumnMinimumWidth(i,boxsize*scale)
+                    self.Grid.setColumnMinimumWidth(i, boxsize * scale)
 
-
-        self.resize(len(LayersMapTiles[0])*boxsize*self.myScale+2,len(LayersMapTiles[0][0])*boxsize*self.myScale+2)
+        self.resize(len(LayersMapTiles[0]) * boxsize * self.myScale + 2,
+                    len(LayersMapTiles[0][0]) * boxsize * self.myScale + 2)
         self.emit(SIGNAL('selectedTile()'))
 
     def getValue(self):
