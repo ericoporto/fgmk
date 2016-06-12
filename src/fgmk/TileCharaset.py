@@ -9,56 +9,58 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import fifl, TileXtra, tMat
 
-### TODO fix enter on QLineEdit
+# TODO fix enter on QLineEdit
 
-facing = ["up","left","down","right"]
+facing = ["up", "left", "down", "right"]
 standardStateset = ["normalSet"]
-standardMovement = ["standing","walking"]
+standardMovement = ["standing", "walking"]
 
 GAMEFOLDER = "gamefolder"
 
 class BaseFormat:
-    def __init__( self ):
-        self.jsonTree = {};
+
+    def __init__(self):
+        self.jsonTree = {}
         self.filename = ""
 
     def new(self):
-        self.jsonTree = {};
+        self.jsonTree = {}
 
-    def save( self , charsn = None):
+    def save(self, charsn=None):
         if(charsn == None):
-             chartosave = self.filename
+            chartosave = self.filename
         else:
             chartosave = charsn
-        f = open( chartosave , "w" )
+        f = open(chartosave, "w")
         tMat.fwriteKeyVals(self.jsonTree, f)
         f.close()
 
-    def exportJS( self , charsn):
-        f = open( charsn , "w" )
+    def exportJS(self, charsn):
+        f = open(charsn, "w")
         f.write("var " + self.levelName + "= {\n")
         tMat.fwriteKeyValsJS(self.jsonTree, f)
         f.write("};")
         f.close()
 
-    def load(self , charsn):
-        f = open( charsn , "r" )
+    def load(self, charsn):
+        f = open(charsn, "r")
         self.jsonTree = json.load(f)
         f.close()
         self.filename = charsn
 
 
 class CharasetFormat(BaseFormat):
-    def __init__( self ):
+
+    def __init__(self):
         super().__init__()
 
-        self.size = [32,64]
+        self.size = [32, 64]
         self.boxsize = 32
 
         self.new()
 
     def new(self):
-        self.jsonTree = { "Charaset": {} }
+        self.jsonTree = {"Charaset": {}}
 
     def setTileImage(self, tileImage):
         self.jsonTree["Charaset"]["tileImage"] = tileImage
@@ -69,39 +71,40 @@ class CharasetFormat(BaseFormat):
         else:
             return False
 
-    def addCharaset(self, name, jsonTree = {} ):
+    def addCharaset(self, name, jsonTree={}):
         self.jsonTree["Charaset"][name] = jsonTree
 
     def getCharasets(self):
         charasetsa = self.jsonTree["Charaset"]
         excludes = ["tileImage"]
-        resultset = [key for key, value in charasetsa.items() if key not in excludes]
+        resultset = [key for key, value in charasetsa.items()
+                     if key not in excludes]
         return sorted(resultset)
 
-    def getAnimation(self,charaset):
+    def getAnimation(self, charaset):
         csetTree = self.jsonTree["Charaset"][charaset]
         csetTL1 = sorted(csetTree)
         tests = standardMovement[:]
         tests.append(sorted(csetTree)[0])
         for test in tests:
             if test in csetTL1:
-                if (isinstance(csetTree[test],list)):
+                if (isinstance(csetTree[test], list)):
                     return csetTree[test]
                 else:
                     csetTL2 = sorted(csetTree[test])
                     for face in sorted(facing):
                         if face in csetTL2:
-                             return csetTree[test][face]
+                            return csetTree[test][face]
 
 
 class BaseCharaset:
-    def __init__( self , image_file):
+
+    def __init__(self, image_file):
 
         self.imgFile = image_file
         self.hasimage = self.init(image_file)
 
-
-    def init( self , image_file):
+    def init(self, image_file):
         if(image_file == None):
             return False
 
@@ -110,8 +113,8 @@ class BaseCharaset:
             self.boxw = 32
             self.boxh = 64
             self.boxsize = (self.boxw, self.boxh)
-            self.imageFile = Image.open( image_file )
-            if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] ==0 :
+            self.imageFile = Image.open(image_file)
+            if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] == 0:
                 currentx = 0
                 currenty = 0
                 tilei = 0
@@ -119,8 +122,10 @@ class BaseCharaset:
                 while currenty < self.imageFile.size[1]:
                     self.bcset.append([])
                     while currentx < self.imageFile.size[0]:
-                        imageTemp = self.imageFile.crop((currentx,currenty,currentx + self.boxw, currenty + self.boxh))
-                        self.bcset[yj].append([imageTemp,imageTemp.resize((self.boxw*2, self.boxh*2), Image.NEAREST) , imageTemp.resize((int(self.boxw*0.5), int(self.boxh*0.5)), Image.NEAREST)]  )
+                        imageTemp = self.imageFile.crop(
+                            (currentx, currenty, currentx + self.boxw, currenty + self.boxh))
+                        self.bcset[yj].append([imageTemp, imageTemp.resize((self.boxw * 2, self.boxh * 2), Image.NEAREST),
+                                               imageTemp.resize((int(self.boxw * 0.5), int(self.boxh * 0.5)), Image.NEAREST)])
                         currentx += self.boxw
 
                     yj += 1
@@ -130,24 +135,24 @@ class BaseCharaset:
                 return True
 
             else:
-                print ("error:Your file width and height are not good to {0}x{1} pixel charaset!".format(self.boxw,self.boxh))
+                print("error:Your file width and height are not good to {0}x{1} pixel charaset!".format(
+                    self.boxw, self.boxh))
 
         return False
 
     def getTileSetImage(self, TileType):
-        #print(TileType)
-        tileImage = ImageQt( self.tileset[ TileType[1]][TileType[0]] )
+        # print(TileType)
+        tileImage = ImageQt(self.tileset[TileType[1]][TileType[0]])
         pixmap = QtGui.QPixmap.fromImage(tileImage)
         image = QtGui.QPixmap(pixmap)
         return image
-
 
 
 class CharaPalette(QWidget):
 
     clicked = pyqtSignal()
 
-    def __init__(self, base_image=None ,parent=None, **kwargs):
+    def __init__(self, base_image=None, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.Grid = QGridLayout(self)
@@ -173,7 +178,7 @@ class CharaPalette(QWidget):
 
     def draw(self):
 
-        self.myBC = BaseCharaset( self.baseImage )
+        self.myBC = BaseCharaset(self.baseImage)
 
         self.setVisible(False)
 
@@ -195,10 +200,12 @@ class CharaPalette(QWidget):
             for jx in range(self.charWid):
                 self.charasetList[iy].append(CharaTile(self))
                 self.Grid.addWidget(self.charasetList[iy][jx], iy, jx)
-                self.charasetList[iy][jx].init( self.myBC.bcset, self.boxsize, [jx,iy], self.scale)
+                self.charasetList[iy][jx].init(
+                    self.myBC.bcset, self.boxsize, [jx, iy], self.scale)
                 self.charasetList[iy][jx].clicked.connect(self.csetSinClick)
 
-        self.resize(self.charWid*self.boxw*self.scale,self.charHei*self.boxh*self.scale)
+        self.resize(self.charWid * self.boxw * self.scale,
+                    self.charHei * self.boxh * self.scale)
 
         self.setVisible(True)
 
@@ -208,6 +215,7 @@ class CharaPalette(QWidget):
 
 
 class CharaTile(QLabel):
+
     def __init(self, parent):
         super().__init__(parent)
 
@@ -215,26 +223,26 @@ class CharaTile(QLabel):
         self.boxw = 32
         self.boxh = 64
         self.boxsize = (self.boxw, self.boxh)
-        self.setMinimumSize (QSize(self.boxw, self.boxh))
+        self.setMinimumSize(QSize(self.boxw, self.boxh))
 
     clicked = pyqtSignal()
     rightClicked = pyqtSignal()
 
-    def init(self, bcset, boxsize, charType, scale = 1):
+    def init(self, bcset, boxsize, charType, scale=1):
         self.charType = charType
         self.boxsize = boxsize
         self.boxw = self.boxsize[0]
         self.boxh = self.boxsize[1]
 
-        if(scale==2):
-            tempscale=1
-        elif(scale==0.5):
-            tempscale=2
+        if(scale == 2):
+            tempscale = 1
+        elif(scale == 0.5):
+            tempscale = 2
         else:
-            tempscale=0
+            tempscale = 0
 
         Composite = bcset[charType[1]][charType[0]][tempscale]
-        pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
+        pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
         self.setPixmap(pixmap)
 
     def mousePressEvent(self, ev):
@@ -243,15 +251,19 @@ class CharaTile(QLabel):
         else:
             self.clicked.emit()
 
+
 class csetsItem(QtWidgets.QListWidgetItem):
-    def __init__(self, aname, jsonTree = {}):
+
+    def __init__(self, aname, jsonTree={}):
         super().__init__(aname)
 
         self.aname = aname
         self.jsonTree = jsonTree
 
+
 class AnimNamesItem(QtWidgets.QListWidgetItem):
-    def __init__(self, aname, isgroup = False, isparent = False):
+
+    def __init__(self, aname, isgroup=False, isparent=False):
         super().__init__(aname)
 
         self.isgroup = isgroup
@@ -261,7 +273,7 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
         aarray = []
         self.setData(Qt.UserRole, aarray)
 
-    def setIschildof(self,parent):
+    def setIschildof(self, parent):
         self.ischildof = parent
 
     def getIschildof(self):
@@ -273,21 +285,23 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
     def getAarray(self):
         return self.data(Qt.UserRole)
 
+
 class CsetAItem(QtWidgets.QListWidgetItem):
+
     def __init__(self, charType, bcset, scale=1):
         super().__init__()
 
-        if(scale==2):
-            tempscale=1
-        elif(scale==0.5):
-            tempscale=2
+        if(scale == 2):
+            tempscale = 1
+        elif(scale == 0.5):
+            tempscale = 2
         else:
-            tempscale=0
+            tempscale = 0
 
         Composite = bcset[charType[1]][charType[0]][tempscale]
-        pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
+        pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
 
-        f=QFont ()
+        f = QFont()
         f.setPointSize(1)
         self.setFont(f)
 
@@ -299,7 +313,8 @@ class CsetAItem(QtWidgets.QListWidgetItem):
 
 
 class AnimatedCharaTile(QLabel):
-    def __init__(self, parent = None, scale = 2):
+
+    def __init__(self, parent=None, scale=2):
         super().__init__(parent)
 
         self.charType = []
@@ -307,8 +322,8 @@ class AnimatedCharaTile(QLabel):
         self.boxh = 64
         self.scale = scale
         self.boxsize = (self.boxw, self.boxh)
-        self.whsize = QSize(self.boxw*scale, self.boxh*scale)
-        self.setFixedSize (self.whsize)
+        self.whsize = QSize(self.boxw * scale, self.boxh * scale)
+        self.setFixedSize(self.whsize)
         self._timer = QtCore.QTimer(interval=100,
                                     timeout=self._animation_step)
 
@@ -318,25 +333,24 @@ class AnimatedCharaTile(QLabel):
         self.charType = charType
         scale = self.scale
 
-        if(scale==2):
-            tempscale=1
-        elif(scale==0.5):
-            tempscale=2
+        if(scale == 2):
+            tempscale = 1
+        elif(scale == 0.5):
+            tempscale = 2
         else:
-            tempscale=0
+            tempscale = 0
 
         Composite = self.bcset[charType[1]][charType[0]][tempscale]
-        pixmap = QtGui.QPixmap.fromImage(ImageQt( Composite ))
+        pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
         self.setPixmap(pixmap)
 
     def clearAnim(self):
         self._timer.stop()
-        pixmap = QPixmap(self.boxw*self.scale, self.boxh*self.scale)
+        pixmap = QPixmap(self.boxw * self.scale, self.boxh * self.scale)
         pixmap.fill(Qt.white)
         self.setPixmap(pixmap)
 
-
-    def setAnimArray(self,bcset, aarray):
+    def setAnimArray(self, bcset, aarray):
         self.aarray = aarray
         self.bcset = bcset
         self._current_frame = 0
@@ -346,17 +360,19 @@ class AnimatedCharaTile(QLabel):
         self._timer.start()
 
     def _animation_step(self):
-        if(len(self.aarray)>0):
+        if(len(self.aarray) > 0):
             self.setACTImage(self.aarray[self._current_frame])
             self._current_frame += 1
             if self._current_frame >= len(self.aarray):
                 self._current_frame = 0
+
 
 def isFacing(test):
     for i in range(len(facing)):
         if(test == facing[i]):
             return True
     return False
+
 
 def isParent(jsonTreeItem):
     for anim in jsonTreeItem:
@@ -367,14 +383,16 @@ def isParent(jsonTreeItem):
 
 
 class CharasetSelector(QWidget):
+
     def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.VBox = QVBoxLayout(self)
         self.ssettings = ssettings
 
-        if(self.ssettings == {} ):
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
+        if(self.ssettings == {}):
+            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "../Game/"))
 
         if (cset is not None):
             self.cset = cset
@@ -382,7 +400,7 @@ class CharasetSelector(QWidget):
             self.cset = CharasetFormat()
 
         self.csetList = QListWidget()
-        self.myBC= BaseCharaset(None)
+        self.myBC = BaseCharaset(None)
         self.update()
 
         self.previewer = AnimatedCharaTile()
@@ -409,23 +427,23 @@ class CharasetSelector(QWidget):
                     self.csetList.addItem(charaset)
 
         if(self.cset.getTileImage()):
-            fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+            fimg = os.path.join(
+                self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
             self.myBC.init(fimg)
 
-
     def reset(self):
-        if(self.csetList.count()>0):
+        if(self.csetList.count() > 0):
             self.csetList.setCurrentRow(0)
 
     def changed(self):
-        if(len(self.csetList.selectedItems())>0 and self.myBC.hasimage):
+        if(len(self.csetList.selectedItems()) > 0 and self.myBC.hasimage):
             row = self.csetList.row(self.csetList.selectedItems()[0])
             charaset = self.cset.getCharasets()[row]
             aarray = self.cset.getAnimation(charaset)
 
             self.previewer.setAnimArray(self.myBC.bcset, aarray)
 
-    def select(self,item):
+    def select(self, item):
         for itemIndex in range(self.csetList.count()):
             if (self.cset.getCharasets()[itemIndex] == item):
                 self.csetList.setCurrentRow(itemIndex)
@@ -437,25 +455,26 @@ class CharasetSelector(QWidget):
 
 
 class CharasetPreviewer(QWidget):
+
     def __init__(self, parent=None, ssettings={}, cset=None, scale=2, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.ssettings = ssettings
 
-        if(self.ssettings == {} ):
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
+        if(self.ssettings == {}):
+            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "../Game/"))
 
         if (cset is not None):
             self.cset = cset
         else:
             self.cset = CharasetFormat()
 
-
         self.cset.getTileImage()
-        self.myBC= BaseCharaset(None)
+        self.myBC = BaseCharaset(None)
         self.update()
 
-        self.previewer = AnimatedCharaTile(self,scale)
+        self.previewer = AnimatedCharaTile(self, scale)
         self.whsize = self.previewer.whsize
         self.setFixedSize(self.whsize)
 
@@ -469,15 +488,15 @@ class CharasetPreviewer(QWidget):
             if(os.path.isfile(f)):
                 self.cset.load(f)
 
-
         if(self.cset.getTileImage()):
-            fimg = os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
+            fimg = os.path.join(
+                self.ssettings["gamefolder"], fifl.IMG, self.cset.getTileImage())
             self.myBC.init(fimg)
 
     def stop(self):
         self.previewer.clearAnim()
 
-    def select(self,item):
+    def select(self, item):
         charasets = self.cset.getCharasets()
         for charaset in charasets:
             if (charaset == item):
@@ -488,8 +507,8 @@ class CharasetPreviewer(QWidget):
         return False
 
 
-
 class CharasetEditorWidget(QDialog):
+
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -530,7 +549,8 @@ class CharasetEditorWidget(QDialog):
         HBoxEntry.addWidget(self.csetsDelButton)
 
         self.csetsList = QListWidget()
-        self.csetsList.itemSelectionChanged.connect(self.csetsListSelectionChanged)
+        self.csetsList.itemSelectionChanged.connect(
+            self.csetsListSelectionChanged)
 
         VBoxCSets = QVBoxLayout()
         VBoxCSets.addWidget(QLabel("Charaset File:"))
@@ -544,19 +564,24 @@ class CharasetEditorWidget(QDialog):
         self.palette.clicked.connect(self.animselected)
         self.scrollArea = QtWidgets.QScrollArea()
         self.scrollArea.setWidget(self.palette)
-        self.scrollArea.setMinimumWidth(self.palette.boxw*self.palette.scale*3+16)
-        self.scrollArea.setMinimumHeight(self.palette.boxh*self.palette.scale*4+16)
+        self.scrollArea.setMinimumWidth(
+            self.palette.boxw * self.palette.scale * 3 + 16)
+        self.scrollArea.setMinimumHeight(
+            self.palette.boxh * self.palette.scale * 4 + 16)
 
         self.palImageFile = QLineEdit()
         self.palImageFileButton = QPushButton("Open")
         self.palImageFileButton.clicked.connect(self.imgOpen)
 
         self.animList = QListWidget()
-        self.animList.setIconSize(QSize(64,128))
+        self.animList.setIconSize(QSize(64, 128))
         self.animList.setFlow(QListWidget.LeftToRight)
-        self.animList.setMinimumWidth(self.palette.boxw*self.palette.scale*4+48)
-        self.animList.setMinimumHeight(self.palette.boxh*self.palette.scale*2+16)
-        self.animList.setMaximumHeight(self.palette.boxh*self.palette.scale*2+16)
+        self.animList.setMinimumWidth(
+            self.palette.boxw * self.palette.scale * 4 + 48)
+        self.animList.setMinimumHeight(
+            self.palette.boxh * self.palette.scale * 2 + 16)
+        self.animList.setMaximumHeight(
+            self.palette.boxh * self.palette.scale * 2 + 16)
         self.animList.setDragDropMode(QAbstractItemView.InternalMove)
         self.animListDel = QPushButton("Delete Frame")
         self.animListDel.clicked.connect(self.animListDelAction)
@@ -564,7 +589,6 @@ class CharasetEditorWidget(QDialog):
         animListModel = self.animList.model()
         animListModel.layoutChanged.connect(self.animListUpdated)
         animListModel.rowsInserted.connect(self.animListUpdated)
-
 
         self.animNamesEntry = QLineEdit()
         self.animNamesEntry.returnPressed.connect(self.animNamesAddAction)
@@ -574,7 +598,8 @@ class CharasetEditorWidget(QDialog):
         self.animNamesDel = QPushButton("Delete")
         self.animNamesDel.clicked.connect(self.animNamesDelAction)
         self.animNames = QListWidget()
-        self.animNames.itemSelectionChanged.connect(self.animNamesSelectionChanged)
+        self.animNames.itemSelectionChanged.connect(
+            self.animNamesSelectionChanged)
         self.animNames.itemChanged.connect(self.animNamesChanged)
 
         self.animPreview = AnimatedCharaTile()
@@ -625,20 +650,19 @@ class CharasetEditorWidget(QDialog):
             if(os.path.isfile(f)):
                 self.__charasetOpen(f)
 
-
     def csetsAddAction(self):
         charsetName = str(self.csetsEntry.text()).strip()
         jsonTree = {}
         self.csetsList.addItem(csetsItem(charsetName, jsonTree))
 
     def csetsDelAction(self):
-        if (len(self.csetsList.selectedItems())>0):
+        if (len(self.csetsList.selectedItems()) > 0):
             for item in self.csetsList.selectedItems():
                 itemIndex = self.csetsList.row(item)
                 self.csetsList.takeItem(itemIndex)
 
     def csetsListSelectionChanged(self):
-        if (len(self.csetsList.selectedItems())>0):
+        if (len(self.csetsList.selectedItems()) > 0):
             self.animNames.clear()
 
             jsonTree = self.csetsList.selectedItems()[0].jsonTree
@@ -646,20 +670,19 @@ class CharasetEditorWidget(QDialog):
             for item in jsonTree:
                 if(isParent(jsonTree[item])):
                     parentItem = AnimNamesItem(item, True, True)
-                    self.animNames.addItem(parentItem )
+                    self.animNames.addItem(parentItem)
                     for i in range(len(facing)):
-                        itemToAdd = AnimNamesItem("    "+facing[i])
+                        itemToAdd = AnimNamesItem("    " + facing[i])
                         itemToAdd.setIschildof(parentItem)
                         itemToAdd.setAarray(jsonTree[item][facing[i]])
                         self.animNames.addItem(itemToAdd)
                 else:
                     SingleItem = AnimNamesItem(item, False, True)
                     SingleItem.setAarray(jsonTree[item])
-                    self.animNames.addItem(SingleItem )
+                    self.animNames.addItem(SingleItem)
 
             self.animNames.setEnabled(True)
             self.animNames.setCurrentRow(0)
-
 
     def charasetNew(self):
 
@@ -669,13 +692,15 @@ class CharasetEditorWidget(QDialog):
 
     def charasetOpen(self):
 
-        if(self.ssettings == {} ):
-            filepath =  os.path.expanduser("~")
+        if(self.ssettings == {}):
+            filepath = os.path.expanduser("~")
         else:
             if "gamefolder" in self.ssettings:
-                filepath = os.path.join(self.ssettings["gamefolder"], fifl.CHARASETS)
+                filepath = os.path.join(
+                    self.ssettings["gamefolder"], fifl.CHARASETS)
 
-        filename = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', filepath ) )
+        filename = str(QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open File', filepath))
         self.__charasetOpen(filename)
 
     def __charasetOpen(self, filename):
@@ -684,33 +709,36 @@ class CharasetEditorWidget(QDialog):
             self.animNames.clear()
             self.animList.clear()
             self.cset.load(filename)
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(str(filename)),"../../"))
-            self.__imgOpen(os.path.join(self.ssettings["gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
+            self.ssettings["gamefolder"] = os.path.abspath(
+                os.path.join(os.path.dirname(str(filename)), "../../"))
+            self.__imgOpen(os.path.join(self.ssettings[
+                           "gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
             for charset in self.cset.jsonTree["Charaset"]:
-                if(charset!="tileImage"):
-                    self.csetsList.addItem(csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
+                if(charset != "tileImage"):
+                    self.csetsList.addItem(
+                        csetsItem(charset, self.cset.jsonTree["Charaset"][charset]))
 
     def charasetSave(self):
         self.cset.new()
 
         self.cset.setTileImage(self.tileImage)
         for itemIndex in range(self.csetsList.count()):
-            self.cset.addCharaset(str(self.csetsList.item(itemIndex).aname),self.csetsList.item(itemIndex).jsonTree)
-
+            self.cset.addCharaset(str(self.csetsList.item(
+                itemIndex).aname), self.csetsList.item(itemIndex).jsonTree)
 
         self.cset.save()
 
     def imgOpen(self):
 
         if(self.ssettings == {}):
-            filepath =  os.path.expanduser("~")
+            filepath = os.path.expanduser("~")
 
-        filename = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', filepath ) )
+        filename = str(QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open File', filepath))
         if os.path.isfile(filename):
             self.__imgOpen(filename)
 
-
-    def __imgOpen(self,filename):
+    def __imgOpen(self, filename):
         self.palette.update(filename)
         self.palImageFile.setText(filename)
 
@@ -720,38 +748,38 @@ class CharasetEditorWidget(QDialog):
 
     def animNamesChanged(self, dummy):
 
-        #print("changed!\n")
-        #print(self.csetsList.selectedItems()[0].jsonTree)
+        # print("changed!\n")
+        # print(self.csetsList.selectedItems()[0].jsonTree)
         jsonTree = {}
 
         for iItem in range(self.animNames.count()):
             if(self.animNames.item(iItem).isparent and not self.animNames.item(iItem).isgroup):
-                jsonTree[self.animNames.item(iItem).aname] = self.animNames.item(iItem).getAarray()
+                jsonTree[self.animNames.item(iItem).aname] = self.animNames.item(
+                    iItem).getAarray()
             if(self.animNames.item(iItem).isparent and self.animNames.item(iItem).isgroup):
                 jsonTree[self.animNames.item(iItem).aname] = {}
                 for jItem in range(self.animNames.count()):
                     if(self.animNames.item(jItem).ischildof == self.animNames.item(iItem)):
                         animationame = self.animNames.item(iItem).aname
                         facing = self.animNames.item(jItem).aname.strip()
-                        jsonTree[animationame][facing] = self.animNames.item(jItem).getAarray()
-
+                        jsonTree[animationame][
+                            facing] = self.animNames.item(jItem).getAarray()
 
         self.csetsList.selectedItems()[0].jsonTree = {}
-        #print("\nto:\n")
-        #print jsonTree
+        # print("\nto:\n")
+        # print jsonTree
         self.csetsList.selectedItems()[0].jsonTree = jsonTree
 
     def animNamesEnable(self, dummy):
-        if(len(self.animNamesEntry.text())>0):
+        if(len(self.animNamesEntry.text()) > 0):
             self.animNamesAdd.setEnabled(True)
             self.animNames.setEnabled(True)
         else:
             self.animNamesAdd.setEnabled(False)
             self.animNames.setEnabled(False)
 
-
     def animNamesDelAction(self):
-        if (len(self.animNames.selectedItems())>0):
+        if (len(self.animNames.selectedItems()) > 0):
             for item in self.animNames.selectedItems():
                 if(item.isparent):
                     for itemIndex in range(self.animNames.count()):
@@ -761,7 +789,7 @@ class CharasetEditorWidget(QDialog):
                     itemIndex = self.animNames.row(item)
                     self.animNames.takeItem(itemIndex)
                 elif(item.ischildof):
-                    itemsToTake=[]
+                    itemsToTake = []
                     for itemIndex in range(self.animNames.count()):
                         if(self.animNames.item(itemIndex).ischildof == item.ischildof and self.animNames.item(itemIndex) != item):
                             itemsToTake.append(self.animNames.item(itemIndex))
@@ -786,10 +814,10 @@ class CharasetEditorWidget(QDialog):
         self.animNamesSelectionChanged()
 
     def animListDelAction(self):
-        if (len(self.animList.selectedItems())>0):
-                for item in self.animList.selectedItems():
-                    itemIndex = self.animList.row(item)
-                    self.animList.takeItem(itemIndex)
+        if (len(self.animList.selectedItems()) > 0):
+            for item in self.animList.selectedItems():
+                itemIndex = self.animList.row(item)
+                self.animList.takeItem(itemIndex)
         else:
             self.animList.clear()
 
@@ -798,7 +826,7 @@ class CharasetEditorWidget(QDialog):
     def animNamesSelectionChanged(self):
         self.animPreview.clearAnim()
 
-        if (len(self.animNames.selectedItems())>0):
+        if (len(self.animNames.selectedItems()) > 0):
             if(self.animNames.selectedItems()[0].isgroup):
                 curRow = self.animNames.currentRow()
                 curRow += 1
@@ -812,29 +840,31 @@ class CharasetEditorWidget(QDialog):
                 self.updating = True
 
                 self.animList.clear()
-                if( len(animArray)> 0):
+                if(len(animArray) > 0):
                     for item in animArray:
-                        self.animList.addItem(CsetAItem(item, bcset, 2) )
+                        self.animList.addItem(CsetAItem(item, bcset, 2))
 
                 self.updating = False
                 self.animPreview.setAnimArray(bcset, animArray)
 
     def animNamesAddAction(self):
-        if(len(self.animNamesEntry.text())>0):
+        if(len(self.animNamesEntry.text()) > 0):
             if self.animNamesCheckBNF.isChecked():
-                self.animNames.addItem(AnimNamesItem(str(self.animNamesEntry.text()).strip(), False, True) )
+                self.animNames.addItem(AnimNamesItem(
+                    str(self.animNamesEntry.text()).strip(), False, True))
             else:
-                parentItem = AnimNamesItem(str(self.animNamesEntry.text()).strip(), True, True)
-                self.animNames.addItem(parentItem )
+                parentItem = AnimNamesItem(
+                    str(self.animNamesEntry.text()).strip(), True, True)
+                self.animNames.addItem(parentItem)
                 for i in range(len(facing)):
-                    itemToAdd = AnimNamesItem("    "+facing[i])
+                    itemToAdd = AnimNamesItem("    " + facing[i])
                     itemToAdd.setIschildof(parentItem)
                     self.animNames.addItem(itemToAdd)
 
-
     def animselected(self):
-        if (len(self.animNames.selectedItems())>0):
-            self.animList.addItem(CsetAItem(self.palette.rValue[0], self.palette.rValue[1], self.palette.rValue[2] ) )
+        if (len(self.animNames.selectedItems()) > 0):
+            self.animList.addItem(CsetAItem(self.palette.rValue[
+                                  0], self.palette.rValue[1], self.palette.rValue[2]))
             print(self.palette.rValue[0])
 
     def animListUpdated(self):
@@ -847,29 +877,32 @@ class CharasetEditorWidget(QDialog):
                     animArray.append(item.getCharType())
                     i += 1
 
-                self.animPreview.setAnimArray(self.palette.myBC.bcset, animArray)
+                self.animPreview.setAnimArray(
+                    self.palette.myBC.bcset, animArray)
                 self.animNames.selectedItems()[0].setAarray(animArray)
             else:
                 self.animPreview.clearAnim()
                 self.animNames.selectedItems()[0].setAarray([])
 
 
-
 class CharasPaletteWidget(QWidget):
-    def __init__(self,pMap, pSettings, parent=None, **kwargs):
+
+    def __init__(self, pMap, pSettings, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
+
 
 class CharasEditorWidget(QWidget):
-    def __init__(self,pMap, pSettings, parent=None, **kwargs):
+
+    def __init__(self, pMap, pSettings, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     from sys import argv, exit
 
-    a=QApplication(argv)
-    #m=CharasetSelector()
-    m=CharasetEditorWidget()
+    a = QApplication(argv)
+    # m=CharasetSelector()
+    m = CharasetEditorWidget()
     a.processEvents()
     m.show()
     m.raise_()
