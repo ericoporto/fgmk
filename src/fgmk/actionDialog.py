@@ -78,14 +78,12 @@ class changeTile(QDialog):
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
-        self.connect(self.myMiniMapWidget, SIGNAL(
-            'selectedTile()'), self.setTeleportPlace)
+        self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
         self.LineTextPlace = QLineEdit()
 
         self.myMiniPaletteWidget = TXWdgt.MiniPaletteWidget(
             self.currentTileSet, self)
-        self.connect(self.myMiniPaletteWidget, SIGNAL(
-            'selectedTilePalette()'), self.setTileToChange)
+        self.myMiniPaletteWidget.selectedTilePalette.connect(self.setTileToChange)
         self.LineTextTile = QLineEdit()
 
         self.comboBoxLayers = QComboBox()
@@ -264,8 +262,8 @@ class teleport(QDialog):
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
-        self.connect(self.myMiniMapWidget, SIGNAL(
-            'selectedTile()'), self.setTeleportPlace)
+        self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
+
         self.LineText = QLineEdit()
         self.buttonBox = QDialogButtonBox(
             QDialogButtonBox.Ok | QDialogButtonBox.Cancel)

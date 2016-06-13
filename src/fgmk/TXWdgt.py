@@ -269,11 +269,10 @@ class newFile(QDialog):
 
 
 class MiniPaletteWidget(QWidget):
+    selectedTilePalette = pyqtSignal()
 
     def __init__(self, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
-
-        selectedTilePalette = pyqtSignal()
 
         self.VBox = QVBoxLayout(self)
 
@@ -342,6 +341,7 @@ class MiniPaletteWidget(QWidget):
 
 
 class MiniMapWidget(QWidget):
+    selectedTile = pyqtSignal()
 
     def __init__(self, pMyMap, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -426,7 +426,7 @@ class MiniMapWidget(QWidget):
 
         self.resize(len(LayersMapTiles[0]) * boxsize * self.myScale + 2,
                     len(LayersMapTiles[0][0]) * boxsize * self.myScale + 2)
-        self.emit(SIGNAL('selectedTile()'))
+        self.selectedTile.emit()
 
     def getValue(self):
         return self.selectedPosition
