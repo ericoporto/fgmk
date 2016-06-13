@@ -987,7 +987,7 @@ class MainWindow(QMainWindow):
     def saveFileAs(self):
         global sSettings
         filename = QtWidgets.QFileDialog.getSaveFileName(
-            self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.json)')
+            self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.map.json)')
         if filename != "":
             sSettings["workingFile"] = filename
             self.myMap.save(sSettings["workingFile"])
@@ -1005,7 +1005,7 @@ class MainWindow(QMainWindow):
         if(sSettings["gamefolder"] == ""):
             sSettings["gamefolder"] = os.path.expanduser("~")
         filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', sSettings["gamefolder"], "JSON Level (*.json);;All Files (*)")[0]
+            self, 'Open File', sSettings["gamefolder"], "JSON Level (*.map.json);;All Files (*)")[0]
         if os.path.isfile(filename):
             sSettings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
