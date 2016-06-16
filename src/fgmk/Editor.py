@@ -399,8 +399,8 @@ class EventsWidget(QWidget):
         self.removeActionButton.clicked.connect(self.removeAction)
         self.deselectActionButton.clicked.connect(self.deselectAction)
 
-        self.HBox.addLayout(VBoxEventsList)
-        self.HBox.addLayout(VBoxActionList)
+        self.HBox.addLayout(VBoxEventsList, 1)
+        self.HBox.addLayout(VBoxActionList, 2)
         self.HBox.addLayout(VBoxLeftButtons)
         self.HBox.addLayout(VBoxButtons)
 
