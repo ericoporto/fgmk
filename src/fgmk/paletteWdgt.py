@@ -6,6 +6,8 @@ class PaletteWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, tileSetInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
 
+        self.parent=parent
+
         self.VBox = QtWidgets.QVBoxLayout(self)
 
         self.tileSetInstance = tileSetInstance
@@ -57,7 +59,7 @@ class PaletteWidget(QtWidgets.QWidget):
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
     def setTileCurrent(self):
-        self.changeTileCurrent(self.sender().tileType[0])
+        self.parent.changeTileCurrent(self.sender().tileType[0])
 
     def setImageCurrent(self, imageIndex):
         self.CurrentTT.initTile(self.tileSetInstance.tileset, 0, 0,

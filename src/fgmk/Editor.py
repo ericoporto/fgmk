@@ -4,7 +4,6 @@ import os
 import sys
 import json
 import tarfile
-import types
 from time import time, sleep
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -30,20 +29,6 @@ rightClickTool = 1
 
 firstClickX = None
 firstClickY = None
-
-def selfChangeTileCurrent(self, changeTo):
-    changeTileCurrent(changeTo)
-
-def changeTileCurrent(changeTo):
-    __mwind__.myMapWidget.currentTile = changeTo
-    __mwind__.myPaletteWidget.setImageCurrent(changeTo)
-
-def changeEventCurrent(changeTo):
-    __mwind__.myMapWidget.currentEvent = changeTo
-
-def changeLayerCurrent(changeTo):
-    __mwind__.myMapWidget.currentLayer = changeTo
-
 
 class MapWidget(QWidget):
 
@@ -142,7 +127,7 @@ class MapWidget(QWidget):
                 self.currentEvent = self.sender().tileType[EVENTSLAYER]
                 self.parent.myEventsWidget.updateEventsList()
             else:
-                changeTileCurrent(self.sender().tileType[self.currentLayer])
+                self.parent.changeTileCurrent(self.sender().tileType[self.currentLayer])
 
         elif theClickedTool == 2:
             # bucket
@@ -222,7 +207,7 @@ class MapWidget(QWidget):
             else:
                 changeTypeTo = abs(self.sender().tileType[
                                    self.currentLayer] + scrollAmount - 2)
-            changeTileCurrent(changeTypeTo)
+            self.parent.changeTileCurrent(changeTypeTo)
         self.changeTileType(changeTypeTo)
         if(self.currentLayer == EVENTSLAYER):
             self.parent.myEventsWidget.updateEventsList()
@@ -383,7 +368,7 @@ class EventsWidget(QWidget):
         self.eventSelectSpinbox.setMinimum(1)
         self.eventSelectSpinbox.setMaximum(100)
         self.eventSelectSpinbox.setSingleStep(1)
-        self.eventSelectSpinbox.valueChanged.connect(changeEventCurrent)
+        self.eventSelectSpinbox.valueChanged.connect(self.parent.changeEventCurrent)
 
         self.addActionButton = QPushButton("Add Action", self)
         self.editActionButton = QPushButton("Edit Action", self)
@@ -614,6 +599,8 @@ class LayerWidget(QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
+        self.parent=parent
+
         self.VBox = QVBoxLayout(self)
         self.VBox.setAlignment(Qt.AlignTop)
 
@@ -646,7 +633,7 @@ class LayerWidget(QWidget):
 
         self.LabelLayer.setText("Current: %s" %
                                 str(self.sender().objectName()))
-        changeLayerCurrent(layerNumber)
+        self.parent.changeLayerCurrent(layerNumber)
 
 class CharasPalWidget(QtWidgets.QWidget):
 
@@ -755,6 +742,15 @@ class ExitFSWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
+    def changeLayerCurrent(self, changeTo):
+        self.myMapWidget.currentLayer = changeTo
+
+    def changeEventCurrent(self, changeTo):
+        self.myMapWidget.currentEvent = changeTo
+
+    def changeTileCurrent(self, changeTo):
+        self.myMapWidget.currentTile = changeTo
+        self.myPaletteWidget.setImageCurrent(changeTo)
 
     def __init__(self, parent=None, **kwargs):
         global sSettings
@@ -783,7 +779,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.scrollArea)
 
-        self.FancyWindow()
+        self.FancyWindow(self)
 
     def selectStartPosition(self):
         result = gameInit.selectStartingPosition(self, sSettings)
@@ -804,7 +800,7 @@ class MainWindow(QMainWindow):
         if(doSave):
             TXWdgt.saveInitFile(sSettings["gamefolder"], result[0])
 
-    def FancyWindow(self):
+    def FancyWindow(self, parent=None):
         global sSettings
 
         self.menubar = QtWidgets.QMenuBar(self)
@@ -836,7 +832,6 @@ class MainWindow(QMainWindow):
         self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = paletteWdgt.PaletteWidget(self, self.myTileSet)
-        self.myPaletteWidget.changeTileCurrent = types.MethodType( selfChangeTileCurrent, self.myPaletteWidget )
         self.paletteDockWdgt = QDockWidget("Palette", self)
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, self.paletteDockWdgt)
@@ -972,7 +967,7 @@ class MainWindow(QMainWindow):
         self.myTileSet = TileXtra.TileSet(os.path.join(
             sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
-        __mwind__.gridViewAction.setChecked(False)  # gambiarra
+        self.gridViewAction.setChecked(False)  # gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
@@ -1015,7 +1010,7 @@ class MainWindow(QMainWindow):
             self.myTileSet = TileXtra.TileSet(os.path.join(
                 sSettings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
-            __mwind__.gridViewAction.setChecked(False)  # gambiarra
+            self.gridViewAction.setChecked(False)  # gambiarra
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
@@ -1038,6 +1033,8 @@ class MainWindow(QMainWindow):
         else:
             event.ignore()
 
+def Icon():
+    return QPixmap('icon.png')
 
 def Editor():
     from sys import argv, exit
@@ -1045,7 +1042,7 @@ def Editor():
 
     a = QApplication(argv)
     start = time()
-    splash_pix = QPixmap('icon.png')
+    splash_pix = Icon()
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
