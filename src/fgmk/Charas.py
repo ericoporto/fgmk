@@ -554,6 +554,9 @@ class CharaSelector(QWidget):
 
                 self.csetprev.update()
 
+        if self.charaqlist.count() > 0:
+            self.charaqlist.setCurrentRow(0)
+
     def setList(self,dictToSet):
         self.charaqlist.clear()
         for chara in dictToSet:
