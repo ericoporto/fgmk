@@ -1,19 +1,35 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import os
-import sys
+from os import path as ospath
+from sys import path as syspath
 
-if os.path.isdir(os.path.join(".","src")) and os.path.isfile(
-        os.path.join(".","setup.py")):
-    sys.path.append(os.path.realpath("src"))
-    sys.path.append(os.path.realpath("src/fgmk"))
-    sys.path.append(os.path.realpath("src/extras"))
+if ospath.isdir(ospath.join(".","src")) and ospath.isfile(
+        ospath.join(".","setup.py")):
+    syspath.append(ospath.realpath("src"))
+    syspath.append(ospath.realpath("src/fgmk"))
+    syspath.append(ospath.realpath("src/extras"))
 
-from fgmk.Editor import Editor
-
-def main():
-    Editor()
 
 if __name__ == "__main__":
-    main()
+    from sys import argv, exit
+    from time import time, sleep
+    from PyQt5.QtWidgets import QApplication, QSplashScreen
+    from PyQt5.QtCore import Qt
+    from fgmk.Editor import MainWindow, Icon
+
+    a = QApplication(argv)
+    start = time()
+    splash_pix = Icon()
+    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    while time() - start < 1:
+        sleep(0.001)
+        a.processEvents()
+    mw = MainWindow(argv)
+    a.processEvents()
+    mw.show()
+    splash.finish(mw)
+    mw.raise_()
+    exit(a.exec_())

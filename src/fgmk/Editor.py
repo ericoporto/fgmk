@@ -752,9 +752,9 @@ class MainWindow(QMainWindow):
         self.myMapWidget.currentTile = changeTo
         self.myPaletteWidget.setImageCurrent(changeTo)
 
-    def __init__(self, parent=None, **kwargs):
+    def __init__(self, filelist, **kwargs):
         global sSettings
-        super().__init__(parent, **kwargs)
+        super().__init__(None, **kwargs)
 
         self.resize(1024, 768)
 
@@ -780,6 +780,40 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.scrollArea)
 
         self.FancyWindow(self)
+
+        self.opemFileIfDropped(filelist)
+
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasUrls:
+            event.accept()
+            self.opemFileIfDropped(event.mimeData().urls()[0].toLocalFile())
+
+        else:
+            event.ignore()
+
+    def opemFileIfDropped(self, filelist):
+        if (isinstance(filelist,str)):
+            if (".map.json" in filelist):
+                self.openFileByName(filelist)
+
+        else:
+            matching = [s for s in filelist if ".map.json" in s]
+            if len(matching) > 0:
+                self.openFileByName(matching[0])
 
     def selectStartPosition(self):
         result = gameInit.selectStartingPosition(self, sSettings)
@@ -995,12 +1029,8 @@ class MainWindow(QMainWindow):
             sSettings["workingFile"] = filename
             self.myMap.exportJS(sSettings["workingFile"])
 
-    def openFile(self):
+    def openFileByName(self, filename):
         global sSettings
-        if(sSettings["gamefolder"] == ""):
-            sSettings["gamefolder"] = os.path.expanduser("~")
-        filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', sSettings["gamefolder"], "JSON Level (*.map.json);;All Files (*)")[0]
         if os.path.isfile(filename):
             sSettings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
@@ -1015,6 +1045,14 @@ class MainWindow(QMainWindow):
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
             self.myCharasPalWidget.reinit()
+
+    def openFile(self):
+        global sSettings
+        if(sSettings["gamefolder"] == ""):
+            sSettings["gamefolder"] = os.path.expanduser("~")
+        filename = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open File', sSettings["gamefolder"], "JSON Level (*.map.json);;All Files (*)")[0]
+        self.openFileByName(filename)
 
     def helpAbout(self):
         credits = "Made by Erico\nWith help from the internet.\nHigly based in Tsubasa's Redo, and inspired in Enterbrain's RPG Maker 2000.\nThanks Nintendo for making the SNES."
@@ -1035,23 +1073,3 @@ class MainWindow(QMainWindow):
 
 def Icon():
     return QPixmap('icon.png')
-
-def Editor():
-    from sys import argv, exit
-    global __mwind__
-
-    a = QApplication(argv)
-    start = time()
-    splash_pix = Icon()
-    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
-    splash.setMask(splash_pix.mask())
-    splash.show()
-    while time() - start < 1:
-        sleep(0.001)
-        a.processEvents()
-    __mwind__ = MainWindow()
-    a.processEvents()
-    __mwind__.show()
-    splash.finish(__mwind__)
-    __mwind__.raise_()
-    exit(a.exec_())
