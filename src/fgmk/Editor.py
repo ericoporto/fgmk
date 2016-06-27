@@ -122,9 +122,9 @@ class MapWidget(QWidget):
         elif theClickedTool == 1:
             # dropper
             if(self.currentLayer == COLISIONLAYER):
-                self.currentColision = self.sender().tileType[COLISIONLAYER]
+                self.parent.changeColisionCurrent(self.sender().tileType[COLISIONLAYER])
             elif(self.currentLayer == EVENTSLAYER):
-                self.currentEvent = self.sender().tileType[EVENTSLAYER]
+                self.parent.changeEventCurrent(self.sender().tileType[EVENTSLAYER])
                 self.parent.myEventsWidget.updateEventsList()
             else:
                 self.parent.changeTileCurrent(self.sender().tileType[self.currentLayer])
@@ -365,10 +365,20 @@ class EventsWidget(QWidget):
 
         self.labelEventsCurrent = QLabel("Event Nº")
         self.eventSelectSpinbox = QSpinBox(self)
-        self.eventSelectSpinbox.setMinimum(1)
+        self.eventSelectSpinbox.setToolTip("Event 0 means No Event.")
+        self.eventSelectSpinbox.setMinimum(0)
         self.eventSelectSpinbox.setMaximum(100)
         self.eventSelectSpinbox.setSingleStep(1)
         self.eventSelectSpinbox.valueChanged.connect(self.parent.changeEventCurrent)
+
+        self.labelColisionCurrent = QLabel("Colision")
+        self.radiocolision = QRadioButton("Colide")
+        self.radionocolision = QRadioButton("Clear")
+        self.radiocolision.setChecked(True)
+        self.radiocolision.toggled.connect(self.radioColisionToggled)
+        self.radionocolision.toggled.connect(self.radioNoColisionToggled)
+        self.radiocolision.clicked.connect(self.colisionRadioSelected)
+        self.radionocolision.clicked.connect(self.colisionRadioSelected)
 
         self.addActionButton = QPushButton("Add Action", self)
         self.editActionButton = QPushButton("Edit Action", self)
@@ -391,6 +401,9 @@ class EventsWidget(QWidget):
 
         VBoxLeftButtons.addWidget(self.labelEventsCurrent)
         VBoxLeftButtons.addWidget(self.eventSelectSpinbox)
+        VBoxLeftButtons.addWidget(self.labelColisionCurrent)
+        VBoxLeftButtons.addWidget(self.radiocolision)
+        VBoxLeftButtons.addWidget(self.radionocolision)
 
         VBoxEventsList.addWidget(self.labelEventsList)
         VBoxEventsList.addWidget(self.EventsList)
@@ -433,6 +446,23 @@ class EventsWidget(QWidget):
         self.show()
 
         self.pMap = pMap
+
+    def colisionRadioSelected(self):
+        self.parent.changeLayerCurrent(COLISIONLAYER)
+
+    def setColisionValueView(self,colisionValue):
+        if(colisionValue==1):
+            self.radiocolision.setChecked(True)
+        else:
+            self.radionocolision.setChecked(True)
+
+    def radioColisionToggled(self):
+        if(self.radiocolision.isChecked()):
+            self.parent.myMapWidget.currentColision = 1;
+
+    def radioNoColisionToggled(self):
+        if(self.radionocolision.isChecked()):
+            self.parent.myMapWidget.currentColision = 0;
 
     def updateActionFromWidget(self):
         self.pMap.removeAllActionsOnEvent(
@@ -611,29 +641,32 @@ class LayerWidget(QWidget):
         for i in range(len(TileXtra.LayersName)):
             self.ButtonLayer.append(QPushButton(TileXtra.LayersName[i]))
             self.ButtonLayer[-1].setObjectName(TileXtra.LayersName[i])
-            self.ButtonLayer[-1].clicked.connect(self.changeLayerTo)
+            self.ButtonLayer[-1].clicked.connect(self.buttonLayerClicked)
             self.VBox.addWidget(self.ButtonLayer[-1])
 
         self.setMaximumHeight(180)
 
         self.show()
 
-    def changeLayerTo(self):
+    def buttonLayerClicked(self):
         # print self.sender().objectName()
         if str(self.sender().objectName()) == TileXtra.LayersName[0]:
-            layerNumber = 0
+            self.changeLayerTo(0)
         elif str(self.sender().objectName()) == TileXtra.LayersName[1]:
-            layerNumber = 1
+            self.changeLayerTo(1)
         elif str(self.sender().objectName()) == TileXtra.LayersName[2]:
-            layerNumber = 2
+            self.changeLayerTo(2)
         elif str(self.sender().objectName()) == TileXtra.LayersName[3]:
-            layerNumber = COLISIONLAYER
+            self.changeLayerTo(COLISIONLAYER)
         elif str(self.sender().objectName()) == TileXtra.LayersName[4]:
-            layerNumber = EVENTSLAYER
+            self.changeLayerTo(EVENTSLAYER)
 
-        self.LabelLayer.setText("Current: %s" %
-                                str(self.sender().objectName()))
+    def changeLayerTo(self, layerNumber):
         self.parent.changeLayerCurrent(layerNumber)
+
+    def changeLayerView(self, layerNumber):
+        self.LabelLayer.setText("Current: %s" %
+                                TileXtra.LayersName[layerNumber])
 
 class CharasPalWidget(QtWidgets.QWidget):
 
@@ -744,9 +777,16 @@ class ExitFSWidget(QWidget):
 class MainWindow(QMainWindow):
     def changeLayerCurrent(self, changeTo):
         self.myMapWidget.currentLayer = changeTo
+        self.myLayerWidget.changeLayerView(changeTo)
 
     def changeEventCurrent(self, changeTo):
         self.myMapWidget.currentEvent = changeTo
+        self.myEventsWidget.eventSelectSpinbox.setValue(changeTo)
+        self.changeLayerCurrent(EVENTSLAYER)
+
+    def changeColisionCurrent(self, changeTo):
+        self.myMapWidget.currentColision = changeTo
+        self.myEventsWidget.setColisionValueView(changeTo)
 
     def changeTileCurrent(self, changeTo):
         self.myMapWidget.currentTile = changeTo
