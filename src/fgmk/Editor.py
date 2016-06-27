@@ -57,6 +57,17 @@ class MapWidget(QWidget):
 
         self.DrawMap(parent)
 
+    def Rescale(self, scale=None):
+        if(scale != None):
+            self.myScale = scale
+
+        for iy in range(self.TileHeight):
+            for jx in range(self.TileWidth):
+                self.TileList[iy][jx].Rescale(self.myScale)
+
+        self.resize(self.TileWidth * self.parent.myTileSet.boxsize * self.myScale,
+                    self.TileHeight * self.parent.myTileSet.boxsize * self.myScale)
+
     def DrawMap(self, parent):
 
         # self.setUpdatesEnabled(False)
@@ -942,6 +953,30 @@ class MainWindow(QMainWindow):
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
+        self.viewMenu.addSeparator()
+
+        self.zoom05xViewAction = QtWidgets.QAction(
+            'Zoom 0.5x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.zoom05xViewAction)
+        self.zoom05xViewAction.triggered.connect(self.changeZoom05x)
+
+        self.zoom1xViewAction = QtWidgets.QAction(
+            'Zoom 1x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.zoom1xViewAction)
+        self.zoom1xViewAction.triggered.connect(self.changeZoom1x)
+
+        self.zoom2xViewAction = QtWidgets.QAction(
+            'Zoom 2x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.zoom2xViewAction)
+        self.zoom2xViewAction.triggered.connect(self.changeZoom2x)
+
+        self.zoom4xViewAction = QtWidgets.QAction(
+            'Zoom 4x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.zoom4xViewAction)
+        self.zoom4xViewAction.triggered.connect(self.changeZoom4x)
+
+        self.viewMenu.addSeparator()
+
         self.gridViewAction = QtWidgets.QAction(
             'grid', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.gridViewAction)
@@ -964,6 +999,43 @@ class MainWindow(QMainWindow):
 
         self.setMenuBar(self.menubar)
 
+        self.changeZoomValue(2)
+
+    def changeZoomValue(self, zoomvalue):
+        if(zoomvalue==0.5):
+            self.zoom05xViewAction.setChecked(True)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(False)
+        if(zoomvalue==1):
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(True)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(False)
+        if(zoomvalue==2):
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(True)
+            self.zoom4xViewAction.setChecked(False)
+        if(zoomvalue==4):
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(True)
+        self.myMapWidget.Rescale(zoomvalue)
+
+    def changeZoom05x(self, checked):
+        self.changeZoomValue(0.5)
+
+    def changeZoom1x(self, checked):
+        self.changeZoomValue(1)
+
+    def changeZoom2x(self, checked):
+        self.changeZoomValue(2)
+
+    def changeZoom4x(self, checked):
+        self.changeZoomValue(4)
+
     def editCharasets(self):
         global sSettings
         myCharasetEditor = TileCharaset.CharasetEditorWidget(self, sSettings)
@@ -985,16 +1057,17 @@ class MainWindow(QMainWindow):
             self.exitFSDockWdgt.hide()
 
     def changeGridMargin(self):
+        bxsz = self.myTileSet.boxsize
         if self.gridViewAction.isChecked() is True:
             self.myMapWidget.Grid.setHorizontalSpacing(1)
             self.myMapWidget.Grid.setVerticalSpacing(1)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth * ((32) * self.myMapWidget.myScale + 1),
-                                    self.myMapWidget.TileHeight * ((32) * self.myMapWidget.myScale + 1))
+            self.myMapWidget.resize(self.myMapWidget.TileWidth * (bxsz * self.myMapWidget.myScale + 1)-1,
+                                    self.myMapWidget.TileHeight * (bxsz * self.myMapWidget.myScale + 1)-1)
         else:
             self.myMapWidget.Grid.setHorizontalSpacing(0)
             self.myMapWidget.Grid.setVerticalSpacing(0)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth * 32 * self.myMapWidget.myScale,
-                                    self.myMapWidget.TileHeight * 32 * self.myMapWidget.myScale)
+            self.myMapWidget.resize(self.myMapWidget.TileWidth * bxsz * self.myMapWidget.myScale,
+                                    self.myMapWidget.TileHeight * bxsz * self.myMapWidget.myScale)
         self.myMapWidget.show()
 
 

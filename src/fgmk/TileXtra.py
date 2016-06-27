@@ -379,17 +379,25 @@ class ExtendedQLabel(QLabel):
         self.tileX = 0
         self.tileY = 0
         self.boxSize = 32
-        self.setMinimumSize(QSize(self.boxSize, self.boxSize))
+        self.ndPixmap = []
+        #self.setMinimumSize(QSize(self.boxSize, self.boxSize))
 
     clicked = pyqtSignal()
     rightClicked = pyqtSignal()
 
+    def Rescale(self, scale=None):
+        if(scale != None):
+            self.scale = scale
+
+        pixmap = self.ndPixmap
+        self.setPixmap(pixmap.scaled(self.scale*self.boxSize, self.scale*self.boxSize))
 
     def initTile(self, tileset, x, y, boxSize, tileType, scale=1):
         self.tileType = tileType
         self.tileX = x
         self.tileY = y
         self.boxSize = boxSize
+        self.scale = scale
 
         if(scale == 2):
             tempscale = 1
@@ -427,6 +435,7 @@ class ExtendedQLabel(QLabel):
                 (int(boxSize * scale), int(boxSize * scale)), Image.NEAREST)
 
         pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
+        self.ndPixmap = pixmap
         self.setPixmap(pixmap)
 
        # self.setMinimumSize (QSize(boxSize*scale, boxSize*scale))
@@ -434,6 +443,7 @@ class ExtendedQLabel(QLabel):
 
     def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1):
         self.tileType[layer] = ChangeTileType
+        self.scale = scale
 
         if(scale == 2):
             tempscale = 1
@@ -471,6 +481,7 @@ class ExtendedQLabel(QLabel):
                 (int(self.boxSize * scale), int(self.boxSize * scale)), Image.NEAREST)
 
         pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
+        self.ndPixmap = pixmap
         self.setPixmap(pixmap)
 
     def mousePressEvent(self, ev):
