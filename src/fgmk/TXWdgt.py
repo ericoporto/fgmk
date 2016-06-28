@@ -362,26 +362,28 @@ class MiniMapWidget(QWidget):
 
         self.TileList = []
         self.selectedPosition = [0, 0]
-        self.DrawMap(parent, pMyMap, pMyTileset)
+        self.DrawMap(pMyMap, pMyTileset)
 
-    def DrawMap(self, parent, pMyMap, pMyTileset):
+    def DrawMap(self, pMyMap, pMyTileset):
         self.setVisible(False)
         self.pMyMap = pMyMap
         self.pMyTileset = pMyTileset
 
-        LayersMapTiles = self.pMyMap .LayersMapTiles
+        LayersMapTiles = self.pMyMap.LayersMapTiles
         tileset = self.pMyTileset.tileset
         boxsize = self.pMyTileset.boxsize
+
+        self.TileHeight = len(LayersMapTiles[0])
+        self.TileWidth = len(LayersMapTiles[0][0])
 
         if len(self.TileList) > 1:
             for collum in self.TileList:
                 for wdgt in collum:
+                    self.Grid.removeWidget(wdgt)
                     wdgt.deleteLater()
+                    wdgt.setParent(None)
                     wdgt = None
             self.TileList = []
-
-        self.TileHeight = len(LayersMapTiles[0])
-        self.TileWidth = len(LayersMapTiles[0][0])
 
         # for i in height
         for iy in range(self.TileHeight):
@@ -403,29 +405,9 @@ class MiniMapWidget(QWidget):
         sender = self.sender()
         self.selectedPosition = [sender.tileX, sender.tileY]
 
-        LayersMapTiles = self.pMyMap.LayersMapTiles
         boxsize = self.pMyTileset.boxsize
         scale = self.myScale
 
-        for i in range(self.TileWidth):
-            for j in range(self.TileHeight):
-
-                if (j == self.selectedPosition[1]):
-                    self.Grid.setRowMinimumHeight(j, boxsize * scale + 1)
-                elif (j == self.selectedPosition[1] - 1):
-                    self.Grid.setRowMinimumHeight(j, boxsize * scale + 1)
-                else:
-                    self.Grid.setRowMinimumHeight(j, boxsize * scale)
-
-                if (i == self.selectedPosition[0]):
-                    self.Grid.setColumnMinimumWidth(i, boxsize * scale + 1)
-                elif (i == self.selectedPosition[0] - 1):
-                    self.Grid.setColumnMinimumWidth(i, boxsize * scale + 1)
-                else:
-                    self.Grid.setColumnMinimumWidth(i, boxsize * scale)
-
-        self.resize(len(LayersMapTiles[0]) * boxsize * self.myScale + 2,
-                    len(LayersMapTiles[0][0]) * boxsize * self.myScale + 2)
         self.selectedTile.emit()
 
     def getValue(self):

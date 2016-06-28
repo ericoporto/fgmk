@@ -403,12 +403,14 @@ class ExtendedQLabel(QLabel):
         self.tileType[layer] = ChangeTileType
         self.scale = scale
 
-        if(scale == 2):
-            tempscale = 1
-        elif(scale == 0.5):
-            tempscale = 2
-        else:
-            tempscale = 0
+        #if(scale == 2):
+        #    tempscale = 1
+        #elif(scale == 0.5):
+        #    tempscale = 2
+        #else:
+        #    tempscale = 0
+        #
+        tempscale = 0
 
         Composite = clearTile.tileset[0][tempscale]
         try:
@@ -434,9 +436,12 @@ class ExtendedQLabel(QLabel):
                 Composite = tMat.alpha_composite(Composite, eventSet.tileset[
                                                  self.tileType[i + 2]][tempscale])
 
-        if(scale != 1 and scale != 0.5 and scale != 2):
-            Composite = Composite.resize(
-                (int(self.boxSize * scale), int(self.boxSize * scale)), Image.NEAREST)
+        #if(scale != 1 and scale != 0.5 and scale != 2):
+        #    Composite = Composite.resize(
+        #        (int(self.boxSize * scale), int(self.boxSize * scale)), Image.NEAREST)
+
+        Composite = Composite.resize(
+            (int(self.boxSize * scale), int(self.boxSize * scale)), Image.NEAREST)
 
         pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
         self.ndPixmap = pixmap

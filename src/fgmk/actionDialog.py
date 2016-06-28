@@ -258,7 +258,7 @@ class teleport(QDialog):
                 self.currentLevel.tileImage, self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
-            self.currentLevel, self.currentTileSet, self)
+            self.currentLevel, self.currentTileSet)
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
@@ -322,7 +322,7 @@ class teleport(QDialog):
                 self.currentTileSet = self.parent.myTileSet
 
         self.myMiniMapWidget.DrawMap(
-            self, self.currentLevel, self.currentTileSet)
+            self.currentLevel, self.currentTileSet)
 
     def getValue(self):
         text = str(self.LineText.text()) + ";" + \
