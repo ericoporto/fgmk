@@ -564,8 +564,7 @@ class fadeIn(QDialog):
         if(edit != None):
             for idx, val in enumerate(effects):
                 if(val[1] == edit[0]):
-                    self.ListEffect.setItemSelected(
-                        self.ListEffect.item(idx), True)
+                    self.ListEffect.setCurrentRow(idx)
 
             if(edit[1] == 'keepEffect'):
                 self.checkbox.setCheckState(Qt.Checked)
@@ -616,8 +615,7 @@ class fadeOut(QDialog):
         if(edit != None):
             for idx, val in enumerate(effects):
                 if(val[1] == edit[0]):
-                    self.ListEffect.setItemSelected(
-                        self.ListEffect.item(idx), True)
+                    self.ListEffect.setCurrentRow(idx)
 
             if(edit[1] == 'keepEffect'):
                 self.checkbox.setCheckState(Qt.Checked)

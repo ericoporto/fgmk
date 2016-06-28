@@ -385,12 +385,10 @@ class ExtendedQLabel(QLabel):
     clicked = pyqtSignal()
     rightClicked = pyqtSignal()
 
-    def Rescale(self, scale=None):
-        if(scale != None):
-            self.scale = scale
+    def Rescale(self, tileset,  scale=1):
+        self.scale = scale
 
-        pixmap = self.ndPixmap
-        self.setPixmap(pixmap.scaled(self.scale*self.boxSize, self.scale*self.boxSize))
+        self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
     def initTile(self, tileset, x, y, boxSize, tileType, scale=1):
         self.tileType = tileType
@@ -399,47 +397,7 @@ class ExtendedQLabel(QLabel):
         self.boxSize = boxSize
         self.scale = scale
 
-        if(scale == 2):
-            tempscale = 1
-        elif(scale == 0.5):
-            tempscale = 2
-        else:
-            tempscale = 0
-
-        Composite = clearTile.tileset[0][tempscale]
-        try:
-            for i in range(len(tileType) - 2):
-                if(tileType[i]):
-                    Composite = Image.alpha_composite(
-                        Composite, tileset[tileType[i]][tempscale])
-            if(tileType[i + 1]):
-                Composite = Image.alpha_composite(Composite, colisionSet.tileset[
-                                                  tileType[i + 1]][tempscale])
-            if(tileType[i + 2]):
-                Composite = Image.alpha_composite(Composite, eventSet.tileset[
-                                                  tileType[i + 2]][tempscale])
-        except:
-            for i in range(len(tileType) - 2):
-                if(tileType[i]):
-                    Composite = tMat.alpha_composite(
-                        Composite, tileset[tileType[i]][tempscale])
-            if(tileType[i + 1]):
-                Composite = tMat.alpha_composite(Composite, colisionSet.tileset[
-                                                 tileType[i + 1]][tempscale])
-            if(tileType[i + 2]):
-                Composite = tMat.alpha_composite(Composite, eventSet.tileset[
-                                                 tileType[i + 2]][tempscale])
-
-        if(scale != 1 and scale != 0.5 and scale != 2):
-            Composite = Composite.resize(
-                (int(boxSize * scale), int(boxSize * scale)), Image.NEAREST)
-
-        pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
-        self.ndPixmap = pixmap
-        self.setPixmap(pixmap)
-
-       # self.setMinimumSize (QSize(boxSize*scale, boxSize*scale))
-        #self.setMaximumSize (QSize(boxSize*scale, boxSize*scale))
+        self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
     def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1):
         self.tileType[layer] = ChangeTileType
