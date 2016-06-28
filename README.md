@@ -22,7 +22,7 @@ For removing, use `sudo apt remove python3-fgmk` .
 
 ### From Source Installation
 
-Clone this repository and install this and all dependencies with pip3.
+Clone this repository, meet the dependencies and install this with pip3.
 
     git clone https://github.com/ericoporto/fgmk.git
     cd fgmk
@@ -43,6 +43,15 @@ This tool is written using Python 3. Needs `pillow`, `numpy` and `PyQt5` - you c
 similar (in Ubuntu) or use pip3.
 
 If you satisfy all dependencies you don't need to install, and [can run from source](#running).
+
+Known Issues with PyQt5 in Ubuntu
+---------------------------------
+If you choose to install the dependencies using pip3, pyqt5 as is in Ubuntu
+requires you to disable the system overlay scroolbars or change the style,
+[see bug here](https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/805303).
+
+Also menu shortcuts are not working unless you do a workaround,
+[details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
 
 Author
 ------
