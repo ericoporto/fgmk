@@ -1,4 +1,4 @@
-from fgmk import TileXtra, actionDialog, proj
+from fgmk import TileXtra, actionDialog, proj, actionsWdgt
 from PyQt5 import QtGui, QtCore, QtWidgets
 
 COLISIONLAYER = 3
