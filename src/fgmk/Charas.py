@@ -3,9 +3,6 @@ import sys
 import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, fifl, TileCharaset
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -44,16 +41,16 @@ class CharasFormat(TileCharaset.BaseFormat):
 
 
 
-class MoveButtons(QWidget):
-    buttonup = pyqtSignal()
-    buttondown = pyqtSignal()
-    buttonleft = pyqtSignal()
-    buttonright = pyqtSignal()
+class MoveButtons(QtWidgets.QWidget):
+    buttonup = QtCore.pyqtSignal()
+    buttondown = QtCore.pyqtSignal()
+    buttonleft = QtCore.pyqtSignal()
+    buttonright = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.Grid = QGridLayout(self)
+        self.Grid = QtWidgets.QGridLayout(self)
 
         self.Grid.setHorizontalSpacing(0)
         self.Grid.setVerticalSpacing(0)
@@ -70,7 +67,7 @@ class MoveButtons(QWidget):
         self.signal["right"] = self.buttonright
 
         for i in TileCharaset.facing:
-            self.dirbuttons.append(QPushButton(i))
+            self.dirbuttons.append(QtWidgets.QPushButton(i))
             self.dirbuttons[-1].setObjectName(i)
             self.dirbuttons[-1].setFixedSize(50, 50)
             self.dirbuttons[-1].clicked.connect(self.bclicked)
@@ -98,22 +95,22 @@ class MoveItem(QtWidgets.QListWidgetItem):
             self.moveorface = moveorface
             self.direction = direction
         movearray = [str(self.moveorface) , str(self.direction)]
-        self.setData(Qt.UserRole, movearray)
+        self.setData(QtCore.Qt.UserRole, movearray)
 
     def getMarray(self):
         #movearray = self.data(Qt.UserRole).toPyObject() #this was python2
         #python3 doesn't need toPyObject (and doesn't work with it)
-        movearray = self.data(Qt.UserRole)
+        movearray = self.data(QtCore.Qt.UserRole)
         return [str(movearray[0]),str(movearray[1])]
 
-class PropertiesWidget(QWidget):
+class PropertiesWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.nocolision = QCheckBox("igone colision")
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.nocolision = QtWidgets.QCheckBox("igone colision")
         self.nocolision.setToolTip("This makes the object ignore the colision map.")
-        self.nocolision.setCheckState(Qt.Unchecked)
+        self.nocolision.setCheckState(QtCore.Qt.Unchecked)
 
         self.propertys =  {}
         self.propertys['nocolision']=self.nocolision
@@ -127,14 +124,14 @@ class PropertiesWidget(QWidget):
         for propertyy in listToSet:
             if(propertyy == 'nocolision'):
                 if(listToSet[propertyy]==0 or listToSet[propertyy]==False):
-                    self.propertys[propertyy].setCheckState(Qt.Unchecked)
+                    self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
                 else:
-                    self.propertys[propertyy].setCheckState(Qt.Checked)
+                    self.propertys[propertyy].setCheckState(QtCore.Qt.Checked)
 
     def clear(self):
         for propertyy in self.propertys:
             if(propertyy == 'nocolision'):
-                self.propertys[propertyy].setCheckState(Qt.Unchecked)
+                self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
 
     def getValue(self):
         properties = {}
@@ -144,21 +141,21 @@ class PropertiesWidget(QWidget):
         return properties
 
 
-class MoveWidget(QWidget):
+class MoveWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
+        self.VBox = QtWidgets.QVBoxLayout(self)
         self.dirButtons = MoveButtons()
         self.dirButtons.buttonup.connect(self.upbclick)
         self.dirButtons.buttondown.connect(self.downbclick)
         self.dirButtons.buttonleft.connect(self.leftbclick)
         self.dirButtons.buttonright.connect(self.rightbclick)
 
-        self.radiomove = QRadioButton("move")
-        self.radioface = QRadioButton("face")
-        self.random = QPushButton("random")
-        self.follow = QPushButton("follow")
+        self.radiomove = QtWidgets.QRadioButton("move")
+        self.radioface = QtWidgets.QRadioButton("face")
+        self.random = QtWidgets.QPushButton("random")
+        self.follow = QtWidgets.QPushButton("follow")
 
 
         self.radioface.setToolTip("Face a direction is when a chara looks at certain direction.")
@@ -169,27 +166,27 @@ class MoveWidget(QWidget):
         self.random.clicked.connect(self.randombclick)
         self.follow.clicked.connect(self.followbclick)
 
-        self.movList = QListWidget(self)
-        self.movList.setDragDropMode(QAbstractItemView.InternalMove)
+        self.movList = QtWidgets.QListWidget(self)
+        self.movList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
 
-        self.deselectbutton = QPushButton("deselect")
-        self.deletebutton = QPushButton("delete")
+        self.deselectbutton = QtWidgets.QPushButton("deselect")
+        self.deletebutton = QtWidgets.QPushButton("delete")
 
         self.deselectbutton.clicked.connect(self.deselectbclick)
         self.deletebutton.clicked.connect(self.deletebclick)
 
-        HBoxB = QHBoxLayout()
+        HBoxB = QtWidgets.QHBoxLayout()
         HBoxB.addWidget(self.deselectbutton)
         HBoxB.addWidget(self.deletebutton)
 
-        VBoxR = QVBoxLayout()
+        VBoxR = QtWidgets.QVBoxLayout()
 
         VBoxR.addWidget(self.radiomove)
         VBoxR.addWidget(self.radioface)
         VBoxR.addWidget(self.random)
         VBoxR.addWidget(self.follow)
 
-        HBoxT = QHBoxLayout()
+        HBoxT = QtWidgets.QHBoxLayout()
         HBoxT.addWidget(self.dirButtons)
         HBoxT.addLayout(VBoxR)
 
@@ -268,7 +265,7 @@ class MoveWidget(QWidget):
         else:
             self.movList.addItem(MoveItem("moveright"))
 
-class ActionsWidget(QWidget):
+class ActionsWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, ischara=False , **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -276,23 +273,23 @@ class ActionsWidget(QWidget):
         self.parent = parent
         self.ischara = ischara
 
-        self.HBox = QHBoxLayout(self)
-        self.HBox.setAlignment(Qt.AlignTop)
+        self.HBox = QtWidgets.QHBoxLayout(self)
+        self.HBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.labelActionList = QLabel("List of Actions:")
-        self.ActionList = QListWidget(self)
+        self.labelActionList = QtWidgets.QLabel("List of Actions:")
+        self.ActionList = QtWidgets.QListWidget(self)
 
-        VBoxActionList = QVBoxLayout()
-        VBoxButtons = QVBoxLayout()
+        VBoxActionList = QtWidgets.QVBoxLayout()
+        VBoxButtons = QtWidgets.QVBoxLayout()
 
-        self.addActionButton = QPushButton("Add Action", self)
-        self.editActionButton = QPushButton("Edit Action", self)
-        self.removeActionButton = QPushButton("Remove Action", self)
-        self.deselectActionButton = QPushButton("Deselect Actions", self)
+        self.addActionButton = QtWidgets.QPushButton("Add Action", self)
+        self.editActionButton = QtWidgets.QPushButton("Edit Action", self)
+        self.removeActionButton = QtWidgets.QPushButton("Remove Action", self)
+        self.deselectActionButton = QtWidgets.QPushButton("Deselect Actions", self)
 
         self.checkboxes = []
-        self.checkboxes.append(QCheckBox("on click", self))
-        self.checkboxes.append(QCheckBox("on over", self))
+        self.checkboxes.append(QtWidgets.QCheckBox("on click", self))
+        self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
 
         self.addActionButton.clicked.connect(self.addAction)
         self.editActionButton.clicked.connect(self.editAction)
@@ -310,13 +307,13 @@ class ActionsWidget(QWidget):
         VBoxButtons.addWidget(self.removeActionButton)
         VBoxButtons.addWidget(self.deselectActionButton)
 
-        self.checkboxes[0].setCheckState(Qt.Checked)
-        self.checkboxes[1].setCheckState(Qt.Unchecked)
+        self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
+        self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
 
         for checkbox in self.checkboxes:
             VBoxButtons.addWidget(checkbox)
 
-        self.ActionList.setDragDropMode(QAbstractItemView.InternalMove)
+        self.ActionList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
 
         self.ActionList.itemSelectionChanged.connect(self.enableButtonsBecauseActionList)
 
@@ -330,9 +327,9 @@ class ActionsWidget(QWidget):
         atype = actionToSet['type']
         for i in range(len(atype)):
             if(atype[i]):
-                self.checkboxes[i].setCheckState(Qt.Checked)
+                self.checkboxes[i].setCheckState(QtCore.Qt.Checked)
             else:
-                self.checkboxes[i].setCheckState(Qt.Unchecked)
+                self.checkboxes[i].setCheckState(QtCore.Qt.Unchecked)
 
         listToSet = actionToSet['list']
         self.ActionList.clear()
@@ -442,25 +439,25 @@ class CharaItem(QtWidgets.QListWidgetItem):
         self.aname = aname
         self.jsonTree = jsonTree
 
-class CharaList(QWidget):
-    SelectionChanged = pyqtSignal()
+class CharaList(QtWidgets.QWidget):
+    SelectionChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
+        self.VBox = QtWidgets.QVBoxLayout(self)
 
-        self.charaslist = QListWidget()
-        self.charaentry = QLineEdit()
-        self.addbutton = QPushButton("add")
-        self.delbutton = QPushButton("del")
+        self.charaslist = QtWidgets.QListWidget()
+        self.charaentry = QtWidgets.QLineEdit()
+        self.addbutton = QtWidgets.QPushButton("add")
+        self.delbutton = QtWidgets.QPushButton("del")
 
         self.addbutton.clicked.connect(self.charaslistAddAction)
         self.delbutton.clicked.connect(self.charaslistDelAction)
         self.charaslist.itemSelectionChanged.connect(self.charaslistSelectionChanged)
         self.charaentry.returnPressed.connect(self.charaslistAddAction)
 
-        HBox = QHBoxLayout()
+        HBox = QtWidgets.QHBoxLayout()
         HBox.addWidget(self.charaentry)
         HBox.addWidget(self.addbutton)
         HBox.addWidget(self.delbutton)
@@ -530,15 +527,15 @@ class CharaList(QWidget):
             jsonTree = dictToSet[chara]
             self.charaslist.addItem(CharaItem(charaName,jsonTree))
 
-class CharaSelector(QWidget):
+class CharaSelector(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.ssettings = ssettings
 
-        self.layout = QHBoxLayout(self)
+        self.layout = QtWidgets.QHBoxLayout(self)
         self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings)
-        self.charaqlist = QListWidget()
+        self.charaqlist = QtWidgets.QListWidget()
 
         self.charaqlist.itemSelectionChanged.connect(self.selectionChanged)
 
@@ -546,7 +543,6 @@ class CharaSelector(QWidget):
         self.layout.addWidget(self.charaqlist)
 
     def update(self):
-
         if "gamefolder" in self.ssettings:
             if (self.ssettings["gamefolder"] != ""):
                 filetoopen = os.path.join(self.ssettings["gamefolder"],fifl.DESCRIPTORS,fifl.CHARAS)
@@ -586,7 +582,7 @@ class CharaSelector(QWidget):
             return None
 
 
-class MiniCharaTile(QWidget):
+class MiniCharaTile(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -608,14 +604,14 @@ class MiniCharaTile(QWidget):
 
         self.setToolTip(chara)
 
-    clicked = pyqtSignal()
-    rightClicked = pyqtSignal()
+    clicked = QtCore.pyqtSignal()
+    rightClicked = QtCore.pyqtSignal()
 
     def stop(self):
         self.csetprev.stop()
 
     def mousePressEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == QtCore.Qt.RightButton:
             self.rightClicked.emit()
         else:
             self.clicked.emit()
@@ -631,11 +627,11 @@ class MiniCharaTile(QWidget):
 
 
 
-class CharaEditor(QDialog):
+class CharaEditor(QtWidgets.QDialog):
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.layout = QHBoxLayout(self)
+        self.layout = QtWidgets.QHBoxLayout(self)
 
         self.charalist = CharaList()
         self.csetSelector = TileCharaset.CharasetSelector(self, ssettings)
@@ -644,16 +640,16 @@ class CharaEditor(QDialog):
 
         self.actions = ActionsWidget(parent,ssettings,True)
         self.actions.setAllState(True)
-        self.reopen = QPushButton("Reopen", self)
+        self.reopen = QtWidgets.QPushButton("Reopen", self)
         self.reopen.clicked.connect(self.reopenfile)
-        self.save = QPushButton("Save", self)
+        self.save = QtWidgets.QPushButton("Save", self)
         self.save.clicked.connect(self.savefile)
 
-        HBoxRS = QHBoxLayout()
+        HBoxRS = QtWidgets.QHBoxLayout()
         HBoxRS.addWidget(self.reopen)
         HBoxRS.addWidget(self.save)
 
-        VBox = QVBoxLayout()
+        VBox = QtWidgets.QVBoxLayout()
         VBox.addWidget(self.charalist)
         VBox.addLayout(HBoxRS)
         VBox.addWidget(self.properties)
@@ -731,7 +727,7 @@ class CharaEditor(QDialog):
 if __name__=="__main__":
     from sys import argv, exit
 
-    a=QApplication(argv)
+    a=QtWidgets.QApplication(argv)
     #m=CharaEditor()
     #m=MoveWidget()
     #m=CharaSelector()

@@ -1,9 +1,6 @@
 import sys
 import json
 import os.path
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -11,15 +8,14 @@ import numpy as np
 from fgmk import tMat, actionDialog, TileXtra, fifl
 
 
-class ActionsWidget(QDialog):
-
+class ActionsWidget(QtWidgets.QDialog):
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
         super().__init__(parent, **kwargs)
         self.psSettings = psSettings
         self.ischaras = ischaras
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         filepath = os.path.join(os.path.dirname(
             os.path.abspath(__file__)), "actions/actionsList.json")

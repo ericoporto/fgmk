@@ -150,10 +150,10 @@ def fwriteKeyVals(data, f, indent=0):
 
     elif isinstance(data, dict):
         f.write("\n" + "    " * indent + "{")
-        for k, v in data.iteritems():
+        for k, v in data.items():
             f.write("\n" + "    " * indent + "\"" + k + "\"" + ": ")
             fwriteKeyVals(v, f, indent + 1)
-            if(data.keys()[-1] != k):
+            if(list(data)[-1] != k):
                 f.write(",")
         f.write("\n" + "    " * indent + "}")
     elif isinstance(data, bool):
@@ -217,10 +217,10 @@ def fwriteKeyValsJS(data, f, indent=0):
         if(indent):
             f.write("\n" + "    " * indent + "{")
 
-        for k, v in data.iteritems():
+        for k, v in data.items():
             f.write("\n" + "    " * indent + "" + k + "" + ": ")
             fwriteKeyValsJS(v, f, indent + 1)
-            if(data.keys()[-1] != k):
+            if(list(data)[-1] != k):
                 f.write(",")
 
         if(indent):

@@ -1,8 +1,5 @@
 import sys
 import json
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -14,7 +11,7 @@ COLISIONLAYER = 3
 EVENTSLAYER = 4
 
 
-class changeTile(QDialog):
+class changeTile(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
@@ -27,15 +24,15 @@ class changeTile(QDialog):
 
         self.useCurrentPlace = "current"
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.LabelText1 = QLabel("Select where is the tile to change:")
-        self.LabelText2 = QLabel("Select to what type change:")
-        self.LabelText3 = QLabel("Change to modify colision layer:")
-        self.LabelText4 = QLabel("Select if event should also change:")
+        self.LabelText1 = QtWidgets.QLabel("Select where is the tile to change:")
+        self.LabelText2 = QtWidgets.QLabel("Select to what type change:")
+        self.LabelText3 = QtWidgets.QLabel("Change to modify colision layer:")
+        self.LabelText4 = QtWidgets.QLabel("Select if event should also change:")
 
-        self.comboBox = QComboBox()
+        self.comboBox = QtWidgets.QComboBox()
 
         self.colisionList = ["keep", "noColision", "collidable"]
 
@@ -79,37 +76,37 @@ class changeTile(QDialog):
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
         self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
-        self.LineTextPlace = QLineEdit()
+        self.LineTextPlace = QtWidgets.QLineEdit()
 
         self.myMiniPaletteWidget = TXWdgt.MiniPaletteWidget(
             self.currentTileSet, self)
         self.myMiniPaletteWidget.selectedTilePalette.connect(self.setTileToChange)
-        self.LineTextTile = QLineEdit()
+        self.LineTextTile = QtWidgets.QLineEdit()
 
-        self.comboBoxLayers = QComboBox()
+        self.comboBoxLayers = QtWidgets.QComboBox()
 
         for layer in TileXtra.LayersNameViewable:
             self.comboBoxLayers.addItem(str(layer))
 
-        self.comboBoxColision = QComboBox()
+        self.comboBoxColision = QtWidgets.QComboBox()
 
         for item in self.colisionList:
             self.comboBoxColision.addItem(str(item))
 
-        self.comboBoxEvent = QComboBox()
+        self.comboBoxEvent = QtWidgets.QComboBox()
 
         for item in self.eventList:
             self.comboBoxEvent.addItem(str(item))
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
         self.comboBox.currentIndexChanged.connect(self.updateMap)
         self.checkbox.stateChanged.connect(self.checkboxChanged)
 
-        self.checkbox.setCheckState(Qt.Checked)
+        self.checkbox.setCheckState(QtCore.Qt.Checked)
 
         self.LineTextPlace.setReadOnly(True)
         self.LineTextTile.setReadOnly(True)
@@ -131,7 +128,7 @@ class changeTile(QDialog):
                     self.comboBoxEvent.setCurrentIndex(idx)
 
             if(edit[4] != self.useCurrentPlace):
-                self.checkbox.setCheckState(Qt.Unchecked)
+                self.checkbox.setCheckState(QtCore.Qt.Unchecked)
                 self.LineTextPlace.setText(
                     "{0};{1};{2}".format(edit[4], edit[5], edit[6]))
 
@@ -140,7 +137,7 @@ class changeTile(QDialog):
                         self.comboBox.setCurrentIndex(idx)
 
             else:
-                self.checkbox.setCheckState(Qt.Checked)
+                self.checkbox.setCheckState(QtCore.Qt.Checked)
 
         self.VBox.addWidget(self.LabelText1)
         self.VBox.addWidget(self.comboBox)
@@ -206,8 +203,7 @@ class changeTile(QDialog):
         return text
 
 
-class teleport(QDialog):
-
+class teleport(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, selectStartPosition=None,  **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -219,12 +215,12 @@ class teleport(QDialog):
 
         self.initFile = TXWdgt.openInitFile(gamefolder)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.LabelText = QLabel("Select where to teleport:")
+        self.LabelText = QtWidgets.QLabel("Select where to teleport:")
 
-        self.comboBox = QComboBox()
+        self.comboBox = QtWidgets.QComboBox()
 
         if(self.nothis is False):
             self.levelsList = ["this"]
@@ -264,9 +260,9 @@ class teleport(QDialog):
 
         self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
 
-        self.LineText = QLineEdit()
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.LineText = QtWidgets.QLineEdit()
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -330,16 +326,16 @@ class teleport(QDialog):
         return text
 
 
-class END(QDialog):
+class END(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -350,16 +346,16 @@ class END(QDialog):
         return ""
 
 
-class ELSE(QDialog):
+class ELSE(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -370,24 +366,24 @@ class ELSE(QDialog):
         return ""
 
 
-class IF(QDialog):
+class IF(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.var1LabelText = QLabel("Write var or value:")
-        self.operLabelText = QLabel("Operation:")
-        self.var2LabelText = QLabel("Write var or value:")
+        self.var1LabelText = QtWidgets.QLabel("Write var or value:")
+        self.operLabelText = QtWidgets.QLabel("Operation:")
+        self.var2LabelText = QtWidgets.QLabel("Write var or value:")
 
-        self.var1LineEdit = QLineEdit()
-        self.operLineEdit = QLineEdit()
-        self.var2LineEdit = QLineEdit()
+        self.var1LineEdit = QtWidgets.QLineEdit()
+        self.operLineEdit = QtWidgets.QLineEdit()
+        self.var2LineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -414,22 +410,21 @@ class IF(QDialog):
         return text
 
 
-class setVar(QDialog):
-
+class setVar(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.varLabelText = QLabel("Write var name:")
-        self.valLabelText = QLabel("Write value:")
+        self.varLabelText = QtWidgets.QLabel("Write var name:")
+        self.valLabelText = QtWidgets.QLabel("Write value:")
 
-        self.varNameLineEdit = QLineEdit()
-        self.valueLineEdit = QLineEdit()
+        self.varNameLineEdit = QtWidgets.QLineEdit()
+        self.valueLineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -453,20 +448,19 @@ class setVar(QDialog):
         return text
 
 
-class varPlusOne(QDialog):
-
+class varPlusOne(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.varLabelText = QLabel("Write var name")
+        self.varLabelText = QtWidgets.QLabel("Write var name")
 
-        self.varNameLineEdit = QLineEdit()
+        self.varNameLineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -486,22 +480,21 @@ class varPlusOne(QDialog):
         return text
 
 
-class showText(QDialog):
-
+class showText(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.LabelText = QLabel("Write the text in the box below:")
-        self.downLabelText = QLabel(
+        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
+        self.downLabelText = QtWidgets.QLabel(
             "tip: you can type var:varname to get the content of that variable.")
 
-        self.LineText = QPlainTextEdit()
+        self.LineText = QtWidgets.QPlainTextEdit()
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -526,29 +519,28 @@ class showText(QDialog):
         return textToReturn
 
 
-class fadeIn(QDialog):
-
+class fadeIn(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
-        self.LabelText = QLabel("Select the effect to use:")
-        self.ListEffect = QListWidget()
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.QtWidgets.Qt.AlignTop)
+        self.LabelText = QtWidgets.QLabel("Select the effect to use:")
+        self.ListEffect = QtWidgets.QListWidget()
 
         effects = [["pixelize", "pixelizeFadeIn"], [
             "black", "blackFadeIn"], ["white", "whiteFadeIn"]]
 
         for effect in effects:
-            item = QListWidgetItem(effect[0])
+            item = QtWidgets.QListWidgetItem(effect[0])
             item.setWhatsThis(effect[1])
             self.ListEffect.addItem(item)
 
-        self.checkbox = QCheckBox("keep effect after")
-        self.checkbox.setCheckState(Qt.Unchecked)
+        self.checkbox = QtWidgets.QCheckBox("keep effect after")
+        self.checkbox.setCheckState(QtCore.Qt.Unchecked)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -567,7 +559,7 @@ class fadeIn(QDialog):
                     self.ListEffect.setCurrentRow(idx)
 
             if(edit[1] == 'keepEffect'):
-                self.checkbox.setCheckState(Qt.Checked)
+                self.checkbox.setCheckState(QtCore.Qt.Checked)
 
     def getValue(self):
         effecToReturn = str(self.ListEffect.selectedItems()[0].whatsThis())
@@ -577,29 +569,28 @@ class fadeIn(QDialog):
         return effecToReturn + ';' + keepEffect
 
 
-class fadeOut(QDialog):
-
+class fadeOut(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
-        self.LabelText = QLabel("Select the effect to use:")
-        self.ListEffect = QListWidget()
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.LabelText = QtWidgets.QLabel("Select the effect to use:")
+        self.ListEffect = QtWidgets.QListWidget()
 
         effects = [["pixelize", "pixelizeFadeOut"], [
             "black", "blackFadeOut"], ["white", "whiteFadeOut"]]
 
         for effect in effects:
-            item = QListWidgetItem(effect[0])
+            item = QtWidgets.QListWidgetItem(effect[0])
             item.setWhatsThis(effect[1])
             self.ListEffect.addItem(item)
 
-        self.checkbox = QCheckBox("keep effect after")
-        self.checkbox.setCheckState(Qt.Unchecked)
+        self.checkbox = QtWidgets.QCheckBox("keep effect after")
+        self.checkbox.setCheckState(QtCore.Qt.Unchecked)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -628,7 +619,7 @@ class fadeOut(QDialog):
         return effecToReturn + ';' + keepEffect
 
 
-class noEffect(QDialog):
+class noEffect(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         super().__init__(parent, **kwargs)
