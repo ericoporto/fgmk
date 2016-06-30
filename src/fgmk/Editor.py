@@ -7,9 +7,6 @@ import tarfile
 from time import time, sleep
 from PIL import Image
 from PIL.ImageQt import ImageQt
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit, paletteWdgt, ToolsWdgt, EventsWdgt, proj
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -22,17 +19,15 @@ os.chdir(dname)
 COLISIONLAYER = 3
 EVENTSLAYER = 4
 
-
-
 firstClickX = None
 firstClickY = None
 
-class MapWidget(QWidget):
 
+class MapWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.Grid = QGridLayout(self)
+        self.Grid = QtWidgets.QGridLayout(self)
 
         self.Grid.setHorizontalSpacing(0)
         self.Grid.setVerticalSpacing(0)
@@ -66,15 +61,12 @@ class MapWidget(QWidget):
                     self.TileHeight * self.parent.myTileSet.boxsize * self.myScale)
 
     def DrawMap(self, parent):
-
         # self.setUpdatesEnabled(False)
         self.setVisible(False)
         LayersMapTiles = parent.myMap.LayersMapTiles
 
         self.TileHeight = len(LayersMapTiles[0])
         self.TileWidth = len(LayersMapTiles[0][0])
-
-        # print(LayersMapTiles)
 
         if len(self.TileList) > 1:
             for collum in self.TileList:
@@ -84,9 +76,7 @@ class MapWidget(QWidget):
             self.TileList = []
 
         # get the background numbers and use to get the tiles
-        # for i in height
         for iy in range(self.TileHeight):
-            # for j in width
             self.TileList.append([])
             for jx in range(self.TileWidth):
 
@@ -95,8 +85,6 @@ class MapWidget(QWidget):
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
-                #self.connect(self.TileList[iy][jx], SIGNAL(
-                #    'scroll(int)'), self.wheelScrolledTileInMap)
                 self.TileList[iy][jx].rightClicked.connect(self.TileInMapRightClicked)
 
         self.resize(self.TileWidth * parent.myTileSet.boxsize * self.myScale,
@@ -188,36 +176,6 @@ class MapWidget(QWidget):
             firstClickX = None
             firstClickY = None
 
-    def wheelScrolledTileInMap(self, scrollAmount):
-        scrollAmount /= abs(scrollAmount)
-        if(self.currentLayer == COLISIONLAYER):
-            if self.sender().tileType[COLISIONLAYER] == 0:
-                changeTypeTo = 1
-            elif self.sender().tileType[COLISIONLAYER] == 1:
-                changeTypeTo = 0
-            else:
-                changeTypeTo = 0
-            self.currentColision = changeTypeTo
-        elif(self.currentLayer == EVENTSLAYER):
-            if abs(self.sender().tileType[EVENTSLAYER] + scrollAmount) < 120:
-                changeTypeTo = abs(self.sender().tileType[
-                                   EVENTSLAYER] + scrollAmount)
-            else:
-                changeTypeTo = abs(self.sender().tileType[
-                                   EVENTSLAYER] + scrollAmount - 2)
-            self.currentEvent = changeTypeTo
-        else:
-            if abs(self.sender().tileType[self.currentLayer] + scrollAmount) < len(self.parent.myTileSet.tileset):
-                changeTypeTo = abs(self.sender().tileType[
-                                   self.currentLayer] + scrollAmount)
-            else:
-                changeTypeTo = abs(self.sender().tileType[
-                                   self.currentLayer] + scrollAmount - 2)
-            self.parent.changeTileCurrent(changeTypeTo)
-        self.changeTileType(changeTypeTo)
-        if(self.currentLayer == EVENTSLAYER):
-            self.parent.myEventsWidget.updateEventsList()
-
     def changeTileType(self, changeTypeTo):
         command = TXWdgt.CommandCTTileType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
@@ -245,28 +203,26 @@ class MapWidget(QWidget):
         self.parent.undoStack.push(command)
 
 
-class LayerWidget(QWidget):
-
+class LayerWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.parent=parent
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.LabelLayer = QLabel("Layer is: %d" % 0)
+        self.LabelLayer = QtWidgets.QLabel("Layer is: %d" % 0)
         self.VBox.addWidget(self.LabelLayer)
         self.ButtonLayer = []
 
         for i in range(len(TileXtra.LayersName)):
-            self.ButtonLayer.append(QPushButton(TileXtra.LayersName[i]))
+            self.ButtonLayer.append(QtWidgets.QPushButton(TileXtra.LayersName[i]))
             self.ButtonLayer[-1].setObjectName(TileXtra.LayersName[i])
             self.ButtonLayer[-1].clicked.connect(self.buttonLayerClicked)
             self.VBox.addWidget(self.ButtonLayer[-1])
 
         self.setMaximumHeight(180)
-
         self.show()
 
     def buttonLayerClicked(self):
@@ -289,11 +245,10 @@ class LayerWidget(QWidget):
         self.LabelLayer.setText("Current: %s" %
                                 TileXtra.LayersName[layerNumber])
 
-class CharasPalWidget(QtWidgets.QWidget):
 
+class CharasPalWidget(QtWidgets.QWidget):
     def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
-
 
         self.mapWdgt = mapWdgt
         self.pMap = pMap
@@ -307,7 +262,6 @@ class CharasPalWidget(QtWidgets.QWidget):
         self.show()
 
     def reinit(self):
-
         for charaplaced in self.charaslist:
             charaplaced[2].stop()
             self.mapWdgt.Grid.removeWidget(charaplaced[2])
@@ -321,7 +275,6 @@ class CharasPalWidget(QtWidgets.QWidget):
             self.addCharaAction((char[1], char[2]), char[0], False)
 
     def addCharaAction(self, position=(0, 0), chara=None, onmap=True):
-
         if (chara == None):
             chara = self.myCharaSelector.getSelected()
 
@@ -376,14 +329,13 @@ class CharasPalWidget(QtWidgets.QWidget):
         return self.myCharaSelector.getSelected()
 
 
-class ExitFSWidget(QWidget):
-
+class ExitFSWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.parent = parent
-        self.VBox = QVBoxLayout(self)
-        self.ButtonExitFS = QPushButton("exit\nfullscreen")
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.ButtonExitFS = QtWidgets.QPushButton("exit\nfullscreen")
         self.ButtonExitFS.clicked.connect(self.ExitFS)
         self.VBox.addWidget(self.ButtonExitFS)
         self.setMaximumHeight(60)
@@ -395,7 +347,7 @@ class ExitFSWidget(QWidget):
         self.parent.fullscreenViewAction.toggle()
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def changeLayerCurrent(self, changeTo):
         self.myMapWidget.currentLayer = changeTo
         self.myLayerWidget.changeLayerView(changeTo)
@@ -414,12 +366,11 @@ class MainWindow(QMainWindow):
         self.myPaletteWidget.setImageCurrent(changeTo)
 
     def __init__(self, filelist, **kwargs):
-
         super().__init__(None, **kwargs)
 
         self.resize(1024, 768)
 
-        self.undoStack = QUndoStack(self)
+        self.undoStack = QtWidgets.QUndoStack(self)
 
         self.levelName = "newFile"
         proj.settings["workingFile"] = self.levelName + ".json"
@@ -496,8 +447,6 @@ class MainWindow(QMainWindow):
             TXWdgt.saveInitFile(proj.settings["gamefolder"], result[0])
 
     def FancyWindow(self, parent=None):
-
-
         self.menubar = QtWidgets.QMenuBar(self)
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
@@ -511,10 +460,10 @@ class MainWindow(QMainWindow):
         fileMenu.addAction('&Exit', self.close, "Ctrl+Q")
 
         undoAction = self.undoStack.createUndoAction(self, self.tr("&Undo"))
-        undoAction.setShortcuts(QKeySequence.Undo)
+        undoAction.setShortcuts(QtGui.QKeySequence.Undo)
         editMenu.addAction(undoAction)
         redoAction = self.undoStack.createRedoAction(self, self.tr("&Redo"))
-        redoAction.setShortcuts(QKeySequence.Redo)
+        redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
 
         projectMenu.addAction('New &Project', self.newProject, '')
@@ -527,39 +476,39 @@ class MainWindow(QMainWindow):
         self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = paletteWdgt.PaletteWidget(self, self.myTileSet)
-        self.paletteDockWdgt = QDockWidget("Palette", self)
+        self.paletteDockWdgt = QtWidgets.QDockWidget("Palette", self)
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.paletteDockWdgt)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.paletteDockWdgt)
 
         self.viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
 
         self.myCharasPalWidget = CharasPalWidget(
             self.myMapWidget, self.myMap, self)
-        self.charasDockWdgt = QDockWidget("Charas", self)
+        self.charasDockWdgt = QtWidgets.QDockWidget("Charas", self)
         self.charasDockWdgt.setWidget(self.myCharasPalWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.charasDockWdgt)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.charasDockWdgt)
         self.tabifyDockWidget(self.charasDockWdgt, self.paletteDockWdgt)
 
         self.viewMenu.addAction(self.charasDockWdgt.toggleViewAction())
 
         self.myLayerWidget = LayerWidget(self)
-        self.layerDockWdgt = QDockWidget("Layers", self)
+        self.layerDockWdgt = QtWidgets.QDockWidget("Layers", self)
         self.layerDockWdgt.setWidget(self.myLayerWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.layerDockWdgt)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.layerDockWdgt)
 
         self.viewMenu.addAction(self.layerDockWdgt.toggleViewAction())
 
         self.myToolsWidget = ToolsWdgt.ToolsWidget(self)
-        self.toolsDockWdgt = QDockWidget("Tool", self)
+        self.toolsDockWdgt = QtWidgets.QDockWidget("Tool", self)
         self.toolsDockWdgt.setWidget(self.myToolsWidget)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.toolsDockWdgt)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.toolsDockWdgt)
 
         self.viewMenu.addAction(self.toolsDockWdgt.toggleViewAction())
 
         self.myEventsWidget = EventsWdgt.EventsWidget(self.myMap, self)
-        self.eventsDockWdgt = QDockWidget("Events", self)
+        self.eventsDockWdgt = QtWidgets.QDockWidget("Events", self)
         self.eventsDockWdgt.setWidget(self.myEventsWidget)
-        self.addDockWidget(Qt.BottomDockWidgetArea, self.eventsDockWdgt)
+        self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.eventsDockWdgt)
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
@@ -593,9 +542,9 @@ class MainWindow(QMainWindow):
         self.gridViewAction.changed.connect(self.changeGridMargin)
 
         self.myExitFSWidget = ExitFSWidget(self)
-        self.exitFSDockWdgt = QDockWidget("", self)
+        self.exitFSDockWdgt = QtWidgets.QDockWidget("", self)
         self.exitFSDockWdgt.setWidget(self.myExitFSWidget)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.exitFSDockWdgt)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.exitFSDockWdgt)
         self.exitFSDockWdgt.hide()
 
         self.fullscreenViewAction = QtWidgets.QAction(
@@ -713,7 +662,6 @@ class MainWindow(QMainWindow):
             self.__newFile(returnedNFD)
 
     def __newFile(self, returnedNFD):
-
         proj.settings["gamefolder"] = str(returnedNFD["gameFolder"])
         self.levelName = str(returnedNFD["name"])
         proj.settings["workingFile"] = os.path.join(
@@ -731,13 +679,11 @@ class MainWindow(QMainWindow):
         self.undoStack.clear()
 
     def saveFile(self):
-
         filename = proj.settings["workingFile"]
         if filename != "":
             self.myMap.save(filename)
 
     def saveFileAs(self):
-
         filename = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.map.json)')
         if filename != "":
@@ -745,7 +691,6 @@ class MainWindow(QMainWindow):
             self.myMap.save(proj.settings["workingFile"])
 
     def exportToJsAs(self):
-
         filename = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)')
         if filename != "":
@@ -753,7 +698,6 @@ class MainWindow(QMainWindow):
             self.myMap.exportJS(proj.settings["workingFile"])
 
     def openFileByName(self, filename):
-
         if os.path.isfile(filename):
             proj.settings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
@@ -770,7 +714,6 @@ class MainWindow(QMainWindow):
             self.myCharasPalWidget.reinit()
 
     def openFile(self):
-
         if(proj.settings["gamefolder"] == ""):
             proj.settings["gamefolder"] = os.path.expanduser("~")
         filename = QtWidgets.QFileDialog.getOpenFileName(
@@ -779,7 +722,7 @@ class MainWindow(QMainWindow):
 
     def helpAbout(self):
         credits = "Made by Erico\nWith help from the internet.\nHigly based in Tsubasa's Redo, and inspired in Enterbrain's RPG Maker 2000.\nThanks Nintendo for making the SNES."
-        QMessageBox.about(self, "About...", credits)
+        QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
         quit_msg = "Do you want to save changes?"
@@ -795,4 +738,4 @@ class MainWindow(QMainWindow):
             event.ignore()
 
 def Icon():
-    return QPixmap('icon.png')
+    return QtGui.QPixmap('icon.png')
