@@ -1,20 +1,20 @@
 ![Icon](iconTiny.png) fgmk
 ==========================
 
+This is an editor for making 2D SNES era RPG like games. The games are composed
+of plain text files, images and a index.html file containing [the engine](https://github.com/ericoporto/fgmkJsEngine).
+
 ![Screenshot](screenshot.png)
 
-This is an editor for making 2D SNES era RPG like games. These RPG should be HTML5 and run on most main browsers.
-
-Everything here is really a work in progress and right now I am still working in getting battles done right.
+The goal is that these plain text files should be easy to be read by humans and
+software.
 
 Installation
 ------------
 
-You can go the releases and grab the latest .deb, or you can install from source.
-
 ### Deb Installation
 
-If you use Ubuntu or Debian, [download from here](https://github.com/ericoporto/fgmk/releases) the latest .deb package.
+If you use Ubuntu or Debian, [download from here](https://github.com/ericoporto/fgmk/releases) the latest `.deb` package.
 
 After you can install using `sudo dpkg -i python3-fgmk_x.y.z.deb`, where x.y.z correspond to the latest version.
 
