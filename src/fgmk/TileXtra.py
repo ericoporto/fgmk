@@ -1,9 +1,6 @@
 import os
 import sys
 import json
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -89,10 +86,10 @@ class actionItem(QtWidgets.QListWidgetItem):
     def __init__(self, actionAndParameter):
         super().__init__(str(actionAndParameter))
         self.setText = str(actionAndParameter)
-        self.setData(Qt.UserRole, actionAndParameter)
+        self.setData(QtCore.Qt.UserRole, actionAndParameter)
 
     def getAction(self):
-        actionAndParameterReturn = self.data(Qt.UserRole)
+        actionAndParameterReturn = self.data(QtCore.Qt.UserRole)
         action = str(actionAndParameterReturn[0])
         parameter = str(actionAndParameterReturn[1])
         return [action, parameter]
@@ -371,7 +368,7 @@ indicativeSet = TileSet(COREIMGFOLDER + "indicativeTiles.png")
 clearTile = TileSet(COREIMGFOLDER + "clearTile.png")
 
 
-class ExtendedQLabel(QLabel):
+class ExtendedQLabel(QtWidgets.QLabel):
     def __init(self, parent):
         super().__init__(parent)
 
@@ -380,8 +377,8 @@ class ExtendedQLabel(QLabel):
     tileY = 0
     boxSize = 32
 
-    clicked = pyqtSignal()
-    rightClicked = pyqtSignal()
+    clicked = QtCore.pyqtSignal()
+    rightClicked = QtCore.pyqtSignal()
 
     def Rescale(self, tileset,  scale=1):
         self.scale = scale
@@ -441,7 +438,7 @@ class ExtendedQLabel(QLabel):
         self.setPixmap(pixmap)
 
     def mousePressEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == QtCore.Qt.RightButton:
             self.rightClicked.emit()
         else:
             self.clicked.emit()

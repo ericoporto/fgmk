@@ -148,14 +148,14 @@ class BaseCharaset:
         return image
 
 
-class CharaPalette(QWidget):
+class CharaPalette(QtWidgets.QWidget):
 
-    clicked = pyqtSignal()
+    clicked = QtCore.pyqtSignal()
 
     def __init__(self, base_image=None, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.Grid = QGridLayout(self)
+        self.Grid = QtWidgets.QGridLayout(self)
 
         self.Grid.setHorizontalSpacing(0)
         self.Grid.setVerticalSpacing(0)
@@ -214,8 +214,7 @@ class CharaPalette(QWidget):
         self.clicked.emit()
 
 
-class CharaTile(QLabel):
-
+class CharaTile(QtWidgets.QLabel):
     def __init(self, parent):
         super().__init__(parent)
 
@@ -225,8 +224,8 @@ class CharaTile(QLabel):
         self.boxsize = (self.boxw, self.boxh)
         self.setMinimumSize(QSize(self.boxw, self.boxh))
 
-    clicked = pyqtSignal()
-    rightClicked = pyqtSignal()
+    clicked = QtCore.pyqtSignal()
+    rightClicked = QtCore.pyqtSignal()
 
     def init(self, bcset, boxsize, charType, scale=1):
         self.charType = charType
@@ -346,7 +345,7 @@ class AnimatedCharaTile(QLabel):
 
     def clearAnim(self):
         self._timer.stop()
-        pixmap = QPixmap(self.boxw * self.scale, self.boxh * self.scale)
+        pixmap = QtGui.QPixmap(self.boxw * self.scale, self.boxh * self.scale)
         pixmap.fill(Qt.white)
         self.setPixmap(pixmap)
 

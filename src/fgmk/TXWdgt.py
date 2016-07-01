@@ -1,9 +1,6 @@
 import sys
 import json
 import os.path
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -32,7 +29,7 @@ def saveInitFile(gamefolder, initFileJsonTree):
     return initFileJsonTree
 
 
-class CommandCTTileType(QUndoCommand):
+class CommandCTTileType(QtWidgets.QUndoCommand):
 
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
         super().__init__(description)
@@ -62,7 +59,7 @@ class CommandCTTileType(QUndoCommand):
         #print("Type= ", self.oldType, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
 
-class CommandCGroupTType(QUndoCommand):
+class CommandCGroupTType(QtWidgets.QUndoCommand):
 
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
         super().__init__(description)
@@ -95,44 +92,44 @@ class CommandCGroupTType(QUndoCommand):
             #print("Type= ", change[2], "  X= " ,change[0], "  Y= " , change[1])
 
 
-class newProject(QDialog):
+class newProject(QtWidgets.QDialog):
 
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.returnValue = {"name": "NewFile", "baseFolder": ""}
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        HBoxFolder = QHBoxLayout()
-        self.LineEditFolder = QLineEdit()
+        HBoxFolder = QtWidgets.QHBoxLayout()
+        self.LineEditFolder = QtWidgets.QLineEdit()
         self.LineEditFolder.setReadOnly(True)
         self.LineEditFolder.setText(str(self.returnValue["baseFolder"]))
-        self.buttonFolder = QPushButton("Browse")
+        self.buttonFolder = QtWidgets.QPushButton("Browse")
         self.buttonFolder.clicked.connect(self.selectGameFolder)
         HBoxFolder.addWidget(self.LineEditFolder)
         HBoxFolder.addWidget(self.buttonFolder)
 
-        HBoxName = QHBoxLayout()
-        self.LineEditName = QLineEdit()
+        HBoxName = QtWidgets.QHBoxLayout()
+        self.LineEditName = QtWidgets.QLineEdit()
         self.LineEditName.setText(str(self.returnValue["name"]))
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
-        HBoxName.addWidget(QLabel("Name:"))
+        HBoxName.addWidget(QtWidgets.QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.VBox.addWidget(QLabel("THIS FUNCTION IS NOT COMPLETE YET"))
-        self.VBox.addWidget(QLabel("Select folder to create game:"))
+        self.VBox.addWidget(QtWidgets.QLabel("THIS FUNCTION IS NOT COMPLETE YET"))
+        self.VBox.addWidget(QtWidgets.QLabel("Select folder to create game:"))
         self.VBox.addLayout(HBoxFolder)
-        self.VBox.addWidget(QLabel("Set game name:"))
+        self.VBox.addWidget(QtWidgets.QLabel("Set game name:"))
         self.VBox.addLayout(HBoxName)
         self.VBox.addWidget(self.buttonBox)
 
@@ -149,21 +146,21 @@ class newProject(QDialog):
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(
-            str(QFileDialog.getExistingDirectory(self, "Select Directory")))
+            str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory")))
         self.returnValue["baseFolder"] = self.LineEditFolder.text()
         self.validateIsOk()
 
     def validateIsOk(self):
         if self.returnValue["name"] != "" and self.returnValue["baseFolder"] != "":
-            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
         else:
-            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
     def getValue(self):
         return self.returnValue
 
 
-class newFile(QDialog):
+class newFile(QtWidgets.QDialog):
 
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -172,51 +169,51 @@ class newFile(QDialog):
 
                             }
 
-        self.VBox = QVBoxLayout(self)
-        self.VBox.setAlignment(Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        HBoxFolder = QHBoxLayout()
-        self.LineEditFolder = QLineEdit()
+        HBoxFolder = QtWidgets.QHBoxLayout()
+        self.LineEditFolder = QtWidgets.QLineEdit()
         self.LineEditFolder.setReadOnly(True)
         self.LineEditFolder.setText(str(self.returnValue["gameFolder"]))
-        self.buttonFolder = QPushButton("Browse")
+        self.buttonFolder = QtWidgets.QPushButton("Browse")
         self.buttonFolder.clicked.connect(self.selectGameFolder)
         HBoxFolder.addWidget(self.LineEditFolder)
         HBoxFolder.addWidget(self.buttonFolder)
 
-        HBoxSize = QHBoxLayout()
-        self.LineEditWidth = QLineEdit()
+        HBoxSize = QtWidgets.QHBoxLayout()
+        self.LineEditWidth = QtWidgets.QLineEdit()
         self.LineEditWidth.setInputMask("000")
         self.LineEditWidth.setText(str(self.returnValue["width"]))
         self.LineEditWidth.editingFinished.connect(self.validateLineEditWidth)
-        self.LineEditHeight = QLineEdit()
+        self.LineEditHeight = QtWidgets.QLineEdit()
         self.LineEditHeight.setInputMask("000")
         self.LineEditHeight.setText(str(self.returnValue["height"]))
         self.LineEditHeight.editingFinished.connect(
             self.validateLineEditHeight)
-        HBoxSize.addWidget(QLabel("Width:"))
+        HBoxSize.addWidget(QtWidgets.QLabel("Width:"))
         HBoxSize.addWidget(self.LineEditWidth)
-        HBoxSize.addWidget(QLabel("Height:"))
+        HBoxSize.addWidget(QtWidgets.QLabel("Height:"))
         HBoxSize.addWidget(self.LineEditHeight)
 
-        HBoxName = QHBoxLayout()
-        self.LineEditName = QLineEdit()
+        HBoxName = QtWidgets.QHBoxLayout()
+        self.LineEditName = QtWidgets.QLineEdit()
         self.LineEditName.setText(str(self.returnValue["name"]))
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
-        HBoxName.addWidget(QLabel("Name:"))
+        HBoxName.addWidget(QtWidgets.QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
-        self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.VBox.addWidget(QLabel("Select game folder:"))
+        self.VBox.addWidget(QtWidgets.QLabel("Select game folder:"))
         self.VBox.addLayout(HBoxFolder)
-        self.VBox.addWidget(QLabel("Set map properties:"))
+        self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
         self.VBox.addLayout(HBoxName)
         self.VBox.addWidget(self.buttonBox)
@@ -254,27 +251,27 @@ class newFile(QDialog):
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(
-            str(QFileDialog.getExistingDirectory(self, "Select Directory")))
+            str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory")))
         self.returnValue["gameFolder"] = self.LineEditFolder.text()
         self.validateIsOk()
 
     def validateIsOk(self):
         if self.returnValue["name"] != "" and self.returnValue["gameFolder"] != "":
-            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
         else:
-            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
     def getValue(self):
         return self.returnValue
 
 
-class MiniPaletteWidget(QWidget):
-    selectedTilePalette = pyqtSignal()
+class MiniPaletteWidget(QtWidgets.QWidget):
+    selectedTilePalette = QtCore.pyqtSignal()
 
     def __init__(self, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
+        self.VBox = QtWidgets.QVBoxLayout(self)
 
         self.tileSetInstance = pMyTileset
 
@@ -282,7 +279,7 @@ class MiniPaletteWidget(QWidget):
 
         self.scale = 1
         self.PaletteItems = QtWidgets.QWidget()
-        self.Grid = QGridLayout()
+        self.Grid = QtWidgets.QGridLayout()
 
         self.PaletteItems.setLayout(self.Grid)
         scrollArea.setWidget(self.PaletteItems)
@@ -340,13 +337,13 @@ class MiniPaletteWidget(QWidget):
         return self.currentTile
 
 
-class MiniMapWidget(QWidget):
-    selectedTile = pyqtSignal()
+class MiniMapWidget(QtWidgets.QWidget):
+    selectedTile = QtCore.pyqtSignal()
 
     def __init__(self, pMyMap, pMyTileset, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.Grid = QGridLayout(self)
+        self.Grid = QtWidgets.QGridLayout(self)
 
         self.Grid.setHorizontalSpacing(0)
         self.Grid.setVerticalSpacing(0)

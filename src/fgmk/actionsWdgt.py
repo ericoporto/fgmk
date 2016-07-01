@@ -27,7 +27,7 @@ class ActionsWidget(QtWidgets.QDialog):
         self.actionButton = []
 
         for action in e["actionList"]:
-            self.actionButton.append(QPushButton(action, self))
+            self.actionButton.append(QtWidgets.QPushButton(action, self))
             self.VBox.addWidget(self.actionButton[-1])
             self.actionButton[-1].clicked.connect(self.getAction)
 
