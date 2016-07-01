@@ -684,16 +684,26 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.save(filename)
 
     def saveFileAs(self):
-        filename = QtWidgets.QFileDialog.getSaveFileName(
+        filename, extension = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.map.json)')
-        if filename != "":
+
+        print(filename)
+
+        if filename[0] != "":
+            if filename[-9:]!='.map.json':
+                filename+='.map.json'
+
             proj.settings["workingFile"] = filename
             self.myMap.save(proj.settings["workingFile"])
 
     def exportToJsAs(self):
-        filename = QtWidgets.QFileDialog.getSaveFileName(
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)')
-        if filename != "":
+
+        if filename[0] != "":
+            if filename[-3:]!='.js':
+                filename+='.js'
+
             proj.settings["workingFile"] = filename
             self.myMap.exportJS(proj.settings["workingFile"])
 

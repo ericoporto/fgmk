@@ -122,7 +122,7 @@ class MapFormat:
     def new(self, tlevelName, levelWidth, levelHeight, levelPalette=None):
 
         if levelPalette is None:
-            f = open("paletteDefault.json", "r")
+            f = open("paletteDefault.json", 'r')
             levelPalette = json.load(f)
             f.close()
 
@@ -155,7 +155,7 @@ class MapFormat:
         # print(self.LayersMapTiles)
 
     def save(self, mapn):
-        f = open(mapn, "w")
+        f = open(mapn, 'w+')
 
         # print(self.listOfActions)
 
@@ -181,7 +181,7 @@ class MapFormat:
         f.close()
 
     def exportJS(self, mapn):
-        f = open(mapn, "w")
+        f = open(mapn, 'w+')
 
         self.jsonTree = {"Level":
                          {
