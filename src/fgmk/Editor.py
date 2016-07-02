@@ -540,67 +540,49 @@ class MainWindow(QtWidgets.QMainWindow):
         self.changeZoomValue(2)
 
     def changeZoomValue(self, zoomvalue):
-        if(zoomvalue == 0.5):
-            self.zoom05xViewAction.setChecked(True)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue == 1):
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(True)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue == 2):
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(True)
-            self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue == 4):
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(True)
+        self.changeZoomViewActionChecked(zoomvalue)
         self.myMapWidget.Rescale(zoomvalue)
 
     def zoomIn(self):
         if(self.myMapWidget.myScale == 2):
             self.myMapWidget.Rescale(4)
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(True)
+            self.changeZoomViewActionChecked(4)
         elif(self.myMapWidget.myScale == 1):
             self.myMapWidget.Rescale(2)
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(True)
-            self.zoom4xViewAction.setChecked(False)
+            self.changeZoomViewActionChecked(2)
         elif(self.myMapWidget.myScale == 0.5):
             self.myMapWidget.Rescale(1)
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(True)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(False)
+            self.changeZoomViewActionChecked(1)
 
     def zoomOut(self):
         if(self.myMapWidget.myScale == 1):
             self.myMapWidget.Rescale(0.5)
-            self.zoom05xViewAction.setChecked(True)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(False)
+            self.changeZoomViewActionChecked(0.5)
         elif(self.myMapWidget.myScale == 2):
             self.myMapWidget.Rescale(1)
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(True)
-            self.zoom2xViewAction.setChecked(False)
-            self.zoom4xViewAction.setChecked(False)
+            self.changeZoomViewActionChecked(1)
         elif(self.myMapWidget.myScale == 4):
             self.myMapWidget.Rescale(2)
-            self.zoom05xViewAction.setChecked(False)
-            self.zoom1xViewAction.setChecked(False)
-            self.zoom2xViewAction.setChecked(True)
-            self.zoom4xViewAction.setChecked(False)
+            self.changeZoomViewActionChecked(2)
+
+    def changeZoomViewActionChecked(self, zoomname):
+            if(zoomname==0.5):
+                self.zoom05xViewAction.setChecked(True)
+            else:
+                self.zoom05xViewAction.setChecked(False)
+            if(zoomname==1):
+                self.zoom1xViewAction.setChecked(True)
+            else:
+                self.zoom1xViewAction.setChecked(False)
+            if(zoomname==2):
+                self.zoom2xViewAction.setChecked(True)
+            else:
+                self.zoom2xViewAction.setChecked(False)
+            if(zoomname==4):
+                self.zoom4xViewAction.setChecked(True)
+            else:
+                self.zoom4xViewAction.setChecked(False)
+
 
     def changeZoom05x(self, checked):
         self.changeZoomValue(0.5)
