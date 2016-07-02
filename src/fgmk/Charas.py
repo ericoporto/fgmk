@@ -583,7 +583,7 @@ class CharaSelector(QtWidgets.QWidget):
 
 
 class MiniCharaTile(QtWidgets.QWidget):
-    def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), **kwargs):
+    def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), scale=1, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.chara = chara
@@ -594,7 +594,7 @@ class MiniCharaTile(QtWidgets.QWidget):
             charas = self.__Open(filetoopen)
             charaset = charas.getCharaset(chara)
 
-            self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings,None,1)
+            self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings,None,scale)
             self.csetprev.select(charaset)
             self.whsize = self.csetprev.whsize
             self.setFixedSize(self.whsize)

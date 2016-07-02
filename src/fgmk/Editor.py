@@ -60,6 +60,8 @@ class MapWidget(QtWidgets.QWidget):
         self.resize(self.TileWidth * self.parent.myTileSet.boxsize * self.myScale,
                     self.TileHeight * self.parent.myTileSet.boxsize * self.myScale)
 
+        self.parent.myCharasPalWidget.reinit()
+
     def DrawMap(self, parent):
         # self.setUpdatesEnabled(False)
         self.setVisible(False)
@@ -282,8 +284,9 @@ class CharasPalWidget(QtWidgets.QWidget):
             chara = self.myCharaSelector.getSelected()
 
         if (chara != None):
+            scale = self.mapWdgt.myScale/2.0
             if(self.positionEmpty(position)):
-                item = Charas.MiniCharaTile(None, proj.settings, chara)
+                item = Charas.MiniCharaTile(None, proj.settings, chara, (0,0), scale)
                 item.rightClicked.connect(self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])
                 if(onmap):
@@ -530,12 +533,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.zoom2xViewAction = QtWidgets.QAction(
             'Zoom 2x', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.zoom2xViewAction)
+        self.zoom2xViewAction.setShortcut(QtGui.QKeySequence("Ctrl+0"))
         self.zoom2xViewAction.triggered.connect(self.changeZoom2x)
 
         self.zoom4xViewAction = QtWidgets.QAction(
             'Zoom 4x', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.zoom4xViewAction)
         self.zoom4xViewAction.triggered.connect(self.changeZoom4x)
+
+        self.zoomInAction = QtWidgets.QAction(
+            'Zoom In', self.viewMenu, checkable=False)
+        self.zoomInAction.setShortcut(QtGui.QKeySequence.ZoomIn)
+        self.viewMenu.addAction(self.zoomInAction)
+        self.zoomInAction.triggered.connect(self.zoomIn)
+
+        self.zoomOutAction = QtWidgets.QAction(
+            'Zoom Out', self.viewMenu, checkable=False)
+        self.zoomOutAction.setShortcut(QtGui.QKeySequence.ZoomOut)
+        self.viewMenu.addAction(self.zoomOutAction)
+        self.zoomOutAction.triggered.connect(self.zoomOut)
 
         self.viewMenu.addSeparator()
 
@@ -585,6 +601,46 @@ class MainWindow(QtWidgets.QMainWindow):
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(True)
         self.myMapWidget.Rescale(zoomvalue)
+
+    def zoomIn(self):
+        if(self.myMapWidget.myScale==2):
+            self.myMapWidget.Rescale(4)
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(True)
+        elif(self.myMapWidget.myScale==1):
+            self.myMapWidget.Rescale(2)
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(True)
+            self.zoom4xViewAction.setChecked(False)
+        elif(self.myMapWidget.myScale==0.5):
+            self.myMapWidget.Rescale(1)
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(True)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(False)
+
+    def zoomOut(self):
+        if(self.myMapWidget.myScale==1):
+            self.myMapWidget.Rescale(0.5)
+            self.zoom05xViewAction.setChecked(True)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(False)
+        elif(self.myMapWidget.myScale==2):
+            self.myMapWidget.Rescale(1)
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(True)
+            self.zoom2xViewAction.setChecked(False)
+            self.zoom4xViewAction.setChecked(False)
+        elif(self.myMapWidget.myScale==4):
+            self.myMapWidget.Rescale(2)
+            self.zoom05xViewAction.setChecked(False)
+            self.zoom1xViewAction.setChecked(False)
+            self.zoom2xViewAction.setChecked(True)
+            self.zoom4xViewAction.setChecked(False)
 
     def changeZoom05x(self, checked):
         self.changeZoomValue(0.5)
@@ -689,8 +745,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveFileAs(self):
         filename, extension = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.map.json)')
-
-        print(filename)
 
         if filename[0] != "":
             if filename[-9:]!='.map.json':
