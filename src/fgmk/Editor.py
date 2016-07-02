@@ -19,7 +19,6 @@ firstClickY = None
 
 
 class MapWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -207,7 +206,6 @@ class MapWidget(QtWidgets.QWidget):
 
 
 class LayerWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -252,7 +250,6 @@ class LayerWidget(QtWidgets.QWidget):
 
 
 class CharasPalWidget(QtWidgets.QWidget):
-
     def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -341,7 +338,6 @@ class CharasPalWidget(QtWidgets.QWidget):
 
 
 class ExitFSWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -360,24 +356,6 @@ class ExitFSWidget(QtWidgets.QWidget):
 
 
 class MainWindow(QtWidgets.QMainWindow):
-
-    def changeLayerCurrent(self, changeTo):
-        self.myMapWidget.currentLayer = changeTo
-        self.myLayerWidget.changeLayerView(changeTo)
-
-    def changeEventCurrent(self, changeTo):
-        self.myMapWidget.currentEvent = changeTo
-        self.myEventsWidget.eventSelectSpinbox.setValue(changeTo)
-        self.changeLayerCurrent(EVENTSLAYER)
-
-    def changeColisionCurrent(self, changeTo):
-        self.myMapWidget.currentColision = changeTo
-        self.myEventsWidget.setColisionValueView(changeTo)
-
-    def changeTileCurrent(self, changeTo):
-        self.myMapWidget.currentTile = changeTo
-        self.myPaletteWidget.setImageCurrent(changeTo)
-
     def __init__(self, filelist, **kwargs):
         super().__init__(None, **kwargs)
 
@@ -409,6 +387,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.opemFileIfDropped(filelist)
 
         self.setAcceptDrops(True)
+
+
+    def changeLayerCurrent(self, changeTo):
+        self.myMapWidget.currentLayer = changeTo
+        self.myLayerWidget.changeLayerView(changeTo)
+
+    def changeEventCurrent(self, changeTo):
+        self.myMapWidget.currentEvent = changeTo
+        self.myEventsWidget.eventSelectSpinbox.setValue(changeTo)
+        self.changeLayerCurrent(EVENTSLAYER)
+
+    def changeColisionCurrent(self, changeTo):
+        self.myMapWidget.currentColision = changeTo
+        self.myEventsWidget.setColisionValueView(changeTo)
+
+    def changeTileCurrent(self, changeTo):
+        self.myMapWidget.currentTile = changeTo
+        self.myPaletteWidget.setImageCurrent(changeTo)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
