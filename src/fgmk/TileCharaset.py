@@ -3,9 +3,6 @@ import sys
 import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import fifl, TileXtra, tMat
 
@@ -245,7 +242,7 @@ class CharaTile(QtWidgets.QLabel):
         self.setPixmap(pixmap)
 
     def mousePressEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == QtCore.Qt.RightButton:
             self.rightClicked.emit()
         else:
             self.clicked.emit()
@@ -270,7 +267,7 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
         self.ischildof = False
         self.aname = aname
         aarray = []
-        self.setData(Qt.UserRole, aarray)
+        self.setData(QtCore.Qt.UserRole, aarray)
 
     def setIschildof(self, parent):
         self.ischildof = parent
@@ -279,10 +276,10 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
         return self.ischildof
 
     def setAarray(self, aarray):
-        self.setData(Qt.UserRole, aarray)
+        self.setData(QtCore.Qt.UserRole, aarray)
 
     def getAarray(self):
-        return self.data(Qt.UserRole)
+        return self.data(QtCore.Qt.UserRole)
 
 
 class CsetAItem(QtWidgets.QListWidgetItem):
@@ -300,18 +297,18 @@ class CsetAItem(QtWidgets.QListWidgetItem):
         Composite = bcset[charType[1]][charType[0]][tempscale]
         pixmap = QtGui.QPixmap.fromImage(ImageQt(Composite))
 
-        f = QFont()
+        f = QtGui.QFont()
         f.setPointSize(1)
         self.setFont(f)
 
-        self.setIcon(QIcon(pixmap))
-        self.setData(Qt.UserRole, charType)
+        self.setIcon(QtGui.QIcon(pixmap))
+        self.setData(QtCore.Qt.UserRole, charType)
 
     def getCharType(self):
-        return self.data(Qt.UserRole)
+        return self.data(QtCore.Qt.UserRole)
 
 
-class AnimatedCharaTile(QLabel):
+class AnimatedCharaTile(QtWidgets.QLabel):
 
     def __init__(self, parent=None, scale=2):
         super().__init__(parent)
@@ -321,7 +318,7 @@ class AnimatedCharaTile(QLabel):
         self.boxh = 64
         self.scale = scale
         self.boxsize = (self.boxw, self.boxh)
-        self.whsize = QSize(self.boxw * scale, self.boxh * scale)
+        self.whsize = QtCore.QSize(self.boxw * scale, self.boxh * scale)
         self.setFixedSize(self.whsize)
         self._timer = QtCore.QTimer(interval=100,
                                     timeout=self._animation_step)
@@ -346,7 +343,7 @@ class AnimatedCharaTile(QLabel):
     def clearAnim(self):
         self._timer.stop()
         pixmap = QtGui.QPixmap(self.boxw * self.scale, self.boxh * self.scale)
-        pixmap.fill(Qt.white)
+        pixmap.fill(QtCore.Qt.white)
         self.setPixmap(pixmap)
 
     def setAnimArray(self, bcset, aarray):
@@ -381,12 +378,12 @@ def isParent(jsonTreeItem):
     return False
 
 
-class CharasetSelector(QWidget):
+class CharasetSelector(QtWidgets.QWidget):
 
     def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.VBox = QVBoxLayout(self)
+        self.VBox = QtWidgets.QVBoxLayout(self)
         self.ssettings = ssettings
 
         if(self.ssettings == {}):
@@ -398,7 +395,7 @@ class CharasetSelector(QWidget):
         else:
             self.cset = CharasetFormat()
 
-        self.csetList = QListWidget()
+        self.csetList = QtWidgets.QListWidget()
         self.myBC = BaseCharaset(None)
         self.update()
 
@@ -453,7 +450,7 @@ class CharasetSelector(QWidget):
         return charaset
 
 
-class CharasetPreviewer(QWidget):
+class CharasetPreviewer(QtWidgets.QWidget):
 
     def __init__(self, parent=None, ssettings={}, cset=None, scale=2, **kwargs):
         super().__init__(parent, **kwargs)
@@ -506,7 +503,7 @@ class CharasetPreviewer(QWidget):
         return False
 
 
-class CharasetEditorWidget(QDialog):
+class CharasetEditorWidget(QtWidgets.QDialog):
 
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
@@ -519,43 +516,43 @@ class CharasetEditorWidget(QDialog):
 
         self.updating = False
 
-        self.HBox = QHBoxLayout(self)
-        self.HBox.setAlignment(Qt.AlignTop)
+        self.HBox = QtWidgets.QHBoxLayout(self)
+        self.HBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.csetsOpenEdit = QLineEdit()
-        self.csetsNewButton = QPushButton("New")
-        self.csetsOpenButton = QPushButton("Open")
-        self.csetsSaveButton = QPushButton("Save")
+        self.csetsOpenEdit = QtWidgets.QLineEdit()
+        self.csetsNewButton = QtWidgets.QPushButton("New")
+        self.csetsOpenButton = QtWidgets.QPushButton("Open")
+        self.csetsSaveButton = QtWidgets.QPushButton("Save")
 
         self.csetsNewButton.clicked.connect(self.charasetNew)
         self.csetsOpenButton.clicked.connect(self.charasetOpen)
         self.csetsSaveButton.clicked.connect(self.charasetSave)
 
-        HBoxOpen = QHBoxLayout()
+        HBoxOpen = QtWidgets.QHBoxLayout()
         HBoxOpen.addWidget(self.csetsNewButton)
         HBoxOpen.addWidget(self.csetsOpenButton)
         HBoxOpen.addWidget(self.csetsSaveButton)
 
-        self.csetsEntry = QLineEdit()
-        self.csetsAddButton = QPushButton("Add")
-        self.csetsDelButton = QPushButton("Delete")
+        self.csetsEntry = QtWidgets.QLineEdit()
+        self.csetsAddButton = QtWidgets.QPushButton("Add")
+        self.csetsDelButton = QtWidgets.QPushButton("Delete")
         self.csetsAddButton.clicked.connect(self.csetsAddAction)
         self.csetsEntry.returnPressed.connect(self.csetsAddAction)
         self.csetsDelButton.clicked.connect(self.csetsDelAction)
-        HBoxEntry = QHBoxLayout()
+        HBoxEntry = QtWidgets.QHBoxLayout()
         HBoxEntry.addWidget(self.csetsEntry)
         HBoxEntry.addWidget(self.csetsAddButton)
         HBoxEntry.addWidget(self.csetsDelButton)
 
-        self.csetsList = QListWidget()
+        self.csetsList = QtWidgets.QListWidget()
         self.csetsList.itemSelectionChanged.connect(
             self.csetsListSelectionChanged)
 
-        VBoxCSets = QVBoxLayout()
-        VBoxCSets.addWidget(QLabel("Charaset File:"))
+        VBoxCSets = QtWidgets.QVBoxLayout()
+        VBoxCSets.addWidget(QtWidgets.QLabel("Charaset File:"))
         VBoxCSets.addWidget(self.csetsOpenEdit)
         VBoxCSets.addLayout(HBoxOpen)
-        VBoxCSets.addWidget(QLabel("Entry name to add:"))
+        VBoxCSets.addWidget(QtWidgets.QLabel("Entry name to add:"))
         VBoxCSets.addLayout(HBoxEntry)
         VBoxCSets.addWidget(self.csetsList)
 
@@ -568,68 +565,68 @@ class CharasetEditorWidget(QDialog):
         self.scrollArea.setMinimumHeight(
             self.palette.boxh * self.palette.scale * 4 + 16)
 
-        self.palImageFile = QLineEdit()
-        self.palImageFileButton = QPushButton("Open")
+        self.palImageFile = QtWidgets.QLineEdit()
+        self.palImageFileButton = QtWidgets.QPushButton("Open")
         self.palImageFileButton.clicked.connect(self.imgOpen)
 
-        self.animList = QListWidget()
-        self.animList.setIconSize(QSize(64, 128))
-        self.animList.setFlow(QListWidget.LeftToRight)
+        self.animList = QtWidgets.QListWidget()
+        self.animList.setIconSize(QtCore.QSize(64, 128))
+        self.animList.setFlow(QtWidgets.QListWidget.LeftToRight)
         self.animList.setMinimumWidth(
             self.palette.boxw * self.palette.scale * 4 + 48)
         self.animList.setMinimumHeight(
             self.palette.boxh * self.palette.scale * 2 + 16)
         self.animList.setMaximumHeight(
             self.palette.boxh * self.palette.scale * 2 + 16)
-        self.animList.setDragDropMode(QAbstractItemView.InternalMove)
-        self.animListDel = QPushButton("Delete Frame")
+        self.animList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.animListDel = QtWidgets.QPushButton("Delete Frame")
         self.animListDel.clicked.connect(self.animListDelAction)
 
         animListModel = self.animList.model()
         animListModel.layoutChanged.connect(self.animListUpdated)
         animListModel.rowsInserted.connect(self.animListUpdated)
 
-        self.animNamesEntry = QLineEdit()
+        self.animNamesEntry = QtWidgets.QLineEdit()
         self.animNamesEntry.returnPressed.connect(self.animNamesAddAction)
-        self.animNamesAdd = QPushButton("Add animation")
+        self.animNamesAdd = QtWidgets.QPushButton("Add animation")
         self.animNamesAdd.clicked.connect(self.animNamesAddAction)
-        self.animNamesCheckBNF = QCheckBox("No facing")
-        self.animNamesDel = QPushButton("Delete")
+        self.animNamesCheckBNF = QtWidgets.QCheckBox("No facing")
+        self.animNamesDel = QtWidgets.QPushButton("Delete")
         self.animNamesDel.clicked.connect(self.animNamesDelAction)
-        self.animNames = QListWidget()
+        self.animNames = QtWidgets.QListWidget()
         self.animNames.itemSelectionChanged.connect(
             self.animNamesSelectionChanged)
         self.animNames.itemChanged.connect(self.animNamesChanged)
 
         self.animPreview = AnimatedCharaTile()
 
-        HBoxCharaPalName = QHBoxLayout()
+        HBoxCharaPalName = QtWidgets.QHBoxLayout()
         HBoxCharaPalName.addWidget(self.palImageFile)
         HBoxCharaPalName.addWidget(self.palImageFileButton)
 
-        VBoxCharaPalette = QVBoxLayout()
-        VBoxCharaPalette.addWidget(QLabel("Image file to load:"))
+        VBoxCharaPalette = QtWidgets.QVBoxLayout()
+        VBoxCharaPalette.addWidget(QtWidgets.QLabel("Image file to load:"))
         VBoxCharaPalette.addLayout(HBoxCharaPalName)
-        VBoxCharaPalette.addWidget(QLabel("Available frames:"))
+        VBoxCharaPalette.addWidget(QtWidgets.QLabel("Available frames:"))
         VBoxCharaPalette.addWidget(self.scrollArea)
 
-        HBoxANE = QHBoxLayout()
+        HBoxANE = QtWidgets.QHBoxLayout()
         HBoxANE.addWidget(self.animNamesEntry)
         HBoxANE.addWidget(self.animNamesAdd)
         HBoxANE.addWidget(self.animNamesCheckBNF)
         HBoxANE.addWidget(self.animNamesDel)
 
-        HBoxAnim = QHBoxLayout()
+        HBoxAnim = QtWidgets.QHBoxLayout()
         HBoxAnim.addWidget(self.animPreview)
         HBoxAnim.addWidget(self.animListDel)
 
-        VBoxCharaAnim = QVBoxLayout()
+        VBoxCharaAnim = QtWidgets.QVBoxLayout()
 
-        VBoxCharaAnim.addWidget(QLabel("Animation Sequence:"))
+        VBoxCharaAnim.addWidget(QtWidgets.QLabel("Animation Sequence:"))
         VBoxCharaAnim.addLayout(HBoxANE)
         VBoxCharaAnim.addWidget(self.animNames)
         VBoxCharaAnim.addLayout(HBoxAnim)
-        VBoxCharaAnim.addWidget(QLabel("Animation Frames:"))
+        VBoxCharaAnim.addWidget(QtWidgets.QLabel("Animation Frames:"))
         VBoxCharaAnim.addWidget(self.animList)
 
         self.HBox.addLayout(VBoxCSets)
@@ -884,13 +881,13 @@ class CharasetEditorWidget(QDialog):
                 self.animNames.selectedItems()[0].setAarray([])
 
 
-class CharasPaletteWidget(QWidget):
+class CharasPaletteWidget(QtWidgets.QWidget):
 
     def __init__(self, pMap, pSettings, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
 
-class CharasEditorWidget(QWidget):
+class CharasEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, pMap, pSettings, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -899,7 +896,7 @@ class CharasEditorWidget(QWidget):
 if __name__ == "__main__":
     from sys import argv, exit
 
-    a = QApplication(argv)
+    a = QtWidgets.QApplication(argv)
     # m=CharasetSelector()
     m = CharasetEditorWidget()
     a.processEvents()

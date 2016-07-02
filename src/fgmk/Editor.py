@@ -271,6 +271,9 @@ class CharasPalWidget(QtWidgets.QWidget):
         self.charaslist = []
 
         charalist = self.pMap.getCharaList()
+        if(charalist == [''] or not charalist):
+            return
+
         for char in charalist:
             self.addCharaAction((char[1], char[2]), char[0], False)
 
