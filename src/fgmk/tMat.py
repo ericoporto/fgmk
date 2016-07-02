@@ -1,6 +1,10 @@
 import numpy as np
 from numbers import Number
 
+try:
+  basestring
+except NameError:
+  basestring = (str, bytes)
 
 def mnZeros(m, n):
     return [[0 for x in range(m)] for x in range(n)]

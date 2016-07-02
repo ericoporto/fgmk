@@ -395,6 +395,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def selectStartPosition(self):
         result = gameInit.selectStartingPosition(self, proj.settings)
 
+        if result is None:
+            return
+
+
         doSave = False
         if(result[1] != "this"):
             doSave = True
@@ -597,14 +601,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.changeZoomValue(4)
 
     def editCharasets(self):
-
         myCharasetEditor = TileCharaset.CharasetEditorWidget(
             self, proj.settings)
         if myCharasetEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasetEditor)
 
     def editCharas(self):
-
         myCharasEditor = Charas.CharaEditor(self, proj.settings)
         if myCharasEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasEditor)
@@ -632,7 +634,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget.show()
 
     def runServer(self):
-
         gwserver.servePage(os.path.abspath(proj.settings["gamefolder"]))
 
     def newProject(self):

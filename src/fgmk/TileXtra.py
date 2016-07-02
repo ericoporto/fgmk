@@ -287,8 +287,8 @@ class MapFormat:
     def removeActionByIndexOnEvent(self, index, event):
         if self.listOfActions.get(str(event), None) is None:
             self.listOfActions[str(event)] = []
-        print("listOfActions index {0}".format(index))
-        print(self.listOfActions[str(event)][index])
+        #print("listOfActions index {0}".format(index))
+        #print(self.listOfActions[str(event)][index])
         del self.listOfActions[str(event)][index]
 
     def getActionListOnEvent(self, event):

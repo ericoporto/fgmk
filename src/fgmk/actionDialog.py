@@ -66,7 +66,7 @@ class changeTile(QtWidgets.QDialog):
         self.eventList.insert(0, "keep")
         self.eventList = [str(x) for x in self.eventList]
 
-        self.checkbox = QCheckBox("instead use event location", self)
+        self.checkbox = QtWidgets.QCheckBox("instead use event location", self)
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
@@ -131,6 +131,8 @@ class changeTile(QtWidgets.QDialog):
                     if(val == edit[6]):
                         self.comboBox.setCurrentIndex(idx)
 
+                self.myMiniMapWidget.changeSelectXY(int(edit[4]), int(edit[5]))
+
             else:
                 self.checkbox.setCheckState(QtCore.Qt.Checked)
 
@@ -165,7 +167,7 @@ class changeTile(QtWidgets.QDialog):
         textToReturn = "{0};{1};{2}".format(
             position[0], position[1], str(self.comboBox.currentText()))
         self.LineTextPlace.setText(textToReturn)
-        self.checkbox.setCheckState(Qt.Unchecked)
+        self.checkbox.setCheckState(QtCore.Qt.Unchecked)
 
     def setTileToChange(self):
         tile = self.myMiniPaletteWidget.getValue()
@@ -287,6 +289,7 @@ class teleport(QtWidgets.QDialog):
                     break
 
             self.updateMap(idx)
+            self.myMiniMapWidget.changeSelectXY(int(edit[0]), int(edit[1]))
 
     def setTeleportPlace(self):
         position = self.myMiniMapWidget.getValue()
@@ -519,7 +522,7 @@ class fadeIn(QtWidgets.QDialog):
         super().__init__(parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.QtWidgets.Qt.AlignTop)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select the effect to use:")
         self.ListEffect = QtWidgets.QListWidget()
 
@@ -604,7 +607,7 @@ class fadeOut(QtWidgets.QDialog):
                     self.ListEffect.setCurrentRow(idx)
 
             if(edit[1] == 'keepEffect'):
-                self.checkbox.setCheckState(Qt.Checked)
+                self.checkbox.setCheckState(QtCore.Qt.Checked)
 
     def getValue(self):
         effecToReturn = str(self.ListEffect.selectedItems()[0].whatsThis())

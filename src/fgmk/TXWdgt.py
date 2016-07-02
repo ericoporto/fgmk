@@ -353,13 +353,20 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.TileHeight = 0
         self.myScale = 0.5
 
+        self.xclicked = TileXtra.ExtendedQLabel(self)
+        self.xclicked.initTile(TileXtra.indicativeSet.tileset, 0, 0, 32, [1,0,0,0,0], 0.5)
+
         self.TileList = []
         self.selectedPosition = [0, 0]
         self.DrawMap(pMyMap, pMyTileset)
 
     def DrawMap(self, pMyMap, pMyTileset):
         self.setVisible(False)
-        self.pMyMap = pMyMap
+
+        if(self.pMyMap != pMyMap):
+            self.pMyMap = pMyMap
+            self.selectedPosition = [0, 0]            
+
         self.pMyTileset = pMyTileset
 
         LayersMapTiles = self.pMyMap.LayersMapTiles
@@ -393,13 +400,21 @@ class MiniMapWidget(QtWidgets.QWidget):
                     self.TileHeight * boxsize * self.myScale)
         self.setVisible(True)
 
+
+        self.changeSelectXY(self.selectedPosition[0], self.selectedPosition[1])
+
+    def changeSelectXY(self, x, y):
+        self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(True)
+
+        self.selectedPosition = [x, y]
+
+        self.Grid.removeWidget(self.xclicked)
+        self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(False)
+        self.Grid.addWidget(self.xclicked, self.selectedPosition[1], self.selectedPosition[0])
+
     def TileClicked(self):
-
         sender = self.sender()
-        self.selectedPosition = [sender.tileX, sender.tileY]
-
-        boxsize = self.pMyTileset.boxsize
-        scale = self.myScale
+        self.changeSelectXY(sender.tileX, sender.tileY)
 
         self.selectedTile.emit()
 
