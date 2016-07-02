@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image

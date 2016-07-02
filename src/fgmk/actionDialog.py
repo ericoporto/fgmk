@@ -1,9 +1,4 @@
-import sys
-import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from PIL import Image
-from PIL.ImageQt import ImageQt
-import numpy as np
 from fgmk import tMat, TileXtra, TXWdgt
 
 

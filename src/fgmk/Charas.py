@@ -1,8 +1,6 @@
 import os
 import sys
 import json
-from PIL import Image
-from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, fifl, TileCharaset
 from fgmk.flowlayout import FlowLayout as FlowLayout

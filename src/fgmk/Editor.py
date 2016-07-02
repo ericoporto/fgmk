@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 # display a tiled image from tileset with PyQt
 import os
-import sys
-import json
 import tarfile
-from time import time, sleep
-from PIL import Image
-from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit, paletteWdgt, ToolsWdgt, EventsWdgt, proj
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -24,6 +19,7 @@ firstClickY = None
 
 
 class MapWidget(QtWidgets.QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -55,7 +51,8 @@ class MapWidget(QtWidgets.QWidget):
 
         for iy in range(self.TileHeight):
             for jx in range(self.TileWidth):
-                self.TileList[iy][jx].Rescale(self.parent.myTileSet.tileset, self.myScale)
+                self.TileList[iy][jx].Rescale(
+                    self.parent.myTileSet.tileset, self.myScale)
 
         self.resize(self.TileWidth * self.parent.myTileSet.boxsize * self.myScale,
                     self.TileHeight * self.parent.myTileSet.boxsize * self.myScale)
@@ -87,7 +84,8 @@ class MapWidget(QtWidgets.QWidget):
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
-                self.TileList[iy][jx].rightClicked.connect(self.TileInMapRightClicked)
+                self.TileList[iy][jx].rightClicked.connect(
+                    self.TileInMapRightClicked)
 
         self.resize(self.TileWidth * parent.myTileSet.boxsize * self.myScale,
                     self.TileHeight * parent.myTileSet.boxsize * self.myScale)
@@ -118,12 +116,15 @@ class MapWidget(QtWidgets.QWidget):
         elif theClickedTool == 1:
             # dropper
             if(self.currentLayer == COLISIONLAYER):
-                self.parent.changeColisionCurrent(self.sender().tileType[COLISIONLAYER])
+                self.parent.changeColisionCurrent(
+                    self.sender().tileType[COLISIONLAYER])
             elif(self.currentLayer == EVENTSLAYER):
-                self.parent.changeEventCurrent(self.sender().tileType[EVENTSLAYER])
+                self.parent.changeEventCurrent(
+                    self.sender().tileType[EVENTSLAYER])
                 self.parent.myEventsWidget.updateEventsList()
             else:
-                self.parent.changeTileCurrent(self.sender().tileType[self.currentLayer])
+                self.parent.changeTileCurrent(
+                    self.sender().tileType[self.currentLayer])
 
         elif theClickedTool == 2:
             # bucket
@@ -206,10 +207,11 @@ class MapWidget(QtWidgets.QWidget):
 
 
 class LayerWidget(QtWidgets.QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.parent=parent
+        self.parent = parent
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -219,7 +221,8 @@ class LayerWidget(QtWidgets.QWidget):
         self.ButtonLayer = []
 
         for i in range(len(TileXtra.LayersName)):
-            self.ButtonLayer.append(QtWidgets.QPushButton(TileXtra.LayersName[i]))
+            self.ButtonLayer.append(
+                QtWidgets.QPushButton(TileXtra.LayersName[i]))
             self.ButtonLayer[-1].setObjectName(TileXtra.LayersName[i])
             self.ButtonLayer[-1].clicked.connect(self.buttonLayerClicked)
             self.VBox.addWidget(self.ButtonLayer[-1])
@@ -249,6 +252,7 @@ class LayerWidget(QtWidgets.QWidget):
 
 
 class CharasPalWidget(QtWidgets.QWidget):
+
     def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -284,9 +288,10 @@ class CharasPalWidget(QtWidgets.QWidget):
             chara = self.myCharaSelector.getSelected()
 
         if (chara != None):
-            scale = self.mapWdgt.myScale/2.0
+            scale = self.mapWdgt.myScale / 2.0
             if(self.positionEmpty(position)):
-                item = Charas.MiniCharaTile(None, proj.settings, chara, (0,0), scale)
+                item = Charas.MiniCharaTile(
+                    None, proj.settings, chara, (0, 0), scale)
                 item.rightClicked.connect(self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])
                 if(onmap):
@@ -336,6 +341,7 @@ class CharasPalWidget(QtWidgets.QWidget):
 
 
 class ExitFSWidget(QtWidgets.QWidget):
+
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -354,6 +360,7 @@ class ExitFSWidget(QtWidgets.QWidget):
 
 
 class MainWindow(QtWidgets.QMainWindow):
+
     def changeLayerCurrent(self, changeTo):
         self.myMapWidget.currentLayer = changeTo
         self.myLayerWidget.changeLayerView(changeTo)
@@ -424,7 +431,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.ignore()
 
     def opemFileIfDropped(self, filelist):
-        if (isinstance(filelist,str)):
+        if (isinstance(filelist, str)):
             if (".map.json" in filelist):
                 self.openFileByName(filelist)
 
@@ -533,7 +540,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.zoom2xViewAction = QtWidgets.QAction(
             'Zoom 2x', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.zoom2xViewAction)
-        self.zoom2xViewAction.setShortcut(QtGui.QKeySequence("Ctrl+0"))
+        self.zoom2xViewAction.setShortcut(
+            QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_0))
         self.zoom2xViewAction.triggered.connect(self.changeZoom2x)
 
         self.zoom4xViewAction = QtWidgets.QAction(
@@ -580,22 +588,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.changeZoomValue(2)
 
     def changeZoomValue(self, zoomvalue):
-        if(zoomvalue==0.5):
+        if(zoomvalue == 0.5):
             self.zoom05xViewAction.setChecked(True)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue==1):
+        if(zoomvalue == 1):
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(True)
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue==2):
+        if(zoomvalue == 2):
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(True)
             self.zoom4xViewAction.setChecked(False)
-        if(zoomvalue==4):
+        if(zoomvalue == 4):
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(False)
@@ -603,19 +611,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget.Rescale(zoomvalue)
 
     def zoomIn(self):
-        if(self.myMapWidget.myScale==2):
+        if(self.myMapWidget.myScale == 2):
             self.myMapWidget.Rescale(4)
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(True)
-        elif(self.myMapWidget.myScale==1):
+        elif(self.myMapWidget.myScale == 1):
             self.myMapWidget.Rescale(2)
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(True)
             self.zoom4xViewAction.setChecked(False)
-        elif(self.myMapWidget.myScale==0.5):
+        elif(self.myMapWidget.myScale == 0.5):
             self.myMapWidget.Rescale(1)
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(True)
@@ -623,19 +631,19 @@ class MainWindow(QtWidgets.QMainWindow):
             self.zoom4xViewAction.setChecked(False)
 
     def zoomOut(self):
-        if(self.myMapWidget.myScale==1):
+        if(self.myMapWidget.myScale == 1):
             self.myMapWidget.Rescale(0.5)
             self.zoom05xViewAction.setChecked(True)
             self.zoom1xViewAction.setChecked(False)
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(False)
-        elif(self.myMapWidget.myScale==2):
+        elif(self.myMapWidget.myScale == 2):
             self.myMapWidget.Rescale(1)
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(True)
             self.zoom2xViewAction.setChecked(False)
             self.zoom4xViewAction.setChecked(False)
-        elif(self.myMapWidget.myScale==4):
+        elif(self.myMapWidget.myScale == 4):
             self.myMapWidget.Rescale(2)
             self.zoom05xViewAction.setChecked(False)
             self.zoom1xViewAction.setChecked(False)
@@ -656,7 +664,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def editCharasets(self):
 
-        myCharasetEditor = TileCharaset.CharasetEditorWidget(self, proj.settings)
+        myCharasetEditor = TileCharaset.CharasetEditorWidget(
+            self, proj.settings)
         if myCharasetEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasetEditor)
 
@@ -679,15 +688,14 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.gridViewAction.isChecked() is True:
             self.myMapWidget.Grid.setHorizontalSpacing(1)
             self.myMapWidget.Grid.setVerticalSpacing(1)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth * (bxsz * self.myMapWidget.myScale + 1)-1,
-                                    self.myMapWidget.TileHeight * (bxsz * self.myMapWidget.myScale + 1)-1)
+            self.myMapWidget.resize(self.myMapWidget.TileWidth * (bxsz * self.myMapWidget.myScale + 1) - 1,
+                                    self.myMapWidget.TileHeight * (bxsz * self.myMapWidget.myScale + 1) - 1)
         else:
             self.myMapWidget.Grid.setHorizontalSpacing(0)
             self.myMapWidget.Grid.setVerticalSpacing(0)
             self.myMapWidget.resize(self.myMapWidget.TileWidth * bxsz * self.myMapWidget.myScale,
                                     self.myMapWidget.TileHeight * bxsz * self.myMapWidget.myScale)
         self.myMapWidget.show()
-
 
     def runServer(self):
 
@@ -747,8 +755,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self, 'Save File', os.path.expanduser("~"), 'JSON Game Level (*.map.json)')
 
         if filename[0] != "":
-            if filename[-9:]!='.map.json':
-                filename+='.map.json'
+            if filename[-9:] != '.map.json':
+                filename += '.map.json'
 
             proj.settings["workingFile"] = filename
             self.myMap.save(proj.settings["workingFile"])
@@ -758,8 +766,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self, 'Save File', os.path.expanduser("~"), 'JS Game Level (*.js)')
 
         if filename[0] != "":
-            if filename[-3:]!='.js':
-                filename+='.js'
+            if filename[-3:] != '.js':
+                filename += '.js'
 
             proj.settings["workingFile"] = filename
             self.myMap.exportJS(proj.settings["workingFile"])
@@ -803,6 +811,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.accept()
         else:
             event.ignore()
+
 
 def Icon():
     return QtGui.QPixmap('icon.png')
