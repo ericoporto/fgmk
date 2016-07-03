@@ -779,6 +779,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myEventsWidget.updateEventsList()
             self.myEventsWidget.deselectAll()
             self.myCharasPalWidget.reinit()
+            gameInit.regenerateLevelList()
             self.myMapExplorerWidget.reloadInitFile()
 
     def openFile(self):
