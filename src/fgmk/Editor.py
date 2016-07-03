@@ -448,6 +448,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myPaletteWidget = paletteWdgt.PaletteWidget(self, self.myTileSet)
         self.paletteDockWdgt = QtWidgets.QDockWidget("Palette", self)
+        self.paletteDockWdgt.setObjectName("Palette")
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.paletteDockWdgt)
 
@@ -456,6 +457,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myCharasPalWidget = CharasPalWidget(
             self.myMapWidget, self.myMap, self)
         self.charasDockWdgt = QtWidgets.QDockWidget("Charas", self)
+        self.charasDockWdgt.setObjectName("Charas")
         self.charasDockWdgt.setWidget(self.myCharasPalWidget)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.charasDockWdgt)
         self.tabifyDockWidget(self.charasDockWdgt, self.paletteDockWdgt)
@@ -464,6 +466,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myLayerWidget = LayerWdgt.LayerWidget(self)
         self.layerDockWdgt = QtWidgets.QDockWidget("Layers", self)
+        self.layerDockWdgt.setObjectName("Layers")
         self.layerDockWdgt.setWidget(self.myLayerWidget)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.layerDockWdgt)
 
@@ -471,6 +474,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myToolsWidget = ToolsWdgt.ToolsWidget(self)
         self.toolsDockWdgt = QtWidgets.QDockWidget("Tool", self)
+        self.toolsDockWdgt.setObjectName("Tool")
         self.toolsDockWdgt.setWidget(self.myToolsWidget)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.toolsDockWdgt)
 
@@ -478,6 +482,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myEventsWidget = EventsWdgt.EventsWidget(self.myMap, self)
         self.eventsDockWdgt = QtWidgets.QDockWidget("Events", self)
+        self.eventsDockWdgt.setObjectName("Events")
         self.eventsDockWdgt.setWidget(self.myEventsWidget)
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.eventsDockWdgt)
 
@@ -486,6 +491,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapExplorerWidget = MapExplorerWdgt.MapExplorerWidget(self)
         self.myMapExplorerWidget.mapOpened.connect(self.openFromExplorer)
         self.mapExplorerDockWdgt = QtWidgets.QDockWidget("Map Explorer", self)
+        self.mapExplorerDockWdgt.setObjectName("MapExplorer")
         self.mapExplorerDockWdgt.setWidget(self.myMapExplorerWidget)
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.mapExplorerDockWdgt)
 
@@ -536,6 +542,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myExitFSWidget = ExitFSWidget(self)
         self.exitFSDockWdgt = QtWidgets.QDockWidget("", self)
+        self.exitFSDockWdgt.setObjectName("ExitFullScreen")
         self.exitFSDockWdgt.setWidget(self.myExitFSWidget)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.exitFSDockWdgt)
         self.exitFSDockWdgt.hide()
@@ -551,7 +558,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setMenuBar(self.menubar)
 
-        self.changeZoomValue(2)
 
     def changeZoomValue(self, zoomvalue):
         self.changeZoomViewActionChecked(zoomvalue)
@@ -802,7 +808,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.beginGroup("MainWindow")
         self.settings.setValue("size", self.size());
         self.settings.setValue("pos", self.pos());
+        self.settings.setValue("zoom", self.myMapWidget.myScale)
+        self.settings.setValue("state", self.saveState())
         self.settings.endGroup();
+
         self.settings.beginGroup("Project")
         self.settings.setValue("workingFile", proj.settings["workingFile"]);
         self.settings.endGroup();
@@ -812,10 +821,17 @@ class MainWindow(QtWidgets.QMainWindow):
          self.settings.beginGroup("MainWindow");
          self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
          self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
+         self.changeZoomValue(float(self.settings.value("zoom", 2)))
+         state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
+         if state:
+            self.restoreState(state)
          self.settings.endGroup();
+
          self.settings.beginGroup("Project")
          self.openFileByName(self.settings.value("workingFile", self.levelName + ".map.json"))
          self.settings.endGroup();
+
+
 
 
 def Icon():
