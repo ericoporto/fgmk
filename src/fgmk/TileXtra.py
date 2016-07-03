@@ -150,10 +150,7 @@ class MapFormat:
         self.levelName = self.jsonTree['Level']['levelName']
         # print(self.LayersMapTiles)
 
-    def save(self, mapn):
-        f = open(mapn, 'w+')
-
-        # print(self.listOfActions)
+    def updateJsonTree(self):
 
         self.jsonTree = {"Level":
                          {
@@ -171,6 +168,13 @@ class MapFormat:
                              "charas": self.listOfCharas
                          }
                          }
+
+    def save(self, mapn):
+        f = open(mapn, 'w+')
+
+        # print(self.listOfActions)
+
+        self.updateJsonTree()
 
         tMat.fwriteKeyVals(self.jsonTree, f)
 
@@ -179,22 +183,7 @@ class MapFormat:
     def exportJS(self, mapn):
         f = open(mapn, 'w+')
 
-        self.jsonTree = {"Level":
-                         {
-                             "levelName": self.levelName,
-                             LayersName[0]: self.LayersMapTiles[0, :, :].tolist(),
-                             LayersName[1]: self.LayersMapTiles[1, :, :].tolist(),
-                             LayersName[2]: self.LayersMapTiles[2, :, :].tolist(),
-                             LayersName[3]: self.LayersMapTiles[3, :, :].tolist(),
-                             LayersName[4]: self.LayersMapTiles[4, :, :].tolist(),
-                             "tiles": self.palette,
-                             "tileImage": self.tileImage,
-                             "eventsType": self.listOfEventsTypes,
-                             "eventsActions": self.listOfActions,
-                             "tilesAnimated": self.tilesAnimated,
-                             "charas": self.listOfCharas
-                         }
-                         }
+        self.updateJsonTree()
         #f.write("var " + self.levelName + "= {};\n")
         #f.write(self.levelName + ".levels = [];\n")
         #f.write(self.levelName + ".levels[0] = {\n")
@@ -305,6 +294,10 @@ class MapFormat:
         if self.listOfEventsTypes.get(str(event), None) is None:
             self.listOfEventsTypes[str(event)] = [1, 0]
         return self.listOfEventsTypes[str(event)]
+
+    def isEqualMap(self, compareMap):
+        self.updateJsonTree()
+        return sorted(self.jsonTree.items()) == sorted(compareMap.jsonTree.items())
 
 
 class TileSet:

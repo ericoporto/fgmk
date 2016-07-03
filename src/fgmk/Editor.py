@@ -3,7 +3,8 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, actionsWdgt, gameInit, paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, proj
+from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, proj
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
@@ -481,6 +482,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
+        self.myMapExplorerWidget = MapExplorerWdgt.MapExplorerWidget(self)
+        self.myMapExplorerWidget.mapOpened.connect(self.openFromExplorer)
+        self.mapExplorerDockWdgt = QtWidgets.QDockWidget("Map Explorer", self)
+        self.mapExplorerDockWdgt.setWidget(self.myMapExplorerWidget)
+        self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.mapExplorerDockWdgt)
+
+        self.viewMenu.addAction(self.mapExplorerDockWdgt.toggleViewAction())
+
         self.viewMenu.addSeparator()
 
         self.zoom05xViewAction = QtWidgets.QAction(
@@ -633,6 +642,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                     self.myMapWidget.TileHeight * bxsz * self.myMapWidget.myScale)
         self.myMapWidget.show()
 
+    def openFromExplorer(self):
+        mapfilename = self.myMapExplorerWidget.mapForOpen
+        gamefolder = os.path.abspath(proj.settings["gamefolder"])
+        filetopen = os.path.join(str(gamefolder), fifl.LEVELS, mapfilename)
+        self.openFileByName(filetopen)
+
+
     def runServer(self):
         gwserver.servePage(os.path.abspath(proj.settings["gamefolder"]))
 
@@ -678,6 +694,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
+        self.myMapExplorerWidget.reloadInitFile()
         self.undoStack.clear()
 
     def saveFile(self):
@@ -722,6 +739,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
             self.myCharasPalWidget.reinit()
+            self.myMapExplorerWidget.reloadInitFile()
 
     def openFile(self):
         if(proj.settings["gamefolder"] == ""):
@@ -735,17 +753,24 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
-        quit_msg = "Do you want to save changes?"
-        reply = QtWidgets.QMessageBox.question(self, 'Message',
-                                               quit_msg, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+        if(proj.settings["workingFile"]!="newFile.json"):
+            testMap = TileXtra.MapFormat()
+            testMap.load(proj.settings["workingFile"])
+            if not self.myMap.isEqualMap(testMap):
 
-        if reply == QtWidgets.QMessageBox.Yes:
-            event.accept()
-            self.saveFile()
-        elif reply == QtWidgets.QMessageBox.No:
-            event.accept()
+                quit_msg = "Do you want to save changes?"
+                reply = QtWidgets.QMessageBox.question(self, 'Message',
+                                                       quit_msg, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+
+                if reply == QtWidgets.QMessageBox.Yes:
+                    event.accept()
+                    self.saveFile()
+                elif reply == QtWidgets.QMessageBox.No:
+                    event.accept()
+                else:
+                    event.ignore()
         else:
-            event.ignore()
+            event.accept()
 
 
 def Icon():
