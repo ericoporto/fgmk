@@ -1,7 +1,7 @@
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat,  TileXtra, fifl
+from fgmk import tMat,  TileXtra, fifl, proj
 
 
 def getLevelPathFromInitFile(gamefolder, levelname):
@@ -165,7 +165,13 @@ class newFile(QtWidgets.QDialog):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.returnValue = {"name": "NewFile", "width": 15, "height": 15, "gameFolder": ""
+        gamefolder = ""
+        if "gamefolder" in proj.settings:
+            gamefolder = os.path.join(proj.settings["gamefolder"])
+            if not os.path.isdir(gamefolder):
+                gamefolder = ""
+
+        self.returnValue = {"name": "NewFile", "width": 15, "height": 15, "gameFolder": gamefolder
 
                             }
 

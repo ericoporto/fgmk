@@ -775,7 +775,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if(proj.settings["gamefolder"] == ""):
             proj.settings["gamefolder"] = os.path.expanduser("~")
         filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', proj.settings["gamefolder"], "JSON Level (*.map.json);;All Files (*)")[0]
+            self, 'Open File', os.path.join(proj.settings["gamefolder"], fifl.LEVELS), "JSON Level (*.map.json);;All Files (*)")[0]
         self.openFileByName(filename)
 
     def helpAbout(self):
@@ -783,7 +783,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
-        if(proj.settings["workingFile"]!="newFile.map.json"):
+        if(os.path.isfile(proj.settings["workingFile"])):
             testMap = TileXtra.MapFormat()
             testMap.load(proj.settings["workingFile"])
             if not self.myMap.isEqualMap(testMap):
@@ -813,7 +813,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.endGroup();
 
         self.settings.beginGroup("Project")
-        self.settings.setValue("workingFile", proj.settings["workingFile"]);
+        if(os.path.isfile(proj.settings["workingFile"])):
+            self.settings.setValue("workingFile", proj.settings["workingFile"]);
         self.settings.endGroup();
 
 
