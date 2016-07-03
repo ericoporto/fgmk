@@ -20,7 +20,7 @@ def servePage(urlToServe):
     admPort = 8081
 
     new = 2  # 2 goes to new tab, 0 same and 1 window.
-    url = "http://" + ip + ":{0}".format(port)
+    url = "http://" + ip + ":{0}".format(port)+"?debug=1"
 
     handlerClass.protocol = Protocol
     try:
