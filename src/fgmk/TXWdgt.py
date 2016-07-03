@@ -10,11 +10,15 @@ def getLevelPathFromInitFile(gamefolder, levelname):
 
 
 def openInitFile(gamefolder):
-    f = open(os.path.join(str(gamefolder),
-                          fifl.DESCRIPTORS, fifl.GAMESETTINGS), "r")
-    initFileJsonTree = json.load(f)
-    f.close()
-    return initFileJsonTree
+    fname = os.path.join(str(gamefolder), fifl.DESCRIPTORS, fifl.GAMESETTINGS)
+
+    if os.path.isfile(fname):
+        f = open(fname, "r")
+        initFileJsonTree = json.load(f)
+        f.close()
+        return initFileJsonTree
+    else:
+        return None
 
 
 def saveInitFile(gamefolder, initFileJsonTree):
@@ -365,7 +369,7 @@ class MiniMapWidget(QtWidgets.QWidget):
 
         if(self.pMyMap != pMyMap):
             self.pMyMap = pMyMap
-            self.selectedPosition = [0, 0]            
+            self.selectedPosition = [0, 0]
 
         self.pMyTileset = pMyTileset
 
