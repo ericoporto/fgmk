@@ -172,7 +172,15 @@ class EventsWidget(QtWidgets.QWidget):
     def deselectAction(self):
         for i in range(self.ActionList.count()):
             item = self.ActionList.item(i)
-            self.ActionList.setItemSelected(item, False)
+            item.setSelected(False)
+
+    def deselectAll(self):
+        self.deselectAction()
+        for i in range(self.EventsList.count()):
+            item = self.EventsList.item(i)
+            item.setSelected(False)
+
+        self.enableButtonsBecauseEventsList()
 
     def checkboxesChanged(self, newState):
         if self.EventsList.selectedItems() is not None:
@@ -186,7 +194,6 @@ class EventsWidget(QtWidgets.QWidget):
                                     ])
 
     def updateEventsList(self):
-
         updatedListOfEvents = self.pMap.getTileListFromLayer(EVENTSLAYER)
         allItemsInEventsList = []
         for index in range(self.EventsList.count()):
@@ -215,8 +222,6 @@ class EventsWidget(QtWidgets.QWidget):
         self.show()
 
     def addAction(self):
-
-
         self.myActionsWidget = actionsWdgt.ActionsWidget(proj.settings, self)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()

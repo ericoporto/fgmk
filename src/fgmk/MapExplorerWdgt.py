@@ -1,3 +1,4 @@
+import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk import TileXtra, TXWdgt, proj
 
@@ -32,5 +33,8 @@ class MapExplorerWidget(QtWidgets.QWidget):
             self.LvlLWidget.insertItem(0,level)
 
     def doubleClickedForOpen(self, item):
-        self.mapForOpen = self.initFile['LevelsList'][item.text()]
-        self.mapOpened.emit()
+        mapForOpen = self.initFile['LevelsList'][item.text()]
+        #only open map if it's not already opened
+        if(os.path.basename(proj.settings["workingFile"])!=mapForOpen):
+            self.mapForOpen = mapForOpen
+            self.mapOpened.emit()

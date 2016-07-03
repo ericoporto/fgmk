@@ -777,6 +777,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.undoStack.clear()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
+            self.myEventsWidget.deselectAll()
             self.myCharasPalWidget.reinit()
             self.myMapExplorerWidget.reloadInitFile()
 
