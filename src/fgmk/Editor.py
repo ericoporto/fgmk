@@ -643,10 +643,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget.show()
 
     def openFromExplorer(self):
-        mapfilename = self.myMapExplorerWidget.mapForOpen
-        gamefolder = os.path.abspath(proj.settings["gamefolder"])
-        filetopen = os.path.join(str(gamefolder), fifl.LEVELS, mapfilename)
-        self.openFileByName(filetopen)
+        testMap = TileXtra.MapFormat()
+        testMap.load(proj.settings["workingFile"])
+        acceptOpen = False
+        if not self.myMap.isEqualMap(testMap):
+
+            quit_msg = "Do you want to save changes?"
+            reply = QtWidgets.QMessageBox.question(self, 'Message',
+                                                   quit_msg, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+
+            if reply == QtWidgets.QMessageBox.Yes:
+                acceptOpen=True
+                self.saveFile()
+            elif reply == QtWidgets.QMessageBox.No:
+                acceptOpen=True
+            else:
+                return
+        else:
+            acceptOpen = True
+
+        if acceptOpen:
+            mapfilename = self.myMapExplorerWidget.mapForOpen
+            gamefolder = os.path.abspath(proj.settings["gamefolder"])
+            filetopen = os.path.join(str(gamefolder), fifl.LEVELS, mapfilename)
+            self.openFileByName(filetopen)
 
 
     def runServer(self):
