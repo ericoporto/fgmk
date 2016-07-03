@@ -122,6 +122,11 @@ class MapFormat:
             levelPalette = json.load(f)
             f.close()
 
+        self.listOfEvents = []
+        self.listOfCharas = []
+        self.listOfEventsTypes = dict()
+        self.listOfActions = dict()
+
         self.jsonTree = {"Level":
                          {
                              "levelName": tlevelName,
