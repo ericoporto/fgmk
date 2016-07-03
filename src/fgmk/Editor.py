@@ -316,12 +316,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, filelist, **kwargs):
         super().__init__(None, **kwargs)
 
-        self.resize(1024, 768)
+        #self.resize(1024, 768)
 
         self.undoStack = QtWidgets.QUndoStack(self)
 
         self.levelName = "newFile"
-        proj.settings["workingFile"] = self.levelName + ".json"
+        proj.settings["workingFile"] = self.levelName + ".map.json"
 
         self.myMap = TileXtra.MapFormat()
 
@@ -336,14 +336,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget = MapWidget(self)
 
         self.scrollArea.setWidget(self.myMapWidget)
-
         self.setCentralWidget(self.scrollArea)
 
         self.FancyWindow(self)
 
         self.opemFileIfDropped(filelist)
-
         self.setAcceptDrops(True)
+
+        self.settings = QtCore.QSettings("FGMK", "fgmkEditor")
+        self.loadSettings()
 
 
     def changeLayerCurrent(self, changeTo):
@@ -703,7 +704,7 @@ class MainWindow(QtWidgets.QMainWindow):
         proj.settings["gamefolder"] = str(returnedNFD["gameFolder"])
         self.levelName = str(returnedNFD["name"])
         proj.settings["workingFile"] = os.path.join(
-            proj.settings["gamefolder"], self.levelName + ".json")
+            proj.settings["gamefolder"], self.levelName + ".map.json")
         self.setWindowTitle(proj.settings["workingFile"])
         self.myMap.new(self.levelName, returnedNFD[
                        "width"], returnedNFD["height"])
@@ -745,6 +746,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.exportJS(proj.settings["workingFile"])
 
     def openFileByName(self, filename):
+        if(filename=="newFile.map.json"):
+            return
+
         if os.path.isfile(filename):
             proj.settings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
@@ -773,7 +777,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
-        if(proj.settings["workingFile"]!="newFile.json"):
+        if(proj.settings["workingFile"]!="newFile.map.json"):
             testMap = TileXtra.MapFormat()
             testMap.load(proj.settings["workingFile"])
             if not self.myMap.isEqualMap(testMap):
@@ -791,6 +795,27 @@ class MainWindow(QtWidgets.QMainWindow):
                     event.ignore()
         else:
             event.accept()
+
+        self.saveSettings()
+
+    def saveSettings(self):
+        self.settings.beginGroup("MainWindow")
+        self.settings.setValue("size", self.size());
+        self.settings.setValue("pos", self.pos());
+        self.settings.endGroup();
+        self.settings.beginGroup("Project")
+        self.settings.setValue("workingFile", proj.settings["workingFile"]);
+        self.settings.endGroup();
+
+
+    def loadSettings(self):
+         self.settings.beginGroup("MainWindow");
+         self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
+         self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
+         self.settings.endGroup();
+         self.settings.beginGroup("Project")
+         self.openFileByName(self.settings.value("workingFile", self.levelName + ".map.json"))
+         self.settings.endGroup();
 
 
 def Icon():
