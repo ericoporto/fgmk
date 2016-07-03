@@ -395,7 +395,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.openFileByName(matching[0])
 
     def selectStartPosition(self):
-        result = gameInit.selectStartingPosition(self, proj.settings)
+        result = gameInit.selectStartingPosition(self)
 
         if result is None:
             return
@@ -710,7 +710,7 @@ class MainWindow(QtWidgets.QMainWindow):
         proj.settings["gamefolder"] = str(returnedNFD["gameFolder"])
         self.levelName = str(returnedNFD["name"])
         proj.settings["workingFile"] = os.path.join(
-            proj.settings["gamefolder"], self.levelName + ".map.json")
+            proj.settings["gamefolder"], fifl.LEVELS, self.levelName + ".map.json")
         self.setWindowTitle(proj.settings["workingFile"])
         self.myMap.new(self.levelName, returnedNFD[
                        "width"], returnedNFD["height"])
@@ -726,8 +726,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveFile(self):
         filename = proj.settings["workingFile"]
+        print(filename)
+
         if filename != "":
             self.myMap.save(filename)
+
+            if gameInit.regenerateLevelList():
+                self.myMapExplorerWidget.reloadInitFile()
+
 
     def saveFileAs(self):
         filename, extension = QtWidgets.QFileDialog.getSaveFileName(
@@ -739,6 +745,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
             proj.settings["workingFile"] = filename
             self.myMap.save(proj.settings["workingFile"])
+
+            if gameInit.regenerateLevelList():
+                self.myMapExplorerWidget.reloadInitFile()
 
     def exportToJsAs(self):
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
@@ -829,7 +838,10 @@ class MainWindow(QtWidgets.QMainWindow):
          self.settings.endGroup();
 
          self.settings.beginGroup("Project")
-         self.openFileByName(self.settings.value("workingFile", self.levelName + ".map.json"))
+
+         workingFile = self.settings.value("workingFile", self.levelName + ".map.json")
+         if(os.path.isfile(workingFile)):
+               self.openFileByName(workingFile)
          self.settings.endGroup();
 
 

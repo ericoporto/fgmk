@@ -190,7 +190,7 @@ class EventsWidget(QtWidgets.QWidget):
         updatedListOfEvents = self.pMap.getTileListFromLayer(EVENTSLAYER)
         allItemsInEventsList = []
         for index in range(self.EventsList.count()):
-            allItemsInEventsList.append([self.EventsList.item(index), index])
+            allItemsInEventsList.append([self.EventsList.item(index), index, int(self.EventsList.item(index).whatsThis())])
 
         for item in allItemsInEventsList:
             for event in updatedListOfEvents[:]:
@@ -198,8 +198,11 @@ class EventsWidget(QtWidgets.QWidget):
                     updatedListOfEvents.remove(event)
                     break
             else:
-                settonone = self.EventsList.takeItem(item[1])
-                settonone = None
+                for index in range(self.EventsList.count()):
+                    if(item[0] == self.EventsList.item(index)):
+                        settonone = self.EventsList.takeItem(index)
+                        settonone = None
+                        break
 
         if updatedListOfEvents is not None:
             for event in updatedListOfEvents:
@@ -240,22 +243,32 @@ class EventsWidget(QtWidgets.QWidget):
             self.ActionList.takeItem(itemIndex)
 
     def selectedItemFromEventsList(self):
-        item = self.EventsList.selectedItems()[0]
+        if(len(self.EventsList.selectedItems())>0):
+            item = self.EventsList.selectedItems()[0]
 
-        self.ActionList.clear()
+            self.ActionList.clear()
 
-        for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
-            self.ActionList.addItem(TileXtra.actionItem(actionitemInList))
+            for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
+                self.ActionList.addItem(TileXtra.actionItem(actionitemInList))
 
-        state = self.pMap.getEventType(item.whatsThis())
+            state = self.pMap.getEventType(item.whatsThis())
 
-        for i in range(len(self.checkboxes)):
-            self.checkboxes[i].setCheckState(2 * state[i])
-            self.checkboxes[i].show()
+            for i in range(len(self.checkboxes)):
+                self.checkboxes[i].setCheckState(2 * state[i])
+                self.checkboxes[i].show()
 
-        self.ActionList.show()
+            self.ActionList.show()
 
     def enableButtonsBecauseEventsList(self):
+        if(self.EventsList.currentItem() == None):
+            self.addActionButton.setEnabled(False)
+            self.removeActionButton.setEnabled(False)
+            self.ActionList.setEnabled(False)
+            self.labelActionList.setEnabled(False)
+            self.deselectActionButton.setEnabled(False)
+            self.editActionButton.setEnabled(False)
+            return
+
         if (self.EventsList.currentItem().isSelected() == True):
             self.addActionButton.setEnabled(True)
             self.ActionList.setEnabled(True)

@@ -1,10 +1,39 @@
 import os.path
+from os import listdir
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionDialog, TXWdgt, fifl
+from fgmk import actionDialog, TXWdgt, fifl, proj
+
+def regenerateLevelList():
+    psSettings = proj.settings
+    gamefolder = os.path.join(psSettings["gamefolder"])
+    if os.path.isdir(gamefolder):
+        initFileJsonTree = TXWdgt.openInitFile(gamefolder)
+    else:
+        return
+
+    if(initFileJsonTree != None):
+        levels = os.path.join(gamefolder, fifl.LEVELS)
+        filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f))]
+        originalLevelList = initFileJsonTree["LevelsList"]
+
+        LevelsList = {}
+        for file in filelist:
+            filewoext = file.split(os.extsep, 1)[0]
+            LevelsList[filewoext] = file
+
+        unmatched_maps = set(LevelsList.items()) ^ set(originalLevelList.items())
+
+        if(len(unmatched_maps)!=0):
+            initFileJsonTree["LevelsList"] = []
+            initFileJsonTree["LevelsList"] = LevelsList
+            TXWdgt.saveInitFile(gamefolder, initFileJsonTree)
+            return True
+
+        return False
 
 
-
-def selectStartingPosition(parent, psSettings):
+def selectStartingPosition(parent):
+    psSettings = proj.settings
     gamefolder = os.path.join(psSettings["gamefolder"])
     initFileJsonTree = TXWdgt.openInitFile(gamefolder)
 
