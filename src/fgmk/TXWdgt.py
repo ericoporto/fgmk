@@ -340,7 +340,7 @@ class MiniPaletteWidget(QtWidgets.QWidget):
 class MiniMapWidget(QtWidgets.QWidget):
     selectedTile = QtCore.pyqtSignal()
 
-    def __init__(self, pMyMap, pMyTileset, parent=None, **kwargs):
+    def __init__(self, pMyMap, pMyTileset, parent=None, indicativeToUse=1, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.Grid = QtWidgets.QGridLayout(self)
@@ -358,7 +358,7 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.myScale = 0.5
 
         self.xclicked = TileXtra.ExtendedQLabel(self)
-        self.xclicked.initTile(TileXtra.indicativeSet.tileset, 0, 0, 32, [1,0,0,0,0], 0.5)
+        self.xclicked.initTile(TileXtra.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
 
         self.TileList = []
         self.selectedPosition = [0, 0]

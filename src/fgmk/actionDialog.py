@@ -212,6 +212,13 @@ class teleport(QtWidgets.QDialog):
 
         self.initFile = TXWdgt.openInitFile(gamefolder)
 
+        if(selectStartPosition == None):
+            self.setWindowTitle('Select where to teleport...')
+            indicative = 1
+        else:
+            self.setWindowTitle(selectStartPosition)
+            indicative = 2
+
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
@@ -251,7 +258,7 @@ class teleport(QtWidgets.QDialog):
                 self.currentLevel.tileImage, self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
-            self.currentLevel, self.currentTileSet)
+            self.currentLevel, self.currentTileSet, None, indicative)
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
@@ -275,10 +282,7 @@ class teleport(QtWidgets.QDialog):
 
         self.setGeometry(300, 200, 350, 650)
 
-        if(selectStartPosition == None):
-            self.setWindowTitle('Select where to teleport...')
-        else:
-            self.setWindowTitle(selectStartPosition)
+
 
         if(edit != None):
             self.LineText.setText("{0};{1}".format(edit[0], edit[1]))
