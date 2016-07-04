@@ -4,19 +4,14 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 import numpy as np
-from fgmk import tMat
+from fgmk import tMat, getdata, proj
 
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
-
-COREIMGFOLDER = "coreimg/"
 LayersName = ["layer1", "layer2", "layer4", "colision", "events"]
 NonViewable = ["colision", "events"]
 LayersNameViewable = [
     _layer for _layer in LayersName if _layer not in NonViewable]
 
-emptyTile = Image.open(COREIMGFOLDER + "emptyTile.png")
+emptyTile = Image.open(getdata.path('emptyTile.png'))
 
 
 def divideRoundUp(a, b):
@@ -118,7 +113,7 @@ class MapFormat:
     def new(self, tlevelName, levelWidth, levelHeight, levelPalette=None):
 
         if levelPalette is None:
-            f = open("paletteDefault.json", 'r')
+            f = open(getdata.path('paletteDefault.json'), 'r')
             levelPalette = json.load(f)
             f.close()
 
@@ -308,6 +303,10 @@ class MapFormat:
 class TileSet:
 
     def __init__(self, image_file, tilePalette=None):
+        self.fakefolder = False
+        if(proj.settings['gamefolder'] == ''):
+            self.fakefolder = True
+
         if tilePalette is None:
             self.initWithoutPalette(image_file)
         else:
@@ -338,7 +337,11 @@ class TileSet:
         bxsz = self.boxsize
         self.tilePalette = tilePalette
         v = self.tilePalette
-        self.imageFile = Image.open(image_file)
+
+        if(self.fakefolder):
+            self.imageFile = Image.open(getdata.path('tile.png'))
+        else:
+            self.imageFile = Image.open(image_file)
         if self.imageFile.size[0] % self.boxsize == 0 and self.imageFile.size[1] % self.boxsize == 0:
             if isinstance(self.tilePalette, dict):
                 # remember: crop uses (( and )) because it is converting the
@@ -359,10 +362,10 @@ class TileSet:
         image = QtGui.QPixmap(pixmap)
         return image
 
-colisionSet = TileSet(COREIMGFOLDER + "collisionTiles.png")
-eventSet = TileSet(COREIMGFOLDER + "eventTiles.png")
-indicativeSet = TileSet(COREIMGFOLDER + "indicativeTiles.png")
-clearTile = TileSet(COREIMGFOLDER + "clearTile.png")
+colisionSet = TileSet(getdata.path('collisionTiles.png'))
+eventSet = TileSet(getdata.path('eventTiles.png'))
+indicativeSet = TileSet(getdata.path('indicativeTiles.png'))
+clearTile = TileSet(getdata.path('clearTile.png'))
 
 
 class ExtendedQLabel(QtWidgets.QLabel):

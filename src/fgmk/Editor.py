@@ -2,15 +2,12 @@
 # display a tiled image from tileset with PyQt
 import os
 import tarfile
+import getdata
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, proj
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
-
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
 
 COLISIONLAYER = 3
 EVENTSLAYER = 4
@@ -331,6 +328,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # get tileset file and split it in images that can be pointed through
         # array
+
         self.myTileSet = TileXtra.TileSet(
             self.myMap.tileImage, self.myMap.palette)
         self.myMapWidget = MapWidget(self)
@@ -694,7 +692,7 @@ class MainWindow(QtWidgets.QMainWindow):
         proj.settings["gamefolder"] = projectPath
         proj.settings["gamename"] = str(returnedNFD["name"])
         os.mkdir(projectPath)
-        tar = tarfile.open("basegame.tar.gz")
+        tar = tarfile.open(getdata.path("basegame.tar.gz"))
         tar.extractall(projectPath)
         tar.close()
 
@@ -850,4 +848,4 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 def Icon():
-    return QtGui.QPixmap('icon.png')
+    return QtGui.QPixmap(getdata.path('icon.png'))

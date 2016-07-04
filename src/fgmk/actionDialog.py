@@ -222,7 +222,7 @@ class teleport(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.LabelText = QtWidgets.QLabel("Select where to teleport:")
+        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
 
         self.comboBox = QtWidgets.QComboBox()
 

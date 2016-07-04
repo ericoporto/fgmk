@@ -95,7 +95,6 @@ class CharasetFormat(BaseFormat):
 
 
 class BaseCharaset:
-
     def __init__(self, image_file):
 
         self.imgFile = image_file
@@ -387,8 +386,7 @@ class CharasetSelector(QtWidgets.QWidget):
         self.ssettings = ssettings
 
         if(self.ssettings == {}):
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(
-                os.path.dirname(os.path.realpath(__file__)), "../Game/"))
+            self.ssettings = proj.settings
 
         if (cset is not None):
             self.cset = cset
@@ -451,15 +449,13 @@ class CharasetSelector(QtWidgets.QWidget):
 
 
 class CharasetPreviewer(QtWidgets.QWidget):
-
     def __init__(self, parent=None, ssettings={}, cset=None, scale=2, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.ssettings = ssettings
 
         if(self.ssettings == {}):
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(
-                os.path.dirname(os.path.realpath(__file__)), "../Game/"))
+            self.ssettings = proj.settings
 
         if (cset is not None):
             self.cset = cset

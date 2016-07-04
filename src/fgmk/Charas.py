@@ -318,9 +318,6 @@ class ActionsWidget(QtWidgets.QWidget):
         ActionListModel = self.ActionList.model()
         ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
-        if(self.ssettings == {} ):
-            self.ssettings["gamefolder"] = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../Game/"))
-
     def setList(self,actionToSet):
         atype = actionToSet['type']
         for i in range(len(atype)):
@@ -354,6 +351,9 @@ class ActionsWidget(QtWidgets.QWidget):
             i += 1
 
     def editAction(self):
+        if(self.ssettings == {} ):
+            return
+
         indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
         selecteditem = self.ActionList.selectedItems()[0]
         actionParamToEdit = selecteditem.getAction()
@@ -380,6 +380,9 @@ class ActionsWidget(QtWidgets.QWidget):
             self.ActionList.setItemSelected(item, False)
 
     def addAction(self):
+        if(self.ssettings == {} ):
+            return
+
         self.myActionsWidget = TXWdgt.ActionsWidget(self.ssettings,self,self.ischara)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
@@ -391,6 +394,9 @@ class ActionsWidget(QtWidgets.QWidget):
                 self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
 
     def removeAction(self):
+        if(self.ssettings == {} ):
+            return
+
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
             self.ActionList.takeItem(itemIndex)

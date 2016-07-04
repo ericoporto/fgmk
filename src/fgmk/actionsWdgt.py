@@ -1,7 +1,7 @@
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, actionDialog, TileXtra, fifl
+from fgmk import tMat, actionDialog, TileXtra, fifl, getdata
 
 
 class ActionsWidget(QtWidgets.QDialog):
@@ -13,8 +13,7 @@ class ActionsWidget(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-        filepath = os.path.join(os.path.dirname(
-            os.path.abspath(__file__)), "actions/actionsList.json")
+        filepath = getdata.path('actionsList.json')
         f = open(filepath, "r")
         e = json.load(f)
         f.close()
