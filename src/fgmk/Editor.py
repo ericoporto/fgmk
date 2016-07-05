@@ -2,7 +2,6 @@
 # display a tiled image from tileset with PyQt
 import os
 import tarfile
-import getdata
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, proj
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata
