@@ -16,18 +16,18 @@ if __name__ == "__main__":
     from time import time, sleep
     from PyQt5.QtWidgets import QApplication, QSplashScreen
     from PyQt5.QtCore import Qt
-    from fgmk.Editor import MainWindow, Icon
+    from fgmk import Editor
 
     a = QApplication(argv)
     start = time()
-    splash_pix = Icon()
+    splash_pix = Editor.Icon()
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
     while time() - start < 1:
         sleep(0.001)
         a.processEvents()
-    mw = MainWindow(argv)
+    mw = Editor.MainWindow(argv)
     a.processEvents()
     mw.show()
     splash.finish(mw)
