@@ -1,5 +1,6 @@
+import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, TXWdgt
+from fgmk import tMat, TileXtra, TXWdgt, proj
 
 
 COLISIONLAYER = 3
@@ -55,8 +56,9 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = TileXtra.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileXtra.TileSet(
-                self.currentLevel.tileImage, self.currentLevel.palette)
+            self.currentTileSet = TileXtra.TileSet(os.path.join(
+                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
             self.currentLevel, self.currentTileSet, self)
@@ -180,8 +182,9 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = TileXtra.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileXtra.TileSet(
-                self.currentLevel.tileImage, self.currentLevel.palette)
+            self.currentTileSet = TileXtra.TileSet(os.path.join(
+                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
         else:
             if(self.edit == None):
                 self.currentLevel = self.parent.parent.parent.myMap
@@ -254,8 +257,9 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = TileXtra.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileXtra.TileSet(
-                self.currentLevel.tileImage, self.currentLevel.palette)
+            self.currentTileSet = TileXtra.TileSet(os.path.join(
+                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
             self.currentLevel, self.currentTileSet, None, indicative)
@@ -305,8 +309,9 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = TileXtra.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileXtra.TileSet(
-                self.currentLevel.tileImage, self.currentLevel.palette)
+            self.currentTileSet = TileXtra.TileSet(os.path.join(
+                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
         else:
             if(self.selectStartPosition == None):
                 if(self.edit == None):
