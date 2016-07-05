@@ -1,8 +1,9 @@
 import os.path
 import sys
 
+#am I running from pyinstaller ?
 if getattr(sys, 'frozen', False):
-    data_path = os.path.join(os.environ.get("_MEIPASS2",os.path.abspath(".")),'data')
+    data_path = os.path.join(os.path.join(sys._MEIPASS),'data')
 elif __file__:
     data_path = os.path.join(os.path.dirname(__file__),'data')
 
