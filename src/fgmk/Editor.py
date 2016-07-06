@@ -723,7 +723,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveFile(self):
         filename = proj.settings["workingFile"]
-        print(filename)
 
         if filename != "":
             self.myMap.save(filename)

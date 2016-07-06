@@ -146,30 +146,16 @@ class MapFormat:
                          }
 
     def save(self, mapn):
-        f = open(mapn, 'w+')
-
         # print(self.listOfActions)
-
         self.updateJsonTree()
-
-        writefile.fwriteKeyVals(self.jsonTree, f)
-
-        f.close()
+        writefile.writesafe(self.jsonTree, mapn)
 
     def exportJS(self, mapn):
-        f = open(mapn, 'w+')
-
         self.updateJsonTree()
         #f.write("var " + self.levelName + "= {};\n")
         #f.write(self.levelName + ".levels = [];\n")
         #f.write(self.levelName + ".levels[0] = {\n")
-
-        f.write("var " + self.levelName + "= {\n")
-
-        writefile.fwriteKeyValsJS(self.jsonTree, f)
-
-        f.write("};")
-        f.close()
+        writefile.writesafe(self.jsonTree, mapn, self.levelName)
 
     def load(self, mapn):
         f = open(mapn, "r")

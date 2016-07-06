@@ -1,9 +1,31 @@
+import os
 from numbers import Number
+from fgmk import printerror
 
 try:
   basestring
 except NameError:
   basestring = (str, bytes)
+
+def writesafe(data, fname, varname=None):
+    tempfile = fname+'~'
+    try:
+        f = open(tempfile, 'w+')
+        try:
+            if(varname==None):
+                fwriteKeyVals(data, f)
+            else:
+                f.write("var " + self.levelName + "= {\n")
+                fwriteKeyValsJS(data,f)
+                f.write("};")
+        finally:
+            f.flush()
+            os.fsync(f.fileno())
+            f.close()
+            os.replace(tempfile,fname)
+    except:
+        printerror.printe('error when opening file')
+
 
 
 def fwriteKeyVals(data, f, indent=0):
