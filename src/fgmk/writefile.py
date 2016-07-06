@@ -96,8 +96,10 @@ def fwriteKeyVals(data, f, indent=0):
         f.write("\n" + "    " * indent + "}")
     elif isinstance(data, bool):
         f.write("%3d" % data)
-    else:
+    elif isinstance(data, basestring):
         f.write("\"" + data + "\"")
+    else:
+        f.write( str(data) )
 
 
 def fwriteKeyValsJS(data, f, indent=0):
@@ -166,3 +168,5 @@ def fwriteKeyValsJS(data, f, indent=0):
 
     else:
         f.write("\"" + data + "\"")
+
+        
