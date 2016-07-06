@@ -2,7 +2,7 @@ import numpy as np
 
 
 def divideRoundUp(a, b):
-    return (a / b) + (a % b > 0)
+    return int((a / b) + (a % b > 0))
 
 
 def mnZeros(m, n):
