@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, proj
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
@@ -181,21 +181,21 @@ class MapWidget(QtWidgets.QWidget):
         self.parent.undoStack.push(command)
 
     def toolBucketFill(self, changeTypeTo):
-        listToChange = TileXtra.tileFill(self.sender().tileX, self.sender(
+        listToChange = mapfile.tileFill(self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
         self.parent.undoStack.push(command)
 
     def toolLine(self, changeTypeTo, firstX, firstY):
-        listToChange = TileXtra.tileLine(firstX, firstY, self.sender().tileX, self.sender(
+        listToChange = mapfile.tileLine(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
         self.parent.undoStack.push(command)
 
     def toolRect(self, changeTypeTo, firstX, firstY):
-        listToChange = TileXtra.tileRect(firstX, firstY, self.sender().tileX, self.sender(
+        listToChange = mapfile.tileRect(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = TXWdgt.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
@@ -319,7 +319,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.levelName = "newFile"
         proj.settings["workingFile"] = self.levelName + ".map.json"
 
-        self.myMap = TileXtra.MapFormat()
+        self.myMap = mapfile.MapFormat()
 
         self.myMap.new(self.levelName, 10, 10)
 
@@ -647,7 +647,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget.show()
 
     def openFromExplorer(self):
-        testMap = TileXtra.MapFormat()
+        testMap = mapfile.MapFormat()
         testMap.load(proj.settings["workingFile"])
         acceptOpen = False
         if not self.myMap.isEqualMap(testMap):
@@ -792,7 +792,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
         if(os.path.isfile(proj.settings["workingFile"])):
-            testMap = TileXtra.MapFormat()
+            testMap = mapfile.MapFormat()
             testMap.load(proj.settings["workingFile"])
             if not self.myMap.isEqualMap(testMap):
 

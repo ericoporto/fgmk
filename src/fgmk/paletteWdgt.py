@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra
+from fgmk import TileXtra, tMat
 
 class PaletteWidget(QtWidgets.QWidget):
 
@@ -55,7 +55,7 @@ class PaletteWidget(QtWidgets.QWidget):
                 tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], 1)
             self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
 
-        self.PaletteItems.resize(6 * tileSetInstance.boxsize, TileXtra.divideRoundUp(
+        self.PaletteItems.resize(6 * tileSetInstance.boxsize, tMat.divideRoundUp(
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
     def setTileCurrent(self):

@@ -4,7 +4,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, TileXtra, tMat
+from fgmk import fifl, TileXtra, writefile
 
 # TODO fix enter on QLineEdit
 
@@ -29,13 +29,13 @@ class BaseFormat:
         else:
             chartosave = charsn
         f = open(chartosave, "w")
-        tMat.fwriteKeyVals(self.jsonTree, f)
+        writefile.fwriteKeyVals(self.jsonTree, f)
         f.close()
 
     def exportJS(self, charsn):
         f = open(charsn, "w")
         f.write("var " + self.levelName + "= {\n")
-        tMat.fwriteKeyValsJS(self.jsonTree, f)
+        writefile.fwriteKeyValsJS(self.jsonTree, f)
         f.write("};")
         f.close()
 

@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, TXWdgt, proj
+from fgmk import tMat, TileXtra, TXWdgt, proj, mapfile
 
 
 COLISIONLAYER = 3
@@ -53,7 +53,7 @@ class changeTile(QtWidgets.QDialog):
                 self.currentLevel = self.parent.parent.myMap
                 self.currentTileSet = self.parent.parent.myTileSet
         else:
-            self.currentLevel = TileXtra.MapFormat()
+            self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
@@ -82,7 +82,7 @@ class changeTile(QtWidgets.QDialog):
 
         self.comboBoxLayers = QtWidgets.QComboBox()
 
-        for layer in TileXtra.LayersNameViewable:
+        for layer in mapfile.LayersNameViewable:
             self.comboBoxLayers.addItem(str(layer))
 
         self.comboBoxColision = QtWidgets.QComboBox()
@@ -112,7 +112,7 @@ class changeTile(QtWidgets.QDialog):
 
             self.myMiniPaletteWidget.setImageCurrent(int(edit[0]))
 
-            for idx, val in enumerate(TileXtra.LayersNameViewable):
+            for idx, val in enumerate(mapfile.LayersNameViewable):
                 if(val == edit[1]):
                     self.comboBoxLayers.setCurrentIndex(idx)
 
@@ -179,7 +179,7 @@ class changeTile(QtWidgets.QDialog):
     def updateMap(self, levelIndex):
 
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
-            self.currentLevel = TileXtra.MapFormat()
+            self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
@@ -254,7 +254,7 @@ class teleport(QtWidgets.QDialog):
                 self.currentLevel = self.parent.myMap
                 self.currentTileSet = self.parent.myTileSet
         else:
-            self.currentLevel = TileXtra.MapFormat()
+            self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
@@ -306,7 +306,7 @@ class teleport(QtWidgets.QDialog):
 
     def updateMap(self, levelIndex):
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
-            self.currentLevel = TileXtra.MapFormat()
+            self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(

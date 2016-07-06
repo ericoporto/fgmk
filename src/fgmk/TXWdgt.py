@@ -326,7 +326,7 @@ class MiniPaletteWidget(QtWidgets.QWidget):
                                               i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
             self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
 
-        self.PaletteItems.resize(6 * tileSetInstance.boxsize, TileXtra.divideRoundUp(
+        self.PaletteItems.resize(6 * tileSetInstance.boxsize, tMat.divideRoundUp(
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
     def setTileCurrent(self):

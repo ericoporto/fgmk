@@ -329,7 +329,7 @@ class ActionsWidget(QtWidgets.QWidget):
         listToSet = actionToSet['list']
         self.ActionList.clear()
         for action in listToSet:
-            self.ActionList.addItem(TileXtra.actionItem(action))
+            self.ActionList.addItem(actionsWdgt.actionItem(action))
 
     def clear(self):
         self.ActionList.clear()
@@ -372,7 +372,7 @@ class ActionsWidget(QtWidgets.QWidget):
             actionToAdd = [actionToEdit,str(returnActDlg)]
 
             self.ActionList.takeItem(indexOfAction)
-            self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
+            self.ActionList.insertItem(indexOfAction,actionsWdgt.actionItem(actionToAdd))
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
@@ -388,10 +388,10 @@ class ActionsWidget(QtWidgets.QWidget):
             actionToAdd = self.myActionsWidget.getValue()
 
             if not self.ActionList.selectedItems():
-                self.ActionList.addItem(TileXtra.actionItem(actionToAdd))
+                self.ActionList.addItem(actionsWdgt.actionItem(actionToAdd))
             else:
                 indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
-                self.ActionList.insertItem(indexOfAction,TileXtra.actionItem(actionToAdd))
+                self.ActionList.insertItem(indexOfAction,actionsWdgt.actionItem(actionToAdd))
 
     def removeAction(self):
         if(self.ssettings == {} ):

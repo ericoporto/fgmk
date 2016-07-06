@@ -165,7 +165,7 @@ class EventsWidget(QtWidgets.QWidget):
 
                 self.ActionList.takeItem(indexOfAction)
                 self.ActionList.insertItem(
-                    indexOfAction, TileXtra.actionItem(actionToAdd))
+                    indexOfAction, actionsWdgt.actionItem(actionToAdd))
                 self.pMap.changeActionOnEvent(
                     indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
 
@@ -228,14 +228,14 @@ class EventsWidget(QtWidgets.QWidget):
 
             if self.EventsList.selectedItems() is not None:
                 if not self.ActionList.selectedItems():
-                    self.ActionList.addItem(TileXtra.actionItem(actionToAdd))
+                    self.ActionList.addItem(actionsWdgt.actionItem(actionToAdd))
                     self.pMap.addActionToEvent(
                         actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
                 else:
                     indexOfAction = self.ActionList.row(
                         self.ActionList.selectedItems()[0])
                     self.ActionList.insertItem(
-                        indexOfAction, TileXtra.actionItem(actionToAdd))
+                        indexOfAction, actionsWdgt.actionItem(actionToAdd))
                     self.pMap.insertActionToEvent(
                         indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
 
@@ -254,7 +254,7 @@ class EventsWidget(QtWidgets.QWidget):
             self.ActionList.clear()
 
             for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
-                self.ActionList.addItem(TileXtra.actionItem(actionitemInList))
+                self.ActionList.addItem(actionsWdgt.actionItem(actionitemInList))
 
             state = self.pMap.getEventType(item.whatsThis())
 

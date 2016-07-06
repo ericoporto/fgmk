@@ -3,6 +3,17 @@ import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, actionDialog, TileXtra, fifl, getdata
 
+class actionItem(QtWidgets.QListWidgetItem):
+    def __init__(self, actionAndParameter):
+        super().__init__(str(actionAndParameter))
+        self.setText = str(actionAndParameter)
+        self.setData(QtCore.Qt.UserRole, actionAndParameter)
+
+    def getAction(self):
+        actionAndParameterReturn = self.data(QtCore.Qt.UserRole)
+        action = str(actionAndParameterReturn[0])
+        parameter = str(actionAndParameterReturn[1])
+        return [action, parameter]
 
 class ActionsWidget(QtWidgets.QDialog):
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
