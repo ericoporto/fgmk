@@ -694,8 +694,11 @@ class MainWindow(QtWidgets.QMainWindow):
         tar = tarfile.open(getdata.path("basegame.tar.gz"))
         tar.extractall(projectPath)
         tar.close()
-
-        self.undoStack.clear()
+        initfile = TXWdgt.openInitFile(proj.settings["gamefolder"])
+        levellist = initfile["LevelsList"]
+        startlevel = initfile['World']['initLevel']
+        levelfile = levellist[startlevel]
+        self.openFileByName(os.path.join(proj.settings["gamefolder"],fifl.LEVELS,levelfile))
 
     def newFile(self):
         myNewFileDialog = TXWdgt.newFile(self)
