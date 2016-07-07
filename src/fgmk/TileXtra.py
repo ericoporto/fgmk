@@ -61,11 +61,6 @@ class TileSet:
                     self.tileset.append([imageTemp, imageTemp.resize(
                         (bxsz * 2, bxsz * 2), Image.NEAREST), imageTemp.resize((int(bxsz * 0.5), int(bxsz * 0.5)), Image.NEAREST)])
 
-    def getTileSetImage(self, TileType):
-        tileImage = ImageQt(self.tileset[TileType])
-        pixmap = QtGui.QPixmap.fromImage(tileImage)
-        image = QtGui.QPixmap(pixmap)
-        return image
 
 colisionSet = TileSet(getdata.path('collisionTiles.png'))
 eventSet = TileSet(getdata.path('eventTiles.png'))

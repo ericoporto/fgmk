@@ -131,13 +131,6 @@ class BaseCharaset:
 
         return False
 
-    def getTileSetImage(self, TileType):
-        # print(TileType)
-        tileImage = ImageQt(self.tileset[TileType[1]][TileType[0]])
-        pixmap = QtGui.QPixmap.fromImage(tileImage)
-        image = QtGui.QPixmap(pixmap)
-        return image
-
 
 class CharaPalette(QtWidgets.QWidget):
 
