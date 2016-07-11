@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, current_project
+from fgmk import TileXtra, actionDialog, TXWdgt, game_server, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -674,7 +674,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def runServer(self):
-        gwserver.servePage(os.path.abspath(current_project.settings["gamefolder"]))
+        game_server.servePage(os.path.abspath(current_project.settings["gamefolder"]))
 
     def newProject(self):
         myNewProjectDialog = TXWdgt.newProject(self)
