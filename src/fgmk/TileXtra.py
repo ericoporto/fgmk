@@ -2,14 +2,14 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, proj, alpha_composite
+from fgmk import tMat, getdata, current_project, alpha_composite
 
 emptyTile = Image.open(getdata.path('emptyTile.png'))
 
 class TileSet:
     def __init__(self, image_file, tilePalette=None):
         self.fakefolder = False
-        if(proj.settings['gamefolder'] == ''):
+        if(current_project.settings['gamefolder'] == ''):
             self.fakefolder = True
 
         if tilePalette is None:

@@ -1,10 +1,10 @@
 import os.path
 from os import listdir
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionDialog, TXWdgt, fifl, proj
+from fgmk import actionDialog, TXWdgt, fifl, current_project
 
 def regenerateLevelList():
-    psSettings = proj.settings
+    psSettings = current_project.settings
     gamefolder = os.path.join(psSettings["gamefolder"])
     if os.path.isdir(gamefolder):
         initFileJsonTree = TXWdgt.openInitFile(gamefolder)
@@ -33,7 +33,7 @@ def regenerateLevelList():
 
 
 def selectStartingPosition(parent):
-    psSettings = proj.settings
+    psSettings = current_project.settings
     gamefolder = os.path.join(psSettings["gamefolder"])
     initFileJsonTree = TXWdgt.openInitFile(gamefolder)
 

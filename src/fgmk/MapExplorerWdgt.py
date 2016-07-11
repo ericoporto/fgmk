@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import TileXtra, TXWdgt, proj
+from fgmk import TileXtra, TXWdgt, current_project
 
 class MapExplorerWidget(QtWidgets.QWidget):
     mapOpened = QtCore.pyqtSignal()
@@ -21,7 +21,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
         self.show()
 
     def reloadInitFile(self):
-        gamefolder = proj.settings["gamefolder"]
+        gamefolder = current_project.settings["gamefolder"]
         self.initFile = TXWdgt.openInitFile(gamefolder)
 
         for level in self.levelList:
@@ -35,6 +35,6 @@ class MapExplorerWidget(QtWidgets.QWidget):
     def doubleClickedForOpen(self, item):
         mapForOpen = self.initFile['LevelsList'][item.text()]
         #only open map if it's not already opened
-        if(os.path.basename(proj.settings["workingFile"])!=mapForOpen):
+        if(os.path.basename(current_project.settings["workingFile"])!=mapForOpen):
             self.mapForOpen = mapForOpen
             self.mapOpened.emit()

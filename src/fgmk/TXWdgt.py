@@ -1,7 +1,7 @@
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat,  TileXtra, fifl, proj
+from fgmk import tMat,  TileXtra, fifl, current_project
 
 
 def getLevelPathFromInitFile(gamefolder, levelname):
@@ -134,7 +134,7 @@ class newProject(QtWidgets.QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('New game project...')
+        self.setWindowTitle('New game current_projectect...')
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
@@ -166,8 +166,8 @@ class newFile(QtWidgets.QDialog):
         super().__init__(parent, **kwargs)
 
         gamefolder = ""
-        if "gamefolder" in proj.settings:
-            gamefolder = os.path.join(proj.settings["gamefolder"])
+        if "gamefolder" in current_project.settings:
+            gamefolder = os.path.join(current_project.settings["gamefolder"])
             if not os.path.isdir(gamefolder):
                 gamefolder = ""
 

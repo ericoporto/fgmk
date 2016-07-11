@@ -1,4 +1,4 @@
-from fgmk import TileXtra, actionDialog, proj, actionsWdgt
+from fgmk import TileXtra, actionDialog, current_project, actionsWdgt
 from PyQt5 import QtGui, QtCore, QtWidgets
 
 COLISIONLAYER = 3
@@ -157,7 +157,7 @@ class EventsWidget(QtWidgets.QWidget):
             newDialogFromName = getattr(actionDialog, str(actionToEdit))
 
             self.myActionsDialog = newDialogFromName(
-                proj.settings["gamefolder"], self, paramArrayOfEdit)
+                current_project.settings["gamefolder"], self, paramArrayOfEdit)
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
 
@@ -222,7 +222,7 @@ class EventsWidget(QtWidgets.QWidget):
         self.show()
 
     def addAction(self):
-        self.myActionsWidget = actionsWdgt.ActionsWidget(proj.settings, self)
+        self.myActionsWidget = actionsWdgt.ActionsWidget(current_project.settings, self)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 

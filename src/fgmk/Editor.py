@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, proj
+from fgmk import TileXtra, actionDialog, TXWdgt, gwserver, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -213,7 +213,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         self.vbox = QtWidgets.QVBoxLayout(self)
 
         self.charaslist = []
-        self.myCharaSelector = Charas.CharaSelector(self, proj.settings)
+        self.myCharaSelector = Charas.CharaSelector(self, current_project.settings)
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
 
@@ -241,7 +241,7 @@ class CharasPalWidget(QtWidgets.QWidget):
             scale = self.mapWdgt.myScale / 2.0
             if(self.positionEmpty(position)):
                 item = Charas.MiniCharaTile(
-                    None, proj.settings, chara, (0, 0), scale)
+                    None, current_project.settings, chara, (0, 0), scale)
                 item.rightClicked.connect(self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])
                 if(onmap):
@@ -317,7 +317,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.undoStack = QtWidgets.QUndoStack(self)
 
         self.levelName = "newFile"
-        proj.settings["workingFile"] = self.levelName + ".map.json"
+        current_project.settings["workingFile"] = self.levelName + ".map.json"
 
         self.myMap = mapfile.MapFormat()
 
@@ -412,13 +412,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 doSave = True
 
         if(doSave):
-            TXWdgt.saveInitFile(proj.settings["gamefolder"], result[0])
+            TXWdgt.saveInitFile(current_project.settings["gamefolder"], result[0])
 
     def FancyWindow(self, parent=None):
         self.menubar = QtWidgets.QMenuBar(self)
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
-        projectMenu = self.menubar.addMenu('&Project')
+        current_projectectMenu = self.menubar.addMenu('&Project')
         fileMenu.addAction('&New', self.newFile, "Ctrl+N")
         fileMenu.addAction('&Open...', self.openFile, "Ctrl+O")
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
@@ -434,12 +434,12 @@ class MainWindow(QtWidgets.QMainWindow):
         redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
 
-        projectMenu.addAction('New &Project', self.newProject, '')
-        projectMenu.addAction('Set starting &position...',
+        current_projectectMenu.addAction('New &Project', self.newProject, '')
+        current_projectectMenu.addAction('Set starting &position...',
                               self.selectStartPosition, '')
-        projectMenu.addAction('Edit &charasets...', self.editCharasets, '')
-        projectMenu.addAction('Edit &charas...', self.editCharas, '')
-        projectMenu.addAction('Run Project', self.runServer, 'f5')
+        current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
+        current_projectectMenu.addAction('Edit &charas...', self.editCharas, '')
+        current_projectectMenu.addAction('Run Project', self.runServer, 'f5')
 
         self.viewMenu = self.menubar.addMenu('&View')
 
@@ -615,12 +615,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def editCharasets(self):
         myCharasetEditor = TileCharaset.CharasetEditorWidget(
-            self, proj.settings)
+            self, current_project.settings)
         if myCharasetEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasetEditor)
 
     def editCharas(self):
-        myCharasEditor = Charas.CharaEditor(self, proj.settings)
+        myCharasEditor = Charas.CharaEditor(self, current_project.settings)
         if myCharasEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasEditor)
 
@@ -648,7 +648,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def openFromExplorer(self):
         testMap = mapfile.MapFormat()
-        testMap.load(proj.settings["workingFile"])
+        testMap.load(current_project.settings["workingFile"])
         acceptOpen = False
         if not self.myMap.isEqualMap(testMap):
 
@@ -668,13 +668,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if acceptOpen:
             mapfilename = self.myMapExplorerWidget.mapForOpen
-            gamefolder = os.path.abspath(proj.settings["gamefolder"])
+            gamefolder = os.path.abspath(current_project.settings["gamefolder"])
             filetopen = os.path.join(str(gamefolder), fifl.LEVELS, mapfilename)
             self.openFileByName(filetopen)
 
 
     def runServer(self):
-        gwserver.servePage(os.path.abspath(proj.settings["gamefolder"]))
+        gwserver.servePage(os.path.abspath(current_project.settings["gamefolder"]))
 
     def newProject(self):
         myNewProjectDialog = TXWdgt.newProject(self)
@@ -685,20 +685,20 @@ class MainWindow(QtWidgets.QMainWindow):
     def __newProject(self, returnedNFD):
         import shutil
 
-        projectPath = os.path.join(
+        current_projectectPath = os.path.join(
             str(returnedNFD["baseFolder"]), str(returnedNFD["name"]))
-        proj.settings["basefolder"] = str(returnedNFD["baseFolder"])
-        proj.settings["gamefolder"] = projectPath
-        proj.settings["gamename"] = str(returnedNFD["name"])
-        os.mkdir(projectPath)
+        current_project.settings["basefolder"] = str(returnedNFD["baseFolder"])
+        current_project.settings["gamefolder"] = current_projectectPath
+        current_project.settings["gamename"] = str(returnedNFD["name"])
+        os.mkdir(current_projectectPath)
         tar = tarfile.open(getdata.path("basegame.tar.gz"))
-        tar.extractall(projectPath)
+        tar.extractall(current_projectectPath)
         tar.close()
-        initfile = TXWdgt.openInitFile(proj.settings["gamefolder"])
+        initfile = TXWdgt.openInitFile(current_project.settings["gamefolder"])
         levellist = initfile["LevelsList"]
         startlevel = initfile['World']['initLevel']
         levelfile = levellist[startlevel]
-        self.openFileByName(os.path.join(proj.settings["gamefolder"],fifl.LEVELS,levelfile))
+        self.openFileByName(os.path.join(current_project.settings["gamefolder"],fifl.LEVELS,levelfile))
 
     def newFile(self):
         myNewFileDialog = TXWdgt.newFile(self)
@@ -707,15 +707,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.__newFile(returnedNFD)
 
     def __newFile(self, returnedNFD):
-        proj.settings["gamefolder"] = str(returnedNFD["gameFolder"])
+        current_project.settings["gamefolder"] = str(returnedNFD["gameFolder"])
         self.levelName = str(returnedNFD["name"])
-        proj.settings["workingFile"] = os.path.join(
-            proj.settings["gamefolder"], fifl.LEVELS, self.levelName + ".map.json")
-        self.setWindowTitle(proj.settings["workingFile"])
+        current_project.settings["workingFile"] = os.path.join(
+            current_project.settings["gamefolder"], fifl.LEVELS, self.levelName + ".map.json")
+        self.setWindowTitle(current_project.settings["workingFile"])
         self.myMap.new(self.levelName, returnedNFD[
                        "width"], returnedNFD["height"])
         self.myTileSet = TileXtra.TileSet(os.path.join(
-            proj.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
+            current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
         self.gridViewAction.setChecked(False)  # gambiarra
         self.myPaletteWidget.drawPalette(self.myTileSet)
@@ -725,7 +725,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.undoStack.clear()
 
     def saveFile(self):
-        filename = proj.settings["workingFile"]
+        filename = current_project.settings["workingFile"]
 
         if filename != "":
             self.myMap.save(filename)
@@ -742,8 +742,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if filename[-9:] != '.map.json':
                 filename += '.map.json'
 
-            proj.settings["workingFile"] = filename
-            self.myMap.save(proj.settings["workingFile"])
+            current_project.settings["workingFile"] = filename
+            self.myMap.save(current_project.settings["workingFile"])
 
             if gameInit.regenerateLevelList():
                 self.myMapExplorerWidget.reloadInitFile()
@@ -756,21 +756,21 @@ class MainWindow(QtWidgets.QMainWindow):
             if filename[-3:] != '.js':
                 filename += '.js'
 
-            proj.settings["workingFile"] = filename
-            self.myMap.exportJS(proj.settings["workingFile"])
+            current_project.settings["workingFile"] = filename
+            self.myMap.exportJS(current_project.settings["workingFile"])
 
     def openFileByName(self, filename):
         if(filename=="newFile.map.json"):
             return
 
         if os.path.isfile(filename):
-            proj.settings["gamefolder"] = os.path.abspath(
+            current_project.settings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
-            proj.settings["workingFile"] = filename
-            self.setWindowTitle(proj.settings["workingFile"])
-            self.myMap.load(proj.settings["workingFile"])
+            current_project.settings["workingFile"] = filename
+            self.setWindowTitle(current_project.settings["workingFile"])
+            self.myMap.load(current_project.settings["workingFile"])
             self.myTileSet = TileXtra.TileSet(os.path.join(
-                proj.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
+                current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             self.gridViewAction.setChecked(False)  # gambiarra
             self.undoStack.clear()
@@ -782,10 +782,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMapExplorerWidget.reloadInitFile()
 
     def openFile(self):
-        if(proj.settings["gamefolder"] == ""):
-            proj.settings["gamefolder"] = os.path.expanduser("~")
+        if(current_project.settings["gamefolder"] == ""):
+            current_project.settings["gamefolder"] = os.path.expanduser("~")
         filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', os.path.join(proj.settings["gamefolder"], fifl.LEVELS), "JSON Level (*.map.json);;All Files (*)")[0]
+            self, 'Open File', os.path.join(current_project.settings["gamefolder"], fifl.LEVELS), "JSON Level (*.map.json);;All Files (*)")[0]
         self.openFileByName(filename)
 
     def helpAbout(self):
@@ -793,9 +793,9 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
-        if(os.path.isfile(proj.settings["workingFile"])):
+        if(os.path.isfile(current_project.settings["workingFile"])):
             testMap = mapfile.MapFormat()
-            testMap.load(proj.settings["workingFile"])
+            testMap.load(current_project.settings["workingFile"])
             if not self.myMap.isEqualMap(testMap):
 
                 quit_msg = "Do you want to save changes?"
@@ -823,8 +823,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.endGroup();
 
         self.settings.beginGroup("Project")
-        if(os.path.isfile(proj.settings["workingFile"])):
-            self.settings.setValue("workingFile", proj.settings["workingFile"]);
+        if(os.path.isfile(current_project.settings["workingFile"])):
+            self.settings.setValue("workingFile", current_project.settings["workingFile"]);
         self.settings.endGroup();
 
 

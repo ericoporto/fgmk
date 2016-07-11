@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, TXWdgt, proj, mapfile
+from fgmk import tMat, TileXtra, TXWdgt, current_project, mapfile
 
 
 COLISIONLAYER = 3
@@ -57,7 +57,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
-                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
@@ -183,7 +183,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
-                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
             if(self.edit == None):
@@ -258,7 +258,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
-                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
         self.myMiniMapWidget = TXWdgt.MiniMapWidget(
@@ -310,7 +310,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileXtra.TileSet(os.path.join(
-                proj.settings["gamefolder"], self.currentLevel.tileImage),
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
             if(self.selectStartPosition == None):

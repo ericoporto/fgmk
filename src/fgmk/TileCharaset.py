@@ -4,7 +4,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, TileXtra, writefile
+from fgmk import fifl, TileXtra, writefile, current_project
 
 # TODO fix enter on QLineEdit
 
@@ -374,7 +374,7 @@ class CharasetSelector(QtWidgets.QWidget):
         self.ssettings = ssettings
 
         if(self.ssettings == {}):
-            self.ssettings = proj.settings
+            self.ssettings = current_project.settings
 
         if (cset is not None):
             self.cset = cset
@@ -443,7 +443,7 @@ class CharasetPreviewer(QtWidgets.QWidget):
         self.ssettings = ssettings
 
         if(self.ssettings == {}):
-            self.ssettings = proj.settings
+            self.ssettings = current_project.settings
 
         if (cset is not None):
             self.cset = cset
