@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import TileXtra, TXWdgt, current_project
+from fgmk import TileXtra, gameInit, current_project
 
 class MapExplorerWidget(QtWidgets.QWidget):
     mapOpened = QtCore.pyqtSignal()
@@ -22,7 +22,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
 
     def reloadInitFile(self):
         gamefolder = current_project.settings["gamefolder"]
-        self.initFile = TXWdgt.openInitFile(gamefolder)
+        self.initFile = gameInit.openInitFile(gamefolder)
 
         for level in self.levelList:
             self.LvlLWidget.takeItem(0)

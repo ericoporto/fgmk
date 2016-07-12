@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, game_server, fifl, TileCharaset, Charas, gameInit, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
@@ -392,7 +392,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.openFileByName(matching[0])
 
     def selectStartPosition(self):
-        result = gameInit.selectStartingPosition(self)
+        result = configure_project.selectStartingPosition(self)
 
         if result is None:
             return
@@ -412,7 +412,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 doSave = True
 
         if(doSave):
-            TXWdgt.saveInitFile(current_project.settings["gamefolder"], result[0])
+            gameInit.saveInitFile(current_project.settings["gamefolder"], result[0])
 
     def FancyWindow(self, parent=None):
         self.menubar = QtWidgets.QMenuBar(self)
@@ -694,7 +694,7 @@ class MainWindow(QtWidgets.QMainWindow):
         tar = tarfile.open(getdata.path("basegame.tar.gz"))
         tar.extractall(current_projectectPath)
         tar.close()
-        initfile = TXWdgt.openInitFile(current_project.settings["gamefolder"])
+        initfile = gameInit.openInitFile(current_project.settings["gamefolder"])
         levellist = initfile["LevelsList"]
         startlevel = initfile['World']['initLevel']
         levelfile = levellist[startlevel]

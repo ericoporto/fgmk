@@ -1,13 +1,39 @@
+import json
 import os.path
 from os import listdir
-from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionDialog, TXWdgt, fifl, current_project
+from fgmk import fifl, current_project
+
+
+def getLevelPathFromInitFile(gamefolder, levelname):
+    initFile = openInitFile(gamefolder)
+    return os.path.join(str(gamefolder), fifl.LEVELS, initFile['LevelsList'][str(levelname)])
+
+
+def openInitFile(gamefolder):
+    fname = os.path.join(str(gamefolder), fifl.DESCRIPTORS, fifl.GAMESETTINGS)
+
+    if os.path.isfile(fname):
+        f = open(fname, "r")
+        initFileJsonTree = json.load(f)
+        f.close()
+        return initFileJsonTree
+    else:
+        return None
+
+
+def saveInitFile(gamefolder, initFileJsonTree):
+    f = open(os.path.join(str(gamefolder),
+                          fifl.DESCRIPTORS, fifl.GAMESETTINGS), "w")
+    initFileJsonTree = json.dump(initFileJsonTree, f, indent=4, sort_keys=True)
+    f.close()
+    return initFileJsonTree
+
 
 def regenerateLevelList():
     psSettings = current_project.settings
     gamefolder = os.path.join(psSettings["gamefolder"])
     if os.path.isdir(gamefolder):
-        initFileJsonTree = TXWdgt.openInitFile(gamefolder)
+        initFileJsonTree = openInitFile(gamefolder)
     else:
         return
 
@@ -26,38 +52,7 @@ def regenerateLevelList():
         if(len(unmatched_maps)!=0):
             initFileJsonTree["LevelsList"] = []
             initFileJsonTree["LevelsList"] = LevelsList
-            TXWdgt.saveInitFile(gamefolder, initFileJsonTree)
+            saveInitFile(gamefolder, initFileJsonTree)
             return True
 
         return False
-
-
-def selectStartingPosition(parent):
-    psSettings = current_project.settings
-    gamefolder = os.path.join(psSettings["gamefolder"])
-    initFileJsonTree = TXWdgt.openInitFile(gamefolder)
-
-    if(initFileJsonTree != None):
-        initx = int(initFileJsonTree["Player"]["initPosX"]/32)
-        inity = int(initFileJsonTree["Player"]["initPosY"]/32+1)
-        level = initFileJsonTree["World"]["initLevel"]
-        edit = None
-        if(level in initFileJsonTree["LevelsList"]):
-            levelfilename = initFileJsonTree["LevelsList"][level]
-
-            if os.path.isfile(os.path.join(gamefolder, fifl.LEVELS, levelfilename)):
-                edit = [initx, inity, level]
-
-        myTeleporDialog = actionDialog.teleport(
-            psSettings["gamefolder"], parent, edit, False, "select starting position")
-        if myTeleporDialog.exec_() == QtWidgets.QDialog.Accepted:
-            returnActDlg = str(myTeleporDialog.getValue())
-            position = returnActDlg.split(';')
-            initFileJsonTree["Player"]["initPosX"] = int(position[0]) * 32
-            initFileJsonTree["Player"]["initPosY"] = (int(position[1]) - 1) * 32
-            if(str(position[2]) != "this"):
-                initFileJsonTree["World"]["initLevel"] = str(position[2])
-            else:
-                initFileJsonTree["World"]["initLevel"] = str(
-                    parent.myMap.levelName)
-            return [initFileJsonTree, str(position[2])]

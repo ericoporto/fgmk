@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, TXWdgt, current_project, mapfile, TileSet
+from fgmk import tMat, TileXtra, gameInit, current_project, mapfile, TileSet, miniWdgt
 
 
 COLISIONLAYER = 3
@@ -16,7 +16,7 @@ class changeTile(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
 
-        self.initFile = TXWdgt.openInitFile(gamefolder)
+        self.initFile = gameInit.openInitFile(gamefolder)
 
         self.useCurrentPlace = "current"
 
@@ -54,13 +54,13 @@ class changeTile(QtWidgets.QDialog):
                 self.currentTileSet = self.parent.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
+            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
-        self.myMiniMapWidget = TXWdgt.MiniMapWidget(
+        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
             self.currentLevel, self.currentTileSet, self)
 
         self.eventList = self.currentLevel.getTileListFromLayer(EVENTSLAYER)[:]
@@ -75,7 +75,7 @@ class changeTile(QtWidgets.QDialog):
         self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
         self.LineTextPlace = QtWidgets.QLineEdit()
 
-        self.myMiniPaletteWidget = TXWdgt.MiniPaletteWidget(
+        self.myMiniPaletteWidget = miniWdgt.MiniPaletteWidget(
             self.currentTileSet, self)
         self.myMiniPaletteWidget.selectedTilePalette.connect(self.setTileToChange)
         self.LineTextTile = QtWidgets.QLineEdit()
@@ -180,7 +180,7 @@ class changeTile(QtWidgets.QDialog):
 
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
+            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
@@ -213,7 +213,7 @@ class teleport(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
 
-        self.initFile = TXWdgt.openInitFile(gamefolder)
+        self.initFile = gameInit.openInitFile(gamefolder)
 
         if(selectStartPosition == None):
             self.setWindowTitle('Select where to teleport...')
@@ -255,13 +255,13 @@ class teleport(QtWidgets.QDialog):
                 self.currentTileSet = self.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
+            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
-        self.myMiniMapWidget = TXWdgt.MiniMapWidget(
+        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
             self.currentLevel, self.currentTileSet, None, indicative)
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
@@ -307,7 +307,7 @@ class teleport(QtWidgets.QDialog):
     def updateMap(self, levelIndex):
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
+            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
