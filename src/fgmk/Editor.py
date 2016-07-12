@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import TileXtra, actionDialog, TXWdgt, game_server, fifl, TileCharaset, Charas, gameInit, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
@@ -328,7 +328,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # get tileset file and split it in images that can be pointed through
         # array
 
-        self.myTileSet = TileXtra.TileSet(
+        self.myTileSet = TileSet.TileSet(
             self.myMap.tileImage, self.myMap.palette)
         self.myMapWidget = MapWidget(self)
 
@@ -714,7 +714,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle(current_project.settings["workingFile"])
         self.myMap.new(self.levelName, returnedNFD[
                        "width"], returnedNFD["height"])
-        self.myTileSet = TileXtra.TileSet(os.path.join(
+        self.myTileSet = TileSet.TileSet(os.path.join(
             current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
         self.gridViewAction.setChecked(False)  # gambiarra
@@ -769,7 +769,7 @@ class MainWindow(QtWidgets.QMainWindow):
             current_project.settings["workingFile"] = filename
             self.setWindowTitle(current_project.settings["workingFile"])
             self.myMap.load(current_project.settings["workingFile"])
-            self.myTileSet = TileXtra.TileSet(os.path.join(
+            self.myTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             self.gridViewAction.setChecked(False)  # gambiarra

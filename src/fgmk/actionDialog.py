@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, TXWdgt, current_project, mapfile
+from fgmk import tMat, TileXtra, TXWdgt, current_project, mapfile, TileSet
 
 
 COLISIONLAYER = 3
@@ -56,7 +56,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileXtra.TileSet(os.path.join(
+            self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
@@ -182,7 +182,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileXtra.TileSet(os.path.join(
+            self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
@@ -257,7 +257,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileXtra.TileSet(os.path.join(
+            self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
@@ -309,7 +309,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(TXWdgt.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileXtra.TileSet(os.path.join(
+            self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:

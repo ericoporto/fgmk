@@ -1,7 +1,7 @@
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat,  TileXtra, fifl, current_project
+from fgmk import tMat,  TileXtra, fifl, current_project, TileSet
 
 
 def getLevelPathFromInitFile(gamefolder, levelname):
@@ -364,7 +364,7 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.myScale = 0.5
 
         self.xclicked = TileXtra.ExtendedQLabel(self)
-        self.xclicked.initTile(TileXtra.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
+        self.xclicked.initTile(TileSet.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
 
         self.TileList = []
         self.selectedPosition = [0, 0]

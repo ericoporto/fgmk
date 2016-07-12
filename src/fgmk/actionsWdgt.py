@@ -1,7 +1,6 @@
 import json
-import os.path
-from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, actionDialog, TileXtra, fifl, getdata
+from PyQt5 import QtCore, QtWidgets
+from fgmk import actionDialog, getdata
 
 class actionItem(QtWidgets.QListWidgetItem):
     def __init__(self, actionAndParameter):

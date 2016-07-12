@@ -2,7 +2,8 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, actionDialog, TXWdgt, fifl, TileCharaset
+from fgmk import actionsWdgt, actionDialog, fifl, TileCharaset
+
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 # moves will be step and face, for all possibilities TileCharaset.facing
@@ -383,7 +384,7 @@ class ActionsWidget(QtWidgets.QWidget):
         if(self.ssettings == {} ):
             return
 
-        self.myActionsWidget = TXWdgt.ActionsWidget(self.ssettings,self,self.ischara)
+        self.myActionsWidget = actionsWdgt.ActionsWidget(self.ssettings,self,self.ischara)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
