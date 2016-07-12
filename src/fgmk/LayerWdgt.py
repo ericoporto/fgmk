@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import TileXtra, mapfile
+from fgmk import mapfile
 
 COLISIONLAYER = 3
 EVENTSLAYER = 4

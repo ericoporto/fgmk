@@ -1,7 +1,7 @@
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat,  TileXtra, fifl, current_project, TileSet
+from fgmk import tMat, fifl, current_project, TileSet
 
 
 

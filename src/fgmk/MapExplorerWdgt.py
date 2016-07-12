@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import TileXtra, gameInit, current_project
+from fgmk import gameInit, current_project
 
 class MapExplorerWidget(QtWidgets.QWidget):
     mapOpened = QtCore.pyqtSignal()

@@ -4,7 +4,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, TileXtra, writefile, current_project
+from fgmk import fifl, writefile, current_project
 
 # TODO fix enter on QLineEdit
 

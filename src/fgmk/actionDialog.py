@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, TileXtra, gameInit, current_project, mapfile, TileSet, miniWdgt
+from fgmk import tMat, gameInit, current_project, mapfile, TileSet, miniWdgt
 
 
 COLISIONLAYER = 3
