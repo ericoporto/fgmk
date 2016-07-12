@@ -29,13 +29,20 @@ def saveInitFile(gamefolder, initFileJsonTree):
     return initFileJsonTree
 
 
-def regenerateLevelList():
-    psSettings = current_project.settings
-    gamefolder = os.path.join(psSettings["gamefolder"])
+def getInitFile():
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
     if os.path.isdir(gamefolder):
-        initFileJsonTree = openInitFile(gamefolder)
+        return openInitFile(gamefolder)
     else:
+        return {}
+
+
+def regenerateLevelList():
+    initFileJsonTree = getInitFile()
+    if 'LevelsList' not in initFileJsonTree:
         return
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
 
     if(initFileJsonTree != None):
         levels = os.path.join(gamefolder, fifl.LEVELS)
@@ -56,3 +63,8 @@ def regenerateLevelList():
             return True
 
         return False
+
+def getAllVariables():
+    # charas.json -> ['Charas'][charanames]['actions']['list']
+    # *.map.json -> ['Level']['eventsActions'][events]
+    return 'allvariables'
