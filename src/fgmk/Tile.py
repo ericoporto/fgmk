@@ -5,7 +5,7 @@ from PIL.ImageQt import ImageQt
 from fgmk import tMat, getdata, current_project, alpha_composite, TileSet
 
 
-class ExtendedQLabel(QtWidgets.QLabel):
+class QTile(QtWidgets.QLabel):
     def __init(self, parent):
         super().__init__(parent)
 

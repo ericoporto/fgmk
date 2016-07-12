@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, tMat
+from fgmk import Tile, tMat
 
 class PaletteWidget(QtWidgets.QWidget):
 
@@ -29,7 +29,7 @@ class PaletteWidget(QtWidgets.QWidget):
 
         self.drawPalette(tileSetInstance)
 
-        self.CurrentTT = TileXtra.ExtendedQLabel(self)
+        self.CurrentTT = Tile.QTile(self)
         self.CurrentTT.initTile(tileSetInstance.tileset, len(
             tileSetInstance.tileset) - 1, 0, tileSetInstance.boxsize, [5, 0, 0, 0, 0], 4)
 
@@ -49,7 +49,7 @@ class PaletteWidget(QtWidgets.QWidget):
             self.PaletteTileList = []
 
         for i in range(len(tileSetInstance.tileset)):
-            self.PaletteTileList.append(TileXtra.ExtendedQLabel(self))
+            self.PaletteTileList.append(Tile.QTile(self))
             self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
             self.PaletteTileList[-1].initTile(
                 tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], 1)

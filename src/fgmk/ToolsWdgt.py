@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import TileXtra, getdata, TileSet
+from fgmk import Tile, getdata, TileSet
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 leftClickTool = 0
@@ -29,7 +29,7 @@ class ToolsWidget(QtWidgets.QWidget):
         self.ToolTile = []
 
         for i in range(self.MaxTools):
-            self.ToolTile.append(TileXtra.ExtendedQLabel(self))
+            self.ToolTile.append(Tile.QTile(self))
             self.ToolTile[-1].initTile(self.toolTileset.tileset, 0, 0, self.toolTileset.boxsize, [
                                        0, 0, TOOLSTARTINGTILE + i, 0, 0], self.scale)
             self.ToolTile[-1].setObjectName(ToolsName[i])

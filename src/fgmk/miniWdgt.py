@@ -1,6 +1,6 @@
 
 from PyQt5 import QtWidgets, QtCore
-from fgmk import TileXtra, tMat, TileSet
+from fgmk import Tile, tMat, TileSet
 
 class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -31,7 +31,7 @@ class MiniPaletteWidget(QtWidgets.QWidget):
         self.drawPalette(self.tileSetInstance)
 
         self.currentTile = 0
-        self.CurrentTT = TileXtra.ExtendedQLabel(self)
+        self.CurrentTT = Tile.QTile(self)
         self.CurrentTT.initTile(self.tileSetInstance.tileset, len(self.tileSetInstance.tileset) - 1,
                                 0, self.tileSetInstance.boxsize, [self.currentTile, 0, 0, 0, 0], self.scale * 2)
 
@@ -51,7 +51,7 @@ class MiniPaletteWidget(QtWidgets.QWidget):
             self.PaletteTileList = []
 
         for i in range(len(tileSetInstance.tileset)):
-            self.PaletteTileList.append(TileXtra.ExtendedQLabel(self))
+            self.PaletteTileList.append(Tile.QTile(self))
             self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
             self.PaletteTileList[-1].initTile(tileSetInstance.tileset,
                                               i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
@@ -94,7 +94,7 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.TileHeight = 0
         self.myScale = 0.5
 
-        self.xclicked = TileXtra.ExtendedQLabel(self)
+        self.xclicked = Tile.QTile(self)
         self.xclicked.initTile(TileSet.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
 
         self.TileList = []
@@ -131,7 +131,7 @@ class MiniMapWidget(QtWidgets.QWidget):
             # for j in width
             self.TileList.append([])
             for jx in range(self.TileWidth):
-                self.TileList[iy].append(TileXtra.ExtendedQLabel(self))
+                self.TileList[iy].append(Tile.QTile(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
                 self.TileList[iy][jx].initTile(tileset, jx, iy, boxsize, LayersMapTiles[
                                                :, iy, jx], self.myScale)
