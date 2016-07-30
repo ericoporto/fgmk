@@ -3,6 +3,11 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk import gameInit, current_project
 
 class MapExplorerWidget(QtWidgets.QWidget):
+    """
+    A widget that can list the available levels from the init file, and allow
+    navigating them by open and closing them in the Editor.
+    """
+
     mapOpened = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, **kwargs):

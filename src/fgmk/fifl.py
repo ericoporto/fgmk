@@ -1,3 +1,7 @@
+"""
+Contains the paths expected for game assets
+"""
+
 import os
 
 DESCRIPTORS = os.path.join("descriptors")

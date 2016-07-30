@@ -24,11 +24,11 @@ def fill(data, xsize, ysize, x_start, y_start):
         data (numpy 2d matrix): a binary 2d matrix where the color of the
             selected point and points with same color is represented by ones and
             the other colors are represented by zeroes.
-        xsize: width of 2d matrix
-        ysize: height of 2d matrix
-        x_start: x position in the matrix where the bucket clicked. The color of
+        xsize int: width of 2d matrix
+        ysize int: height of 2d matrix
+        x_start int: x position in the matrix where the bucket clicked. The color of
             this point is represented by one.
-        y_start: y position in the matrix where the bucket clicked.
+        y_start int: y position in the matrix where the bucket clicked.
 
     Returns:
         list of tuples. Each tuple is a x,y pair representing points where the
@@ -58,10 +58,10 @@ def line(x0, y0, x1, y1):
     Allow drawing a line. Not Bresenham's algorithm.
 
     Args:
-        x0: x starting point of the line.
-        y0: y starting point of the line
-        x1: x ending point of the line
-        y1: y ending point of the line
+        x0 int: x starting point of the line.
+        y0 int: y starting point of the line
+        x1 int: x ending point of the line
+        y1 int: y ending point of the line
 
     Returns:
         list of tuples. Each tuple is a x,y pair representing points where the
@@ -109,10 +109,10 @@ def rect(x0, y0, x1, y1):
     Allow drawing a rectangle.
 
     Args:
-        x0: x starting point of the rectangle.
-        y0: y starting point of the rectangle.
-        x1: x ending point of the rectangle.
-        y1: y ending point of the rectangle.
+        x0 int: x starting point of the rectangle.
+        y0 int: y starting point of the rectangle.
+        x1 int: x ending point of the rectangle.
+        y1 int: y ending point of the rectangle.
 
     Returns:
         list of tuples. Each tuple is a x,y pair representing points where the

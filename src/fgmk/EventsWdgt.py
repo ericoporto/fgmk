@@ -5,6 +5,10 @@ COLISIONLAYER = 3
 EVENTSLAYER = 4
 
 class EventsWidget(QtWidgets.QWidget):
+    """
+    This widget allows adding actions to an event. It also allows changing the
+    current selected Event number and Colision/non Colidable tile for drawing.
+    """
 
     def __init__(self, pMap, parent=None, **kwargs):
         super().__init__(parent, **kwargs)

@@ -18,4 +18,14 @@
 # Maybe in the future.
 
 export PYTHONPATH=src/
-py.test
+#py.test
+if hash py.test-3 2>/dev/null; then
+    py.test-3
+elif hash py.test 2>/dev/null; then
+    py.test
+else
+    echo "install pytest. ex:"
+    echo " $   sudo apt install python3-pytest"
+    echo "or"
+    echo " $   sudo pip3 install pytest"
+fi

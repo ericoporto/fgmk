@@ -9,15 +9,40 @@ except NameError:
   basestring = (str, bytes)
 
 def ordered(obj):
+    """
+    Recursive order a unordered dict. Use for comparing dicts.
+    """
     if isinstance(obj, dict):
         return sorted((k, ordered(v)) for k, v in obj.items())
     else:
         return obj
 
 def isJsonEqual(jsonA,jsonB):
+    """
+    Check if two json tree (dicts) are equal.
+
+    Args:
+        jsonA dict: a dict or jsontree.
+        jsonB dict: another dict or jsontree.
+
+    Returns:
+        bool. True if equal, False if not.
+    """
     return ordered(jsonA) == ordered(jsonB)
 
+
 def writesafe(data, fname, varname=None):
+    """
+    Write a dict to a file as Json safely.
+
+    Write the content of a dict to a file with name fname~ and if it's content
+    is equal to data, renames fname~ to just fname. This function can optionaly
+    generate a JS object if varname is not None.
+
+    Args:
+        data dict: a dict you wish to write to a file.
+        fname str: the file name.
+    """
     tempfile = fname+'~'
     try:
         f = open(tempfile, 'w+')
@@ -51,6 +76,10 @@ def writesafe(data, fname, varname=None):
 
 
 def fwriteKeyVals(data, f, indent=0):
+    """
+    Recursively write a JSON from dict data to an opened file f.
+    """
+
     if isinstance(data, list):
         try:
             gotdata = isinstance(data[0], list)
@@ -125,6 +154,10 @@ def fwriteKeyVals(data, f, indent=0):
 
 
 def fwriteKeyValsJS(data, f, indent=0):
+    """
+    Recursively write a JS object from dict data to an opened file f.
+    """
+
     if isinstance(data, list):
         try:
             gotdata = isinstance(data[0], list)

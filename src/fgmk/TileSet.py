@@ -6,6 +6,11 @@ from fgmk import tMat, getdata, current_project, alpha_composite
 emptyTile = Image.open(getdata.path('emptyTile.png'))
 
 class TileSet:
+    """
+    A TileSet has the property tileset which contains the image_file broken in
+    boxsized (32px) square images. You can specify how to treat the image_file
+    by passing a tilePalette along
+    """
     def __init__(self, image_file, tilePalette=None):
         self.fakefolder = False
         if(current_project.settings['gamefolder'] == ''):

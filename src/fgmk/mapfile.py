@@ -9,9 +9,11 @@ LayersNameViewable = [
 
 
 def tileFill(clickedX, clickedY, fullLayer, changeTToType):
-    # This function applies bucket fill at point clickedX, clickedY of a ndarray
-    # fullLayer, and returns a list of the format
-    #[[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
+    This function applies bucket fill at point clickedX, clickedY of a ndarray
+    fullLayer, and returns a list of the format
+    [[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
 
     changeWhatType = fullLayer[clickedY, clickedX]
 
@@ -30,9 +32,11 @@ def tileFill(clickedX, clickedY, fullLayer, changeTToType):
 
 
 def tileLine(firstClickedX, firstClickedY, lastClickedX, lastClickedY, fullLayer, changeTToType):
-    # This function applies bucket fill at point clickedX, clickedY of a ndarray
-    # fullLayer, and returns a list of the format
-    #[[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
+    This function applies bucket fill at point clickedX, clickedY of a ndarray
+    fullLayer, and returns a list of the format
+    [[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
 
     whatChanged = []
 
@@ -48,9 +52,11 @@ def tileLine(firstClickedX, firstClickedY, lastClickedX, lastClickedY, fullLayer
 
 
 def tileRect(firstClickedX, firstClickedY, lastClickedX, lastClickedY, fullLayer, changeTToType):
-    # This function applies bucket fill at point clickedX, clickedY of a ndarray
-    # fullLayer, and returns a list of the format
-    #[[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
+    This function applies bucket fill at point clickedX, clickedY of a ndarray
+    fullLayer, and returns a list of the format
+    [[pointx, pointy, tileType befor fill, tileType after fill] :]
+    """
 
     whatChanged = []
 
@@ -66,6 +72,11 @@ def tileRect(firstClickedX, firstClickedY, lastClickedX, lastClickedY, fullLayer
 
 
 class MapFormat:
+    """
+    Creates a map. This object has functions to allow modifying the map
+    jsonTree, saving to file, loading a file over, new map creation, and more.
+    The map only exists in memory, it's not an image, canvas or similar.
+    """
 
     def __init__(self):
         self.jsonTree = []
