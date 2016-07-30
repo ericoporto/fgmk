@@ -1,4 +1,5 @@
 import os
+import json
 from numbers import Number
 from fgmk import printerror
 
@@ -6,6 +7,15 @@ try:
   basestring
 except NameError:
   basestring = (str, bytes)
+
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    else:
+        return obj
+
+def isJsonEqual(jsonA,jsonB):
+    return ordered(jsonA) == ordered(jsonB)
 
 def writesafe(data, fname, varname=None):
     tempfile = fname+'~'
@@ -22,7 +32,19 @@ def writesafe(data, fname, varname=None):
             f.flush()
             os.fsync(f.fileno())
             f.close()
-            os.replace(tempfile,fname)
+            if(varname==None):
+                try:
+                    f = open(tempfile, 'r')
+                    tempjsontree = json.load(f)
+                    if isJsonEqual(data,tempjsontree):
+                        f.close()
+                        os.replace(tempfile,fname)
+                    else:
+                        printerror.printe("written file not equal to data")
+                except:
+                    printerror.printe("error when checking file")
+            else:
+                os.replace(tempfile,fname)
     except:
         printerror.printe('error when opening file')
 
@@ -84,7 +106,7 @@ def fwriteKeyVals(data, f, indent=0):
                         f.write(dataToWrite)
                     f.write(",") if i != len(data) - 1 else f.write("]")
             else:
-                f.write(" [\"\"]")
+                f.write(" []")
 
     elif isinstance(data, dict):
         f.write("\n" + "    " * indent + "{")
@@ -168,5 +190,3 @@ def fwriteKeyValsJS(data, f, indent=0):
 
     else:
         f.write("\"" + data + "\"")
-
-        

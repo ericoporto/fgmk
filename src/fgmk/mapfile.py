@@ -259,4 +259,4 @@ class MapFormat:
 
     def isEqualMap(self, compareMap):
         self.updateJsonTree()
-        return sorted(self.jsonTree.items()) == sorted(compareMap.jsonTree.items())
+        return writefile.isJsonEqual(self.jsonTree,compareMap.jsonTree)
