@@ -10,9 +10,10 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='fgmk',
-    version='1.0.0',
+    version='0.2.0',
     description='A PyQt5 Maker to generate a RPG Javascript game.',
     url='https://github.com/ericoporto/fgmk',
+    download_url = 'https://github.com/ericoporto/fgmk/tarball/0.2',
     author='Erico Porto',
     author_email='elhafulvics@gmail.com',
     license='GPLv2',
