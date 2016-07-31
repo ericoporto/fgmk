@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=FGMK
+GenericName=2D RPG Game Maker
+Comment=game development, rpgmaker ide
+Exec=fgmk
+Icon=fgmk
+Terminal=false
+Type=Application
+Categories=Development;AdventureGame;
+MimeType=text/fgmk-map;
+Name[en_US]=fgmk
