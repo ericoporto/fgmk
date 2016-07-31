@@ -30,19 +30,19 @@ if osname == 'Linux':
         mkdir_p(os.path.expanduser('~/.local/share/applications'))
         mkdir_p(os.path.expanduser('~/.local/share/icons'))
         mkdir_p(os.path.expanduser('~/.local/share/mime'))
-        datafiles = dict(data_files=[(os.path.expanduser('~/.local/share/applications'), ['src/platform/ubuntu/fgmk.desktop']),
-                    (os.path.expanduser('~/.local/share/icons'), ['src/platform/ubuntu/fgmk.svg',
+        datafiles = dict(data_files=[('share/applications', ['src/platform/ubuntu/fgmk.desktop']),
+                    ('share/icons', ['src/platform/ubuntu/fgmk.svg',
                                           'src/platform/ubuntu/fgmk-map.svg']),
-                    (os.path.expanduser('~/.local/share/mime'), ['src/platform/ubuntu/fgmk.xml'])])
+                    ('share/mime', ['src/platform/ubuntu/fgmk.xml'])])
 
 
 
 setup(
     name='fgmk',
-    version='0.2.1',
+    version='0.2.2',
     description='A PyQt5 Maker to generate a RPG Javascript game.',
     url='https://github.com/ericoporto/fgmk',
-    download_url = 'https://github.com/ericoporto/fgmk/tarball/0.2',
+    download_url = 'https://github.com/ericoporto/fgmk/tarball/0.2.2',
     author='Erico Porto',
     author_email='elhafulvics@gmail.com',
     license='GPLv2',
@@ -51,7 +51,10 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Games/Entertainment :: Role-Playing',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-        'Programming Language :: Python :: 3.4'
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5'
     ],
     keywords='game development',
     install_requires=['numpy','pillow','pyqt5'],
