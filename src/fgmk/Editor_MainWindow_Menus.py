@@ -6,7 +6,12 @@ from fgmk import tMat, fifl, current_project, TileSet
 
 
 class CommandCTTileType(QtWidgets.QUndoCommand):
-
+    """
+    Class for a single tile operation.
+    This class operates in the visible map
+    widget and the map (that has the jsontree), having redo (which is also the
+    do action) and undo capabilities.
+    """
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
         super().__init__(description)
 
@@ -36,6 +41,12 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
 
 
 class CommandCGroupTType(QtWidgets.QUndoCommand):
+    """
+    Class for a multiple tile operation.
+    This class operates in the visible map
+    widget and the map (that has the jsontree), having redo (which is also the
+    do action) and undo capabilities.
+    """
 
     def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
         super().__init__(description)
@@ -69,6 +80,10 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
 
 
 class newProject(QtWidgets.QDialog):
+    """
+    The New Project menu. When you click New Project... entry in menu, this
+    will be open in a new window.
+    """
 
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -137,7 +152,10 @@ class newProject(QtWidgets.QDialog):
 
 
 class newFile(QtWidgets.QDialog):
-
+    """
+    The New File menu. When you click New File... entry in menu, this
+    will be open in a new window.
+    """
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
 

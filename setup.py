@@ -12,8 +12,8 @@ setup(
     name='fgmk',
     version='1.0.0',
     description='A PyQt5 Maker to generate a RPG Javascript game.',
-    url='https://github.com/ericoporto/fangamk',
-    author='Erico Vieira Porto',
+    url='https://github.com/ericoporto/fgmk',
+    author='Erico Porto',
     author_email='elhafulvics@gmail.com',
     license='GPLv2',
     classifiers=[
