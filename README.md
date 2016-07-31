@@ -12,6 +12,12 @@ software.
 Installation
 ------------
 
+### From pip Installation
+
+This software is available under [PyPI](https://pypi.python.org/pypi/fgmk) as **fgmk**.
+
+    pip3 install fgmk
+
 ### Deb Installation
 
 If you use Ubuntu or Debian, [download from here](https://github.com/ericoporto/fgmk/releases) the latest `.deb` package.
