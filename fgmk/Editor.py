@@ -533,6 +533,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addSeparator()
 
+        self.toggleVisibilityAll = QtWidgets.QAction(
+            'toolbar visibility', self.viewMenu, checkable=True)
+        self.toggleVisibilityAll.triggered.connect(self.toggleVisibleDocks)
+        self.toggleVisibilityAll.setShortcut(
+            QtGui.QKeySequence(QtCore.Qt.Key_Tab))
+        self.visibleDocks = []
+        self.toggleVisibilityAll.setChecked(True)
+
+        self.viewMenu.addAction(self.toggleVisibilityAll)
+
+        self.viewMenu.addSeparator()
+
         self.gridViewAction = QtWidgets.QAction(
             'grid', self.viewMenu, checkable=True)
         self.viewMenu.addAction(self.gridViewAction)
@@ -556,6 +568,29 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setMenuBar(self.menubar)
 
+    def toggleVisibleDocks(self):
+        if(self.toggleVisibilityAll.isChecked()):
+            #make all visible (as before)
+            if(self.visibleDocks[0]): self.paletteDockWdgt.show()
+            if(self.visibleDocks[1]): self.charasDockWdgt.show()
+            if(self.visibleDocks[2]): self.layerDockWdgt.show()
+            if(self.visibleDocks[3]): self.toolsDockWdgt.show()
+            if(self.visibleDocks[4]): self.eventsDockWdgt.show()
+            if(self.visibleDocks[5]): self.mapExplorerDockWdgt.show()
+        else:
+            #make all invisible
+            self.visibleDocks = [self.paletteDockWdgt.isVisible(),
+                self.charasDockWdgt.isVisible(),
+                self.layerDockWdgt.isVisible(),
+                self.toolsDockWdgt.isVisible(),
+                self.eventsDockWdgt.isVisible(),
+                self.mapExplorerDockWdgt.isVisible()]
+            self.paletteDockWdgt.hide()
+            self.charasDockWdgt.hide()
+            self.layerDockWdgt.hide()
+            self.toolsDockWdgt.hide()
+            self.eventsDockWdgt.hide()
+            self.mapExplorerDockWdgt.hide()
 
     def changeZoomValue(self, zoomvalue):
         self.changeZoomViewActionChecked(zoomvalue)
@@ -818,6 +853,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("pos", self.pos());
         self.settings.setValue("zoom", self.myMapWidget.myScale)
         self.settings.setValue("state", self.saveState())
+        self.settings.setValue("visibledocks", self.visibleDocks)
+        self.settings.setValue("tabDockVisibility", self.toggleVisibilityAll.isChecked())
         self.settings.endGroup();
 
         self.settings.beginGroup("Project")
@@ -831,6 +868,8 @@ class MainWindow(QtWidgets.QMainWindow):
          self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
          self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
          self.changeZoomValue(float(self.settings.value("zoom", 2)))
+         self.visibleDocks = self.settings.value("visibledocks", type=bool)
+         self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", type=bool))
          state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
          if state:
             self.restoreState(state)
