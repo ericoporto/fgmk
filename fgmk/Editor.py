@@ -5,6 +5,7 @@ import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, actionDialog, Editor_MainWindow_Menus, game_server, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
+from fgmk import help
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 
@@ -551,7 +552,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fullscreenViewAction.changed.connect(self.changeToFullscreen)
 
         helpMenu = self.menubar.addMenu('&Help')
-        helpMenu.addAction('About...', self.helpAbout)
+        helpMenu.addAction('About...', self.about)
 
         self.setMenuBar(self.menubar)
 
@@ -788,9 +789,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self, 'Open File', os.path.join(current_project.settings["gamefolder"], fifl.LEVELS), "JSON Level (*.map.json);;All Files (*)")[0]
         self.openFileByName(filename)
 
-    def helpAbout(self):
-        credits = "Made by Erico\nWith help from the internet.\nHigly based in Tsubasa's Redo, and inspired in Enterbrain's RPG Maker 2000.\nThanks Nintendo for making the SNES."
-        QtWidgets.QMessageBox.about(self, "About...", credits)
 
     def closeEvent(self, event):
         if(os.path.isfile(current_project.settings["workingFile"])):
@@ -845,6 +843,8 @@ class MainWindow(QtWidgets.QMainWindow):
                self.openFileByName(workingFile)
          self.settings.endGroup();
 
+    def about(self):
+        QtWidgets.QMessageBox.about(self, "About...", help.aboutstr)
 
 
 
