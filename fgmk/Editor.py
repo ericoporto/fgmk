@@ -106,7 +106,6 @@ class MapWidget(QtWidgets.QWidget):
                 self.changeTileType(self.currentColision)
             elif(self.currentLayer == EVENTSLAYER):
                 self.changeTileType(self.currentEvent)
-                self.parent.myEventsWidget.updateEventsList()
             else:
                 self.changeTileType(self.currentTile)
 
@@ -118,7 +117,6 @@ class MapWidget(QtWidgets.QWidget):
             elif(self.currentLayer == EVENTSLAYER):
                 self.parent.changeEventCurrent(
                     self.sender().tileType[EVENTSLAYER])
-                self.parent.myEventsWidget.updateEventsList()
             else:
                 self.parent.changeTileCurrent(
                     self.sender().tileType[self.currentLayer])
@@ -129,7 +127,6 @@ class MapWidget(QtWidgets.QWidget):
                 self.toolBucketFill(self.currentColision)
             elif(self.currentLayer == EVENTSLAYER):
                 self.toolBucketFill(self.currentEvent)
-                self.parent.myEventsWidget.updateEventsList()
             else:
                 self.toolBucketFill(self.currentTile)
 
@@ -144,7 +141,6 @@ class MapWidget(QtWidgets.QWidget):
                                   firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolLine(self.currentEvent, firstClickX, firstClickY)
-                    self.parent.myEventsWidget.updateEventsList()
                 else:
                     self.toolLine(self.currentTile, firstClickX, firstClickY)
                 firstClickX = None
@@ -160,7 +156,6 @@ class MapWidget(QtWidgets.QWidget):
                                   firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolRect(self.currentEvent, firstClickX, firstClickY)
-                    self.parent.myEventsWidget.updateEventsList()
                 else:
                     self.toolRect(self.currentTile, firstClickX, firstClickY)
                 firstClickX = None
