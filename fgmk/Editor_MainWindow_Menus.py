@@ -227,7 +227,7 @@ class newFile(QtWidgets.QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.VBox.addWidget(QtWidgets.QLabel("Select game folder:"))
+        self.VBox.addWidget(QtWidgets.QLabel("Select game Project folder:"))
         self.VBox.addLayout(HBoxFolder)
         self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
@@ -267,7 +267,7 @@ class newFile(QtWidgets.QDialog):
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(
-            str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory")))
+            str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory")))
         self.returnValue["gameFolder"] = self.LineEditFolder.text()
         self.validateIsOk()
 
