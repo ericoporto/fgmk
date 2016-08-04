@@ -233,6 +233,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.undoStack = QtWidgets.QUndoStack(self)
 
+        self.setWindowIcon(QtGui.QIcon(Icon()))
         self.levelName = "newFile"
         current_project.settings["workingFile"] = self.levelName + ".map.json"
 
