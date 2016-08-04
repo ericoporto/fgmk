@@ -9,25 +9,31 @@ of plain text files, images and a index.html file containing [the engine](https:
 The goal is that these plain text files should be easy to be read by humans and
 software.
 
-Installation
-------------
-
-### From pip Installation
+Recommended Install and Run
+--------------------------
 
 This software is available under [PyPI](https://pypi.python.org/pypi/fgmk)
-as **fgmk**.
+as **fgmk**. For installing `pip3` in Ubuntu, use `sudo apt install python3-pip`.
 
     pip3 install fgmk
 
-### Deb Installation
+After install, just open a terminal and type:
 
-If you use Ubuntu or Debian, [download from here](https://github.com/ericoporto/fgmk/releases)
-the latest `.deb` package.
+    fgmk
 
-After you can install using `sudo dpkg -i python3-fgmk_x.y.z.deb`, where
-x.y.z correspond to the latest version.
+### Windows install and run
 
-For removing, use `sudo apt remove python3-fgmk` .
+In Windows, install Python 3 from https://www.python.org/, and then open `cmd.exe` and type (press enter after):
+
+    Python -m pip install fgmk
+
+To run, you can type the following in `cmd.exe` or the `run...` prompt
+
+    Python -m fgmk
+
+
+Alternative Installation and Running methods
+--------------------------------------------
 
 ### From Source Installation
 
@@ -37,34 +43,24 @@ Clone this repository, meet the dependencies and install this with pip3.
     cd fgmk
     pip3 install .
 
-Running
--------
+### Running from source
 
-You can run this from the directory you cloned by typing `./run.py` (without
-installing)or after install, just open a terminal and type:
+Clone this repository, meet the dependencies and type `./run.py`
 
-    fgmk
-
+    git clone https://github.com/ericoporto/fgmk.git
+    cd fgmk
+    ./run.py
 
 Dependencies
 ------------
 
 This tool is written using Python 3. Needs `pillow`, `numpy` and `PyQt5` -
-you can `apt install python3-pyqt5` and similar (in Ubuntu) or use pip3.
+you can `apt install python3-pyqt5` and similar (in Ubuntu) or use pip.
 
-If you satisfy all dependencies you don't need to install, and [can run from source](#running).
+If you satisfy all dependencies you don't need to install, and [can run from source](#running-from-source).
 
 Known Issues with PyQt5 in Ubuntu
 ---------------------------------
-
-### Application crashes Ubuntu
-
-If you choose to install the dependencies using pip3, pyqt5 as is in Ubuntu
-requires you to disable the system overlay scroolbars or change the style,
-[see bug here](https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/805303).
-
-Doing so will have the menu not integrated with the top bar, but keyboard
-shortcuts will work.
 
 ### Application has no keyboard shortcuts
 
@@ -74,6 +70,25 @@ work.
 
 [Details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
 
+### Application crashes Ubuntu
+
+Since upgrading to Ubuntu 16.04 I don't have this problem anymore.
+
+If you choose to install the dependencies using pip3, pyqt5 as is in Ubuntu
+may require you to **disable the system overlay scroolbars** or change the style,
+[see bug here](https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/805303).
+
+Doing so will have the menu not integrated with the top bar, but keyboard
+shortcuts will work. You can also just open in the command line by typing
+
+    LIBOVERLAY_SCROLLBAR=0 fgmk
+
+Contributing
+------------
+
+Please take a look to the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
+
+
 Author
 ------
 
@@ -82,4 +97,4 @@ Made by Érico Vieira Porto
 License
 -------
 
-Distributed under GPLv2 license. See [`LICENSE`](LICENSE) for more information.
+Distributed under GPLv2 license. See [`LICENSE`](LICENSE) for more information

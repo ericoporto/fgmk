@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+
+from os import environ as environ
 from sys import exit, argv
 from time import time, sleep
 from PyQt5.QtWidgets import QApplication, QSplashScreen
@@ -9,6 +11,8 @@ from fgmk import Editor
 
 def main(args=None):
     """The main routine."""
+
+    environ["LIBOVERLAY_SCROLLBAR"] = "0"
     if args is None:
         args = argv[1:]
 
@@ -29,4 +33,5 @@ def main(args=None):
     exit(a.exec_())
 
 if __name__ == "__main__":
+    environ["LIBOVERLAY_SCROLLBAR"] = "0"
     main()
