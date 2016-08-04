@@ -62,7 +62,7 @@ setup(
     description='A PyQt5 Maker to generate a RPG Javascript game.',
     long_description=long_description,
     url='https://github.com/ericoporto/fgmk',
-    download_url = 'https://github.com/ericoporto/fgmk/tarball/0.2.2',
+    download_url = 'https://github.com/ericoporto/fgmk/tarball/'+version,
     author='Erico Vieira Porto',
     author_email='ericoporto2008@gmail.com',
     license='GPLv2',
