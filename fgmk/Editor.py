@@ -774,8 +774,8 @@ class MainWindow(QtWidgets.QMainWindow):
          self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
          self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
          self.changeZoomValue(float(self.settings.value("zoom", 2)))
-         self.visibleDocks = self.settings.value("visibledocks", type=bool)
-         self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", type=bool))
+         self.visibleDocks = self.settings.value("visibledocks", [True, True, True, True, True, True], type=bool)
+         self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", True, type=bool))
          state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
          if state:
             self.restoreState(state)
