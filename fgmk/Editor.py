@@ -164,7 +164,7 @@ class MapWidget(QtWidgets.QWidget):
             charaX = self.sender().tileX
             charaY = self.sender().tileY
             command = CharasPalWdgt.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
-            self.parent.undoStack.push(command)
+            self.parent.commandToStack(command)
 
         else:
             firstClickX = None
@@ -173,28 +173,28 @@ class MapWidget(QtWidgets.QWidget):
     def changeTileType(self, changeTypeTo):
         command = Editor_MainWindow_Menus.CommandCTTileType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
-        self.parent.undoStack.push(command)
+        self.parent.commandToStack(command)
 
     def toolBucketFill(self, changeTypeTo):
         listToChange = mapfile.tileFill(self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
-        self.parent.undoStack.push(command)
+        self.parent.commandToStack(command)
 
     def toolLine(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileLine(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
-        self.parent.undoStack.push(command)
+        self.parent.commandToStack(command)
 
     def toolRect(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileRect(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
-        self.parent.undoStack.push(command)
+        self.parent.commandToStack(command)
 
 
 
@@ -817,6 +817,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myEventsWidget.setEnabled(torf)
         self.myMapExplorerWidget.setEnabled(torf)
         self.myMapWidget.setEnabled(torf)
+
+    def commandToStack(self, command):
+        self.undoStack.push(command)
 
 
 def Icon():

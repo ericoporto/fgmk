@@ -26,7 +26,7 @@ class CommandAddChara(QtWidgets.QUndoCommand):
 
 class CommandDelChara(QtWidgets.QUndoCommand):
     """
-    Class for a single chara insert operation.
+    Class for a single chara delete operation.
     This class operates in the visible map
     widget and the map (that has the jsontree), having redo (which is also the
     do action) and undo capabilities.
@@ -97,7 +97,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
                 command = CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
-                self.parent.undoStack.push(command)
+                self.parent.commandToStack(command)
                 break
 
 
