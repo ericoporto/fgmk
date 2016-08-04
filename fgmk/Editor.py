@@ -341,11 +341,14 @@ class MainWindow(QtWidgets.QMainWindow):
         redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
 
-        current_projectectMenu.addAction('New &Project', self.newProject, '')
+        current_projectectMenu.addAction('&New Project', self.newProject, 'Ctrl+Shift+N')
+        current_projectectMenu.addAction('&Open Project', self.openProject, 'Ctrl+Shift+O')
+        current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Set starting &position...',
                               self.selectStartPosition, '')
         current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
         current_projectectMenu.addAction('Edit &charas...', self.editCharas, '')
+        current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Run Project', self.runServer, 'f5')
 
         self.viewMenu = self.menubar.addMenu('&View')
@@ -625,8 +628,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.__newProject(returnedNFD)
 
     def __newProject(self, returnedNFD):
-        import shutil
-
         current_projectectPath = os.path.join(
             str(returnedNFD["baseFolder"]), str(returnedNFD["name"]))
         current_project.settings["basefolder"] = str(returnedNFD["baseFolder"])
@@ -641,6 +642,20 @@ class MainWindow(QtWidgets.QMainWindow):
         startlevel = initfile['World']['initLevel']
         levelfile = levellist[startlevel]
         self.openFileByName(os.path.join(current_project.settings["gamefolder"],fifl.LEVELS,levelfile))
+
+    def openProject(self):
+        if(current_project.settings["gamefolder"] == ""):
+            current_project.settings["gamefolder"] = os.path.expanduser("~")
+
+        projectfolder = os.path.join(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory"))
+
+        if(os.path.isfile(os.path.join(projectfolder,fifl.INITFILE))):
+            initfile = gameInit.openInitFile(projectfolder)
+            levellist = initfile["LevelsList"]
+            startlevel = initfile['World']['initLevel']
+            levelfile = levellist[startlevel]
+            self.openFileByName(os.path.join(projectfolder,fifl.LEVELS,levelfile))
+
 
     def newFile(self):
         myNewFileDialog = Editor_MainWindow_Menus.newFile(self)
@@ -721,7 +736,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myEventsWidget.deselectAll()
             self.myCharasPalWidget.reinit()
             gameInit.regenerateLevelList()
-            self.myMapExplorerWidget.reloadInitFile()
+            hasinit = self.myMapExplorerWidget.reloadInitFile()
+            self.setEnabledAll(hasinit == True)
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):
@@ -770,27 +786,37 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def loadSettings(self):
-         self.settings.beginGroup("MainWindow");
-         self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
-         self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
-         self.changeZoomValue(float(self.settings.value("zoom", 2)))
-         self.visibleDocks = self.settings.value("visibledocks", [True, True, True, True, True, True], type=bool)
-         self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", True, type=bool))
-         state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
-         if state:
+        self.settings.beginGroup("MainWindow");
+        self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
+        self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
+        self.changeZoomValue(float(self.settings.value("zoom", 2)))
+        self.visibleDocks = self.settings.value("visibledocks", [True, True, True, True, True, True], type=bool)
+        self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", True, type=bool))
+        state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
+        if state:
             self.restoreState(state)
-         self.settings.endGroup();
+        self.settings.endGroup();
 
-         self.settings.beginGroup("Project")
+        self.settings.beginGroup("Project")
 
-         workingFile = self.settings.value("workingFile", self.levelName + ".map.json")
-         if(os.path.isfile(workingFile)):
-               self.openFileByName(workingFile)
-         self.settings.endGroup();
+        workingFile = self.settings.value("workingFile", self.levelName + ".map.json")
+        if(os.path.isfile(workingFile)):
+            self.openFileByName(workingFile)
+        else:
+            self.setEnabledAll(False)
+        self.settings.endGroup();
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About...", help.aboutstr)
 
+    def setEnabledAll(self, torf):
+        self.myPaletteWidget.setEnabled(torf)
+        self.myCharasPalWidget.setEnabled(torf)
+        self.myLayerWidget.setEnabled(torf)
+        self.myToolsWidget.setEnabled(torf)
+        self.myEventsWidget.setEnabled(torf)
+        self.myMapExplorerWidget.setEnabled(torf)
+        self.myMapWidget.setEnabled(torf)
 
 
 def Icon():

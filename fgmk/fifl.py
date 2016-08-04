@@ -13,3 +13,5 @@ FONT = os.path.join("font")
 
 GAMESETTINGS = "init.json"
 CHARAS = "charas.json"
+
+INITFILE = os.path.join(DESCRIPTORS,GAMESETTINGS)

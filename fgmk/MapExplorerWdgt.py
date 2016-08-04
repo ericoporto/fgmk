@@ -37,6 +37,11 @@ class MapExplorerWidget(QtWidgets.QWidget):
             self.levelList.append(level)
             self.LvlLWidget.insertItem(0,level)
 
+        if(self.initFile):
+            return True
+        else:
+            return False
+
     def doubleClickedForOpen(self, item):
         mapForOpen = self.initFile['LevelsList'][item.text()]
         #only open map if it's not already opened

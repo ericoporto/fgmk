@@ -133,7 +133,7 @@ class newProject(QtWidgets.QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.VBox.addWidget(QtWidgets.QLabel("THIS FUNCTION IS NOT COMPLETE YET"))
+        #self.VBox.addWidget(QtWidgets.QLabel("THIS FUNCTION IS NOT COMPLETE YET"))
         self.VBox.addWidget(QtWidgets.QLabel("Select folder to create game:"))
         self.VBox.addLayout(HBoxFolder)
         self.VBox.addWidget(QtWidgets.QLabel("Set game name:"))
@@ -141,7 +141,7 @@ class newProject(QtWidgets.QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('New game current_projectect...')
+        self.setWindowTitle('New game current_project...')
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
