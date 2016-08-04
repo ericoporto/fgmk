@@ -3,6 +3,27 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
+class CommandAddAction(QtWidgets.QUndoCommand):
+    """
+    Class for adding an action to an event.
+    This class operates in the event
+    widget and the map (that has the jsontree)
+    """
+    def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontoadd):
+        super().__init__(description)
+
+        self.pEventsWidget = pEventsWidget
+        self.actionindex = actionindex
+        self.eventindex = eventindex
+        self.actiontoadd = actiontoadd
+
+    def redo(self):
+        self.pEventsWidget.addActionIndex(self.actionindex,
+                                          self.eventindex,
+                                          self.actiontoadd)
+
+    def undo(self):
+        self.pEventsWidget.removeActionIndex(self.actionindex, self.eventindex)
 
 class EventsWidget(QtWidgets.QWidget):
     """
@@ -101,8 +122,8 @@ class EventsWidget(QtWidgets.QWidget):
         self.EventsList.itemSelectionChanged.connect(
             self.selectedItemFromEventsList)
 
-        ActionListModel = self.ActionList.model()
-        ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
+        # ActionListModel = self.ActionList.model()
+        # ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
         self.addActionButton.setEnabled(False)
         self.removeActionButton.setEnabled(False)
@@ -132,21 +153,20 @@ class EventsWidget(QtWidgets.QWidget):
         if(self.radionocolision.isChecked()):
             self.parent.myMapWidget.currentColision = 0;
 
-    def updateActionFromWidget(self):
-        self.pMap.removeAllActionsOnEvent(
-            self.EventsList.selectedItems()[0].whatsThis())
-        i = 0
-        while i < self.ActionList.count():
-            item = self.ActionList.item(i)
-            actionToAdd = item.getAction()
-            self.pMap.addActionToEvent(
-                actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
-            i += 1
-        print(self.pMap.getActionListOnEvent(
-            self.EventsList.selectedItems()[0].whatsThis()))
+    # def updateActionFromWidget(self):
+    #     print("update action from widget")
+    #
+    #     self.pMap.removeAllActionsOnEvent(
+    #         self.EventsList.selectedItems()[0].whatsThis())
+    #     i = 0
+    #     while i < self.ActionList.count():
+    #         item = self.ActionList.item(i)
+    #         actionToAdd = item.getAction()
+    #         self.pMap.addActionToEvent(
+    #             actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
+    #         i += 1
 
     def editAction(self):
-
         if self.EventsList.selectedItems() is not None:
             indexOfAction = self.ActionList.row(
                 self.ActionList.selectedItems()[0])
@@ -232,24 +252,48 @@ class EventsWidget(QtWidgets.QWidget):
 
             if self.EventsList.selectedItems() is not None:
                 if not self.ActionList.selectedItems():
-                    self.ActionList.addItem(actionsWdgt.actionItem(actionToAdd))
-                    self.pMap.addActionToEvent(
-                        actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
+                    lastactionitem = self.ActionList.count()
+
+                    command = CommandAddAction("adding action",
+                                               self,
+                                               lastactionitem,
+                                               self.EventsList.selectedItems()[0].whatsThis(),
+                                               actionToAdd)
+                    self.parent.commandToStack(command)
+
                 else:
                     indexOfAction = self.ActionList.row(
                         self.ActionList.selectedItems()[0])
-                    self.ActionList.insertItem(
-                        indexOfAction, actionsWdgt.actionItem(actionToAdd))
-                    self.pMap.insertActionToEvent(
-                        indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
+
+
+                    command = CommandAddAction("adding action",
+                                               self,
+                                               indexOfAction,
+                                               self.EventsList.selectedItems()[0].whatsThis(),
+                                               actionToAdd)
+                    self.parent.commandToStack(command)
+
+
+    def addActionIndex(self, actionindex, eventindex, acctiontoadd):
+        self.pMap.insertActionToEvent(actionindex, acctiontoadd, eventindex)
+
+        if(len(self.EventsList.selectedItems())>0):
+            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
+            if(seleventindex==eventindex):
+                self.ActionList.insertItem(actionindex,
+                                           actionsWdgt.actionItem(acctiontoadd))
 
     def removeAction(self):
-
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
-            self.pMap.removeActionByIndexOnEvent(
-                itemIndex, self.EventsList.selectedItems()[0].whatsThis())
-            self.ActionList.takeItem(itemIndex)
+            self.removeActionIndex(itemIndex, self.EventsList.selectedItems()[0].whatsThis())
+
+    def removeActionIndex(self, actionindex, eventindex):
+        self.pMap.removeActionByIndexOnEvent(actionindex, eventindex)
+        if(len(self.EventsList.selectedItems())>0):
+            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
+            if(seleventindex==eventindex):
+                self.ActionList.takeItem(actionindex)
 
     def selectedItemFromEventsList(self):
         if(len(self.EventsList.selectedItems())>0):
