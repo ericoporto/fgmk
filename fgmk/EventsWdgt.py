@@ -1,8 +1,8 @@
 from fgmk import actionDialog, current_project, actionsWdgt
 from PyQt5 import QtGui, QtCore, QtWidgets
+from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
+from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
-COLISIONLAYER = 3
-EVENTSLAYER = 4
 
 class EventsWidget(QtWidgets.QWidget):
     """

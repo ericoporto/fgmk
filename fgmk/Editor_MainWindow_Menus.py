@@ -2,8 +2,9 @@ import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, fifl, current_project, TileSet
+from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
+from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
-EVENTSLAYER = 4
 
 class CommandCTTileType(QtWidgets.QUndoCommand):
     """

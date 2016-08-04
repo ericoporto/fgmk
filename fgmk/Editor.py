@@ -7,10 +7,8 @@ from fgmk import Tile, actionDialog, Editor_MainWindow_Menus, game_server, fifl,
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk import help, CharasPalWdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
-
-
-COLISIONLAYER = 3
-EVENTSLAYER = 4
+from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
+from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
 firstClickX = None
 firstClickY = None
@@ -167,7 +165,6 @@ class MapWidget(QtWidgets.QWidget):
             charaY = self.sender().tileY
             command = CharasPalWdgt.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
             self.parent.undoStack.push(command)
-#            self.parent.myCharasPalWidget.addCharaAction((charaX, charaY))
 
         else:
             firstClickX = None
@@ -201,7 +198,6 @@ class MapWidget(QtWidgets.QWidget):
 
 
 
-
 class ExitFSWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -218,6 +214,7 @@ class ExitFSWidget(QtWidgets.QWidget):
 
     def ExitFS(self):
         self.parent.fullscreenViewAction.toggle()
+
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -238,9 +235,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.scrollArea = QtWidgets.QScrollArea(self)
 
-        # get tileset file and split it in images that can be pointed through
-        # array
-
+        # get tileset file and split it in images that can be pointed
         self.myTileSet = TileSet.TileSet(
             self.myMap.tileImage, self.myMap.palette)
         self.myMapWidget = MapWidget(self)
@@ -309,7 +304,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if result is None:
             return
-
 
         doSave = False
         if(result[1] != "this"):
