@@ -28,7 +28,7 @@ class CommandAddAction(QtWidgets.QUndoCommand):
 
 class CommandChangeAction(QtWidgets.QUndoCommand):
     """
-    Class for adding an action to an event.
+    Class for editing an action in an event.
     This class operates in the event
     widget and the map (that has the jsontree)
     """
@@ -50,6 +50,28 @@ class CommandChangeAction(QtWidgets.QUndoCommand):
         self.pEventsWidget.changeAction(self.actionindex,
                                         self.eventindex,
                                         self.oldaction)
+
+class CommandDelAction(QtWidgets.QUndoCommand):
+    """
+    Class for deleting an action from an event.
+    This class operates in the event
+    widget and the map (that has the jsontree)
+    """
+    def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontodel):
+        super().__init__(description)
+
+        self.pEventsWidget = pEventsWidget
+        self.actionindex = actionindex
+        self.eventindex = eventindex
+        self.actiontodel = actiontodel
+
+    def redo(self):
+        self.pEventsWidget.removeActionIndex(self.actionindex, self.eventindex)
+
+    def undo(self):
+        self.pEventsWidget.addActionIndex(self.actionindex,
+                                          self.eventindex,
+                                          self.actiontodel)
 
 class EventsWidget(QtWidgets.QWidget):
     """
@@ -294,7 +316,7 @@ class EventsWidget(QtWidgets.QWidget):
                 if not self.ActionList.selectedItems():
                     lastactionitem = self.ActionList.count()
 
-                    command = CommandAddAction("adding action",
+                    command = CommandAddAction("added action",
                                                self,
                                                lastactionitem,
                                                self.EventsList.selectedItems()[0].whatsThis(),
@@ -306,7 +328,7 @@ class EventsWidget(QtWidgets.QWidget):
                         self.ActionList.selectedItems()[0])
 
 
-                    command = CommandAddAction("adding action",
+                    command = CommandAddAction("added action",
                                                self,
                                                indexOfAction,
                                                self.EventsList.selectedItems()[0].whatsThis(),
@@ -326,7 +348,16 @@ class EventsWidget(QtWidgets.QWidget):
     def removeAction(self):
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
-            self.removeActionIndex(itemIndex, self.EventsList.selectedItems()[0].whatsThis())
+
+            actiontodel = self.pMap.getActionOnEvent(
+                itemIndex, self.EventsList.selectedItems()[0].whatsThis())
+
+            command = CommandDelAction("deleted action",
+                                       self,
+                                       itemIndex,
+                                       self.EventsList.selectedItems()[0].whatsThis(),
+                                       actiontodel)
+            self.parent.commandToStack(command)
 
     def removeActionIndex(self, actionindex, eventindex):
         self.pMap.removeActionByIndexOnEvent(actionindex, eventindex)
