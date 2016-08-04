@@ -1,49 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Charas, current_project
-
-class CommandAddChara(QtWidgets.QUndoCommand):
-    """
-    Class for a single chara insert operation.
-    This class operates in the visible map
-    widget and the map (that has the jsontree), having redo (which is also the
-    do action) and undo capabilities.
-    """
-    def __init__(self, description, pCharasPalWidget,  position=(0, 0), chara=None,):
-        super().__init__(description)
-
-        self.pCharasPalWidget = pCharasPalWidget
-        self.position = position
-        if (chara == None):
-            chara = self.pCharasPalWidget.myCharaSelector.getSelected()
-        self.chara = chara
-
-    def redo(self):
-        self.pCharasPalWidget.addCharaAction(self.position,self.chara, True)
-
-    def undo(self):
-        self.pCharasPalWidget.deletePosition(self.position, True)
-
-
-class CommandDelChara(QtWidgets.QUndoCommand):
-    """
-    Class for a single chara delete operation.
-    This class operates in the visible map
-    widget and the map (that has the jsontree), having redo (which is also the
-    do action) and undo capabilities.
-    """
-    def __init__(self, description, pCharasPalWidget,  position, chara):
-        super().__init__(description)
-
-        self.pCharasPalWidget = pCharasPalWidget
-        self.position = position
-        self.chara = chara
-
-    def redo(self):
-        self.pCharasPalWidget.deletePosition(self.position, True)
-
-    def undo(self):
-        self.pCharasPalWidget.addCharaAction(self.position,self.chara, True)
-
+from fgmk import Charas, current_project, CMD
 
 
 class CharasPalWidget(QtWidgets.QWidget):
@@ -96,7 +52,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         item = self.sender()
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
-                command = CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
+                command = CMD.CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
                 self.parent.commandToStack(command)
                 break
 

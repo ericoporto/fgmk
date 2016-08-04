@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Tile, actionDialog, Editor_MainWindow_Menus, game_server, fifl, TileCharaset, Charas, gameInit, current_project
+from fgmk import Tile, actionDialog, Editor_MainWindow_Menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk import help, CharasPalWdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -163,7 +163,7 @@ class MapWidget(QtWidgets.QWidget):
             # charaplacer
             charaX = self.sender().tileX
             charaY = self.sender().tileY
-            command = CharasPalWdgt.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
+            command = CMD.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
             self.parent.commandToStack(command)
 
         else:
@@ -171,28 +171,28 @@ class MapWidget(QtWidgets.QWidget):
             firstClickY = None
 
     def changeTileType(self, changeTypeTo):
-        command = Editor_MainWindow_Menus.CommandCTTileType(self.parent, self.sender(
+        command = CMD.CommandCTTileType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
         self.parent.commandToStack(command)
 
     def toolBucketFill(self, changeTypeTo):
         listToChange = mapfile.tileFill(self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
+        command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
         self.parent.commandToStack(command)
 
     def toolLine(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileLine(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
+        command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
         self.parent.commandToStack(command)
 
     def toolRect(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileRect(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
-        command = Editor_MainWindow_Menus.CommandCGroupTType(self.parent, self.sender(
+        command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
         self.parent.commandToStack(command)
 
