@@ -25,6 +25,32 @@ class CommandAddAction(QtWidgets.QUndoCommand):
     def undo(self):
         self.pEventsWidget.removeActionIndex(self.actionindex, self.eventindex)
 
+
+class CommandChangeAction(QtWidgets.QUndoCommand):
+    """
+    Class for adding an action to an event.
+    This class operates in the event
+    widget and the map (that has the jsontree)
+    """
+    def __init__(self, description, pEventsWidget, actionindex,  eventindex, oldaction, newaction):
+        super().__init__(description)
+
+        self.pEventsWidget = pEventsWidget
+        self.actionindex = actionindex
+        self.eventindex = eventindex
+        self.oldaction = oldaction
+        self.newaction = newaction
+
+    def redo(self):
+        self.pEventsWidget.changeAction(self.actionindex,
+                                        self.eventindex,
+                                        self.newaction)
+
+    def undo(self):
+        self.pEventsWidget.changeAction(self.actionindex,
+                                        self.eventindex,
+                                        self.oldaction)
+
 class EventsWidget(QtWidgets.QWidget):
     """
     This widget allows adding actions to an event. It also allows changing the
@@ -187,11 +213,25 @@ class EventsWidget(QtWidgets.QWidget):
 
                 actionToAdd = [actionToEdit, str(returnActDlg)]
 
-                self.ActionList.takeItem(indexOfAction)
+                command = CommandChangeAction("edited action",
+                                 self,
+                                 indexOfAction,
+                                 self.EventsList.selectedItems()[0].whatsThis(),
+                                 actionParamToEdit,
+                                 actionToAdd)
+                self.parent.commandToStack(command)
+
+
+    def changeAction(self, actionindex, eventindex, newaction):
+        self.pMap.changeActionOnEvent(actionindex, newaction, eventindex)
+
+        if(len(self.EventsList.selectedItems())>0):
+            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
+            if(seleventindex==eventindex):
+                self.ActionList.takeItem(actionindex)
                 self.ActionList.insertItem(
-                    indexOfAction, actionsWdgt.actionItem(actionToAdd))
-                self.pMap.changeActionOnEvent(
-                    indexOfAction, actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
+                    actionindex, actionsWdgt.actionItem(newaction))
+
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
