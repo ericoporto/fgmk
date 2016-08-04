@@ -3,7 +3,7 @@ import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, fifl, current_project, TileSet
 
-
+EVENTSLAYER = 4
 
 class CommandCTTileType(QtWidgets.QUndoCommand):
     """
@@ -12,7 +12,7 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
     widget and the map (that has the jsontree), having redo (which is also the
     do action) and undo capabilities.
     """
-    def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
+    def __init__(self, parent, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
         super().__init__(description)
 
         self.sender = senderTileWdgt
@@ -22,21 +22,29 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
         self.changeTypeTo = changeTypeTo
         self.oldType = self.sender.tileType[layer]
 
-        self.pmyMapWidget = child.myMapWidget
+        self.pmyMapWidget = parent.myMapWidget
         self.pMap = pMap
         self.ptileset = ptileset
+        self.myEventsWidget = parent.myEventsWidget
+
 
     def redo(self):
         self.pMap.setTile(self.tileX, self.tileY,
                           self.Layer, self.changeTypeTo)
         self.sender.updateTileImageInMap(
             self.changeTypeTo, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
+
+        if(self.Layer == EVENTSLAYER):
+            self.myEventsWidget.updateEventsList()
         #print("Type= ", self.changeTypeTo, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
     def undo(self):
         self.pMap.setTile(self.tileX, self.tileY, self.Layer, self.oldType)
         self.sender.updateTileImageInMap(
             self.oldType, self.Layer, self.ptileset, self.pmyMapWidget.myScale)
+
+        if(self.Layer == EVENTSLAYER):
+            self.myEventsWidget.updateEventsList()
         #print("Type= ", self.oldType, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
 
@@ -48,7 +56,7 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
     do action) and undo capabilities.
     """
 
-    def __init__(self, child, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
+    def __init__(self, parent, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
         super().__init__(description)
 
         self.tileX = senderTileWdgt.tileX
@@ -56,9 +64,10 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
         self.Layer = layer
         self.changeTypeTo = changeTypeTo
 
-        self.pmyMapWidget = child.myMapWidget
+        self.pmyMapWidget = parent.myMapWidget
         self.pMap = pMap
         self.ptileset = ptileset
+        self.myEventsWidget = parent.myEventsWidget
 
         self.listToChange = listToChange
 
@@ -68,6 +77,9 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
             self.pMap.setTile(change[0], change[1], self.Layer, change[3])
             tile.updateTileImageInMap(
                 change[3], self.Layer, self.ptileset, self.pmyMapWidget.myScale)
+
+        if(self.Layer == EVENTSLAYER):
+            self.myEventsWidget.updateEventsList()
             #print("Type= ", change[3], "  X= " , change[0], "  Y= " , change[1])
 
     def undo(self):
@@ -76,6 +88,9 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
             self.pMap.setTile(change[0], change[1], self.Layer, change[2])
             tile.updateTileImageInMap(
                 change[2], self.Layer, self.ptileset, self.pmyMapWidget.myScale)
+
+        if(self.Layer == EVENTSLAYER):
+            self.myEventsWidget.updateEventsList()
             #print("Type= ", change[2], "  X= " ,change[0], "  Y= " , change[1])
 
 
