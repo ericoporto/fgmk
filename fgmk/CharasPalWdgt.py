@@ -24,6 +24,28 @@ class CommandAddChara(QtWidgets.QUndoCommand):
         self.pCharasPalWidget.deletePosition(self.position, True)
 
 
+class CommandDelChara(QtWidgets.QUndoCommand):
+    """
+    Class for a single chara insert operation.
+    This class operates in the visible map
+    widget and the map (that has the jsontree), having redo (which is also the
+    do action) and undo capabilities.
+    """
+    def __init__(self, description, pCharasPalWidget,  position, chara):
+        super().__init__(description)
+
+        self.pCharasPalWidget = pCharasPalWidget
+        self.position = position
+        self.chara = chara
+
+    def redo(self):
+        self.pCharasPalWidget.deletePosition(self.position, True)
+
+    def undo(self):
+        self.pCharasPalWidget.addCharaAction(self.position,self.chara, True)
+
+
+
 class CharasPalWidget(QtWidgets.QWidget):
     def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
         super().__init__(parent, **kwargs)
@@ -74,13 +96,10 @@ class CharasPalWidget(QtWidgets.QWidget):
         item = self.sender()
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
-                charaplaced[2].stop()
-                self.pMap.removeChara(charaplaced[1][0], charaplaced[1][1])
-                self.mapWdgt.Grid.removeWidget(charaplaced[2])
-                charaplaced[2].deleteLater()
+                command = CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
+                self.parent.undoStack.push(command)
                 break
 
-        self.charaslist.remove(charaplaced)
 
     def getCharasList(self):
         charaslist = []
