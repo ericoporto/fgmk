@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
+from fgmk import base_tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
 from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -74,7 +74,7 @@ class MapWidget(QtWidgets.QWidget):
             self.TileList.append([])
             for jx in range(self.TileWidth):
 
-                self.TileList[iy].append(Tile.QTile(self))
+                self.TileList[iy].append(base_tile.QTile(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
