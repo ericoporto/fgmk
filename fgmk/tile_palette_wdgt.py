@@ -48,13 +48,15 @@ class PaletteWidget(QtWidgets.QWidget):
                 wdgt = None
             self.PaletteTileList = []
 
-        for i in range(len(tileSetInstance.tileset)):
+        i = 0
+        for key in sorted(tileSetInstance.tileset):
             self.PaletteTileList.append(base_tile.QTile(self))
             self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
             self.PaletteTileList[-1].initTile(
-                tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], 1)
+                tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [key, 0, 0, 0, 0], 1)
             self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
             self.PaletteTileList[-1].doubleClicked.connect(self.paletteItemDoubleClicked)
+            i+=1
 
         self.PaletteItems.resize(6 * tileSetInstance.boxsize, tMat.divideRoundUp(
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
@@ -63,6 +65,7 @@ class PaletteWidget(QtWidgets.QWidget):
         self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['pen'])
 
     def setTileCurrent(self):
+        print(self.sender().tileType[0])
         self.parent.changeTileCurrent(self.sender().tileType[0])
 
     def setImageCurrent(self, imageIndex):
