@@ -431,7 +431,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.zoomInAction = QtWidgets.QAction(
             'Zoom In', self.viewMenu, checkable=False)
-        self.zoomInAction.setShortcut(QtGui.QKeySequence.ZoomIn)
+        self.zoomInAction.setShortcuts([QtGui.QKeySequence.ZoomIn,
+                                        QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Equal)])
         self.viewMenu.addAction(self.zoomInAction)
         self.zoomInAction.triggered.connect(self.zoomIn)
 
