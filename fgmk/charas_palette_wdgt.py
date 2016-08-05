@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Charas, current_project, cmd
+from fgmk import persona, current_project, cmd
 
 
 class CharasPalWidget(QtWidgets.QWidget):
@@ -13,7 +13,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         self.vbox = QtWidgets.QVBoxLayout(self)
 
         self.charaslist = []
-        self.myCharaSelector = Charas.CharaSelector(self, current_project.settings)
+        self.myCharaSelector = persona.CharaSelector(self, current_project.settings)
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
 
@@ -40,7 +40,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         if (chara != None):
             scale = self.mapWdgt.myScale / 2.0
             if(self.positionEmpty(position)):
-                item = Charas.MiniCharaTile(
+                item = persona.MiniCharaTile(
                     None, current_project.settings, chara, (0, 0), scale)
                 item.rightClicked.connect(self.autodelete)
                 self.mapWdgt.Grid.addWidget(item, position[1], position[0])

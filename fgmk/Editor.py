@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, Charas, game_init, current_project
+from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, persona, game_init, current_project
 from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -566,7 +566,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print(myCharasetEditor)
 
     def editCharas(self):
-        myCharasEditor = Charas.CharaEditor(self, current_project.settings)
+        myCharasEditor = persona.CharaEditor(self, current_project.settings)
         if myCharasEditor.exec_() == QtWidgets.QDialog.Accepted:
             print(myCharasEditor)
 
