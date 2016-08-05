@@ -6,13 +6,14 @@ class Box:
 
 __m = Box()  # m will contain all module-level values
 __m.undostack = None  # undostack  global in module
-__m.savestackindex = None
+__m.setWindowTitle = None
+__m.windowTitle = None
 
 def initUndoStack(parent):
     global __m
     if __m.undostack is None:
         __m.undostack = QtWidgets.QUndoStack(parent)
-        __m.savestackindex = 0
+        __m.undostack.cleanChanged.connect(checkAndUpdateTitle)
 
 def createUndoAction(parent):
     global __m
@@ -24,16 +25,41 @@ def createRedoAction(parent):
 
 def clearCommandStack():
     global __m
-    __m.savestackindex = 0
     __m.undostack.clear()
+    __m.undostack.setClean()
 
 def updateStackAtSave():
     global __m
-    __m.savestackindex = __m.undostack.index()
+    __m.undostack.setClean()
 
 def commandToStack(command):
     global __m
     __m.undostack.push(command)
+
+def getWindowTitleHandler(window):
+    global __m
+    if __m.setWindowTitle is None:
+        __m.setWindowTitle=window.setWindowTitle
+        __m.windowTitle=window.windowTitle
+
+def checkAndUpdateTitle():
+    wintitle = __m.windowTitle()
+    if(__m.undostack.isClean()):
+        __m.setWindowTitle(delAsteriskFromStr(wintitle))
+    else:
+        __m.setWindowTitle(addAsteriskToStr(wintitle))
+
+def addAsteriskToStr(title):
+    if(title.endswith('*')):
+        return title
+    else:
+        return title+'*'
+
+def delAsteriskFromStr(title):
+    if(title.endswith('*')):
+        return title[:-1]
+    else:
+        return title
 
 class CommandAddAction(QtWidgets.QUndoCommand):
     """
@@ -184,6 +210,8 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
 
         if(self.Layer == EVENTSLAYER):
             self.myEventsWidget.updateEventsList()
+
+        checkAndUpdateTitle()
         #print("Type= ", self.changeTypeTo, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
     def undo(self):
@@ -193,6 +221,8 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
 
         if(self.Layer == EVENTSLAYER):
             self.myEventsWidget.updateEventsList()
+
+        checkAndUpdateTitle()
         #print("Type= ", self.oldType, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
 

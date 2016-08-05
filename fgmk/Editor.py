@@ -224,6 +224,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #self.resize(1024, 768)
 
         CMD.initUndoStack(self)
+        CMD.getWindowTitleHandler(self)
 
         self.setWindowIcon(QtGui.QIcon(Icon()))
         self.levelName = "newFile"
@@ -732,7 +733,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             self.gridViewAction.setChecked(False)  # gambiarra
-            CMD.clearCommandStack()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
             self.myEventsWidget.deselectAll()
@@ -740,6 +740,7 @@ class MainWindow(QtWidgets.QMainWindow):
             gameInit.regenerateLevelList()
             hasinit = self.myMapExplorerWidget.reloadInitFile()
             self.setEnabledAll(hasinit == True)
+            CMD.clearCommandStack()
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):
