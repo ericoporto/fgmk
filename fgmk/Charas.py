@@ -2,7 +2,7 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionsWdgt, actionDialog, fifl, TileCharaset
+from fgmk import actionsWdgt, action_dialog, fifl, TileCharaset
 
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -364,7 +364,7 @@ class ActionsWidget(QtWidgets.QWidget):
 
         paramArrayOfEdit = paramOfEdit.split(';')
 
-        newDialogFromName = getattr(actionDialog, str(actionToEdit))
+        newDialogFromName = getattr(action_dialog, str(actionToEdit))
 
         self.myActionsDialog = newDialogFromName(self.ssettings["gamefolder"],self,paramArrayOfEdit,True)
         if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:

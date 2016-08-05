@@ -1,4 +1,4 @@
-from fgmk import actionDialog, current_project, actionsWdgt, CMD
+from fgmk import action_dialog, current_project, actionsWdgt, CMD
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
@@ -158,7 +158,7 @@ class EventsWidget(QtWidgets.QWidget):
 
             paramArrayOfEdit = paramOfEdit.split(';')
 
-            newDialogFromName = getattr(actionDialog, str(actionToEdit))
+            newDialogFromName = getattr(action_dialog, str(actionToEdit))
 
             self.myActionsDialog = newDialogFromName(
                 current_project.settings["gamefolder"], self, paramArrayOfEdit)

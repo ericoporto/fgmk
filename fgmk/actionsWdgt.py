@@ -1,6 +1,6 @@
 import json
 from PyQt5 import QtCore, QtWidgets
-from fgmk import actionDialog, getdata
+from fgmk import action_dialog, getdata
 
 class actionItem(QtWidgets.QListWidgetItem):
     def __init__(self, actionAndParameter):
@@ -50,7 +50,7 @@ class ActionsWidget(QtWidgets.QDialog):
             self.returnValue = [str(self.returnValue), ""]
             self.accept()
         else:
-            newDialogFromName = getattr(actionDialog, str(self.returnValue))
+            newDialogFromName = getattr(action_dialog, str(self.returnValue))
             if(self.ischaras is False):
                 self.myActionsDialog = newDialogFromName(
                     self.psSettings["gamefolder"], self)

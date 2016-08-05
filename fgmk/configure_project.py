@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import gameInit, actionDialog, current_project, fifl
+from fgmk import gameInit, action_dialog, current_project, fifl
 
 def selectStartingPosition(parent):
     psSettings = current_project.settings
@@ -18,7 +18,7 @@ def selectStartingPosition(parent):
             if os.path.isfile(os.path.join(gamefolder, fifl.LEVELS, levelfilename)):
                 edit = [initx, inity, level]
 
-        myTeleporDialog = actionDialog.teleport(
+        myTeleporDialog = action_dialog.teleport(
             psSettings["gamefolder"], parent, edit, False, "select starting position")
         if myTeleporDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(myTeleporDialog.getValue())
