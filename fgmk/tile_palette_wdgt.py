@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_tile, tMat
+from fgmk import base_tile, tMat, tools_wdgt
 
 class PaletteWidget(QtWidgets.QWidget):
 
@@ -54,9 +54,13 @@ class PaletteWidget(QtWidgets.QWidget):
             self.PaletteTileList[-1].initTile(
                 tileSetInstance.tileset, i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], 1)
             self.PaletteTileList[-1].clicked.connect(self.setTileCurrent)
+            self.PaletteTileList[-1].doubleClicked.connect(self.paletteItemDoubleClicked)
 
         self.PaletteItems.resize(6 * tileSetInstance.boxsize, tMat.divideRoundUp(
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
+
+    def paletteItemDoubleClicked(self):
+        self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['pen'])
 
     def setTileCurrent(self):
         self.parent.changeTileCurrent(self.sender().tileType[0])

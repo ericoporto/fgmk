@@ -16,6 +16,7 @@ class QTile(QtWidgets.QLabel):
 
     clicked = QtCore.pyqtSignal()
     rightClicked = QtCore.pyqtSignal()
+    doubleClicked = QtCore.pyqtSignal()
 
     def Rescale(self, tileset,  scale=1):
         self.scale = scale
@@ -79,6 +80,9 @@ class QTile(QtWidgets.QLabel):
             self.rightClicked.emit()
         else:
             self.clicked.emit()
+
+    def mouseDoubleClickEvent(self, event):
+        self.doubleClicked.emit()
 
     ##def wheelEvent(self, ev):
     #    self.emit(SIGNAL('scroll(int)'), ev.delta())
