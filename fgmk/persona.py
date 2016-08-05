@@ -534,6 +534,7 @@ class CharaList(QtWidgets.QWidget):
 
 class CharaSelector(QtWidgets.QWidget):
     charaClicked = QtCore.pyqtSignal()
+    charaDoubleClicked = QtCore.pyqtSignal()
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -545,9 +546,12 @@ class CharaSelector(QtWidgets.QWidget):
 
         self.charaqlist.itemSelectionChanged.connect(self.selectionChanged)
         self.charaqlist.itemClicked.connect(self.emitclicked)
+        self.charaqlist.itemDoubleClicked.connect(self.emitdoubleclicked)
 
         self.layout.addWidget(self.csetprev)
         self.layout.addWidget(self.charaqlist)
+    def emitdoubleclicked(self):
+        self.charaDoubleClicked.emit()
 
     def emitclicked(self):
         self.charaClicked.emit()

@@ -14,12 +14,12 @@ class CharasPalWidget(QtWidgets.QWidget):
 
         self.charaslist = []
         self.myCharaSelector = persona.CharaSelector(self, current_project.settings)
-        self.myCharaSelector.charaClicked.connect(self.charaClicked)
+        self.myCharaSelector.charaDoubleClicked.connect(self.charaDoubleClicked)
 
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
 
-    def charaClicked(self):
+    def charaDoubleClicked(self):
         self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['charaplacer'])
 
     def reinit(self):
