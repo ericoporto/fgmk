@@ -1,7 +1,7 @@
 import os
 import json
 from numbers import Number
-from fgmk import printerror
+from fgmk import print_error
 
 try:
   basestring
@@ -65,13 +65,13 @@ def writesafe(data, fname, varname=None):
                         f.close()
                         os.replace(tempfile,fname)
                     else:
-                        printerror.printe("written file not equal to data")
+                        print_error.printe("written file not equal to data")
                 except:
-                    printerror.printe("error when checking file")
+                    print_error.printe("error when checking file")
             else:
                 os.replace(tempfile,fname)
     except:
-        printerror.printe('error when opening file')
+        print_error.printe('error when opening file')
 
 
 
