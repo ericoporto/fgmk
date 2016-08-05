@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, Editor_MainWindow_Menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, actionsWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
+from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk import help, CharasPalWdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER

@@ -1,4 +1,4 @@
-from fgmk import action_dialog, current_project, actionsWdgt, CMD
+from fgmk import action_dialog, current_project, actions_wdgt, CMD
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
@@ -184,7 +184,7 @@ class EventsWidget(QtWidgets.QWidget):
             if(seleventindex==eventindex):
                 self.ActionList.takeItem(actionindex)
                 self.ActionList.insertItem(
-                    actionindex, actionsWdgt.actionItem(newaction))
+                    actionindex, actions_wdgt.actionItem(newaction))
 
 
     def deselectAction(self):
@@ -240,7 +240,7 @@ class EventsWidget(QtWidgets.QWidget):
         self.show()
 
     def addAction(self):
-        self.myActionsWidget = actionsWdgt.ActionsWidget(current_project.settings, self)
+        self.myActionsWidget = actions_wdgt.ActionsWidget(current_project.settings, self)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
@@ -275,7 +275,7 @@ class EventsWidget(QtWidgets.QWidget):
             seleventindex = self.EventsList.selectedItems()[0].whatsThis()
             if(seleventindex==eventindex):
                 self.ActionList.insertItem(actionindex,
-                                           actionsWdgt.actionItem(acctiontoadd))
+                                           actions_wdgt.actionItem(acctiontoadd))
 
     def removeAction(self):
         for item in self.ActionList.selectedItems():
@@ -305,7 +305,7 @@ class EventsWidget(QtWidgets.QWidget):
             self.ActionList.clear()
 
             for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
-                self.ActionList.addItem(actionsWdgt.actionItem(actionitemInList))
+                self.ActionList.addItem(actions_wdgt.actionItem(actionitemInList))
 
             state = self.pMap.getEventType(item.whatsThis())
 

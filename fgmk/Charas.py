@@ -2,7 +2,7 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actionsWdgt, action_dialog, fifl, TileCharaset
+from fgmk import actions_wdgt, action_dialog, fifl, TileCharaset
 
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -330,7 +330,7 @@ class ActionsWidget(QtWidgets.QWidget):
         listToSet = actionToSet['list']
         self.ActionList.clear()
         for action in listToSet:
-            self.ActionList.addItem(actionsWdgt.actionItem(action))
+            self.ActionList.addItem(actions_wdgt.actionItem(action))
 
     def clear(self):
         self.ActionList.clear()
@@ -373,7 +373,7 @@ class ActionsWidget(QtWidgets.QWidget):
             actionToAdd = [actionToEdit,str(returnActDlg)]
 
             self.ActionList.takeItem(indexOfAction)
-            self.ActionList.insertItem(indexOfAction,actionsWdgt.actionItem(actionToAdd))
+            self.ActionList.insertItem(indexOfAction,actions_wdgt.actionItem(actionToAdd))
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
@@ -384,15 +384,15 @@ class ActionsWidget(QtWidgets.QWidget):
         if(self.ssettings == {} ):
             return
 
-        self.myActionsWidget = actionsWdgt.ActionsWidget(self.ssettings,self,self.ischara)
+        self.myActionsWidget = actions_wdgt.ActionsWidget(self.ssettings,self,self.ischara)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
             if not self.ActionList.selectedItems():
-                self.ActionList.addItem(actionsWdgt.actionItem(actionToAdd))
+                self.ActionList.addItem(actions_wdgt.actionItem(actionToAdd))
             else:
                 indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
-                self.ActionList.insertItem(indexOfAction,actionsWdgt.actionItem(actionToAdd))
+                self.ActionList.insertItem(indexOfAction,actions_wdgt.actionItem(actionToAdd))
 
     def removeAction(self):
         if(self.ssettings == {} ):
