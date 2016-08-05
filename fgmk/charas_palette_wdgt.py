@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import persona, current_project, cmd
+from fgmk import persona, current_project, cmd, tools_wdgt
 
 
 class CharasPalWidget(QtWidgets.QWidget):
@@ -14,8 +14,13 @@ class CharasPalWidget(QtWidgets.QWidget):
 
         self.charaslist = []
         self.myCharaSelector = persona.CharaSelector(self, current_project.settings)
+        self.myCharaSelector.charaClicked.connect(self.charaClicked)
+
         self.vbox.addWidget(self.myCharaSelector)
         self.show()
+
+    def charaClicked(self):
+        self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['charaplacer'])
 
     def reinit(self):
         for charaplaced in self.charaslist:

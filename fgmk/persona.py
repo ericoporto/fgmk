@@ -533,6 +533,7 @@ class CharaList(QtWidgets.QWidget):
             self.charaslist.addItem(CharaItem(charaName,jsonTree))
 
 class CharaSelector(QtWidgets.QWidget):
+    charaClicked = QtCore.pyqtSignal()
     def __init__(self, parent=None, ssettings={}, **kwargs):
         super().__init__(parent, **kwargs)
 
@@ -543,9 +544,13 @@ class CharaSelector(QtWidgets.QWidget):
         self.charaqlist = QtWidgets.QListWidget()
 
         self.charaqlist.itemSelectionChanged.connect(self.selectionChanged)
+        self.charaqlist.itemClicked.connect(self.emitclicked)
 
         self.layout.addWidget(self.csetprev)
         self.layout.addWidget(self.charaqlist)
+
+    def emitclicked(self):
+        self.charaClicked.emit()
 
     def update(self):
         if "gamefolder" in self.ssettings:

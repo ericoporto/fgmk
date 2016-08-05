@@ -5,6 +5,13 @@ from fgmk.flowlayout import FlowLayout as FlowLayout
 leftClickTool = 0
 rightClickTool = 1
 
+tools={ "pen": 0,
+        "dropper": 1,
+        "bucket": 2,
+        "line":3,
+        "rectangle":4,
+        "charaplacer":5}
+
 class ToolsWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None, **kwargs):
@@ -77,6 +84,12 @@ class ToolsWidget(QtWidgets.QWidget):
         elif str(self.sender().objectName()) == "charaplacer":
             rightClickTool = 5
 
+        self.updateToolTiles()
+        self.show()
+
+    def changeLeftClickToolTo(self, tooltochange):
+        global leftClickTool
+        leftClickTool = tooltochange
         self.updateToolTiles()
         self.show()
 
