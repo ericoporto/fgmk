@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, map_explorer_wdgt, getdata, mapfile, TileSet, configure_project
+from fgmk import  paletteWdgt, tools_wdgt, events_wdgt, LayerWdgt, map_explorer_wdgt, getdata, mapfile, TileSet, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
@@ -89,10 +89,10 @@ class MapWidget(QtWidgets.QWidget):
         # self.show()
 
     def TileInMapRightClicked(self):
-        self.ClickedATileinMap(ToolsWdgt.rightClickTool)
+        self.ClickedATileinMap(tools_wdgt.rightClickTool)
 
     def TileInMapClicked(self):
-        self.ClickedATileinMap(ToolsWdgt.leftClickTool)
+        self.ClickedATileinMap(tools_wdgt.leftClickTool)
 
     def ClickedATileinMap(self, theClickedTool):
         global firstClickX
@@ -380,7 +380,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addAction(self.layerDockWdgt.toggleViewAction())
 
-        self.myToolsWidget = ToolsWdgt.ToolsWidget(self)
+        self.myToolsWidget = tools_wdgt.ToolsWidget(self)
         self.toolsDockWdgt = QtWidgets.QDockWidget("Tool", self)
         self.toolsDockWdgt.setObjectName("Tool")
         self.toolsDockWdgt.setWidget(self.myToolsWidget)
