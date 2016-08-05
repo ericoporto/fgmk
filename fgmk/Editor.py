@@ -3,7 +3,7 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Tile, Editor_MainWindow_Menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
+from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
@@ -623,7 +623,7 @@ class MainWindow(QtWidgets.QMainWindow):
         game_server.servePage(os.path.abspath(current_project.settings["gamefolder"]))
 
     def newProject(self):
-        myNewProjectDialog = Editor_MainWindow_Menus.newProject(self)
+        myNewProjectDialog = editor_mainwindow_menus.newProject(self)
         if myNewProjectDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnedNFD = myNewProjectDialog.getValue()
             self.__newProject(returnedNFD)
@@ -659,7 +659,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def newFile(self):
-        myNewFileDialog = Editor_MainWindow_Menus.newFile(self)
+        myNewFileDialog = editor_mainwindow_menus.newFile(self)
         if myNewFileDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnedNFD = myNewFileDialog.getValue()
             self.__newFile(returnedNFD)
