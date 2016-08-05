@@ -2,17 +2,17 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actions_wdgt, action_dialog, fifl, TileCharaset
+from fgmk import actions_wdgt, action_dialog, fifl, tile_charaset
 
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
-# moves will be step and face, for all possibilities TileCharaset.facing
+# moves will be step and face, for all possibilities tile_charaset.facing
 # so a radio to select move or face and for buttons - one for each direction.
 # also a follow chara option will be added next and a random movement
 
-moves = {"move":TileCharaset.facing , "face":TileCharaset.facing, "random":"move", "follow": "player"}
+moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"move", "follow": "player"}
 
-class CharasFormat(TileCharaset.BaseFormat):
+class CharasFormat(tile_charaset.BaseFormat):
     def __init__( self ):
         super().__init__()
 
@@ -65,7 +65,7 @@ class MoveButtons(QtWidgets.QWidget):
         self.signal["left"] = self.buttonleft
         self.signal["right"] = self.buttonright
 
-        for i in TileCharaset.facing:
+        for i in tile_charaset.facing:
             self.dirbuttons.append(QtWidgets.QPushButton(i))
             self.dirbuttons[-1].setObjectName(i)
             self.dirbuttons[-1].setFixedSize(50, 50)
@@ -539,7 +539,7 @@ class CharaSelector(QtWidgets.QWidget):
         self.ssettings = ssettings
 
         self.layout = QtWidgets.QHBoxLayout(self)
-        self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings)
+        self.csetprev = tile_charaset.CharasetPreviewer(self,ssettings)
         self.charaqlist = QtWidgets.QListWidget()
 
         self.charaqlist.itemSelectionChanged.connect(self.selectionChanged)
@@ -599,7 +599,7 @@ class MiniCharaTile(QtWidgets.QWidget):
             charas = self.__Open(filetoopen)
             charaset = charas.getCharaset(chara)
 
-            self.csetprev = TileCharaset.CharasetPreviewer(self,ssettings,None,scale)
+            self.csetprev = tile_charaset.CharasetPreviewer(self,ssettings,None,scale)
             self.csetprev.select(charaset)
             self.whsize = self.csetprev.whsize
             self.setFixedSize(self.whsize)
@@ -639,7 +639,7 @@ class CharaEditor(QtWidgets.QDialog):
         self.layout = QtWidgets.QHBoxLayout(self)
 
         self.charalist = CharaList()
-        self.csetSelector = TileCharaset.CharasetSelector(self, ssettings)
+        self.csetSelector = tile_charaset.CharasetSelector(self, ssettings)
         self.movement = MoveWidget()
         self.properties = PropertiesWidget()
 
