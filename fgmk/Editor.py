@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
-from fgmk import  paletteWdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, TileSet, configure_project
+from fgmk import  paletteWdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
@@ -237,7 +237,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scrollArea = QtWidgets.QScrollArea(self)
 
         # get tileset file and split it in images that can be pointed
-        self.myTileSet = TileSet.TileSet(
+        self.myTileSet = tile_set.TileSet(
             self.myMap.tileImage, self.myMap.palette)
         self.myMapWidget = MapWidget(self)
 
@@ -672,7 +672,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle(current_project.settings["workingFile"])
         self.myMap.new(self.levelName, returnedNFD[
                        "width"], returnedNFD["height"])
-        self.myTileSet = TileSet.TileSet(os.path.join(
+        self.myTileSet = tile_set.TileSet(os.path.join(
             current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
         self.gridViewAction.setChecked(False)  # gambiarra
@@ -729,7 +729,7 @@ class MainWindow(QtWidgets.QMainWindow):
             current_project.settings["workingFile"] = filename
             self.setWindowTitle(current_project.settings["workingFile"])
             self.myMap.load(current_project.settings["workingFile"])
-            self.myTileSet = TileSet.TileSet(os.path.join(
+            self.myTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             self.gridViewAction.setChecked(False)  # gambiarra

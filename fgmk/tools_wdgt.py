@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Tile, getdata, TileSet
+from fgmk import Tile, getdata, tile_set
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
 leftClickTool = 0
@@ -12,7 +12,7 @@ class ToolsWidget(QtWidgets.QWidget):
 
         self.scale = 2
 
-        self.toolTileset = TileSet.TileSet(getdata.path('tools.png'))
+        self.toolTileset = tile_set.TileSet(getdata.path('tools.png'))
 
         self.FBox = FlowLayout(self)
 

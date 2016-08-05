@@ -2,7 +2,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, current_project, alpha_composite, TileSet
+from fgmk import tMat, getdata, current_project, alpha_composite, tile_set
 
 
 class QTile(QtWidgets.QLabel):
@@ -40,17 +40,17 @@ class QTile(QtWidgets.QLabel):
         else:
             tempscale = 0
 
-        Composite = TileSet.clearTile.tileset[0][tempscale]
+        Composite = tile_set.clearTile.tileset[0][tempscale]
         try:
             for i in range(len(self.tileType) - 2):
                 if(self.tileType[i]):
                     Composite = Image.alpha_composite(
                         Composite, tileset[self.tileType[i]][tempscale])
             if(self.tileType[i + 1]):
-                Composite = Image.alpha_composite(Composite, TileSet.colisionSet.tileset[
+                Composite = Image.alpha_composite(Composite, tile_set.colisionSet.tileset[
                                                   self.tileType[i + 1]][tempscale])
             if(self.tileType[i + 2]):
-                Composite = Image.alpha_composite(Composite, TileSet.eventSet.tileset[
+                Composite = Image.alpha_composite(Composite, tile_set.eventSet.tileset[
                                                   self.tileType[i + 2]][tempscale])
         except:
             for i in range(len(self.tileType) - 2):
@@ -58,10 +58,10 @@ class QTile(QtWidgets.QLabel):
                     Composite = alpha_composite.alpha_composite(
                         Composite, tileset[self.tileType[i]][tempscale])
             if(self.tileType[i + 1]):
-                Composite = alpha_composite.alpha_composite(Composite, TileSet.colisionSet.tileset[
+                Composite = alpha_composite.alpha_composite(Composite, tile_set.colisionSet.tileset[
                                                  self.tileType[i + 1]][tempscale])
             if(self.tileType[i + 2]):
-                Composite = alpha_composite.alpha_composite(Composite, TileSet.eventSet.tileset[
+                Composite = alpha_composite.alpha_composite(Composite, tile_set.eventSet.tileset[
                                                  self.tileType[i + 2]][tempscale])
 
         if(scale != 1 and scale != 0.5 and scale != 2):

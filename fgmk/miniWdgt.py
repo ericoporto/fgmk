@@ -1,6 +1,6 @@
 
 from PyQt5 import QtWidgets, QtCore
-from fgmk import Tile, tMat, TileSet
+from fgmk import Tile, tMat, tile_set
 
 class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -95,7 +95,7 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.myScale = 0.5
 
         self.xclicked = Tile.QTile(self)
-        self.xclicked.initTile(TileSet.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
+        self.xclicked.initTile(tile_set.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
 
         self.TileList = []
         self.selectedPosition = [0, 0]

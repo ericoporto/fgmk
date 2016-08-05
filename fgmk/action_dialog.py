@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, game_init, current_project, mapfile, TileSet, miniWdgt
+from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
@@ -54,7 +54,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileSet.TileSet(os.path.join(
+            self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
@@ -180,7 +180,7 @@ class changeTile(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileSet.TileSet(os.path.join(
+            self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
@@ -255,7 +255,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
-            self.currentTileSet = TileSet.TileSet(os.path.join(
+            self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
 
@@ -307,7 +307,7 @@ class teleport(QtWidgets.QDialog):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
-            self.currentTileSet = TileSet.TileSet(os.path.join(
+            self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
