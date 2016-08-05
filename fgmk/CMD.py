@@ -211,7 +211,6 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
         if(self.Layer == EVENTSLAYER):
             self.myEventsWidget.updateEventsList()
 
-        checkAndUpdateTitle()
         #print("Type= ", self.changeTypeTo, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
     def undo(self):
@@ -222,7 +221,6 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
         if(self.Layer == EVENTSLAYER):
             self.myEventsWidget.updateEventsList()
 
-        checkAndUpdateTitle()
         #print("Type= ", self.oldType, "  X= " ,self.tileX, "  Y= " , self.tileY)
 
 
