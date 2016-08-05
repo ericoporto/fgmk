@@ -87,7 +87,7 @@ setup(
             ]
     },
     package_data = {
-        'fgmk': ['data/*.png','data/*.json','data/basegame.tar.gz']
+        'fgmk': ['data/*.png','data/*.json','data/basegame.tar.gz','data/example.tar.gz']
     },
     **datafiles
 )
