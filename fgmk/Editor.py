@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
+from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
@@ -388,7 +388,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addAction(self.toolsDockWdgt.toggleViewAction())
 
-        self.myEventsWidget = EventsWdgt.EventsWidget(self.myMap, self)
+        self.myEventsWidget = events_wdgt.EventsWidget(self.myMap, self)
         self.eventsDockWdgt = QtWidgets.QDockWidget("Events", self)
         self.eventsDockWdgt.setObjectName("Events")
         self.eventsDockWdgt.setWidget(self.myEventsWidget)
