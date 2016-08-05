@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
-from fgmk import  paletteWdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
+from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
@@ -354,7 +354,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu = self.menubar.addMenu('&View')
 
-        self.myPaletteWidget = paletteWdgt.PaletteWidget(self, self.myTileSet)
+        self.myPaletteWidget = tile_palette_wdgt.PaletteWidget(self, self.myTileSet)
         self.paletteDockWdgt = QtWidgets.QDockWidget("Palette", self)
         self.paletteDockWdgt.setObjectName("Palette")
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
