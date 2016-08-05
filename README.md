@@ -49,7 +49,7 @@ Clone this repository, meet the dependencies and type `./run.py`
 
     git clone https://github.com/ericoporto/fgmk.git
     cd fgmk
-    ./run.py
+    python3 -m fgmk
 
 Dependencies
 ------------
