@@ -5,7 +5,7 @@ import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, Editor_MainWindow_Menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
 from fgmk import  paletteWdgt, ToolsWdgt, EventsWdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
-from fgmk import help, CharasPalWdgt
+from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
@@ -362,7 +362,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addAction(self.paletteDockWdgt.toggleViewAction())
 
-        self.myCharasPalWidget = CharasPalWdgt.CharasPalWidget(
+        self.myCharasPalWidget = charas_palette_wdgt.CharasPalWidget(
             self.myMapWidget, self.myMap, self)
         self.charasDockWdgt = QtWidgets.QDockWidget("Charas", self)
         self.charasDockWdgt.setObjectName("Charas")
