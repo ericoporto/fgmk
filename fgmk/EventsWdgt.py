@@ -173,7 +173,7 @@ class EventsWidget(QtWidgets.QWidget):
                                  self.EventsList.selectedItems()[0].whatsThis(),
                                  actionParamToEdit,
                                  actionToAdd)
-                self.parent.commandToStack(command)
+                CMD.commandToStack(command)
 
 
     def changeAction(self, actionindex, eventindex, newaction):
@@ -253,7 +253,7 @@ class EventsWidget(QtWidgets.QWidget):
                                                lastactionitem,
                                                self.EventsList.selectedItems()[0].whatsThis(),
                                                actionToAdd)
-                    self.parent.commandToStack(command)
+                    CMD.commandToStack(command)
 
                 else:
                     indexOfAction = self.ActionList.row(
@@ -265,7 +265,7 @@ class EventsWidget(QtWidgets.QWidget):
                                                indexOfAction,
                                                self.EventsList.selectedItems()[0].whatsThis(),
                                                actionToAdd)
-                    self.parent.commandToStack(command)
+                    CMD.commandToStack(command)
 
 
     def addActionIndex(self, actionindex, eventindex, acctiontoadd):
@@ -289,7 +289,7 @@ class EventsWidget(QtWidgets.QWidget):
                                        itemIndex,
                                        self.EventsList.selectedItems()[0].whatsThis(),
                                        actiontodel)
-            self.parent.commandToStack(command)
+            CMD.commandToStack(command)
 
     def removeActionIndex(self, actionindex, eventindex):
         self.pMap.removeActionByIndexOnEvent(actionindex, eventindex)

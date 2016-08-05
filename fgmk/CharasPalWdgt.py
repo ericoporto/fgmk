@@ -53,7 +53,7 @@ class CharasPalWidget(QtWidgets.QWidget):
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
                 command = CMD.CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
-                self.parent.commandToStack(command)
+                CMD.commandToStack(command)
                 break
 
 

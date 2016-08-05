@@ -1,6 +1,40 @@
 from PyQt5 import QtWidgets
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
+class Box:
+    pass
+
+__m = Box()  # m will contain all module-level values
+__m.undostack = None  # undostack  global in module
+__m.savestackindex = None
+
+def initUndoStack(parent):
+    global __m
+    if __m.undostack is None:
+        __m.undostack = QtWidgets.QUndoStack(parent)
+        __m.savestackindex = 0
+
+def createUndoAction(parent):
+    global __m
+    return __m.undostack.createUndoAction(parent, parent.tr("&Undo"))
+
+def createRedoAction(parent):
+    global __m
+    return __m.undostack.createRedoAction(parent, parent.tr("&Redo"))
+
+def clearCommandStack():
+    global __m
+    __m.savestackindex = 0
+    __m.undostack.clear()
+
+def updateStackAtSave():
+    global __m
+    __m.savestackindex = __m.undostack.index()
+
+def commandToStack(command):
+    global __m
+    __m.undostack.push(command)
+
 class CommandAddAction(QtWidgets.QUndoCommand):
     """
     Class for adding an action to an event.

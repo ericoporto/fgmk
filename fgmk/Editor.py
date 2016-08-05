@@ -164,7 +164,7 @@ class MapWidget(QtWidgets.QWidget):
             charaX = self.sender().tileX
             charaY = self.sender().tileY
             command = CMD.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
-            self.parent.commandToStack(command)
+            CMD.commandToStack(command)
 
         else:
             firstClickX = None
@@ -173,28 +173,28 @@ class MapWidget(QtWidgets.QWidget):
     def changeTileType(self, changeTypeTo):
         command = CMD.CommandCTTileType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
-        self.parent.commandToStack(command)
+        CMD.commandToStack(command)
 
     def toolBucketFill(self, changeTypeTo):
         listToChange = mapfile.tileFill(self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
-        self.parent.commandToStack(command)
+        CMD.commandToStack(command)
 
     def toolLine(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileLine(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
-        self.parent.commandToStack(command)
+        CMD.commandToStack(command)
 
     def toolRect(self, changeTypeTo, firstX, firstY):
         listToChange = mapfile.tileRect(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = CMD.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
-        self.parent.commandToStack(command)
+        CMD.commandToStack(command)
 
 
 
@@ -223,7 +223,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #self.resize(1024, 768)
 
-        self.undoStack = QtWidgets.QUndoStack(self)
+        CMD.initUndoStack(self)
 
         self.setWindowIcon(QtGui.QIcon(Icon()))
         self.levelName = "newFile"
@@ -334,10 +334,10 @@ class MainWindow(QtWidgets.QMainWindow):
                            self.exportToJsAs, "Shift+Ctrl+E")
         fileMenu.addAction('&Exit', self.close, "Ctrl+Q")
 
-        undoAction = self.undoStack.createUndoAction(self, self.tr("&Undo"))
+        undoAction = CMD.createUndoAction(self)
         undoAction.setShortcuts(QtGui.QKeySequence.Undo)
         editMenu.addAction(undoAction)
-        redoAction = self.undoStack.createRedoAction(self, self.tr("&Redo"))
+        redoAction = CMD.createRedoAction(self)
         redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
 
@@ -679,13 +679,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
         self.myMapExplorerWidget.reloadInitFile()
-        self.undoStack.clear()
+        CMD.clearCommandStack()
 
     def saveFile(self):
         filename = current_project.settings["workingFile"]
 
         if filename != "":
             self.myMap.save(filename)
+            CMD.updateStackAtSave()
 
             if gameInit.regenerateLevelList():
                 self.myMapExplorerWidget.reloadInitFile()
@@ -701,6 +702,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             current_project.settings["workingFile"] = filename
             self.myMap.save(current_project.settings["workingFile"])
+            CMD.updateStackAtSave()
 
             if gameInit.regenerateLevelList():
                 self.myMapExplorerWidget.reloadInitFile()
@@ -730,7 +732,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
             self.myMapWidget.DrawMap(self)
             self.gridViewAction.setChecked(False)  # gambiarra
-            self.undoStack.clear()
+            CMD.clearCommandStack()
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
             self.myEventsWidget.deselectAll()
@@ -817,9 +819,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myEventsWidget.setEnabled(torf)
         self.myMapExplorerWidget.setEnabled(torf)
         self.myMapWidget.setEnabled(torf)
-
-    def commandToStack(self, command):
-        self.undoStack.push(command)
 
 
 def Icon():
