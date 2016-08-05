@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 __title__ = 'fgmk'
 __author__ = 'Érico Vieira Porto'
 __license__ = 'GPLv2'

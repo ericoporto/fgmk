@@ -4,7 +4,7 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, configure_project
+from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, map_explorer_wdgt, getdata, mapfile, TileSet, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
@@ -396,7 +396,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewMenu.addAction(self.eventsDockWdgt.toggleViewAction())
 
-        self.myMapExplorerWidget = MapExplorerWdgt.MapExplorerWidget(self)
+        self.myMapExplorerWidget = map_explorer_wdgt.MapExplorerWidget(self)
         self.myMapExplorerWidget.mapOpened.connect(self.openFromExplorer)
         self.mapExplorerDockWdgt = QtWidgets.QDockWidget("Map Explorer", self)
         self.mapExplorerDockWdgt.setObjectName("MapExplorer")
