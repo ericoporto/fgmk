@@ -3,8 +3,8 @@
 import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, gameInit, current_project
-from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, gameInit, configure_project
+from fgmk import Tile, editor_mainwindow_menus, CMD, game_server, fifl, TileCharaset, Charas, game_init, current_project
+from fgmk import  paletteWdgt, ToolsWdgt, events_wdgt, LayerWdgt, MapExplorerWdgt, getdata, mapfile, TileSet, configure_project
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
@@ -320,7 +320,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 doSave = True
 
         if(doSave):
-            gameInit.saveInitFile(current_project.settings["gamefolder"], result[0])
+            game_init.saveInitFile(current_project.settings["gamefolder"], result[0])
 
     def FancyWindow(self, parent=None):
         self.menubar = QtWidgets.QMenuBar(self)
@@ -638,7 +638,7 @@ class MainWindow(QtWidgets.QMainWindow):
         tar = tarfile.open(getdata.path("basegame.tar.gz"))
         tar.extractall(current_projectectPath)
         tar.close()
-        initfile = gameInit.openInitFile(current_project.settings["gamefolder"])
+        initfile = game_init.openInitFile(current_project.settings["gamefolder"])
         levellist = initfile["LevelsList"]
         startlevel = initfile['World']['initLevel']
         levelfile = levellist[startlevel]
@@ -651,7 +651,7 @@ class MainWindow(QtWidgets.QMainWindow):
         projectfolder = os.path.join(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory"))
 
         if(os.path.isfile(os.path.join(projectfolder,fifl.INITFILE))):
-            initfile = gameInit.openInitFile(projectfolder)
+            initfile = game_init.openInitFile(projectfolder)
             levellist = initfile["LevelsList"]
             startlevel = initfile['World']['initLevel']
             levelfile = levellist[startlevel]
@@ -689,7 +689,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.save(filename)
             CMD.updateStackAtSave()
 
-            if gameInit.regenerateLevelList():
+            if game_init.regenerateLevelList():
                 self.myMapExplorerWidget.reloadInitFile()
 
 
@@ -705,7 +705,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.save(current_project.settings["workingFile"])
             CMD.updateStackAtSave()
 
-            if gameInit.regenerateLevelList():
+            if game_init.regenerateLevelList():
                 self.myMapExplorerWidget.reloadInitFile()
 
     def exportToJsAs(self):
@@ -737,7 +737,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myEventsWidget.updateEventsList()
             self.myEventsWidget.deselectAll()
             self.myCharasPalWidget.reinit()
-            gameInit.regenerateLevelList()
+            game_init.regenerateLevelList()
             hasinit = self.myMapExplorerWidget.reloadInitFile()
             self.setEnabledAll(hasinit == True)
             CMD.clearCommandStack()

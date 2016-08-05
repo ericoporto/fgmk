@@ -1,11 +1,11 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import gameInit, action_dialog, current_project, fifl
+from fgmk import game_init, action_dialog, current_project, fifl
 
 def selectStartingPosition(parent):
     psSettings = current_project.settings
     gamefolder = os.path.join(psSettings["gamefolder"])
-    initFileJsonTree = gameInit.openInitFile(gamefolder)
+    initFileJsonTree = game_init.openInitFile(gamefolder)
 
     if(initFileJsonTree != None):
         initx = int(initFileJsonTree["Player"]["initPosX"]/32)

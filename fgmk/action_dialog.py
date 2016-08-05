@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, gameInit, current_project, mapfile, TileSet, miniWdgt
+from fgmk import tMat, game_init, current_project, mapfile, TileSet, miniWdgt
 from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
 
@@ -14,7 +14,7 @@ class changeTile(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
 
-        self.initFile = gameInit.openInitFile(gamefolder)
+        self.initFile = game_init.openInitFile(gamefolder)
 
         self.useCurrentPlace = "current"
 
@@ -52,7 +52,7 @@ class changeTile(QtWidgets.QDialog):
                 self.currentTileSet = self.parent.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
@@ -178,7 +178,7 @@ class changeTile(QtWidgets.QDialog):
 
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
@@ -211,7 +211,7 @@ class teleport(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
 
-        self.initFile = gameInit.openInitFile(gamefolder)
+        self.initFile = game_init.openInitFile(gamefolder)
 
         if(selectStartPosition == None):
             self.setWindowTitle('Select where to teleport...')
@@ -253,7 +253,7 @@ class teleport(QtWidgets.QDialog):
                 self.currentTileSet = self.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(0)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
@@ -305,7 +305,7 @@ class teleport(QtWidgets.QDialog):
     def updateMap(self, levelIndex):
         if (str(self.comboBox.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(gameInit.getLevelPathFromInitFile(
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
                 self.gamefolder, self.comboBox.itemText(levelIndex)))
             self.currentTileSet = TileSet.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),

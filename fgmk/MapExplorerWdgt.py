@@ -1,6 +1,6 @@
 import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import gameInit, current_project
+from fgmk import game_init, current_project
 
 class MapExplorerWidget(QtWidgets.QWidget):
     """
@@ -27,7 +27,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
 
     def reloadInitFile(self):
         gamefolder = current_project.settings["gamefolder"]
-        self.initFile = gameInit.openInitFile(gamefolder)
+        self.initFile = game_init.openInitFile(gamefolder)
 
         for level in self.levelList:
             self.LvlLWidget.takeItem(0)
