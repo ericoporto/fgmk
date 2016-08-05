@@ -1,8 +1,8 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, mapfile, TileSet, miniWdgt
-from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
-from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
+from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
 
 class changeTile(QtWidgets.QDialog):

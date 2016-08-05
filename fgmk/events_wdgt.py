@@ -1,7 +1,7 @@
 from fgmk import action_dialog, current_project, actions_wdgt, CMD
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk.LayerWdgt import COLISIONLAYER as COLISIONLAYER
-from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
+from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
 
 

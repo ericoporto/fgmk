@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from fgmk.LayerWdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
 class Box:
     pass
