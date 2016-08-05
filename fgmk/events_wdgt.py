@@ -1,4 +1,4 @@
-from fgmk import action_dialog, current_project, actions_wdgt, CMD
+from fgmk import action_dialog, current_project, actions_wdgt, cmd
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
@@ -167,13 +167,13 @@ class EventsWidget(QtWidgets.QWidget):
 
                 actionToAdd = [actionToEdit, str(returnActDlg)]
 
-                command = CMD.CommandChangeAction("edited action",
+                command = cmd.CommandChangeAction("edited action",
                                  self,
                                  indexOfAction,
                                  self.EventsList.selectedItems()[0].whatsThis(),
                                  actionParamToEdit,
                                  actionToAdd)
-                CMD.commandToStack(command)
+                cmd.commandToStack(command)
 
 
     def changeAction(self, actionindex, eventindex, newaction):
@@ -248,24 +248,24 @@ class EventsWidget(QtWidgets.QWidget):
                 if not self.ActionList.selectedItems():
                     lastactionitem = self.ActionList.count()
 
-                    command = CMD.CommandAddAction("added action",
+                    command = cmd.CommandAddAction("added action",
                                                self,
                                                lastactionitem,
                                                self.EventsList.selectedItems()[0].whatsThis(),
                                                actionToAdd)
-                    CMD.commandToStack(command)
+                    cmd.commandToStack(command)
 
                 else:
                     indexOfAction = self.ActionList.row(
                         self.ActionList.selectedItems()[0])
 
 
-                    command = CMD.CommandAddAction("added action",
+                    command = cmd.CommandAddAction("added action",
                                                self,
                                                indexOfAction,
                                                self.EventsList.selectedItems()[0].whatsThis(),
                                                actionToAdd)
-                    CMD.commandToStack(command)
+                    cmd.commandToStack(command)
 
 
     def addActionIndex(self, actionindex, eventindex, acctiontoadd):
@@ -284,12 +284,12 @@ class EventsWidget(QtWidgets.QWidget):
             actiontodel = self.pMap.getActionOnEvent(
                 itemIndex, self.EventsList.selectedItems()[0].whatsThis())
 
-            command = CMD.CommandDelAction("deleted action",
+            command = cmd.CommandDelAction("deleted action",
                                        self,
                                        itemIndex,
                                        self.EventsList.selectedItems()[0].whatsThis(),
                                        actiontodel)
-            CMD.commandToStack(command)
+            cmd.commandToStack(command)
 
     def removeActionIndex(self, actionindex, eventindex):
         self.pMap.removeActionByIndexOnEvent(actionindex, eventindex)

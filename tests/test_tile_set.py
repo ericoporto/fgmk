@@ -1,19 +1,19 @@
 import os
-from fgmk import TileSet
+from fgmk import tile_set
 from PIL import ImageChops
 
 def gettestdata(filename):
     return os.path.join(os.path.dirname(__file__),filename)
 
 def test_emptyTile():
-    assert TileSet.emptyTile
+    assert tile_set.emptyTile
 
 def test_TileSet_length():
-    mytileset = TileSet.TileSet(gettestdata('testTiles.png'))
+    mytileset = tile_set.TileSet(gettestdata('testTiles.png'))
     assert len(mytileset.tileset) == 3
 
 def test_TileSet_boxsize():
-    mytileset = TileSet.TileSet(gettestdata('testTiles.png'))
+    mytileset = tile_set.TileSet(gettestdata('testTiles.png'))
     assert mytileset.boxsize == 32
 
 def test_TileSet_checkEmptyTile():
@@ -23,10 +23,10 @@ def test_TileSet_checkEmptyTile():
     The difference should be empty because images are equal
     """
 
-    mytileset = TileSet.TileSet(gettestdata('testTiles.png'))
+    mytileset = tile_set.TileSet(gettestdata('testTiles.png'))
     expected_empty_tile = mytileset.tileset[0][0]
 
-    empty_tile = TileSet.emptyTile
+    empty_tile = tile_set.emptyTile
 
     diff = ImageChops.difference(empty_tile, expected_empty_tile)
 
@@ -39,10 +39,10 @@ def test_TileSet_checkFilledTile():
     The difference should be a 32x32 box starting from zero.
     """
 
-    mytileset = TileSet.TileSet(gettestdata('testTiles.png'))
+    mytileset = tile_set.TileSet(gettestdata('testTiles.png'))
     expected_filled_tile = mytileset.tileset[1][0]
 
-    empty_tile = TileSet.emptyTile
+    empty_tile = tile_set.emptyTile
 
     diff = ImageChops.difference(empty_tile, expected_filled_tile)
 

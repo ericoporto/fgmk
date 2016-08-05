@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import Charas, current_project, CMD
+from fgmk import Charas, current_project, cmd
 
 
 class CharasPalWidget(QtWidgets.QWidget):
@@ -52,8 +52,8 @@ class CharasPalWidget(QtWidgets.QWidget):
         item = self.sender()
         for charaplaced in self.charaslist:
             if(charaplaced[2] == item):
-                command = CMD.CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
-                CMD.commandToStack(command)
+                command = cmd.CommandDelChara("deleted chara", self, (charaplaced[1][0], charaplaced[1][1]),charaplaced[0])
+                cmd.commandToStack(command)
                 break
 
 
