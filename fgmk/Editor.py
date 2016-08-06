@@ -5,6 +5,7 @@ import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, persona, game_init, current_project
 from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
+from fgmk import temp
 from fgmk import help, charas_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
@@ -475,6 +476,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fullscreenViewAction.changed.connect(self.changeToFullscreen)
 
         helpMenu = self.menubar.addMenu('&Help')
+        helpMenu.addSeparator()
+        helpMenu.addAction('Load example...', self.load_example)
+        helpMenu.addSeparator()
         helpMenu.addAction('About...', self.about)
 
         self.setMenuBar(self.menubar)
@@ -768,9 +772,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     event.accept()
                 else:
                     event.ignore()
+                    return
+
         else:
             event.accept()
 
+
+        temp.clean()
         self.saveSettings()
 
     def saveSettings(self):
@@ -812,6 +820,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About...", help.aboutstr)
+
+    def load_example(self):
+        levelfile = help.load_example()
+        self.openFileByName(os.path.join(current_project.settings["gamefolder"],fifl.LEVELS,levelfile))
 
     def setEnabledAll(self, torf):
         self.myPaletteWidget.setEnabled(torf)
