@@ -31,7 +31,7 @@ class ActionsWidget(QtWidgets.QDialog):
         self.parent = parent
         self.actionButton = []
 
-        for action in e["actionList"]:
+        for action in e["actionOrder"]:
             self.actionButton.append(QtWidgets.QPushButton(action, self))
             self.VBox.addWidget(self.actionButton[-1])
             self.actionButton[-1].clicked.connect(self.getAction)

@@ -623,6 +623,44 @@ class fadeOut(QtWidgets.QDialog):
             keepEffect = 'keepEffect'
         return effecToReturn + ';' + keepEffect
 
+class rain(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.LabelText = QtWidgets.QLabel("Select either start or stop:")
+        self.ListEffect = QtWidgets.QListWidget()
+
+        self.radiostart = QtWidgets.QRadioButton("start", self)
+        self.radiostop = QtWidgets.QRadioButton("stop", self)
+
+        self.radiostart.setChecked(True)
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.radiostart)
+        self.VBox.addWidget(self.radiostop)
+        self.VBox.addWidget(self.buttonBox)
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('rain: choose if starts raining')
+
+        if(edit != None):
+            if(edit[0] == 'stop'):
+                self.radiostop.setChecked(True)
+
+    def getValue(self):
+        rain_state='start'
+        if self.radiostop.isChecked():
+            rain_state = 'stop'
+        return rain_state
+
 
 class noEffect(QtWidgets.QDialog):
 

@@ -1,4 +1,18 @@
-{ "actionList": {
+{ "actionOrder":[
+  "showText",
+  "teleport",
+  "changeTile",
+  "rain",
+  "fadeIn",
+  "fadeOut",
+  "setVar",
+  "varPlusOne",
+  "IF",
+  "ELSE",
+  "END",
+  "noEffect"
+],
+  "actionList": {
     "setVar":["varname","value"],
     "varPlusOne":["varname"],
     "IF":["var1","oper","var2"],
@@ -9,6 +23,7 @@
     "fadeOut":["effect","keepEffect"],
     "noEffect":[""],
     "teleport":["positionx","positiony","level"],
-    "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]]
+    "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]],
+    "rain":["state"]
     }
 }
