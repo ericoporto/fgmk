@@ -32,6 +32,7 @@ class ActionsWidget(QtWidgets.QDialog):
 
         self.VBox = QtWidgets.QVBoxLayout(self.insideScrollArea)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.insideScrollArea.setLayout(self.VBox)
 
         filepath = getdata.path('actionsList.json')
         f = open(filepath, "r")
@@ -50,6 +51,7 @@ class ActionsWidget(QtWidgets.QDialog):
             self.actionButton[-1].clicked.connect(self.getAction)
 
         self.setGeometry(300, 40, 350, 650)
+        self.setLayout(self.mainVBox)
         self.setWindowTitle('Select Action to add...')
 
         self.show()
