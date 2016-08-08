@@ -65,7 +65,6 @@ class PaletteWidget(QtWidgets.QWidget):
         self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['pen'])
 
     def setTileCurrent(self):
-        print(self.sender().tileType[0])
         self.parent.changeTileCurrent(self.sender().tileType[0])
 
     def setImageCurrent(self, imageIndex):
