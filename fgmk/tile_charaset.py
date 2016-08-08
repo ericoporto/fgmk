@@ -14,34 +14,7 @@ standardMovement = ["standing", "walking"]
 
 GAMEFOLDER = "gamefolder"
 
-class BaseFormat:
-    def __init__(self):
-        self.jsonTree = {}
-        self.filename = ""
-
-    def new(self):
-        self.jsonTree = {}
-
-    def save(self, charsn=None):
-        if(charsn == None):
-            chartosave = self.filename
-        else:
-            chartosave = charsn
-
-        writefile.writesafe(self.jsonTree, f)
-
-    def exportJS(self, charsn):
-        writefile.writesafe(self.jsonTree, f, self.levelName )
-        #TODO set the correct varname here
-
-    def load(self, charsn):
-        f = open(charsn, "r")
-        self.jsonTree = json.load(f)
-        f.close()
-        self.filename = charsn
-
-
-class CharasetFormat(BaseFormat):
+class CharasetFormat(writefile.BaseFormat):
 
     def __init__(self):
         super().__init__()

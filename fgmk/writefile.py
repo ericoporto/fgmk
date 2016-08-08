@@ -8,6 +8,32 @@ try:
 except NameError:
   basestring = (str, bytes)
 
+class BaseFormat:
+    def __init__(self, filename=""):
+        self.jsonTree = {}
+        self.filename = filename
+
+    def new(self):
+        self.jsonTree = {}
+
+    def save(self, filename=""):
+        if(filename != ""):
+            self.filename = filename
+
+        writesafe(self.jsonTree, self.filename)
+
+    def exportJS(self, charsn):
+        writefile.writesafe(self.jsonTree, f, self.jsvarname )
+        #TODO set the correct varname here
+
+    def load(self, filename=""):
+        if(filename != ""):
+            self.filename = filename
+
+        f = open(self.filename, "r")
+        self.jsonTree = json.load(f)
+        f.close()
+
 def ordered(obj):
     """
     Recursive order a unordered dict. Use for comparing dicts.

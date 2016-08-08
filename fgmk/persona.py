@@ -2,7 +2,7 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actions_wdgt, action_dialog, fifl, tile_charaset
+from fgmk import actions_wdgt, action_dialog, fifl, tile_charaset, writefile
 
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -12,7 +12,7 @@ from fgmk.flowlayout import FlowLayout as FlowLayout
 
 moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"move", "follow": "player"}
 
-class CharasFormat(tile_charaset.BaseFormat):
+class CharasFormat(writefile.BaseFormat):
     def __init__( self ):
         super().__init__()
 
