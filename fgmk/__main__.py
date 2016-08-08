@@ -30,6 +30,7 @@ def main(args=None):
     mw.show()
     splash.finish(mw)
     mw.raise_()
+    mw.afterInit()
     exit(a.exec_())
 
 if __name__ == "__main__":

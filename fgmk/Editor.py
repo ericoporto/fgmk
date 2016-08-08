@@ -251,7 +251,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setAcceptDrops(True)
 
         self.settings = QtCore.QSettings("FGMK", "fgmkEditor")
-        self.loadSettings()
+
+        self.firsttime = self.loadSettings()
+
+    def afterInit(self):
+        if self.firsttime:
+            help.welcome(self)
 
 
     def changeLayerCurrent(self, changeTo):
@@ -796,6 +801,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.settings.setValue("workingFile", current_project.settings["workingFile"]);
         self.settings.endGroup();
 
+        self.settings.setValue("firsttime", False)
+
 
     def loadSettings(self):
         self.settings.beginGroup("MainWindow");
@@ -817,6 +824,9 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.setEnabledAll(False)
         self.settings.endGroup();
+
+        return self.settings.value("firsttime",True, type=bool)
+
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About...", help.aboutstr)

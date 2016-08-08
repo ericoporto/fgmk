@@ -1,5 +1,6 @@
 from fgmk import __title__, __version__, __copyright__, __license__
 from fgmk import temp, getdata, current_project, game_init
+from PyQt5 import QtWidgets
 import os
 import tarfile
 
@@ -11,6 +12,16 @@ Thanks Nintendo for making the SNES.
 
 aboutstr = __title__ + " v" + __version__ + "\n\n" + \
     __copyright__ + "\n\n" + __license__ + "\n\nCredits:\n" + credits
+
+welcome_msg = """
+Welcome to FGMK
+
+Please start a new game project by clicking in Project -> New Project
+"""
+
+def welcome(parent=None):
+    QtWidgets.QMessageBox.information(parent, 'Welcome to '+__title__ ,
+                                           welcome_msg, QtWidgets.QMessageBox.Ok )
 
 def load_example():
     exampleProject = {"name": "example", "baseFolder": temp.mkdtemp()}
