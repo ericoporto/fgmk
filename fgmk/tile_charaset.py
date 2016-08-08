@@ -818,7 +818,7 @@ class CharasetEditorWidget(QtWidgets.QDialog):
         if (len(self.animNames.selectedItems()) > 0):
             self.animList.addItem(CsetAItem(self.palette.rValue[
                                   0], self.palette.rValue[1], self.palette.rValue[2]))
-            print(self.palette.rValue[0])
+            
 
     def animListUpdated(self):
         if(self.updating == False):

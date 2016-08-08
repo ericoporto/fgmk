@@ -573,12 +573,12 @@ class MainWindow(QtWidgets.QMainWindow):
         myCharasetEditor = tile_charaset.CharasetEditorWidget(
             self, current_project.settings)
         if myCharasetEditor.exec_() == QtWidgets.QDialog.Accepted:
-            print(myCharasetEditor)
+            pass
 
     def editCharas(self):
         myCharasEditor = persona.CharaEditor(self, current_project.settings)
         if myCharasEditor.exec_() == QtWidgets.QDialog.Accepted:
-            print(myCharasEditor)
+            pass
 
     def changeToFullscreen(self):
         if self.fullscreenViewAction.isChecked():
