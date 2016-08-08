@@ -20,7 +20,17 @@ class ActionsWidget(QtWidgets.QDialog):
         self.psSettings = psSettings
         self.ischaras = ischaras
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.mainVBox = QtWidgets.QVBoxLayout(self)
+        self.mainVBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.scrollArea = QtWidgets.QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
+        self.mainVBox.addWidget(self.scrollArea)
+
+        self.insideScrollArea = QtWidgets.QWidget(self.scrollArea)
+        self.scrollArea.setWidget(self.insideScrollArea)
+
+        self.VBox = QtWidgets.QVBoxLayout(self.insideScrollArea)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         filepath = getdata.path('actionsList.json')
@@ -33,6 +43,9 @@ class ActionsWidget(QtWidgets.QDialog):
 
         for action in e["actionOrder"]:
             self.actionButton.append(QtWidgets.QPushButton(action, self))
+            self.actionButton[-1].setMaximumWidth(330)
+            self.actionButton[-1].setMinimumWidth(80)
+            self.actionButton[-1].setMinimumHeight(24)
             self.VBox.addWidget(self.actionButton[-1])
             self.actionButton[-1].clicked.connect(self.getAction)
 
