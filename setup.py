@@ -57,6 +57,12 @@ with open('fgmk/__init__.py', 'r') as fd:
 
 test_requirements = ['pytest>=2.8.0']
 
+if(int(sys.version_info.major) == 2):
+    install_requires = ['numpy','pillow']
+    print("!!!Please INSTALL PYQT5!!!")
+else:
+    install_requires = ['numpy','pillow','pyqt5']
+
 setup(
     name='fgmk',
     version=version,
@@ -81,7 +87,7 @@ setup(
     cmdclass={'test': PyTest},
     tests_require=test_requirements,
     keywords='game development',
-    install_requires=['numpy','pillow','pyqt5'],
+    install_requires=install_requires,
     packages = ["fgmk"],
     entry_points={
         'gui_scripts': [
