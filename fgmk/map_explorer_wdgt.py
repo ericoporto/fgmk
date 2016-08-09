@@ -17,13 +17,23 @@ class MapExplorerWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.menuTileset = tile_set.TileSet(getdata.path('map_explorer_icons.png'))
-        self.scale = 1
+        self.scale = 0.5
 
-        self.HBox = QtWidgets.QHBoxLayout()
-        self.HBox.setAlignment(QtCore.Qt.AlignLeft)
+        iconGrid = QtWidgets.QGridLayout()
 
-        iconName = ["open","trash"]
-        iconHelp = ["opens a map file. Same as double clicking.",
+        iconHBoxL = QtWidgets.QHBoxLayout()
+        iconHBoxL.setAlignment(QtCore.Qt.AlignLeft)
+        iconGrid.addLayout(iconHBoxL, 0,0, QtCore.Qt.AlignLeft)
+
+        iconHBoxR = QtWidgets.QHBoxLayout()
+        iconHBoxR.setAlignment(QtCore.Qt.AlignRight)
+        iconGrid.addLayout(iconHBoxR, 0,1, QtCore.Qt.AlignRight)
+
+        #the last element will be left at the right corner
+        #I want the trash to be always the last element
+        iconName = ["new","open","trash"]
+        iconHelp = ["creates a new map file",
+                    "opens a map file. Same as double clicking.",
                     "deletes a map file."]
         self.menuIcons = []
 
@@ -35,14 +45,17 @@ class MapExplorerWidget(QtWidgets.QWidget):
             self.menuIcons[-1].setObjectName(iconName[i])
             self.menuIcons[-1].setToolTip(iconName[i] + "\nWhen clicked, " + iconHelp[i])
             self.menuIcons[-1].clicked.connect(self.clickedOnIcon)
-            self.HBox.addWidget(self.menuIcons[-1])
+            if(i<len(iconName)-1):
+                iconHBoxL.addWidget(self.menuIcons[-1])
+            else:
+                iconHBoxR.addWidget(self.menuIcons[-1])
 
 
         self.parent = parent
         self.LvlLWidget = QtWidgets.QListWidget(self)
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
-        self.VBox.addLayout(self.HBox)
+        self.VBox.addLayout(iconGrid)
         self.VBox.addWidget(self.LvlLWidget)
         self.levelList = []
         self.mapForOpen = ''
@@ -62,6 +75,10 @@ class MapExplorerWidget(QtWidgets.QWidget):
 
             elif(action == "trash"):
                 self.deleteMap(selected_item)
+
+        if(action == "new"):
+            if self.parent.newFile():
+                self.parent.saveFile()
 
 
     def deleteMap(self, item):

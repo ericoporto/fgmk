@@ -681,6 +681,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if myNewFileDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnedNFD = myNewFileDialog.getValue()
             self.__newFile(returnedNFD)
+            return True
+
+        return False
 
     def __newFile(self, returnedNFD):
         current_project.settings["gamefolder"] = str(returnedNFD["gameFolder"])
