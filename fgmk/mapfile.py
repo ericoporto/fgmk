@@ -257,6 +257,3 @@ class MapFormat(base_model.BaseFormat):
         if self.listOfEventsTypes.get(str(event), None) is None:
             self.listOfEventsTypes[str(event)] = [1, 0]
         return self.listOfEventsTypes[str(event)]
-
-    def isEqualMap(self, compareMap):
-        return super().isEqual(compareMap)

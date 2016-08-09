@@ -607,7 +607,7 @@ class MainWindow(QtWidgets.QMainWindow):
         testMap = mapfile.MapFormat()
         testMap.load(current_project.settings["workingFile"])
         acceptOpen = False
-        if not self.myMap.isEqualMap(testMap):
+        if not self.myMap.isEqual(testMap):
 
             quit_msg = "Do you want to save changes?"
             reply = QtWidgets.QMessageBox.question(self, 'Message',
@@ -765,7 +765,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if(os.path.isfile(current_project.settings["workingFile"])):
             testMap = mapfile.MapFormat()
             testMap.load(current_project.settings["workingFile"])
-            if not self.myMap.isEqualMap(testMap):
+            if not self.myMap.isEqual(testMap):
 
                 quit_msg = "Do you want to save changes?"
                 reply = QtWidgets.QMessageBox.question(self, 'Message',

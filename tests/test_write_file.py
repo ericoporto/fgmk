@@ -1,4 +1,4 @@
-from fgmk import writefile
+from fgmk import write_file
 import json
 import os
 
@@ -14,7 +14,7 @@ def test_fwriteKeyVals():
                 }
 
     f = open(tfile, 'w+')
-    writefile.fwriteKeyVals(jsontree, f)
+    write_file.fwriteKeyVals(jsontree, f)
     f.close()
 
     f = None
@@ -39,7 +39,7 @@ def test_writesafe_success():
                 'iamnotnumber': '90'
                 }
 
-    writefile.writesafe(jsontree, tfile)
+    write_file.writesafe(jsontree, tfile)
 
     f = open(tfile, 'r')
     resjsontree = json.load(f)
