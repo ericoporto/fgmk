@@ -59,6 +59,9 @@ you can `apt install python3-pyqt5` and similar (in Ubuntu) or use pip.
 
 If you satisfy all dependencies you don't need to install, and [can run from source](#running-from-source).
 
+Experimental compatibility to python2 (2.7 and on) is added to versions above
+0.3.0 .
+
 Known Issues with PyQt5 in Ubuntu
 ---------------------------------
 
@@ -69,19 +72,6 @@ the menu will be nicely integrated. Unfortunately, keyboard shortcuts won't
 work.
 
 [Details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
-
-### Application crashes Ubuntu
-
-Since upgrading to Ubuntu 16.04 I don't have this problem anymore.
-
-If you choose to install the dependencies using pip3, pyqt5 as is in Ubuntu
-may require you to **disable the system overlay scroolbars** or change the style,
-[see bug here](https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/805303).
-
-Doing so will have the menu not integrated with the top bar, but keyboard
-shortcuts will work. You can also just open in the command line by typing
-
-    LIBOVERLAY_SCROLLBAR=0 fgmk
 
 Contributing
 ------------
