@@ -1,5 +1,5 @@
 import json
-from fgmk import tMat, getdata, writefile, base_model
+from fgmk import tMat, getdata, base_model
 import numpy as np
 
 LayersName = ["layer1", "layer2", "layer4", "colision", "events"]

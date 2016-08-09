@@ -1,5 +1,5 @@
 import json
-from fgmk import writefile
+from fgmk import write_file
 
 class BaseFormat:
     def __init__(self, filename=""):
@@ -15,11 +15,11 @@ class BaseFormat:
         if(filename != ""):
             self.filename = filename
 
-        writefile.writesafe(self.jsonTree, self.filename)
+        write_file.writesafe(self.jsonTree, self.filename)
 
     def exportJS(self, filename="", jsvarname = ""):
         self.updateJsonTree()
-        
+
         if(filename != ""):
             self.jsfilename = filename
 
@@ -28,7 +28,7 @@ class BaseFormat:
         else:
             self.jsvarname = os.path.splitext(os.path.basename(self.jsfilename))[0]
 
-        writefile.writesafe(self.jsonTree, self.jsfilename, self.jsvarname )
+        write_file.writesafe(self.jsonTree, self.jsfilename, self.jsvarname )
 
     def load(self, filename=""):
         if(filename != ""):
@@ -40,7 +40,7 @@ class BaseFormat:
 
     def isEqual(self, objToCompare):
         self.updateJsonTree()
-        return writefile.isJsonEqual(self.jsonTree,objToCompare.jsonTree)
+        return write_file.isJsonEqual(self.jsonTree,objToCompare.jsonTree)
 
     def updateJsonTree(self):
         pass
