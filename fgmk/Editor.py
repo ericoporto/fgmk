@@ -360,7 +360,8 @@ class MainWindow(QtWidgets.QMainWindow):
         current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
         current_projectectMenu.addAction('Edit &charas...', self.editCharas, '')
         current_projectectMenu.addSeparator()
-        current_projectectMenu.addAction('Run Project', self.runServer, 'f5')
+        current_projectectMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
+        current_projectectMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
 
         self.viewMenu = self.menubar.addMenu('&View')
 
@@ -632,6 +633,9 @@ class MainWindow(QtWidgets.QMainWindow):
             filetopen = os.path.join(str(gamefolder), fifl.LEVELS, mapfilename)
             self.openFileByName(filetopen)
 
+    def saveAndRun(self):
+        self.saveFile()
+        self.runServer()
 
     def runServer(self):
         game_server.servePage(os.path.abspath(current_project.settings["gamefolder"]))

@@ -103,6 +103,11 @@ class newFile(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
+        self.OutCheckbox = QtWidgets.QCheckBox("Map for other game project")
+        self.OutCheckbox.stateChanged.connect(self.otherFolder)
+
+
+        self.LabelFolder = QtWidgets.QLabel("Select game Project folder:")
         HBoxFolder = QtWidgets.QHBoxLayout()
         self.LineEditFolder = QtWidgets.QLineEdit()
         self.LineEditFolder.setReadOnly(True)
@@ -142,15 +147,36 @@ class newFile(QtWidgets.QDialog):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.VBox.addWidget(QtWidgets.QLabel("Select game Project folder:"))
-        self.VBox.addLayout(HBoxFolder)
+
         self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
         self.VBox.addLayout(HBoxName)
+        self.VBox.addWidget(self.OutCheckbox)
+        self.VBox.addWidget(self.LabelFolder)
+        self.VBox.addLayout(HBoxFolder)
         self.VBox.addWidget(self.buttonBox)
 
-        self.setGeometry(300, 40, 350, 650)
+        self.setGeometry(300, 40, 350, 400)
         self.setWindowTitle('New map...')
+
+        self.otherFolder(False)
+
+    def otherFolder(self, state):
+        if(state):
+            self.LabelFolder.show()
+            self.LineEditFolder.show()
+            self.buttonFolder.show()
+        else:
+            gamefolder = ""
+            if "gamefolder" in current_project.settings:
+                gamefolder = os.path.join(current_project.settings["gamefolder"])
+                if not os.path.isdir(gamefolder):
+                    gamefolder = ""
+            self.LineEditFolder.setText(gamefolder)
+            self.returnValue["gameFolder"] = gamefolder
+            self.LabelFolder.hide()
+            self.LineEditFolder.hide()
+            self.buttonFolder.hide()
 
     def validateLineEditWidth(self):
         if int(self.LineEditWidth.text()) < 15:

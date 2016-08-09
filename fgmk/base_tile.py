@@ -44,28 +44,17 @@ class QTile(QtWidgets.QLabel):
             tempscale = 0
 
         Composite = tile_set.clearTile.tileset[0][tempscale]
-        try:
-            for i in range(len(self.tileType) - 2):
-                if(self.tileType[i]):
-                    Composite = Image.alpha_composite(
-                        Composite, tileset[self.tileType[i]][tempscale])
-            if(self.tileType[i + 1]):
-                Composite = Image.alpha_composite(Composite, tile_set.colisionSet.tileset[
-                                                  self.tileType[i + 1]][tempscale])
-            if(self.tileType[i + 2]):
-                Composite = Image.alpha_composite(Composite, tile_set.eventSet.tileset[
-                                                  self.tileType[i + 2]][tempscale])
-        except:
-            for i in range(len(self.tileType) - 2):
-                if(self.tileType[i]):
-                    Composite = alpha_composite.alpha_composite(
-                        Composite, tileset[self.tileType[i]][tempscale])
-            if(self.tileType[i + 1]):
-                Composite = alpha_composite.alpha_composite(Composite, tile_set.colisionSet.tileset[
-                                                 self.tileType[i + 1]][tempscale])
-            if(self.tileType[i + 2]):
-                Composite = alpha_composite.alpha_composite(Composite, tile_set.eventSet.tileset[
-                                                 self.tileType[i + 2]][tempscale])
+
+        for i in range(len(self.tileType) - 2):
+            if(self.tileType[i]):
+                Composite = alpha_composite.alpha_composite(
+                    Composite, tileset[self.tileType[i]][tempscale])
+        if(self.tileType[i + 1]):
+            Composite = alpha_composite.alpha_composite(Composite, tile_set.colisionSet.tileset[
+                                             self.tileType[i + 1]][tempscale])
+        if(self.tileType[i + 2]):
+            Composite = alpha_composite.alpha_composite(Composite, tile_set.eventSet.tileset[
+                                             self.tileType[i + 2]][tempscale])
 
         if(scale != 1 and scale != 0.5 and scale != 2):
             Composite = Composite.resize(
