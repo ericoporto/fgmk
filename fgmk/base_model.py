@@ -10,12 +10,16 @@ class BaseFormat:
         self.jsonTree = {}
 
     def save(self, filename=""):
+        self.updateJsonTree()
+
         if(filename != ""):
             self.filename = filename
 
         writefile.writesafe(self.jsonTree, self.filename)
 
     def exportJS(self, filename="", jsvarname = ""):
+        self.updateJsonTree()
+        
         if(filename != ""):
             self.jsfilename = filename
 
@@ -33,3 +37,10 @@ class BaseFormat:
         f = open(self.filename, "r")
         self.jsonTree = json.load(f)
         f.close()
+
+    def isEqual(self, objToCompare):
+        self.updateJsonTree()
+        return writefile.isJsonEqual(self.jsonTree,objToCompare.jsonTree)
+
+    def updateJsonTree(self):
+        pass

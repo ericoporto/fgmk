@@ -726,8 +726,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if filename[-3:] != '.js':
                 filename += '.js'
 
-            current_project.settings["workingFile"] = filename
-            self.myMap.exportJS(current_project.settings["workingFile"])
+            #current_project.settings["workingFile"] = filename
+            self.myMap.exportJS(filename)
 
     def openFileByName(self, filename):
         if(filename=="newFile.map.json"):

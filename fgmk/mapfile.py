@@ -1,5 +1,5 @@
 import json
-from fgmk import tMat, getdata, writefile
+from fgmk import tMat, getdata, writefile, base_model
 import numpy as np
 
 LayersName = ["layer1", "layer2", "layer4", "colision", "events"]
@@ -71,15 +71,14 @@ def tileRect(firstClickedX, firstClickedY, lastClickedX, lastClickedY, fullLayer
     return whatChanged
 
 
-class MapFormat:
+class MapFormat(base_model.BaseFormat):
     """
     Creates a map. This object has functions to allow modifying the map
     jsonTree, saving to file, loading a file over, new map creation, and more.
     The map only exists in memory, it's not an image, canvas or similar.
     """
-
     def __init__(self):
-        self.jsonTree = []
+        super().__init__()
 
         self.palette = []
 
@@ -156,17 +155,8 @@ class MapFormat:
                          }
                          }
 
-    def save(self, mapn):
-        # print(self.listOfActions)
-        self.updateJsonTree()
-        writefile.writesafe(self.jsonTree, mapn)
-
     def exportJS(self, mapn):
-        self.updateJsonTree()
-        #f.write("var " + self.levelName + "= {};\n")
-        #f.write(self.levelName + ".levels = [];\n")
-        #f.write(self.levelName + ".levels[0] = {\n")
-        writefile.writesafe(self.jsonTree, mapn, self.levelName)
+        super().exportJS(mapn, self.levelName)
 
     def load(self, mapn):
         f = open(mapn, "r")
@@ -269,5 +259,4 @@ class MapFormat:
         return self.listOfEventsTypes[str(event)]
 
     def isEqualMap(self, compareMap):
-        self.updateJsonTree()
-        return writefile.isJsonEqual(self.jsonTree,compareMap.jsonTree)
+        super().isEqual(compareMap)

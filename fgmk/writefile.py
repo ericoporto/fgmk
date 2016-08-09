@@ -51,7 +51,7 @@ def writesafe(data, fname, varname=None):
             if(varname==None):
                 fwriteKeyVals(data, f)
             else:
-                f.write("var " + self.levelName + "= {\n")
+                f.write("var " + varname + "= {\n")
                 fwriteKeyValsJS(data,f)
                 f.write("};")
         finally:
