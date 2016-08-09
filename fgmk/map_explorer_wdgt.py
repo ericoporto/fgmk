@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os.path
+from os import remove as osremove
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import game_init, current_project
+from fgmk import game_init, current_project, tile_set, getdata, base_tile, fifl
 
 class MapExplorerWidget(QtWidgets.QWidget):
     """
@@ -15,17 +16,67 @@ class MapExplorerWidget(QtWidgets.QWidget):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
+        self.menuTileset = tile_set.TileSet(getdata.path('map_explorer_icons.png'))
+        self.scale = 1
+
+        self.HBox = QtWidgets.QHBoxLayout()
+        self.HBox.setAlignment(QtCore.Qt.AlignLeft)
+
+        iconName = ["open","trash"]
+        iconHelp = ["opens a map file. Same as double clicking.",
+                    "deletes a map file."]
+        self.menuIcons = []
+
+        for i in range(len(iconName)):
+            self.menuIcons.append(base_tile.QTile(self))
+            self.menuIcons[-1].initTile(self.menuTileset.tileset, 0, 0,
+                                        self.menuTileset.boxsize,
+                                        [0, 0, i+1, 0, 0], self.scale)
+            self.menuIcons[-1].setObjectName(iconName[i])
+            self.menuIcons[-1].setToolTip(iconName[i] + "\nWhen clicked, " + iconHelp[i])
+            self.menuIcons[-1].clicked.connect(self.clickedOnIcon)
+            self.HBox.addWidget(self.menuIcons[-1])
+
+
         self.parent = parent
         self.LvlLWidget = QtWidgets.QListWidget(self)
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.VBox.addLayout(self.HBox)
         self.VBox.addWidget(self.LvlLWidget)
         self.levelList = []
         self.mapForOpen = ''
-        self.LvlLWidget.itemClicked.connect(self.doubleClickedForOpen)
-        #self.LvlLWidget.itemDoubleClicked.connect(self.doubleClickedForOpen)
+        self.LvlLWidget.itemDoubleClicked.connect(self.openMapItem)
+        #self.LvlLWidget.itemClicked.connect(self.doubleClickedForOpen)
 
         self.show()
+
+    def clickedOnIcon(self):
+        action = str(self.sender().objectName())
+        are_items_selected = len(self.LvlLWidget.selectedItems())>0
+        if are_items_selected:
+            selected_item = self.LvlLWidget.selectedItems()[0]
+
+            if(action == "open"):
+                self.openMapItem(selected_item)
+
+            elif(action == "trash"):
+                self.deleteMap(selected_item)
+
+
+    def deleteMap(self, item):
+        mapForDeletion = self.initFile['LevelsList'][item.text()]
+
+        gamefolder = current_project.settings["gamefolder"]
+
+        target_to_delete = os.path.join(gamefolder,fifl.LEVELS,mapForDeletion)
+
+        reply = QtWidgets.QMessageBox.question(self, 'Delete?',
+                                               'Do you really wish to delete:\n'+mapForDeletion, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            osremove(target_to_delete)
+            game_init.regenerateLevelList()
+            self.reloadInitFile()
 
     def reloadInitFile(self):
         gamefolder = current_project.settings["gamefolder"]
@@ -44,7 +95,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
         else:
             return False
 
-    def doubleClickedForOpen(self, item):
+    def openMapItem(self, item):
         mapForOpen = self.initFile['LevelsList'][item.text()]
         #only open map if it's not already opened
         if(os.path.basename(current_project.settings["workingFile"])!=mapForOpen):
