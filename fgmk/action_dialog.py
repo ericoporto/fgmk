@@ -379,6 +379,11 @@ class IF(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
+        notefont = QtGui.QFont()
+        notefont.setItalic(True)
+        note = QtWidgets.QLabel("Use var:varname when referencing variables")
+        note.setFont(notefont)
+
         self.var1LabelText = QtWidgets.QLabel("Write var or value:")
         self.operLabelText = QtWidgets.QLabel("Operation:")
         self.var2LabelText = QtWidgets.QLabel("Write var or value:")
@@ -394,6 +399,7 @@ class IF(QtWidgets.QDialog):
         self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.var1LabelText)
+        self.VBox.addWidget(note)
         self.VBox.addWidget(self.var1LineEdit)
         self.VBox.addWidget(self.operLabelText)
         self.VBox.addWidget(self.operLineEdit)

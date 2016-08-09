@@ -4,7 +4,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, writefile, current_project
+from fgmk import fifl, base_model, current_project
 
 # TODO fix enter on QLineEdit
 
@@ -14,7 +14,7 @@ standardMovement = ["standing", "walking"]
 
 GAMEFOLDER = "gamefolder"
 
-class CharasetFormat(writefile.BaseFormat):
+class CharasetFormat(base_model.BaseFormat):
 
     def __init__(self):
         super().__init__()
@@ -818,7 +818,7 @@ class CharasetEditorWidget(QtWidgets.QDialog):
         if (len(self.animNames.selectedItems()) > 0):
             self.animList.addItem(CsetAItem(self.palette.rValue[
                                   0], self.palette.rValue[1], self.palette.rValue[2]))
-            
+
 
     def animListUpdated(self):
         if(self.updating == False):
