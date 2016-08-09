@@ -5,7 +5,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, base_model, current_project
+from fgmk import fifl, base_model, current_project, img_util
 
 # TODO fix enter on QLineEdit
 
@@ -79,7 +79,7 @@ class BaseCharaset:
             self.boxw = 32
             self.boxh = 64
             self.boxsize = (self.boxw, self.boxh)
-            self.imageFile = Image.open(image_file)
+            self.imageFile = img_util.open(image_file)
             if self.imageFile.size[0] % self.boxsize[0] == 0 and self.imageFile.size[1] % self.boxsize[1] == 0:
                 currentx = 0
                 currenty = 0

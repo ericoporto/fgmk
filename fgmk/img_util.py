@@ -34,3 +34,9 @@ except:
         out = out.astype('uint8')
         out = Image.fromarray(out, 'RGBA')
         return out
+
+def open(filename):
+    img = Image.open(filename)
+    if(img.mode != 'RGBA'):
+        img.convert('RGBA')
+    return img

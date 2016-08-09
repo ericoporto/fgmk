@@ -2,9 +2,9 @@
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, current_project, alpha_composite
+from fgmk import tMat, getdata, current_project, img_util
 
-emptyTile = Image.open(getdata.path('emptyTile.png'))
+emptyTile = img_util.open(getdata.path('emptyTile.png'))
 
 class TileSet:
     """
@@ -25,7 +25,7 @@ class TileSet:
     def initWithoutPalette(self, image_file):
         self.tileset = {}
         self.boxsize = 32
-        self.imageFile = Image.open(image_file)
+        self.imageFile = img_util.open(image_file)
         if self.imageFile.size[0] % self.boxsize == 0 and self.imageFile.size[1] % self.boxsize == 0:
             currentx = 0
             currenty = 0
@@ -49,9 +49,9 @@ class TileSet:
         v = self.tilePalette
 
         if(self.fakefolder):
-            self.imageFile = Image.open(getdata.path('tile.png'))
+            self.imageFile = img_util.open(getdata.path('tile.png'))
         else:
-            self.imageFile = Image.open(image_file)
+            self.imageFile = img_util.open(image_file)
         if self.imageFile.size[0] % self.boxsize == 0 and self.imageFile.size[1] % self.boxsize == 0:
             if isinstance(self.tilePalette, dict):
                 # remember: crop uses (( and )) because it is converting the

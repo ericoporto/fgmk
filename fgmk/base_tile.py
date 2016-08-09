@@ -3,7 +3,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, current_project, alpha_composite, tile_set
+from fgmk import tMat, getdata, current_project, img_util, tile_set
 
 
 class QTile(QtWidgets.QLabel):
@@ -47,13 +47,13 @@ class QTile(QtWidgets.QLabel):
 
         for i in range(len(self.tileType) - 2):
             if(self.tileType[i]):
-                Composite = alpha_composite.alpha_composite(
+                Composite = img_util.alpha_composite(
                     Composite, tileset[self.tileType[i]][tempscale])
         if(self.tileType[i + 1]):
-            Composite = alpha_composite.alpha_composite(Composite, tile_set.colisionSet.tileset[
+            Composite = img_util.alpha_composite(Composite, tile_set.colisionSet.tileset[
                                              self.tileType[i + 1]][tempscale])
         if(self.tileType[i + 2]):
-            Composite = alpha_composite.alpha_composite(Composite, tile_set.eventSet.tileset[
+            Composite = img_util.alpha_composite(Composite, tile_set.eventSet.tileset[
                                              self.tileType[i + 2]][tempscale])
 
         if(scale != 1 and scale != 0.5 and scale != 2):
