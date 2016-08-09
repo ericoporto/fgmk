@@ -78,7 +78,8 @@ class MapFormat(base_model.BaseFormat):
     The map only exists in memory, it's not an image, canvas or similar.
     """
     def __init__(self):
-        super().__init__()
+        #super().__init__()
+        base_model.BaseFormat.__init__(self)
 
         self.palette = []
 
@@ -156,7 +157,9 @@ class MapFormat(base_model.BaseFormat):
                          }
 
     def exportJS(self, mapn):
-        super().exportJS(mapn, self.levelName)
+        #super().exportJS(mapn, self.levelName)
+        base_model.BaseFormat.exportJS(self, mapn, self.levelName)
+
 
     def load(self, mapn):
         f = open(mapn, "r")

@@ -5,7 +5,8 @@ from fgmk import base_tile, tMat, tools_wdgt
 class PaletteWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None, tileSetInstance=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.parent=parent
 

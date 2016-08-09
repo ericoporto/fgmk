@@ -18,7 +18,8 @@ GAMEFOLDER = "gamefolder"
 class CharasetFormat(base_model.BaseFormat):
 
     def __init__(self):
-        super().__init__()
+        #super().__init__()
+        base_model.BaseFormat.__init__(self)
 
         self.size = [32, 64]
         self.boxsize = 32
@@ -111,7 +112,8 @@ class CharaPalette(QtWidgets.QWidget):
     clicked = QtCore.pyqtSignal()
 
     def __init__(self, base_image=None, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.Grid = QtWidgets.QGridLayout(self)
 
@@ -174,7 +176,8 @@ class CharaPalette(QtWidgets.QWidget):
 
 class CharaTile(QtWidgets.QLabel):
     def __init(self, parent):
-        super().__init__(parent)
+        #super().__init__(parent)
+        QtWidgets.QLabel.__init__(self, parent)
 
         self.charType = []
         self.boxw = 32
@@ -212,7 +215,8 @@ class CharaTile(QtWidgets.QLabel):
 class csetsItem(QtWidgets.QListWidgetItem):
 
     def __init__(self, aname, jsonTree={}):
-        super().__init__(aname)
+        #super().__init__(aname)
+        QtWidgets.QListWidgetItem.__init__(self, aname)
 
         self.aname = aname
         self.jsonTree = jsonTree
@@ -221,7 +225,8 @@ class csetsItem(QtWidgets.QListWidgetItem):
 class AnimNamesItem(QtWidgets.QListWidgetItem):
 
     def __init__(self, aname, isgroup=False, isparent=False):
-        super().__init__(aname)
+        #super().__init__(aname)
+        QtWidgets.QListWidgetItem.__init__(self, aname)
 
         self.isgroup = isgroup
         self.isparent = isparent
@@ -246,7 +251,8 @@ class AnimNamesItem(QtWidgets.QListWidgetItem):
 class CsetAItem(QtWidgets.QListWidgetItem):
 
     def __init__(self, charType, bcset, scale=1):
-        super().__init__()
+        #super().__init__()
+        QtWidgets.QListWidgetItem.__init__(self)
 
         if(scale == 2):
             tempscale = 1
@@ -272,7 +278,8 @@ class CsetAItem(QtWidgets.QListWidgetItem):
 class AnimatedCharaTile(QtWidgets.QLabel):
 
     def __init__(self, parent=None, scale=2):
-        super().__init__(parent)
+        #super().__init__(parent)
+        QtWidgets.QLabel.__init__(self, parent)
 
         self.charType = []
         self.boxw = 32
@@ -342,7 +349,8 @@ def isParent(jsonTreeItem):
 class CharasetSelector(QtWidgets.QWidget):
 
     def __init__(self, parent=None, ssettings={}, cset=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.ssettings = ssettings
@@ -412,7 +420,8 @@ class CharasetSelector(QtWidgets.QWidget):
 
 class CharasetPreviewer(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, cset=None, scale=2, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.ssettings = ssettings
 
@@ -464,7 +473,8 @@ class CharasetPreviewer(QtWidgets.QWidget):
 class CharasetEditorWidget(QtWidgets.QDialog):
 
     def __init__(self, parent=None, ssettings={}, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.cset = CharasetFormat()
 
@@ -842,13 +852,15 @@ class CharasetEditorWidget(QtWidgets.QDialog):
 class CharasPaletteWidget(QtWidgets.QWidget):
 
     def __init__(self, pMap, pSettings, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
 
 class CharasEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, pMap, pSettings, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
 
 if __name__ == "__main__":

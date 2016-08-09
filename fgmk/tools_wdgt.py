@@ -16,7 +16,8 @@ tools={ "pen": 0,
 class ToolsWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.scale = 2
 

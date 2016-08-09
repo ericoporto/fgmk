@@ -5,7 +5,8 @@ from fgmk import persona, current_project, cmd, tools_wdgt
 
 class CharasPalWidget(QtWidgets.QWidget):
     def __init__(self, mapWdgt, pMap, parent=None, charaInstance=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.mapWdgt = mapWdgt
         self.pMap = pMap

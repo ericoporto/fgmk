@@ -18,7 +18,8 @@ firstClickY = None
 
 class MapWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.Grid = QtWidgets.QGridLayout(self)
 
@@ -202,7 +203,8 @@ class MapWidget(QtWidgets.QWidget):
 
 class ExitFSWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self,parent, **kwargs)
+        #super().__init__(parent, **kwargs)
 
         self.parent = parent
         self.VBox = QtWidgets.QVBoxLayout(self)
@@ -221,7 +223,8 @@ class ExitFSWidget(QtWidgets.QWidget):
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, filelist, **kwargs):
-        super().__init__(None, **kwargs)
+        #super().__init__(None, **kwargs)
+        QtWidgets.QMainWindow.__init__(self, None, **kwargs)
 
         #self.resize(1024, 768)
 

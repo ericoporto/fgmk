@@ -15,7 +15,8 @@ moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"mo
 
 class CharasFormat(base_model.BaseFormat):
     def __init__( self ):
-        super().__init__()
+        #super().__init__()
+        base_model.BaseFormat.__init__(self)
 
         self.new()
 
@@ -48,7 +49,8 @@ class MoveButtons(QtWidgets.QWidget):
     buttonright = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.Grid = QtWidgets.QGridLayout(self)
 
@@ -86,7 +88,8 @@ class MoveButtons(QtWidgets.QWidget):
 
 class MoveItem(QtWidgets.QListWidgetItem):
     def __init__(self, moveorface, direction = ""):
-        super().__init__(moveorface+direction)
+        #super().__init__(moveorface+direction)
+        QtWidgets.QListWidgetItem.__init__(self, moveorface+direction)
 
         if (direction == ""):
             self.direction = moveorface[4:]
@@ -105,7 +108,8 @@ class MoveItem(QtWidgets.QListWidgetItem):
 
 class PropertiesWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.nocolision = QtWidgets.QCheckBox("igone colision")
@@ -143,7 +147,8 @@ class PropertiesWidget(QtWidgets.QWidget):
 
 class MoveWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.dirButtons = MoveButtons()
@@ -267,7 +272,8 @@ class MoveWidget(QtWidgets.QWidget):
 
 class ActionsWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, ischara=False , **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.ssettings = ssettings
         self.parent = parent
@@ -437,7 +443,8 @@ class ActionsWidget(QtWidgets.QWidget):
 
 class CharaItem(QtWidgets.QListWidgetItem):
     def __init__(self, aname, jsonTree = {}):
-        super().__init__(aname)
+        #super().__init__(aname)
+        QtWidgets.QListWidgetItem.__init__(self, aname)
 
         if(jsonTree == {}):
              jsonTree = {'movements': [], 'actions': {'type': [], 'list': []}, 'charaset': ''}
@@ -449,7 +456,8 @@ class CharaList(QtWidgets.QWidget):
     SelectionChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, ssettings={}, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
 
@@ -537,7 +545,8 @@ class CharaSelector(QtWidgets.QWidget):
     charaClicked = QtCore.pyqtSignal()
     charaDoubleClicked = QtCore.pyqtSignal()
     def __init__(self, parent=None, ssettings={}, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.ssettings = ssettings
 
@@ -599,7 +608,8 @@ class CharaSelector(QtWidgets.QWidget):
 
 class MiniCharaTile(QtWidgets.QWidget):
     def __init__(self, parent=None, ssettings={}, chara="", position=(0,0), scale=1, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.chara = chara
         self.position = position
@@ -644,7 +654,8 @@ class MiniCharaTile(QtWidgets.QWidget):
 
 class CharaEditor(QtWidgets.QDialog):
     def __init__(self, parent=None, ssettings={}, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.layout = QtWidgets.QHBoxLayout(self)
 

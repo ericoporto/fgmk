@@ -12,7 +12,8 @@ class MapExplorerWidget(QtWidgets.QWidget):
     mapOpened = QtCore.pyqtSignal()
 
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.parent = parent
         self.LvlLWidget = QtWidgets.QListWidget(self)

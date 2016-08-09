@@ -13,7 +13,8 @@ class EventsWidget(QtWidgets.QWidget):
     """
 
     def __init__(self, pMap, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.parent = parent
 
