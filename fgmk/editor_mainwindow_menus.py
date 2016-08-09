@@ -15,7 +15,8 @@ class newProject(QtWidgets.QDialog):
     """
 
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.returnValue = {"name": "NewFile", "baseFolder": ""}
 
@@ -86,7 +87,8 @@ class newFile(QtWidgets.QDialog):
     will be open in a new window.
     """
     def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         gamefolder = ""
         if "gamefolder" in current_project.settings:

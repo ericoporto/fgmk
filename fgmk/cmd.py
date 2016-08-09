@@ -69,7 +69,8 @@ class CommandAddAction(QtWidgets.QUndoCommand):
     widget and the map (that has the jsontree)
     """
     def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontoadd):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init(self, description)
 
         self.pEventsWidget = pEventsWidget
         self.actionindex = actionindex
@@ -92,7 +93,8 @@ class CommandChangeAction(QtWidgets.QUndoCommand):
     widget and the map (that has the jsontree)
     """
     def __init__(self, description, pEventsWidget, actionindex,  eventindex, oldaction, newaction):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pEventsWidget = pEventsWidget
         self.actionindex = actionindex
@@ -118,7 +120,8 @@ class CommandDelAction(QtWidgets.QUndoCommand):
     widget and the map (that has the jsontree)
     """
     def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontodel):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pEventsWidget = pEventsWidget
         self.actionindex = actionindex
@@ -143,7 +146,8 @@ class CommandAddChara(QtWidgets.QUndoCommand):
     do action) and undo capabilities.
     """
     def __init__(self, description, pCharasPalWidget,  position=(0, 0), chara=None,):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pCharasPalWidget = pCharasPalWidget
         self.position = position
@@ -167,7 +171,8 @@ class CommandDelChara(QtWidgets.QUndoCommand):
     do action) and undo capabilities.
     """
     def __init__(self, description, pCharasPalWidget,  position, chara):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pCharasPalWidget = pCharasPalWidget
         self.position = position
@@ -189,7 +194,8 @@ class CommandCTTileType(QtWidgets.QUndoCommand):
     do action) and undo capabilities.
     """
     def __init__(self, parent, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, description):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.sender = senderTileWdgt
         self.tileX = self.sender.tileX
@@ -235,7 +241,8 @@ class CommandCGroupTType(QtWidgets.QUndoCommand):
     """
 
     def __init__(self, parent, senderTileWdgt, pMap, ptileset, layer,  changeTypeTo, listToChange, description):
-        super().__init__(description)
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.tileX = senderTileWdgt.tileX
         self.tileY = senderTileWdgt.tileY

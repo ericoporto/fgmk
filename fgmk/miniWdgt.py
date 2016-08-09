@@ -6,7 +6,8 @@ class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
 
     def __init__(self, pMyTileset, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
 
@@ -78,7 +79,8 @@ class MiniMapWidget(QtWidgets.QWidget):
     selectedTile = QtCore.pyqtSignal()
 
     def __init__(self, pMyMap, pMyTileset, parent=None, indicativeToUse=1, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.Grid = QtWidgets.QGridLayout(self)
 

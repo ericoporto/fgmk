@@ -8,7 +8,8 @@ from fgmk import tMat, getdata, current_project, alpha_composite, tile_set
 
 class QTile(QtWidgets.QLabel):
     def __init(self, parent):
-        super().__init__(parent)
+        #super().__init__(parent)
+        QtWidgets.QLabel.__init__(self, parent)
 
     tileType = []
     tileX = 0

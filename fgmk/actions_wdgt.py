@@ -5,7 +5,8 @@ from fgmk import action_dialog, getdata
 
 class actionItem(QtWidgets.QListWidgetItem):
     def __init__(self, actionAndParameter):
-        super().__init__(str(actionAndParameter))
+        #super().__init__(str(actionAndParameter))
+        QtWidgets.QListWidgetItem.__init__(self, str(actionAndParameter))
         self.setText = str(actionAndParameter)
         self.setData(QtCore.Qt.UserRole, actionAndParameter)
 
@@ -17,7 +18,9 @@ class actionItem(QtWidgets.QListWidgetItem):
 
 class ActionsWidget(QtWidgets.QDialog):
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
         self.psSettings = psSettings
         self.ischaras = ischaras
 

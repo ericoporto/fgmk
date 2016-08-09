@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import sys
 from numbers import Number
 from fgmk import print_error
 
@@ -8,6 +9,27 @@ try:
   basestring
 except NameError:
   basestring = (str, bytes)
+
+#from here: http://code.activestate.com/recipes/579097-safely-and-atomically-write-to-a-file/
+try:
+    osreplace = os.replace  # Python 3.3 and better.
+except AttributeError:
+    if sys.platform == 'win32':
+        # FIXME This is definitely not atomic!
+        # But it's how (for example) Mercurial does it, as of 2016-03-23
+        # https://selenic.com/repo/hg/file/tip/mercurial/windows.py
+        def osreplace(source, destination):
+            assert sys.platform == 'win32'
+            try:
+                os.rename(source, dest)
+            except OSError as err:
+                if err.winerr != 183:
+                    raise
+                os.remove(dest)
+                os.rename(source, dest)
+    else:
+        # Atomic on POSIX. Not sure about Cygwin, OS/2 or others.
+        osreplace = os.rename
 
 
 def ordered(obj):
@@ -65,13 +87,13 @@ def writesafe(data, fname, varname=None):
                     tempjsontree = json.load(f)
                     if isJsonEqual(data,tempjsontree):
                         f.close()
-                        os.replace(tempfile,fname)
+                        osreplace(tempfile,fname)
                     else:
                         print_error.printe("written file not equal to data")
                 except:
                     print_error.printe("error when checking file")
             else:
-                os.replace(tempfile,fname)
+                osreplace(tempfile,fname)
     except:
         print_error.printe('error when opening file')
 

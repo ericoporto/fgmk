@@ -9,7 +9,9 @@ from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 class changeTile(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
         self.nothis = nothis
         self.gamefolder = gamefolder
         self.edit = edit
@@ -204,7 +206,8 @@ class changeTile(QtWidgets.QDialog):
 
 class teleport(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, selectStartPosition=None,  **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.nothis = nothis
         self.selectStartPosition = selectStartPosition
@@ -335,7 +338,8 @@ class teleport(QtWidgets.QDialog):
 class END(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -355,7 +359,8 @@ class END(QtWidgets.QDialog):
 class ELSE(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -375,7 +380,8 @@ class ELSE(QtWidgets.QDialog):
 class IF(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -424,7 +430,8 @@ class IF(QtWidgets.QDialog):
 
 class setVar(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -462,7 +469,8 @@ class setVar(QtWidgets.QDialog):
 
 class varPlusOne(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -494,7 +502,8 @@ class varPlusOne(QtWidgets.QDialog):
 
 class showText(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -533,7 +542,8 @@ class showText(QtWidgets.QDialog):
 
 class fadeIn(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -583,7 +593,8 @@ class fadeIn(QtWidgets.QDialog):
 
 class fadeOut(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -632,7 +643,8 @@ class fadeOut(QtWidgets.QDialog):
 
 class rain(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -672,7 +684,8 @@ class rain(QtWidgets.QDialog):
 class noEffect(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
-        super().__init__(parent, **kwargs)
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.accept
 
