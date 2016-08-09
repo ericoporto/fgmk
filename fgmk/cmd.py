@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 

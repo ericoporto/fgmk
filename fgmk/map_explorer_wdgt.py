@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk import game_init, current_project

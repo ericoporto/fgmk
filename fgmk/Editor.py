@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # display a tiled image from tileset with PyQt
 import os
 import tarfile

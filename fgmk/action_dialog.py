@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt

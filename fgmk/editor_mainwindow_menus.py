@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Contains the paths expected for game assets
 """

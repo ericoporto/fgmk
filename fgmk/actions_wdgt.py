@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from PyQt5 import QtCore, QtWidgets
 from fgmk import action_dialog, getdata

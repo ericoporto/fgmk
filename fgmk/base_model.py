@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from fgmk import write_file
 

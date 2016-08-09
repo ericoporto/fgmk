@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore
 from fgmk import base_tile, tMat, tile_set
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk import mapfile
 

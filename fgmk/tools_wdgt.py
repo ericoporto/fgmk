@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_tile, getdata, tile_set
 from fgmk.flowlayout import FlowLayout as FlowLayout

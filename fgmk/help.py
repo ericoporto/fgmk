@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from fgmk import __title__, __version__, __copyright__, __license__
 from fgmk import temp, getdata, current_project, game_init
 from PyQt5 import QtWidgets

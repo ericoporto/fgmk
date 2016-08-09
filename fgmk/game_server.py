@@ -4,12 +4,17 @@ from threading import Thread
 import webbrowser
 #import BaseHTTPServer
 #import SimpleHTTPServer
-import http.server
+try:
+    from http.server import HTTPServer as BaseHTTPServer
+    from http.server import SimpleHTTPRequestHandler as SimpleHTTPRequestHandler
+except ImportError:
+    import BaseHTTPServer
+    from  SimpleHTTPServer import SimpleHTTPRequestHandler as SimpleHTTPRequestHandler
 
-class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+class NoCacheHTTPRequestHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_my_headers()
-        http.server.SimpleHTTPRequestHandler.end_headers(self)
+        SimpleHTTPRequestHandler.end_headers(self)
 
     def send_my_headers(self):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -19,7 +24,7 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 def servePage(urlToServe):
     tempOrigiCurDir = os.curdir
     os.chdir(urlToServe)
-    serverClass = http.server.HTTPServer
+    serverClass = BaseHTTPServer
     handlerClass = NoCacheHTTPRequestHandler
 
     Protocol = "HTTP/1.0"

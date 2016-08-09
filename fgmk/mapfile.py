@@ -259,4 +259,4 @@ class MapFormat(base_model.BaseFormat):
         return self.listOfEventsTypes[str(event)]
 
     def isEqualMap(self, compareMap):
-        super().isEqual(compareMap)
+        return super().isEqual(compareMap)
