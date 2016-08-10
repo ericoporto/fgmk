@@ -113,7 +113,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
             self.levelList.append(level)
             self.LvlLWidget.insertItem(0,level)
 
-        if(self.initFile):
+        if(self.initFile != None):
             return True
         else:
             return False

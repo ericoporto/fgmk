@@ -251,12 +251,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.FancyWindow(self)
 
-        self.opemFileIfDropped(filelist)
         self.setAcceptDrops(True)
 
         self.settings = QtCore.QSettings("FGMK", "fgmkEditor")
 
         self.firsttime = self.loadSettings()
+        self.opemFileIfDropped(filelist)
 
     def afterInit(self):
         if self.firsttime:
@@ -762,6 +762,7 @@ class MainWindow(QtWidgets.QMainWindow):
             hasinit = self.myMapExplorerWidget.reloadInitFile()
             self.setEnabledAll(hasinit == True)
             cmd.clearCommandStack()
+            self.firsttime == False
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):
