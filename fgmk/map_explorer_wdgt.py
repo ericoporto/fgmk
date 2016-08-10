@@ -88,12 +88,18 @@ class MapExplorerWidget(QtWidgets.QWidget):
 
         target_to_delete = os.path.join(gamefolder,fifl.LEVELS,mapForDeletion)
 
-        reply = QtWidgets.QMessageBox.question(self, 'Delete?',
-                                               'Do you really wish to delete:\n'+mapForDeletion, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if reply == QtWidgets.QMessageBox.Yes:
-            osremove(target_to_delete)
-            game_init.regenerateLevelList()
-            self.reloadInitFile()
+        if(os.path.basename(current_project.settings["workingFile"])!=mapForDeletion):
+
+            reply = QtWidgets.QMessageBox.question(self, 'Delete?',
+                                                   'Do you really wish to delete:\n'+mapForDeletion, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
+                osremove(target_to_delete)
+                game_init.regenerateLevelList()
+                self.reloadInitFile()
+
+        else:
+            QtWidgets.QMessageBox.information(self, 'Delete Problem',
+                                                   "Can't delete a map while it's open in the map editor.", QtWidgets.QMessageBox.Ok )
 
     def reloadInitFile(self):
         gamefolder = current_project.settings["gamefolder"]
