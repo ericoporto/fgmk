@@ -70,7 +70,7 @@ class CommandAddAction(QtWidgets.QUndoCommand):
     """
     def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontoadd):
         #super().__init__(description)
-        QtWidgets.QUndoCommand.__init(self, description)
+        QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pEventsWidget = pEventsWidget
         self.actionindex = actionindex
