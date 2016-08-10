@@ -225,7 +225,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, filelist, **kwargs):
         #super().__init__(None, **kwargs)
         QtWidgets.QMainWindow.__init__(self, None, **kwargs)
-
         #self.resize(1024, 768)
 
         cmd.initUndoStack(self)
@@ -762,7 +761,7 @@ class MainWindow(QtWidgets.QMainWindow):
             hasinit = self.myMapExplorerWidget.reloadInitFile()
             self.setEnabledAll(hasinit == True)
             cmd.clearCommandStack()
-            self.firsttime == False
+            self.firsttime = False
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):

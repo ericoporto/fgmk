@@ -20,11 +20,11 @@ class QTile(QtWidgets.QLabel):
     rightClicked = QtCore.pyqtSignal()
     doubleClicked = QtCore.pyqtSignal()
 
-    def Rescale(self, tileset,  scale=1):
+    def Rescale(self, tileset,  scale=1, anim=False):
         self.scale = scale
         self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
-    def initTile(self, tileset, x, y, boxSize, tileType, scale=1):
+    def initTile(self, tileset, x, y, boxSize, tileType, scale=1, anim=False):
         self.tileType = tileType
         self.tileX = x
         self.tileY = y
@@ -32,7 +32,7 @@ class QTile(QtWidgets.QLabel):
         self.scale = scale
         self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
-    def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1):
+    def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1, anim=False):
         self.tileType[layer] = ChangeTileType
         self.scale = scale
 
@@ -49,9 +49,16 @@ class QTile(QtWidgets.QLabel):
             if(self.tileType[i]):
                 Composite = img_util.alpha_composite(
                     Composite, tileset[self.tileType[i]][tempscale])
-        if(self.tileType[i + 1]):
-            Composite = img_util.alpha_composite(Composite, tile_set.colisionSet.tileset[
-                                             self.tileType[i + 1]][tempscale])
+
+        if(anim==False):
+            if(self.tileType[i + 1]):
+                Composite = img_util.alpha_composite(Composite, tile_set.colisionSet.tileset[
+                                                 self.tileType[i + 1]][tempscale])
+        else:
+            if(self.tileType[i + 1]):
+                Composite = img_util.alpha_composite(Composite, tile_set.animSet.tileset[
+                                                 self.tileType[i + 1]][tempscale])
+
         if(self.tileType[i + 2]):
             Composite = img_util.alpha_composite(Composite, tile_set.eventSet.tileset[
                                              self.tileType[i + 2]][tempscale])
