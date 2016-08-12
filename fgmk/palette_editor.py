@@ -1,6 +1,6 @@
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_model, current_project, fifl, tile_set, base_tile
+from fgmk import base_model, current_project, fifl, tile_set, base_tile, getdata
 
 ANIMLAYER=3
 IDLAYER=4
@@ -125,7 +125,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
 
         self.TileWidth = 0
         self.TileHeight = 0
-        self.myScale = 2
+        self.myScale = 1
         self.TileList = []
 
     def LoadPal(self, pal):
@@ -142,6 +142,19 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         self.TileWidth = int(self.t.imageFile.size[0]/self.t.boxsize)
         self.TileHeight = int(self.t.imageFile.size[1]/self.t.boxsize)
         self.DrawPal()
+
+    def Rescale(self, scale=None):
+        if(scale != None):
+            self.myScale = scale
+
+        for iy in range(self.TileHeight):
+            for jx in range(self.TileWidth):
+                self.TileList[iy][jx].Rescale(
+                    self.t.tileset, self.myScale)
+
+        self.resize(self.TileWidth * self.t.boxsize * self.myScale,
+                    self.TileHeight * self.t.boxsize * self.myScale)
+
 
     def DrawPal(self):
         # self.setUpdatesEnabled(False)
@@ -228,7 +241,6 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         else:
             return [0,0,0,0,0]
 
-
     def updatePalFile(self):
         self.pal.delalltiles()
         self.pal.addtile(T(0,(0,0),0))
@@ -246,6 +258,12 @@ class PaletteCfgWidget(QtWidgets.QWidget):
             if(self.currentType>299):
                 self.currentType=0
             self.parent.tileSpinbox.setValue(self.currentType)
+        elif modifiers == QtCore.Qt.ControlModifier:
+            self.currentType-=1
+            if(self.currentType<0):
+                self.currentType=0
+            self.parent.tileSpinbox.setValue(self.currentType)
+
 
         command = CommandSetTileType(self, self.sender(), 'id', self.currentType, "set id")
         self.parent.undostack.push(command)
@@ -257,6 +275,11 @@ class PaletteCfgWidget(QtWidgets.QWidget):
             if(self.currentAnim>4):
                 self.currentAnim=0
             self.parent.animSpinbox.setValue(self.currentAnim)
+        if modifiers == QtCore.Qt.ControlModifier:
+            self.currentAnim-=1
+            if(self.currentAnim<0):
+                self.currentAnim=0
+            self.parent.animSpinbox.setValue(self.currentAnim)
 
         command = CommandSetTileType(self, self.sender(), 'anim', self.currentAnim, "set anim")
         self.parent.undostack.push(command)
@@ -266,6 +289,23 @@ class PaletteCfgWidget(QtWidgets.QWidget):
     def changeAnimIdCurrent(self, num):
         self.currentAnim = num
 
+    def getMaxTile(self):
+        maxtile = 0
+        for iy in range(self.TileHeight):
+            for jx in range(self.TileWidth):
+                tiletype = self.TileList[iy][jx].tileType
+                if(tiletype[IDLAYER]>maxtile):
+                    maxtile=tiletype[IDLAYER]
+        return maxtile
+
+    def getMaxAnim(self):
+        maxanim = 1
+        for iy in range(self.TileHeight):
+            for jx in range(self.TileWidth):
+                tiletype = self.TileList[iy][jx].tileType
+                if(tiletype[IDLAYER]==self.currentType and tiletype[ANIMLAYER] > maxanim):
+                    maxanim=tiletype[ANIMLAYER]
+        return maxanim
 
 class CommandSetTileType(QtWidgets.QUndoCommand):
     """
@@ -325,29 +365,20 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         VBox.setAlignment(QtCore.Qt.AlignTop)
         insideScrollArea.setLayout(VBox)
 
-        #this block creates the main button to open and save a palette
-        HBox=QtWidgets.QHBoxLayout()
-        self.buttonGroup = QtWidgets.QButtonGroup()
-        self.buttonGroup.buttonClicked[QtWidgets.QAbstractButton].connect(self.buttonClicked)
-        buttons=[{'name':'new palette' , 'id':0, 'objname':'new_pal' },
-                 {'name':'open palette', 'id':1, 'objname':'open_pal'},
-                 {'name':'save palette', 'id':2, 'objname':'save_pal'},
-                 {'name':'open image', 'id':3, 'objname':'open_palimg'},
-                 {'name':'open game project', 'id':4, 'objname':'open_gamefolder'}]
-        for b in buttons:
-            button = QtWidgets.QPushButton(b['name'])
-            button.setObjectName(b['objname'])
-            self.buttonGroup.addButton(button, b['id'])
-            HBox.addWidget(button)
 
         #this will create the basic palette editor widget
         self.myPalWidget = PaletteCfgWidget(parent=self)
         self.PalscrollArea = QtWidgets.QScrollArea(self)
         self.PalscrollArea.setWidget(self.myPalWidget)
 
-
         #adding a toolbar
         self.toolbar = QtWidgets.QToolBar(self)
+        self.toolbar.addAction("new\npalette",self.myPalWidget.new)
+        self.toolbar.addAction("open\npalette",self.openPalette)
+        self.toolbar.addAction("save\npalette",self.openPalette)
+        self.toolbar.addAction("open\nimage",self.openImage)
+        if(current_project.settings['gamefolder'] == ''):
+            self.toolbar.addAction("open\ngame project",self.openProject)
 
         #this will add id and anim control
         undoaction = self.undostack.createUndoAction(self, self.tr("&Undo"))
@@ -355,6 +386,12 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         self.toolbar.addAction(undoaction)
         self.toolbar.addAction(redoaction)
 
+        maxpixmap = QtGui.QPixmap(getdata.path('icon_max.png'))
+        maxp1pixmap = QtGui.QPixmap(getdata.path('icon_max_p1.png'))
+        zeropixmap = QtGui.QPixmap(getdata.path('icon_zero.png'))
+        maxicon = QtGui.QIcon(maxpixmap)
+        maxp1icon = QtGui.QIcon(maxp1pixmap)
+        zeroicon = QtGui.QIcon(zeropixmap)
         labelIdCurrent = QtWidgets.QLabel("Tile Nº")
         self.tileSpinbox = QtWidgets.QSpinBox(self)
         self.tileSpinbox.setToolTip("Tile 0 means not selected.")
@@ -362,6 +399,21 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         self.tileSpinbox.setMaximum(299)
         self.tileSpinbox.setSingleStep(1)
         self.tileSpinbox.valueChanged.connect(self.myPalWidget.changeTileIdCurrent)
+        tileMaxP1 = QtWidgets.QPushButton()
+        tileMaxP1.setIcon(maxp1icon)
+        tileMaxP1.setIconSize(maxp1pixmap.rect().size())
+        tileMaxP1.clicked.connect(self.maxTileSpinboxP1)
+        tileMaxP1.show()
+        tileMax = QtWidgets.QPushButton()
+        tileMax.setIcon(maxicon)
+        tileMax.setIconSize(maxpixmap.rect().size())
+        tileMax.clicked.connect(self.maxTileSpinbox)
+        tileMax.show()
+        tileZero = QtWidgets.QPushButton()
+        tileZero.setIcon(zeroicon)
+        tileZero.setIconSize(zeropixmap.rect().size())
+        tileZero.clicked.connect(self.zeroTileSpinbox)
+        tileZero.show()
         labelAnimCurrent = QtWidgets.QLabel("Tile Animated")
         self.animSpinbox = QtWidgets.QSpinBox(self)
         self.animSpinbox.setToolTip("0 means not animated.")
@@ -369,30 +421,57 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         self.animSpinbox.setMaximum(4)
         self.animSpinbox.setSingleStep(1)
         self.animSpinbox.valueChanged.connect(self.myPalWidget.changeAnimIdCurrent)
+        animMax = QtWidgets.QPushButton()
+        animMax.setIcon(maxicon)
+        animMax.setIconSize(maxpixmap.rect().size())
+        animMax.clicked.connect(self.maxAnimSpinbox)
+        animMax.show()
+        animZero = QtWidgets.QPushButton()
+        animZero.setIcon(zeroicon)
+        animZero.setIconSize(zeropixmap.rect().size())
+        animZero.clicked.connect(self.zeroAnimSpinbox)
+        animZero.show()
         SpinHBox=QtWidgets.QHBoxLayout()
         SpinHBox.setAlignment(QtCore.Qt.AlignLeft)
         SpinHBox.addWidget(labelIdCurrent)
         SpinHBox.addWidget(self.tileSpinbox)
+        SpinHBox.addWidget(tileMaxP1)
+        SpinHBox.addWidget(tileMax)
+        SpinHBox.addWidget(tileZero)
         SpinHBox.addWidget(labelAnimCurrent)
         SpinHBox.addWidget(self.animSpinbox)
-
+        SpinHBox.addWidget(animMax)
+        SpinHBox.addWidget(animZero)
 
         VBox.addWidget(self.toolbar)
-        VBox.addLayout(HBox)
         VBox.addLayout(SpinHBox)
         VBox.addWidget(self.PalscrollArea)
 
-    def buttonClicked(self, button):
-        if  (button.objectName()=='new_pal'):
-            self.myPalWidget.new()
-        elif(button.objectName()=='open_pal'):
-            self.openPalette()
-        elif(button.objectName()=='save_pal'):
-            pass
-        elif(button.objectName()=='open_palimg'):
-            self.openImage()
-        elif(button.objectName()=='open_gamefolder'):
-            self.openProject()
+    def maxTileSpinbox(self):
+        maxtile = self.myPalWidget.getMaxTile()
+        self.myPalWidget.currentType=maxtile
+        self.tileSpinbox.setValue(maxtile)
+
+    def maxTileSpinboxP1(self):
+        maxtile = self.myPalWidget.getMaxTile()+1
+        self.myPalWidget.currentType=maxtile
+        self.tileSpinbox.setValue(maxtile)
+
+    def zeroTileSpinbox(self):
+        self.myPalWidget.currentType=0
+        self.tileSpinbox.setValue(0)
+
+    def maxAnimSpinbox(self):
+        maxanim = self.myPalWidget.getMaxAnim()
+        self.myPalWidget.currentAnim=maxanim
+        self.animSpinbox.setValue(maxanim)
+
+    def zeroAnimSpinbox(self):
+        self.myPalWidget.currentAnim=0
+        self.animSpinbox.setValue(0)
+
+    def savePalette(self):
+        pass
 
     def openImage(self):
         folder_to_open_to=""
