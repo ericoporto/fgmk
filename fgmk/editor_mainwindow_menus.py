@@ -96,9 +96,10 @@ class newFile(QtWidgets.QDialog):
             if not os.path.isdir(gamefolder):
                 gamefolder = ""
 
-        self.returnValue = {"name": "NewFile", "width": 15, "height": 15, "gameFolder": gamefolder
-
-                            }
+        self.returnValue = {"name": "NewFile",
+                            "width": 15, "height": 15,
+                            "gameFolder": gamefolder,
+                            'palette':None }
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -139,6 +140,18 @@ class newFile(QtWidgets.QDialog):
         HBoxName.addWidget(QtWidgets.QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
+
+        LabelPalette = QtWidgets.QLabel("Select palette for map:")
+        HBoxPalette = QtWidgets.QHBoxLayout()
+        self.LineEditPalette = QtWidgets.QLineEdit()
+        self.LineEditPalette.setReadOnly(True)
+        self.LineEditPalette.setText(str(self.returnValue["palette"]))
+        self.buttonPalette = QtWidgets.QPushButton("Browse")
+        self.buttonPalette.clicked.connect(self.selectMapPalette)
+        HBoxPalette.addWidget(self.LineEditPalette)
+        HBoxPalette.addWidget(self.buttonPalette)
+
+
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
@@ -151,6 +164,7 @@ class newFile(QtWidgets.QDialog):
         self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
         self.VBox.addLayout(HBoxName)
+        self.VBox.addLayout(HBoxPalette)
         self.VBox.addWidget(self.OutCheckbox)
         self.VBox.addWidget(self.LabelFolder)
         self.VBox.addLayout(HBoxFolder)
@@ -205,6 +219,17 @@ class newFile(QtWidgets.QDialog):
         self.LineEditName.setText(tempStr)
         self.returnValue["name"] = self.LineEditName.text()
         self.validateIsOk()
+
+    def selectMapPalette(self):
+        filename = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open File', os.path.join(current_project.settings["gamefolder"], fifl.LEVELS), "JSON Palette (*.pal.json);;All Files (*)")[0]
+
+        if os.path.isfile(os.path.join(filename)):
+            relpath = os.path.relpath(filename, os.path.join(current_project.settings["gamefolder"], fifl.LEVELS))
+            if(relpath==os.path.basename(filename)):
+                self.LineEditPalette.setText(relpath)
+                self.returnValue["palette"] = self.LineEditPalette.text()
+                self.validateIsOk()
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(

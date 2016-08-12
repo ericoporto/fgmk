@@ -47,7 +47,7 @@ def regenerateLevelList():
 
     if(initFileJsonTree != None):
         levels = os.path.join(gamefolder, fifl.LEVELS)
-        filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f))]
+        filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f)) and f.endswith(".map.json")]
         originalLevelList = initFileJsonTree["LevelsList"]
 
         LevelsList = {}

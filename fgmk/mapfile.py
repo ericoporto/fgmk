@@ -1,4 +1,5 @@
 import json
+import os
 from fgmk import tMat, getdata, base_model
 import numpy as np
 
@@ -97,10 +98,14 @@ class MapFormat(base_model.BaseFormat):
 
         self.listOfCharas = []
 
-    def new(self, tlevelName, levelWidth, levelHeight, levelPalette=None):
+    def new(self, tlevelName, levelWidth, levelHeight, palettepath=None):
 
-        if levelPalette is None:
-            f = open(getdata.path('paletteDefault.json'), 'r')
+        if palettepath is None:
+            f = open(getdata.path('default.pal.json'), 'r')
+            levelPalette = json.load(f)
+            f.close()
+        else:
+            f = open(os.path.join(palettepath), 'r')
             levelPalette = json.load(f)
             f.close()
 

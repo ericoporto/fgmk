@@ -41,6 +41,13 @@ class PaletteFormat(base_model.BaseFormat):
                          'tiles': {'0':[0,0]},
                          'tilesAnimated': {}}
 
+    def loadjsondump(self,jsonTree):
+        self.jsonTree = jsonTree
+        for tile in self.jsonTree['tilesAnimated']:
+            self.animtiles[str(tile)] = {}
+            for i in range(len(self.jsonTree['tilesAnimated'][tile])):
+                self.animtiles[tile][str(i)]=self.jsonTree['tilesAnimated'][tile][i]
+
     def load(self,palfile):
         base_model.BaseFormat.load(self,palfile)
         for tile in self.jsonTree['tilesAnimated']:
@@ -127,6 +134,11 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         self.TileHeight = 0
         self.myScale = 1
         self.TileList = []
+
+    def LoadJsonDumpPal(self, jsonTree):
+        self.pal.loadjsondump(jsonTree)
+        self.img = os.path.join(current_project.settings['gamefolder'], self.pal.getimg())
+        self.LoadImage()
 
     def LoadPal(self, pal):
         self.pal.load(pal)
@@ -347,7 +359,7 @@ class CommandSetTileType(QtWidgets.QUndoCommand):
 
 
 class PaletteEditorWidget(QtWidgets.QDialog):
-    def __init__(self, parent=None, ssettings={}, **kwargs):
+    def __init__(self,mappalette=None, parent=None, ssettings={}, **kwargs):
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         #this will create a undo stack
@@ -446,6 +458,13 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         VBox.addWidget(self.toolbar)
         VBox.addLayout(SpinHBox)
         VBox.addWidget(self.PalscrollArea)
+
+        if(mappalette!=None):
+            self.openMapPalette(mappalette)
+
+
+    def openMapPalette(self, mappalette):
+        self.myPalWidget.LoadJsonDumpPal(mappalette)
 
     def maxTileSpinbox(self):
         maxtile = self.myPalWidget.getMaxTile()

@@ -8,6 +8,7 @@ from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, til
 from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import temp
 from fgmk import help, charas_palette_wdgt
+from fgmk import palette_editor
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
@@ -356,8 +357,10 @@ class MainWindow(QtWidgets.QMainWindow):
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Set starting &position...',
                               self.selectStartPosition, '')
+        current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
         current_projectectMenu.addAction('Edit &charas...', self.editCharas, '')
+        current_projectectMenu.addAction('Edit &palette...', self.editPalette, '')
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
         current_projectectMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
@@ -584,6 +587,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if myCharasEditor.exec_() == QtWidgets.QDialog.Accepted:
             pass
 
+    def editPalette(self):
+        mappalette = { 'tiles': self.myMap.palette,
+                       'tileImage': self.myMap.tileImage,
+                       'tilesAnimated': self.myMap.tilesAnimated}
+        myPaletteEditor = palette_editor.PaletteEditorWidget(mappalette,
+            self, current_project.settings)
+        if myPaletteEditor.exec_() == QtWidgets.QDialog.Accepted:
+            pass
+
     def changeToFullscreen(self):
         if self.fullscreenViewAction.isChecked():
             self.showFullScreen()
@@ -690,8 +702,10 @@ class MainWindow(QtWidgets.QMainWindow):
         current_project.settings["workingFile"] = os.path.join(
             current_project.settings["gamefolder"], fifl.LEVELS, self.levelName + ".map.json")
         self.setWindowTitle(current_project.settings["workingFile"])
+        palette = os.path.join(
+            current_project.settings["gamefolder"], fifl.LEVELS,returnedNFD["palette"])
         self.myMap.new(self.levelName, returnedNFD[
-                       "width"], returnedNFD["height"])
+                       "width"], returnedNFD["height"], palette)
         self.myTileSet = tile_set.TileSet(os.path.join(
             current_project.settings["gamefolder"], self.myMap.tileImage), self.myMap.palette)
         self.myMapWidget.DrawMap(self)
