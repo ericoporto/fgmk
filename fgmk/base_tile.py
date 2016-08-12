@@ -15,27 +15,34 @@ class QTile(QtWidgets.QLabel):
     tileX = 0
     tileY = 0
     boxSize = 32
+    pal = False
 
     clicked = QtCore.pyqtSignal()
     rightClicked = QtCore.pyqtSignal()
     doubleClicked = QtCore.pyqtSignal()
 
-    def Rescale(self, tileset,  scale=1, anim=False):
+    def Rescale(self, tileset,  scale=1):
         self.scale = scale
         self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
-    def initTile(self, tileset, x, y, boxSize, tileType, scale=1, anim=False):
+    def initTile(self, tileset, x, y, boxSize, tileType, scale=1, pal=False):
         self.tileType = tileType
         self.tileX = x
         self.tileY = y
         self.boxSize = boxSize
         self.scale = scale
+        self.pal = pal
         self.updateTileImageInMap(self.tileType[0], 0, tileset, self.scale)
 
-    def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1, anim=False):
+    def updateTileImageInMap(self, ChangeTileType, layer, tileset,  scale=1):
         self.tileType[layer] = ChangeTileType
         self.scale = scale
+        self.updateTileType(tileset)
 
+    def updateTileType(self, tileset, tileType=None):
+        if(tileType!=None):
+            self.tileType = tileType
+        scale = self.scale
         if(scale == 2):
             tempscale = 1
         elif(scale == 0.5):
@@ -50,7 +57,7 @@ class QTile(QtWidgets.QLabel):
                 Composite = img_util.alpha_composite(
                     Composite, tileset[self.tileType[i]][tempscale])
 
-        if(anim==False):
+        if(self.pal==False):
             if(self.tileType[i + 1]):
                 Composite = img_util.alpha_composite(Composite, tile_set.colisionSet.tileset[
                                                  self.tileType[i + 1]][tempscale])
