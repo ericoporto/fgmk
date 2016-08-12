@@ -38,5 +38,5 @@ except:
 def open(filename):
     img = Image.open(filename)
     #if(img.mode != 'RGBA'):
-    img.convert('RGBA')
+    img = img.convert('RGBA')
     return img

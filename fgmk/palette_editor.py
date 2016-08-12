@@ -40,7 +40,7 @@ class PaletteFormat(base_model.BaseFormat):
 
     def new(self):
         self.animtiles = {}
-        self.jsonTree = {'tileImage': '',
+        self.jsonTree = {'tileImage': 'img/tile.png',
                          'tiles': {'0':[0,0]},
                          'tilesAnimated': {}}
 
@@ -120,9 +120,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
             self.pal = pal
 
         self.Grid = QtWidgets.QGridLayout(self)
-        self.new()
 
-    def new(self):
         self.Grid.setHorizontalSpacing(0)
         self.Grid.setVerticalSpacing(0)
         self.Grid.setSpacing(0)
@@ -138,6 +136,24 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         self.myScale = 1
         self.TileList = []
 
+    def new(self):
+        self.Grid.setHorizontalSpacing(0)
+        self.Grid.setVerticalSpacing(0)
+        self.Grid.setSpacing(0)
+        self.Grid.setContentsMargins(0, 0, 0, 0)
+
+        self.currentType = 1
+        self.currentAnim = 1
+
+        self.img = None
+
+        self.TileWidth = 0
+        self.TileHeight = 0
+        self.myScale = 1
+
+        self.pal.new()
+        self.LoadPal()
+
     def getPalFilename(self):
         return self.pal.getfilename()
 
@@ -150,8 +166,9 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         self.img = os.path.join(current_project.settings['gamefolder'], self.pal.getimg())
         self.LoadImage()
 
-    def LoadPal(self, pal):
-        self.pal.load(pal)
+    def LoadPal(self, pal=None):
+        if(pal!=None):
+            self.pal.load(pal)
         self.img = os.path.join(current_project.settings['gamefolder'], self.pal.getimg())
         self.LoadImage()
 
@@ -185,7 +202,10 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         if len(self.TileList) > 1:
             for collum in self.TileList:
                 for wdgt in collum:
+                    self.Grid.removeWidget(wdgt)
                     wdgt.deleteLater()
+                    wdgt.hide()
+                    del wdgt
                     wdgt = None
             self.TileList = []
 
