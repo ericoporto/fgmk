@@ -7,18 +7,16 @@ IDLAYER=4
 
 #T(id,(x,y))
 class T:
-    def __init__(self,id,pos,anim=None):
-        self.id=str(id)
-        self.pos=pos
-        self.x=pos[0]
-        self.y=pos[1]
-        self.anim=anim
+    def __init__(self,id,pos,anim=0):
+        self.set(id,pos,anim)
 
-    def set(self,id,pos,anim=None):
+    def set(self,id,pos,anim=0):
         self.id=str(id)
         self.pos=pos
         self.x=pos[0]
         self.y=pos[1]
+        if(anim==0):
+            anim=0
         self.anim=anim
 
     def setxy(self,x,y):
@@ -29,7 +27,7 @@ class T:
     def setid(self,id):
         self.id=str(id)
 
-    def setanim(anim=None):
+    def setanim(anim=0):
         self.anim=anim
 
 class PaletteFormat(base_model.BaseFormat):
@@ -58,20 +56,6 @@ class PaletteFormat(base_model.BaseFormat):
     def getimg(self):
         return self.jsonTree['tileImage']
 
-    def settile(self, t):
-        #previous = self.gettile(t.x,t.y)
-        if(int(t.id)>0):
-            if(t.anim==None):
-                self.deltilexy(t.x,t.y)
-                self.addtile(t)
-            else:
-                self.deltilexy(t.x,t.y)
-                self.addtile(t)
-                self.addanimtile(t)
-
-        else:
-            self.deltilexy(t.x,t.y)
-
     def gettile(self, x, y):
         tiles = self.jsonTree['tiles']
         tanims = self.jsonTree['tilesAnimated']
@@ -94,7 +78,10 @@ class PaletteFormat(base_model.BaseFormat):
 
         return T(-1,(x,y))
 
-
+    def delalltiles(self):
+        self.animtiles = {}
+        self.jsonTree['tiles'] = {}
+        self.jsonTree['tilesAnimated'] = {}
 
     def addanimtile(self,tileT):
         if tileT.id in self.animtiles:
@@ -102,50 +89,15 @@ class PaletteFormat(base_model.BaseFormat):
         else:
             self.animtiles[tileT.id]={}
             self.animtiles[tileT.id][tileT.anim] = [tileT.x,tileT.y]
-
         animdict = self.animtiles[tileT.id]
-
         animlist = [animdict[k] for k in sorted(animdict)]
-
         self.jsonTree['tilesAnimated'][tileT.id] = animlist
 
     def addtile(self,tileT):
+        if(tileT.anim > 0):
+            self.addanimtile(tileT)
         self.jsonTree['tiles'][tileT.id] = [tileT.x,tileT.y]
         return self.jsonTree['tiles'][tileT.id]
-
-    def deltilexy(self,x,y):
-        dellist = []
-        for tile in self.jsonTree['tiles']:
-            if(self.jsonTree['tiles'][tile][0] ==x and self.jsonTree['tiles'][tile][0] ==y):
-                dellist.append(tile)
-        for tile in dellist:
-            self.jsonTree['tiles'].pop(str(tile), None)
-
-        dellist = []
-        for tile in self.animtiles:
-            for i in self.animtiles[tile]:
-                if(self.animtiles[tile][i][0] ==x and self.animtiles[tile][i][0] ==y):
-                    dellist.append((tile,i))
-        for item in dellist:
-            removed = self.animtiles[str(item[0])].pop(item[1], None)
-            print(removed)
-
-        tilesAnimated = {}
-        for tile in self.animtiles:
-            animdict = self.animtiles[tile]
-            animlist = [animdict[k] for k in sorted(animdict)]
-            tilesAnimated[tile]=animlist
-
-        self.jsonTree['tilesAnimated'] = tilesAnimated
-
-
-
-    def deltile(self,tilen):
-        if str(tilen) in self.jsonTree['tiles']:
-            self.jsonTree['tiles'].pop(str(tilen), None)
-        if str(tilen) in self.jsonTree['tilesAnimated']:
-            self.jsonTree['tilesAnimated'].pop(str(tilen), None)
-
 
 class PaletteCfgWidget(QtWidgets.QWidget):
     def __init__(self, pal=None, parent=None, **kwargs):
@@ -211,14 +163,21 @@ class PaletteCfgWidget(QtWidgets.QWidget):
                 tiletype[0]=i
                 self.TileList[iy].append(base_tile.QTile(self))
                 self.Grid.addWidget(self.TileList[iy][jx], iy, jx)
-                self.TileList[iy][jx].initTile(self.t.tileset, jx, iy,
-                                               self.t.boxsize,
-                                               tiletype,
-                                               self.myScale,
-                                               True)
-                self.TileList[iy][jx].clicked.connect(self.TileClicked)
-                self.TileList[iy][jx].rightClicked.connect(
-                    self.TileRightClicked)
+                if(i!=0):
+                    self.TileList[iy][jx].initTile(self.t.tileset, jx, iy,
+                                                   self.t.boxsize,
+                                                   tiletype,
+                                                   self.myScale,
+                                                   True)
+                    self.TileList[iy][jx].clicked.connect(self.TileClicked)
+                    self.TileList[iy][jx].rightClicked.connect(
+                        self.TileRightClicked)
+                else:
+                    self.TileList[iy][jx].initTile(self.t.tileset, jx, iy,
+                                                   self.t.boxsize,
+                                                   [0,0,0,0,0],
+                                                   self.myScale,
+                                                   True)
                 i+=1
 
         self.resize(self.TileWidth * self.t.boxsize * self.myScale,
@@ -230,7 +189,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         x = int(i % self.TileWidth)
         y = int(i / self.TileWidth)
         tileid = -1
-        tileanim = None
+        tileanim = 0
         if(tiletype[IDLAYER]!=0):
             tileid = tiletype[IDLAYER]
             layer=IDLAYER
@@ -238,8 +197,6 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         if(tiletype[ANIMLAYER]!=0):
             tileanim = tiletype[ANIMLAYER]
             layer=ANIMLAYER
-
-        self.pal.settile(T(tileid,(x,y),tileanim))
 
         if(tileid != -1):
             for iy in range(self.TileHeight):
@@ -251,7 +208,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
                                                 self.t.tileset,
                                                 self.myScale)
 
-        if(tileanim != None):
+        if(tileanim != 0):
             for iy in range(self.TileHeight):
                 for jx in range(self.TileWidth):
                     if(self.TileList[iy][jx].tileType[3] == int(tileanim) and self.TileList[iy][jx].tileType[4]== tiletype[IDLAYER]):
@@ -262,38 +219,47 @@ class PaletteCfgWidget(QtWidgets.QWidget):
                                                 self.myScale)
 
         self.TileList[y][x].updateTileType(self.t.tileset, tiletype)
-
-        print(self.pal.jsonTree)
+        self.updatePalFile()
 
     def getTileType(self,x,y):
         tile = self.pal.gettile(x,y)
         if int(tile.id) != -1:
-            if tile.anim == None:
-                return [0,0,0,0,int(tile.id)]
-            else:
-                return [0,0,0,tile.anim,int(tile.id)]
+            return [0,0,0,tile.anim,int(tile.id)]
         else:
             return [0,0,0,0,0]
 
+
+    def updatePalFile(self):
+        self.pal.delalltiles()
+        self.pal.addtile(T(0,(0,0),0))
+        for iy in range(self.TileHeight):
+            for jx in range(self.TileWidth):
+                tiletype = self.TileList[iy][jx].tileType
+                if(tiletype[IDLAYER]!=0):
+                    self.pal.addtile(T(tiletype[IDLAYER],(jx,iy),tiletype[ANIMLAYER]))
+
+
     def TileClicked(self):
-        command = CommandSetTileType(self, self.sender(), 'id', self.currentType, "set id")
-        self.parent.undostack.push(command)
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         if modifiers == QtCore.Qt.ShiftModifier:
             self.currentType+=1
             if(self.currentType>299):
                 self.currentType=0
-            self.parent.animSpinbox.setValue(self.currentType)
+            self.parent.tileSpinbox.setValue(self.currentType)
+
+        command = CommandSetTileType(self, self.sender(), 'id', self.currentType, "set id")
+        self.parent.undostack.push(command)
 
     def TileRightClicked(self):
-        command = CommandSetTileType(self, self.sender(), 'anim', self.currentAnim, "set anim")
-        self.parent.undostack.push(command)
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         if modifiers == QtCore.Qt.ShiftModifier:
             self.currentAnim+=1
             if(self.currentAnim>4):
                 self.currentAnim=0
             self.parent.animSpinbox.setValue(self.currentAnim)
+
+        command = CommandSetTileType(self, self.sender(), 'anim', self.currentAnim, "set anim")
+        self.parent.undostack.push(command)
 
     def changeTileIdCurrent(self, num):
         self.currentType = num
