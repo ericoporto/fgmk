@@ -35,6 +35,9 @@ class PaletteFormat(base_model.BaseFormat):
         base_model.BaseFormat.__init__(self)
         self.new()
 
+    def getfilename(self):
+        return self.filename
+
     def new(self):
         self.animtiles = {}
         self.jsonTree = {'tileImage': '',
@@ -134,6 +137,13 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         self.TileHeight = 0
         self.myScale = 1
         self.TileList = []
+
+    def getPalFilename(self):
+        return self.pal.getfilename()
+
+    def savePal(self, filename=''):
+        self.updatePalFile()
+        self.pal.save(filename)
 
     def LoadJsonDumpPal(self, jsonTree):
         self.pal.loadjsondump(jsonTree)
@@ -377,7 +387,6 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         VBox.setAlignment(QtCore.Qt.AlignTop)
         insideScrollArea.setLayout(VBox)
 
-
         #this will create the basic palette editor widget
         self.myPalWidget = PaletteCfgWidget(parent=self)
         self.PalscrollArea = QtWidgets.QScrollArea(self)
@@ -387,7 +396,8 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         self.toolbar = QtWidgets.QToolBar(self)
         self.toolbar.addAction("new\npalette",self.myPalWidget.new)
         self.toolbar.addAction("open\npalette",self.openPalette)
-        self.toolbar.addAction("save\npalette",self.openPalette)
+        self.toolbar.addAction("save\npalette",self.savePalette)
+        self.toolbar.addAction("save\npalette as..",self.savePaletteAs)
         self.toolbar.addAction("open\nimage",self.openImage)
         if(current_project.settings['gamefolder'] == ''):
             self.toolbar.addAction("open\ngame project",self.openProject)
@@ -489,8 +499,30 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         self.myPalWidget.currentAnim=0
         self.animSpinbox.setValue(0)
 
-    def savePalette(self):
-        pass
+    def savePalette(self,filename=''):
+        if(filename==''):
+            filename = self.myPalWidget.getPalFilename()
+
+        if(filename==''):
+            self.savePaletteAs()
+        else:
+            self.myPalWidget.savePal(filename)
+
+    def savePaletteAs(self):
+        if(current_project.settings['gamefolder'] == ''):
+            folder_to_open_to = os.path.expanduser('~')
+        else:
+            folder_to_open_to = os.path.join(current_project.settings['gamefolder'], fifl.LEVELS)
+
+        filename, extension = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save File', folder_to_open_to, 'JSON Pal Level (*.pal.json)')
+
+        if filename != "":
+            if filename[-9:] != '.pal.json':
+                filename += '.pal.json'
+
+            self.savePalette(filename)
+
 
     def openImage(self):
         folder_to_open_to=""
