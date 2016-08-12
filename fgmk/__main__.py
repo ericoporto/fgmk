@@ -10,30 +10,8 @@ from fgmk import Editor
 from fgmk import __title__, __version__, __copyright__, __license__
 import argparse
 
-def main(args=None):
+def main():
     """The main routine."""
-    environ["LIBOVERLAY_SCROLLBAR"] = "0"
-    if args is None:
-        args = argv[1:]
-
-    a = QApplication(args)
-    start = time()
-    splash_pix = Editor.Icon()
-    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
-    splash.setMask(splash_pix.mask())
-    splash.show()
-    while time() - start < 1:
-        sleep(0.001)
-        a.processEvents()
-    mw = Editor.MainWindow(args)
-    a.processEvents()
-    mw.show()
-    splash.finish(mw)
-    mw.raise_()
-    mw.afterInit()
-    exit(a.exec_())
-
-if __name__ == "__main__":
     environ["LIBOVERLAY_SCROLLBAR"] = "0"
     parser = argparse.ArgumentParser(
                 prog=__title__,
@@ -55,7 +33,27 @@ if __name__ == "__main__":
         print(__title__ + "  v " + __version__ )
         exit()
 
+    a = QApplication([])
+    start = time()
+    splash_pix = Editor.Icon()
+    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    while time() - start < 1:
+        sleep(0.001)
+        a.processEvents()
+
+    mw_arg=[]
     if 'mapfile' in args:
-        main([args.mapfile])
-    else:
-        main()
+        mw_arg = [args.mapfile]
+
+    mw = Editor.MainWindow(mw_arg)
+    a.processEvents()
+    mw.show()
+    splash.finish(mw)
+    mw.raise_()
+    mw.afterInit()
+    exit(a.exec_())
+
+if __name__ == "__main__":
+    main()
