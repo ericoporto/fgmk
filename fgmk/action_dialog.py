@@ -500,6 +500,45 @@ class varPlusOne(QtWidgets.QDialog):
         return text
 
 
+class alert(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
+        self.downLabelText = QtWidgets.QLabel(
+            "tip: you can type var:varname to get the content of that variable.")
+
+        self.LineEdit = QtWidgets.QLineEdit()
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.LineEdit)
+        self.VBox.addWidget(self.downLabelText)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            self.LineEdit.setText(edit[0])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('Write text to show in text box...')
+
+    def getValue(self):
+        text = str(self.LineEdit.text())
+        textListLf = text.split("\n")
+        textToReturn = textListLf[0]
+        for line in textListLf[1:]:
+            textToReturn += '\\n' + line
+        return textToReturn
+
 class showText(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         #super().__init__(parent, **kwargs)

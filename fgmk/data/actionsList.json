@@ -1,5 +1,6 @@
 { "actionOrder":[
   "showText",
+  "alert",
   "teleport",
   "changeTile",
   "rain",
@@ -18,6 +19,7 @@
     "IF":["var1","oper","var2"],
     "END":[""],
     "ELSE":[""],
+    "alert":["text"],
     "showText":["text"],
     "fadeIn":["effect","keepEffect"],
     "fadeOut":["effect","keepEffect"],
