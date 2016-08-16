@@ -348,8 +348,6 @@ class teleportInPlace(QtWidgets.QDialog):
         self.initFile = game_init.openInitFile(gamefolder)
 
         self.setWindowTitle('Select map to teleport...')
-        indicative = 1
-
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
@@ -387,7 +385,7 @@ class teleportInPlace(QtWidgets.QDialog):
                 self.currentLevel.palette)
 
         self.myMiniMapWidget = miniWdgt.MiniMapWidget(
-            self.currentLevel, self.currentTileSet, None, indicative)
+            self.currentLevel, self.currentTileSet, None, 0)
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 

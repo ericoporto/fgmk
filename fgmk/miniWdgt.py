@@ -95,9 +95,11 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.TileWidth = 0
         self.TileHeight = 0
         self.myScale = 0.5
+        self.indicativeToUse=indicativeToUse
 
-        self.xclicked = base_tile.QTile(self)
-        self.xclicked.initTile(tile_set.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
+        if(indicativeToUse>0):
+            self.xclicked = base_tile.QTile(self)
+            self.xclicked.initTile(tile_set.indicativeSet.tileset, 0, 0, 32, [indicativeToUse,0,0,0,0], 0.5)
 
         self.TileList = []
         self.selectedPosition = [0, 0]
@@ -147,13 +149,14 @@ class MiniMapWidget(QtWidgets.QWidget):
         self.changeSelectXY(self.selectedPosition[0], self.selectedPosition[1])
 
     def changeSelectXY(self, x, y):
-        self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(True)
+        if(self.indicativeToUse>0):
+            self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(True)
 
-        self.selectedPosition = [x, y]
+            self.selectedPosition = [x, y]
 
-        self.Grid.removeWidget(self.xclicked)
-        self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(False)
-        self.Grid.addWidget(self.xclicked, self.selectedPosition[1], self.selectedPosition[0])
+            self.Grid.removeWidget(self.xclicked)
+            self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(False)
+            self.Grid.addWidget(self.xclicked, self.selectedPosition[1], self.selectedPosition[0])
 
     def TileClicked(self):
         sender = self.sender()
