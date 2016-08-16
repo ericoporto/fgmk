@@ -5,7 +5,17 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, fifl, current_project
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+import os
+import platform
+import subprocess
 
+def openFolder(path):
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
 
 
 class newProject(QtWidgets.QDialog):

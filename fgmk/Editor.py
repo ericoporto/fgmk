@@ -364,6 +364,7 @@ class MainWindow(QtWidgets.QMainWindow):
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
         current_projectectMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
+        current_projectectMenu.addAction('Open Project Folder', self.openProjectFolder, '')
 
         self.viewMenu = self.menubar.addMenu('&View')
 
@@ -647,6 +648,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveAndRun(self):
         self.saveFile()
         self.runServer()
+
+    def openProjectFolder(self):
+        foldertoopen = os.path.join(current_project.settings["gamefolder"])
+        if(foldertoopen==''):
+            foldertoopen = os.path.expanduser("~")
+
+        editor_mainwindow_menus.openFolder(foldertoopen)
 
     def runServer(self):
         game_server.servePage(os.path.abspath(current_project.settings["gamefolder"]))
