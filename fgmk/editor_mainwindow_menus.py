@@ -106,10 +106,14 @@ class newFile(QtWidgets.QDialog):
             if not os.path.isdir(gamefolder):
                 gamefolder = ""
 
+        palette = None
+        if os.path.isfile(os.path.join(gamefolder,fifl.LEVELS,'default.pal.json')):
+            palette = os.path.join(gamefolder,fifl.LEVELS,'default.pal.json')
+
         self.returnValue = {"name": "NewFile",
                             "width": 15, "height": 15,
                             "gameFolder": gamefolder,
-                            'palette':None }
+                            'palette':palette }
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
