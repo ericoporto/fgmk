@@ -335,6 +335,109 @@ class teleport(QtWidgets.QDialog):
         return text
 
 
+class teleportInPlace(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False,  **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.nothis = nothis
+        self.gamefolder = gamefolder
+        self.edit = edit
+        self.parent = parent
+
+        self.initFile = game_init.openInitFile(gamefolder)
+
+        self.setWindowTitle('Select map to teleport...')
+        indicative = 1
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
+
+        self.comboBox = QtWidgets.QComboBox()
+
+        if(self.nothis is False):
+            self.levelsList = ["this"]
+        else:
+            self.levelsList = []
+
+        for level in self.initFile['LevelsList']:
+            self.levelsList.append(level)
+
+        for level in self.levelsList:
+            self.comboBox.addItem(str(level))
+
+        self.scrollArea = QtWidgets.QScrollArea()
+
+        if(self.nothis is False):
+            if(self.edit == None):
+                self.currentLevel = self.parent.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.myTileSet
+
+        else:
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.comboBox.itemText(0)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+
+        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
+            self.currentLevel, self.currentTileSet, None, indicative)
+
+        self.scrollArea.setWidget(self.myMiniMapWidget)
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+        self.comboBox.currentIndexChanged.connect(self.updateMap)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.scrollArea)
+        self.VBox.addWidget(self.buttonBox)
+
+        self.setGeometry(300, 200, 350, 650)
+
+        if(edit != None):
+            for idx, val in enumerate(self.levelsList):
+                if(val == edit[0]):
+                    self.comboBox.setCurrentIndex(idx)
+                    break
+
+            self.updateMap(idx)
+
+    def updateMap(self, levelIndex):
+        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.comboBox.itemText(levelIndex)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+        else:
+            if(self.edit == None):
+                self.currentLevel = self.parent.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.myTileSet
+
+
+        self.myMiniMapWidget.DrawMap(
+            self.currentLevel, self.currentTileSet)
+
+    def getValue(self):
+        text = str(self.comboBox.currentText())
+        return text
+
+
 class END(QtWidgets.QDialog):
 
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
