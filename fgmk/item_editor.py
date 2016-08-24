@@ -23,7 +23,8 @@ class base_item:
                             description=default_description,
                             icon=default_icon,
                             category=default_category,
-                            action=default_action):
+                            action=default_action,
+                            jsonTree=None):
         normalized_name = str(name)
         normalized_name = normalized_name.title()
         normalized_name = normalized_name.replace(" ", "")
@@ -38,6 +39,8 @@ class base_item:
         self.icon = icon
         self.category = category
         self.action = action
+        if(jsonTree!=None):
+            self.loadjsontree(jsonTree)
 
     def setname(self,name):
         self.name = name
@@ -71,9 +74,42 @@ class base_item:
 
     def getnormalname(self):
         normalized_name = str(self.name)
-        normalized_name = normalized_name.title()
         normalized_name = normalized_name.replace(" ", "")
         return normalized_name
+
+    def new(self):
+        self.equipable=default_equipable
+        self.unique=default_unique
+        self.usable=default_usable
+        self.effect=default_effect
+        self.statMod=default_statMod
+        self.description=default_description
+        self.icon=default_icon
+        self.category=default_category
+        self.action=default_action
+
+    def loadjsontree(self,jsonTree):
+        self.new()
+        if('name' in jsonTree):
+            self.name = jsonTree['name']
+        if('equipable' in jsonTree):
+            self.equipable = jsonTree['equipable']
+        if('usable' in jsonTree):
+            self.usable = jsonTree['usable']
+        if('unique' in jsonTree):
+            self.unique = jsonTree['unique']
+        if('effect' in jsonTree):
+            self.effect = jsonTree['effect']
+        if('statMod' in jsonTree):
+            self.statMod = jsonTree['statMod']
+        if('description' in jsonTree):
+            self.description = jsonTree['description']
+        if('icon' in jsonTree):
+            self.icon = jsonTree['icon']
+        if('category' in jsonTree):
+            self.category = jsonTree['category']
+        if('action' in jsonTree):
+            self.action = jsonTree['action']
 
     def getjsontree(self):
         jsonTree = {}
@@ -101,23 +137,42 @@ class base_item:
 
 
 class ItemsFormat(base_model.BaseFormat):
-    def __init__(self):
+    def __init__(self,filename=''):
         base_model.BaseFormat.__init__(self)
-
-        self.filename = os.path.join(current_project.settings['gamefolder'],ITEMSFILE)
+        if(filename==''):
+            self.filename = os.path.join(current_project.settings['gamefolder'],fifl.ITEMSFILE)
+        else:
+            self.filename = filename
         self.new()
 
     def new(self):
         self.jsonTree = {"Items":{}}
 
-    def addItem(self, item):
-        self.jsonTree['Items'][item.getnormalname()] = item.getjsontree()
-        return self.jsonTree
+    def additem(self, item):
+        newitem=False
+        if(not item.getnormalname() in self.jsonTree['Items']):
+            newitem=True
 
-    def removeItemName(self, name):
+        self.jsonTree['Items'][item.getnormalname()] = item.getjsontree()
+        return newitem
+
+    def removebyname(self, name):
         it = base_item(name)
         del self.jsonTree['Items'][it.getnormalname()]
         return self.jsonTree
+
+    def getitems(self):
+        return self.jsonTree['Items']
+
+    def getitem(self,item):
+        tempjson = self.jsonTree['Items'][item]
+        if not 'name' in tempjson:
+            tempjson['name']=item
+
+        return tempjson
+
+    def getitemsname(self):
+        return sorted(self.jsonTree['Items'])
 
 class ItemCfgWidget(QtWidgets.QWidget):
     def __init__(self, itemd=None, parent=None, **kwargs):
@@ -132,6 +187,7 @@ class ItemCfgWidget(QtWidgets.QWidget):
         VBox = QtWidgets.QVBoxLayout(self)
 
         self.nameLineEdit = QtWidgets.QLineEdit(self)
+        self.nameLineEdit.setMaxLength(22)
         self.radioEquipable = QtWidgets.QRadioButton('equipable',self)
         self.radioUsable = QtWidgets.QRadioButton('usable', self)
         self.radioNone = QtWidgets.QRadioButton('none', self)
@@ -157,6 +213,10 @@ class ItemCfgWidget(QtWidgets.QWidget):
         VBox.addWidget(QtWidgets.QLabel('Item category:'))
         VBox.addWidget(self.comboboxCategory)
 
+    def newItem(self):
+        self.itemd = base_item('')
+        self.loadItem()
+
     def loadItem(self,item=None):
         if(item!=None):
             self.itemd = item
@@ -177,7 +237,7 @@ class ItemCfgWidget(QtWidgets.QWidget):
             category_index = item_categories.index(self.itemd.category)
             self.comboboxCategory.setCurrentIndex(category_index)
 
-    def saveItem(self,item=None):
+    def getItem(self,item=None):
         if(item!=None):
             self.itemd = item
 
@@ -196,12 +256,127 @@ class ItemCfgWidget(QtWidgets.QWidget):
 
         return self.itemd
 
+class ItemsList(QtWidgets.QWidget):
+    currentItemChanged = QtCore.pyqtSignal(base_item, 'QString')
+    def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.itemf = ItemsFormat()
+        self.itemsList = QtWidgets.QListWidget(self)
+        self.itemsList.currentItemChanged.connect(self.currentChanged)
+
+        self.load(itemsfname)
+        VBox = QtWidgets.QVBoxLayout(self)
+        VBox.addWidget(self.itemsList)
+        self.setLayout(VBox)
+
+    def new(self):
+        self.itemf.new()
+        self.load()
+
+    def load(self,itemsfname=None):
+        self.itemsList.clear()
+        if(itemsfname != None):
+            self.itemf.load(itemsfname)
+
+        items = self.itemf.getitemsname()
+        for i in range(len(items)):
+            item = items[i]
+            self.itemsList.addItem(item)
+
+    def saveItem(self,item):
+        needsrefresh = self.itemf.additem(item)
+        if(needsrefresh):
+            self.load()
+
+    def removeByName(self,itemname):
+        self.itemf.removebyname(itemname)
+        self.load()
+
+    def save(self,filename=None):
+        if(filename!=None):
+            self.itemf.save(filename)
+        else:
+            self.itemf.save()
+
+    def currentChanged(self,current,previous):
+        if(current == previous):
+            return
+
+        previousname = ''
+        if(previous != None):
+            previousname = previous.text()
+
+        if(current != None):
+            itemname = current.text()
+            itemjson = self.itemf.getitem(itemname)
+            item = base_item(itemname,jsonTree=itemjson)
+            self.currentItemChanged.emit(item,previousname)
+
+class itemsEditorWidget(QtWidgets.QDialog):
+    def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.itemsList = ItemsList(itemsfname)
+        self.itemsList.currentItemChanged.connect(self.itemChanged)
+        self.itemCfg = ItemCfgWidget()
+
+        if(parent==None):
+            self.toolbarMain = QtWidgets.QToolBar()
+            self.toolbarMain.addAction("new\nitems.json",self.newItems)
+            self.toolbarMain.addAction("open\nitems.json", self.openItems)
+
+        LVBox = QtWidgets.QVBoxLayout()
+        LVBox.addWidget(self.itemsList)
+
+        HBox = QtWidgets.QHBoxLayout(self)
+        HBox.addLayout(LVBox)
+        HBox.addWidget(self.itemCfg)
+
+    def itemChanged(self,currentItem,previousName):
+        if(previousName!=None and previousName != ''):
+            item = self.itemCfg.getItem()
+            if(item.name == previousName):
+                self.itemsList.saveItem(item)
+            else:
+                self.itemsList.removeByName(previousName)
+                self.itemsList.saveItem(item)
+
+        if(currentItem!=None):
+            self.itemCfg.loadItem(currentItem)
+            self.itemCfg.setEnabled(True)
+        else:
+            self.itemCfg.setEnabled(False)
+
+    def newItems(self):
+        self.itemsList.new()
+
+    def openItems(self):
+        self.itemsList.load()
+
+
+def main(filelist=None):
+    filetoopen=None
+
+    if (isinstance(filelist, str)):
+        if ("items.json" in filelist):
+            filetoopen = filelist
+
+    else:
+        matching = [s for s in filelist if "items.json" in s]
+        if len(matching) > 0:
+            filetoopen = matching[0]
+
+    if(filetoopen==None):
+        return itemsEditorWidget()
+    else:
+        return itemsEditorWidget(itemsfname=filetoopen)
 
 if __name__ == "__main__":
     from sys import argv, exit
 
     a = QtWidgets.QApplication(argv)
-    m = ItemCfgWidget()
+    m = main(argv)
     a.processEvents()
     m.show()
     m.raise_()
