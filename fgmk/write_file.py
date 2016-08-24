@@ -170,7 +170,10 @@ def fwriteKeyVals(data, f, indent=0):
                 f.write(",")
         f.write("\n" + "    " * indent + "}")
     elif isinstance(data, bool):
-        f.write("%3d" % data)
+        if(data):
+            f.write("true")
+        else:
+            f.write("false")
     elif isinstance(data, basestring):
         f.write("\"" + data + "\"")
     else:
