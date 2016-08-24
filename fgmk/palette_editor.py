@@ -580,7 +580,7 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         current_project.settings["gamefolder"] = projectfolder
 
 def main(args=None):
-    if(args==None):
+    if(args!=None):
         return PaletteEditorWidget(args)
     else:
         return PaletteEditorWidget()
