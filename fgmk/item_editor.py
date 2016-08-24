@@ -296,6 +296,19 @@ class ItemsList(QtWidgets.QWidget):
             item = items[i]
             self.itemsList.addItem(item)
 
+    def newItem(self):
+        item = base_item('newItem')
+        needsrefresh = self.itemf.additem(item)
+        if(needsrefresh):
+            self.load()
+
+        items = self.itemf.getitemsname()
+        for i in range(len(items)):
+            itemname = items[i]
+            if(itemname=='newItem'):
+                self.itemsList.setCurrentRow(i)
+                return
+
     def saveItem(self,item):
         needsrefresh = self.itemf.additem(item)
         if(needsrefresh):
@@ -313,7 +326,10 @@ class ItemsList(QtWidgets.QWidget):
 
     def currentItem(self):
         listitem = self.itemsList.currentItem()
-        return listitem.text()
+        if(listitem != None):
+            return listitem.text()
+        else:
+            return None
 
     def currentChanged(self,current,previous):
         if(current == previous):
@@ -345,12 +361,25 @@ class itemsEditorWidget(QtWidgets.QDialog):
             self.toolbarMain.addAction("save\nitems.json", self.saveItems)
             LVBox.addWidget(self.toolbarMain)
 
+        self.toolbar = QtWidgets.QToolBar()
+        self.toolbar.addAction("new",self.newItem)
+        self.toolbar.addAction("delete", self.deleteItem)
+        self.toolbar.addAction("save", self.saveCurrentItem)
+        LVBox.addWidget(self.toolbar)
 
         LVBox.addWidget(self.itemsList)
 
         HBox = QtWidgets.QHBoxLayout(self)
         HBox.addLayout(LVBox)
         HBox.addWidget(self.itemCfg)
+
+    def newItem(self):
+        self.itemsList.newItem()
+
+    def deleteItem(self):
+        itemname = self.itemsList.currentItem()
+        if(itemname != None):
+            self.itemsList.removeByName(itemname)
 
     def saveCurrentItem(self):
         itemname = self.itemsList.currentItem()
