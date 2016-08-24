@@ -22,8 +22,8 @@ Windows install and run
 
 In Windows, install Python 3 from https://www.python.org/, and then open `cmd.exe` and type (press enter after):
 
-    Python -m pip install fgmk
+    python -m pip install fgmk
 
 To run, you can type the following in `cmd.exe` or the `run...` prompt
 
-    Python -m fgmk
+    python -m fgmk

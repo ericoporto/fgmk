@@ -25,11 +25,11 @@ After install, just open a terminal and type:
 
 In Windows, install Python 3 from https://www.python.org/, and then open `cmd.exe` and type (press enter after):
 
-    Python -m pip install fgmk
+    python -m pip install fgmk
 
 To run, you can type the following in `cmd.exe` or the `run...` prompt
 
-    Python -m fgmk
+    python -m fgmk
 
 
 Alternative Installation and Running methods
@@ -45,7 +45,7 @@ Clone this repository, meet the dependencies and install this with pip3.
 
 ### Running from source
 
-Clone this repository, meet the dependencies and type `./run.py`
+Clone this repository, meet the dependencies and type `python3 -m fgmk`
 
     git clone https://github.com/ericoporto/fgmk.git
     cd fgmk
