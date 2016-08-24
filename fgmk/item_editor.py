@@ -362,8 +362,8 @@ class itemsEditorWidget(QtWidgets.QDialog):
             LVBox.addWidget(self.toolbarMain)
 
         self.toolbar = QtWidgets.QToolBar()
-        self.toolbar.addAction("new",self.newItem)
-        self.toolbar.addAction("delete", self.deleteItem)
+        self.toolbar.addAction("+new",self.newItem)
+        self.toolbar.addAction("-delete", self.deleteItem)
         self.toolbar.addAction("save", self.saveCurrentItem)
         LVBox.addWidget(self.toolbar)
 
