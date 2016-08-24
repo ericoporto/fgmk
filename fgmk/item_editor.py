@@ -245,10 +245,19 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.itemd.setdescription(self.descriptionLineEdit.text())
         if(self.radioEquipable.isChecked()):
             self.itemd.setequipable()
+        else:
+            self.itemd.setequipable(False)
+
         if(self.radioUsable.isChecked()):
             self.itemd.setusable()
+        else:
+            self.itemd.setusable(False)
+
         if(self.checkboxUnique.isChecked()):
             self.itemd.setunique()
+        else:
+            self.itemd.setunique(False)
+
         if(self.comboboxCategory.currentIndex()!=0):
             self.itemd.setcategory(self.comboboxCategory.currentText())
         else:
@@ -269,6 +278,9 @@ class ItemsList(QtWidgets.QWidget):
         VBox = QtWidgets.QVBoxLayout(self)
         VBox.addWidget(self.itemsList)
         self.setLayout(VBox)
+
+    def getFileName(self):
+        return self.itemf.filename
 
     def new(self):
         self.itemf.new()
@@ -299,6 +311,10 @@ class ItemsList(QtWidgets.QWidget):
         else:
             self.itemf.save()
 
+    def currentItem(self):
+        listitem = self.itemsList.currentItem()
+        return listitem.text()
+
     def currentChanged(self,current,previous):
         if(current == previous):
             return
@@ -321,17 +337,33 @@ class itemsEditorWidget(QtWidgets.QDialog):
         self.itemsList.currentItemChanged.connect(self.itemChanged)
         self.itemCfg = ItemCfgWidget()
 
+        LVBox = QtWidgets.QVBoxLayout()
         if(parent==None):
             self.toolbarMain = QtWidgets.QToolBar()
             self.toolbarMain.addAction("new\nitems.json",self.newItems)
             self.toolbarMain.addAction("open\nitems.json", self.openItems)
+            self.toolbarMain.addAction("save\nitems.json", self.saveItems)
+            LVBox.addWidget(self.toolbarMain)
 
-        LVBox = QtWidgets.QVBoxLayout()
+
         LVBox.addWidget(self.itemsList)
 
         HBox = QtWidgets.QHBoxLayout(self)
         HBox.addLayout(LVBox)
         HBox.addWidget(self.itemCfg)
+
+    def saveCurrentItem(self):
+        itemname = self.itemsList.currentItem()
+        item = self.itemCfg.getItem()
+        if(item.name == itemname):
+            self.itemsList.saveItem(item)
+        else:
+            self.itemsList.removeByName(itemname)
+            self.itemsList.saveItem(item)
+
+    def saveNewItem(self):
+        item = self.itemCfg.getItem()
+        self.itemsList.saveItem(item)
 
     def itemChanged(self,currentItem,previousName):
         if(previousName!=None and previousName != ''):
@@ -352,7 +384,44 @@ class itemsEditorWidget(QtWidgets.QDialog):
         self.itemsList.new()
 
     def openItems(self):
-        self.itemsList.load()
+        folder_to_open_to=''
+        if(current_project.settings['gamefolder'] == ''):
+            folder_to_open_to = os.path.expanduser('~')
+        else:
+            folder_to_open_to = os.path.join(current_project.settings['gamefolder'], fifl.DESCRIPTORS)
+
+        filename = QtWidgets.QFileDialog.getOpenFileName(self,
+                        'Open File',
+                        folder_to_open_to,
+                        "JSON Items (items.json);;All Files (*)")[0]
+        if(filename!=''):
+            self.itemsList.load(filename)
+
+    def saveItems(self,filename=''):
+        if(filename==''):
+            filename = self.itemsList.getFileName()
+
+        print(os.path.dirname(filename))
+        if os.path.exists(os.path.dirname(filename)):
+            self.saveCurrentItem()
+            self.itemsList.save(filename)
+        else:
+            self.saveItemsAs()
+
+    def saveItemsAs(self):
+        if(current_project.settings['gamefolder'] == ''):
+            folder_to_open_to = os.path.expanduser('~')
+        else:
+            folder_to_open_to = os.path.join(current_project.settings['gamefolder'], fifl.DESCRIPTORS)
+
+        filename, extension = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save File', folder_to_open_to, 'JSON Items (items.json)')
+
+        if filename != "":
+            if filename[-10:] != 'items.json':
+                filename = os.path.join(os.path.dirname(filename),'items.json')
+
+            self.saveItems(filename)
 
 
 def main(filelist=None):
