@@ -1,7 +1,7 @@
 
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_model, current_project, fifl
+from fgmk import base_model, current_project, fifl, actions_wdgt
 
 item_categories=['none','consumable','collectible','weapon','armor']
 default_equipable = False
@@ -190,10 +190,13 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.nameLineEdit.setMaxLength(22)
         self.radioEquipable = QtWidgets.QRadioButton('equipable',self)
         self.radioUsable = QtWidgets.QRadioButton('usable', self)
+        self.radioUsable.toggled.connect(self.radioUsableChanged)
         self.radioNone = QtWidgets.QRadioButton('none', self)
         self.checkboxUnique =  QtWidgets.QCheckBox('unique', self)
         self.descriptionLineEdit = QtWidgets.QLineEdit(self)
         self.comboboxCategory = QtWidgets.QComboBox(self)
+
+        self.actionWidget = actions_wdgt.tinyActionsWdgt(self,current_project.settings,True,True)
 
         for i in range(len(item_categories)):
             category = item_categories[i]
@@ -213,6 +216,11 @@ class ItemCfgWidget(QtWidgets.QWidget):
         VBox.addWidget(QtWidgets.QLabel('Item category:'))
         VBox.addWidget(self.comboboxCategory)
 
+        VBox.addWidget(self.actionWidget)
+
+    def radioUsableChanged(self,abool):
+        self.actionWidget.setEnabled(abool)
+
     def newItem(self):
         self.itemd = base_item('')
         self.loadItem()
@@ -226,6 +234,7 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.radioNone.setChecked(True)
         if(self.itemd.equipable != default_equipable):
             self.radioEquipable.setChecked(True)
+
         if(self.itemd.usable != default_usable):
             self.radioUsable.setChecked(True)
         if(self.itemd.unique != default_unique):
@@ -236,6 +245,11 @@ class ItemCfgWidget(QtWidgets.QWidget):
         if(self.itemd.category != default_category):
             category_index = item_categories.index(self.itemd.category)
             self.comboboxCategory.setCurrentIndex(category_index)
+
+        if(self.itemd.action != default_action):
+            self.actionWidget.setList(self.itemd.action)
+        else:
+            self.actionWidget.setList([])
 
     def getItem(self,item=None):
         if(item!=None):
@@ -262,6 +276,12 @@ class ItemCfgWidget(QtWidgets.QWidget):
             self.itemd.setcategory(self.comboboxCategory.currentText())
         else:
             self.itemd.setcategory()
+
+        if(self.actionWidget.getValue() == []):
+            self.itemd.setaction()
+        else:
+            self.itemd.setaction(self.actionWidget.getValue())
+
 
         return self.itemd
 
@@ -468,6 +488,7 @@ def main(filelist=None):
     if(filetoopen==None):
         return itemsEditorWidget()
     else:
+        current_project.settings['gamefolder'] = os.path.join(os.path.dirname(filetoopen),'../')
         return itemsEditorWidget(itemsfname=filetoopen)
 
 if __name__ == "__main__":

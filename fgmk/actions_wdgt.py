@@ -89,13 +89,14 @@ class ActionsWidget(QtWidgets.QDialog):
 
 
 class tinyActionsWdgt(QtWidgets.QWidget):
-    def __init__(self, parent=None, ssettings={}, ischara=False , **kwargs):
+    def __init__(self, parent=None, ssettings={}, ischara=False, isitem=False , **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.ssettings = ssettings
         self.parent = parent
         self.ischara = ischara
+        self.isitem = isitem
 
         self.HBox = QtWidgets.QHBoxLayout(self)
         self.HBox.setAlignment(QtCore.Qt.AlignTop)
@@ -111,9 +112,12 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.removeActionButton = QtWidgets.QPushButton("Remove Action", self)
         self.deselectActionButton = QtWidgets.QPushButton("Deselect Actions", self)
 
-        self.checkboxes = []
-        self.checkboxes.append(QtWidgets.QCheckBox("on click", self))
-        self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
+        if(not self.isitem):
+            self.checkboxes = []
+            self.checkboxes.append(QtWidgets.QCheckBox("on click", self))
+            self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
+            self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
+            self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
 
         self.addActionButton.clicked.connect(self.addAction)
         self.editActionButton.clicked.connect(self.editAction)
@@ -131,11 +135,9 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         VBoxButtons.addWidget(self.removeActionButton)
         VBoxButtons.addWidget(self.deselectActionButton)
 
-        self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
-        self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
-
-        for checkbox in self.checkboxes:
-            VBoxButtons.addWidget(checkbox)
+        if(not self.isitem):
+            for checkbox in self.checkboxes:
+                VBoxButtons.addWidget(checkbox)
 
         self.ActionList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
 
@@ -145,14 +147,19 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
     def setList(self,actionToSet):
-        atype = actionToSet['type']
-        for i in range(len(atype)):
-            if(atype[i]):
-                self.checkboxes[i].setCheckState(QtCore.Qt.Checked)
-            else:
-                self.checkboxes[i].setCheckState(QtCore.Qt.Unchecked)
+        if(not self.isitem):
+            atype = actionToSet['type']
+            for i in range(len(atype)):
+                if(atype[i]):
+                    self.checkboxes[i].setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.checkboxes[i].setCheckState(QtCore.Qt.Unchecked)
 
-        listToSet = actionToSet['list']
+            listToSet = actionToSet['list']
+        else:
+            listToSet = actionToSet
+
+
         self.ActionList.clear()
         for action in listToSet:
             self.ActionList.addItem(actionItem(action))
@@ -250,11 +257,13 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         for itemIndex in range(self.ActionList.count()):
             allactions.append(self.ActionList.item(itemIndex).getAction())
 
-        onclick = self.checkboxes[0].isChecked()
-        onover = self.checkboxes[1].isChecked()
+        if(not self.isitem):
+            onclick = self.checkboxes[0].isChecked()
+            onover = self.checkboxes[1].isChecked()
+            actiontype = [onclick,onover]
+            returnvalue = {'list':allactions, 'type':actiontype }
 
-        actiontype = [onclick,onover]
-
-        returnvalue = {'list':allactions, 'type':actiontype }
+        else:
+            returnvalue = allactions
 
         return returnvalue
