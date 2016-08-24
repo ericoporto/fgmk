@@ -6,7 +6,7 @@ from sys import exit, argv
 from time import time, sleep
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtCore import Qt, QSettings
-from fgmk import Editor
+from fgmk import Editor, palette_editor
 from fgmk import __title__, __version__, __copyright__, __license__
 import argparse
 
@@ -19,6 +19,7 @@ def main():
                 epilog=__copyright__ + ", " + __license__ +".")
     parser.add_argument('-v', '--version', action='store_true', default=False, help='get software version.')
     parser.add_argument('-c', '--clean', action='store_true', default=False, help='cleans software settings.')
+    parser.add_argument('-p', '--palette', action='store_true', default=False, help='loads exclusively the palette editor.')
     parser.add_argument('mapfile', nargs='?', default='check_no_map', help='a single .map.json file')
     args = parser.parse_args()
 
@@ -28,6 +29,14 @@ def main():
             settings.remove(key) #guarantee to eliminate all
         settings.sync() #writes to disk
         exit()
+
+    if args.palette == True:
+        a = QApplication([])
+        m = palette_editor.main()
+        a.processEvents()
+        m.show()
+        m.raise_()
+        exit(a.exec_())
 
     if args.version == True:
         print(__title__ + "  v " + __version__ )

@@ -579,11 +579,17 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         projectfolder = os.path.join(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory"))
         current_project.settings["gamefolder"] = projectfolder
 
+def main(args=None):
+    if(args==None):
+        return PaletteEditorWidget(args)
+    else:
+        return PaletteEditorWidget()
+
 if __name__ == "__main__":
     from sys import argv, exit
 
     a = QtWidgets.QApplication(argv)
-    m = PaletteEditorWidget()
+    m = main()
     a.processEvents()
     m.show()
     m.raise_()
