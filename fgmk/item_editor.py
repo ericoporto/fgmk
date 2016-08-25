@@ -6,6 +6,7 @@ from fgmk import base_model, current_project, fifl, actions_wdgt
 item_categories=['none','consumable','collectible','weapon','armor']
 default_equipable = False
 default_unique = False
+default_reusable = False
 default_usable = False
 default_effect = None
 default_statMod = None
@@ -17,6 +18,7 @@ default_action = None
 class base_item:
     def __init__(self,name, equipable=default_equipable,
                             unique=default_unique,
+                            reusable=default_reusable,
                             usable=default_usable,
                             effect=default_effect,
                             statMod=default_statMod,
@@ -32,6 +34,7 @@ class base_item:
         self.name = name
         self.equipable = equipable
         self.unique = unique
+        self.reusable = reusable
         self.usable = usable
         self.effect = effect
         self.statMod = statMod
@@ -50,6 +53,9 @@ class base_item:
 
     def setunique(self, unique=True):
         self.unique = unique
+
+    def setreusable(self, reusable=True):
+        self.reusable = reusable
 
     def setusable(self,usable=True):
         self.usable = usable
@@ -80,6 +86,7 @@ class base_item:
     def new(self):
         self.equipable=default_equipable
         self.unique=default_unique
+        self.reusable=default_reusable
         self.usable=default_usable
         self.effect=default_effect
         self.statMod=default_statMod
@@ -98,6 +105,8 @@ class base_item:
             self.usable = jsonTree['usable']
         if('unique' in jsonTree):
             self.unique = jsonTree['unique']
+        if('reusable' in jsonTree):
+            self.reusable = jsonTree['reusable']
         if('effect' in jsonTree):
             self.effect = jsonTree['effect']
         if('statMod' in jsonTree):
@@ -120,6 +129,8 @@ class base_item:
             jsonTree['usable'] = True
         if(self.unique):
             jsonTree['unique'] = True
+        if(self.reusable):
+            jsonTree['reusable'] = True
         if(self.effect != None):
             jsonTree['effect'] = self.effect
         if(self.statMod != None):
@@ -174,6 +185,96 @@ class ItemsFormat(base_model.BaseFormat):
     def getitemsname(self):
         return sorted(self.jsonTree['Items'])
 
+class StatModWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+        #elements
+        titleLabel = QtWidgets.QLabel('stat modification')
+        self.clearButton = QtWidgets.QPushButton('clear all',self)
+        self.stSpinbox = QtWidgets.QSpinBox(self)
+        self.dxSpinbox = QtWidgets.QSpinBox(self)
+        self.iqSpinbox = QtWidgets.QSpinBox(self)
+        stLabel = QtWidgets.QLabel('st')
+        dxLabel = QtWidgets.QLabel('dx')
+        iqLabel = QtWidgets.QLabel('iq')
+
+        #logic
+        self.clearButton.clicked.connect(self.clearAll)
+        self.stSpinbox.setToolTip('How much the item will modify strenght.')
+        self.stSpinbox.setMinimum(-250)
+        self.stSpinbox.setMaximum(250)
+        self.stSpinbox.setSingleStep(1)
+        self.dxSpinbox.setToolTip('How much the item will modify dexterity.')
+        self.dxSpinbox.setMinimum(-250)
+        self.dxSpinbox.setMaximum(250)
+        self.dxSpinbox.setSingleStep(1)
+        self.iqSpinbox.setToolTip('How much the item will modify intelligence.')
+        self.iqSpinbox.setMinimum(-250)
+        self.iqSpinbox.setMaximum(250)
+        self.iqSpinbox.setSingleStep(1)
+
+        #layout and appearance
+        titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        stLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        dxLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        iqLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        VBox = QtWidgets.QVBoxLayout(self)
+        statsHBox = QtWidgets.QHBoxLayout()
+        statsHBox.addWidget(stLabel)
+        statsHBox.addWidget(self.stSpinbox)
+        statsHBox.addWidget(dxLabel)
+        statsHBox.addWidget(self.dxSpinbox)
+        statsHBox.addWidget(iqLabel)
+        statsHBox.addWidget(self.iqSpinbox)
+        titleHBox = QtWidgets.QHBoxLayout()
+        titleHBox.addWidget(titleLabel)
+        titleHBox.addWidget(self.clearButton)
+        VBox.addLayout(titleHBox)
+        VBox.addLayout(statsHBox)
+
+    def clearAll(self):
+        self.stSpinbox.setValue(0)
+        self.dxSpinbox.setValue(0)
+        self.iqSpinbox.setValue(0)
+
+    def setValue(self,stat={'st':0,'dx':0,'iq':0}):
+        if stat == default_statMod:
+            self.clearAll()
+            return
+
+        if 'st' in stat:
+            self.stSpinbox.setValue(stat['st'])
+        else:
+            self.stSpinbox.setValue(0)
+
+        if 'dx' in stat:
+            self.dxSpinbox.setValue(stat['dx'])
+        else:
+            self.dxSpinbox.setValue(0)
+
+        if 'iq' in stat:
+            self.iqSpinbox.setValue(stat['iq'])
+        else:
+            self.iqSpinbox.setValue(0)
+
+    def getValue(self):
+        stat = {}
+        st = self.stSpinbox.value()
+        dx = self.dxSpinbox.value()
+        iq = self.iqSpinbox.value()
+        if st != 0:
+            stat['st']=st
+        if dx != 0:
+            stat['dx']=st
+        if iq != 0:
+            stat['iq']=iq
+
+        if('st' in stat or 'dx' in stat or 'iq' in stat):
+            return stat
+        else:
+            return default_statMod
+
+
 class ItemCfgWidget(QtWidgets.QWidget):
     def __init__(self, itemd=None, parent=None, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
@@ -190,13 +291,21 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.nameLineEdit.setMaxLength(22)
         self.radioEquipable = QtWidgets.QRadioButton('equipable',self)
         self.radioUsable = QtWidgets.QRadioButton('usable', self)
-        self.radioUsable.toggled.connect(self.radioUsableChanged)
         self.radioNone = QtWidgets.QRadioButton('none', self)
         self.checkboxUnique =  QtWidgets.QCheckBox('unique', self)
+        self.checkboxReusable =  QtWidgets.QCheckBox('reusable', self)
         self.descriptionLineEdit = QtWidgets.QLineEdit(self)
         self.comboboxCategory = QtWidgets.QComboBox(self)
 
+        self.statModWidget = StatModWidget(self)
         self.actionWidget = actions_wdgt.tinyActionsWdgt(self,current_project.settings,True,True)
+
+        self.actionWidget.setEnabled(False)
+        self.statModWidget.setEnabled(False)
+        self.checkboxReusable.setEnabled(False)
+
+        self.radioUsable.toggled.connect(self.radioUsableChanged)
+        self.radioEquipable.toggled.connect(self.radioEquipableChanged)
 
         for i in range(len(item_categories)):
             category = item_categories[i]
@@ -211,15 +320,20 @@ class ItemCfgWidget(QtWidgets.QWidget):
         VBox.addWidget(self.radioUsable)
         VBox.addWidget(self.radioNone)
         VBox.addWidget(self.checkboxUnique)
+        VBox.addWidget(self.checkboxReusable)
         VBox.addWidget(QtWidgets.QLabel('Item description:'))
         VBox.addWidget(self.descriptionLineEdit)
         VBox.addWidget(QtWidgets.QLabel('Item category:'))
         VBox.addWidget(self.comboboxCategory)
-
+        VBox.addWidget(self.statModWidget)
         VBox.addWidget(self.actionWidget)
 
     def radioUsableChanged(self,abool):
         self.actionWidget.setEnabled(abool)
+        self.checkboxReusable.setEnabled(abool)
+
+    def radioEquipableChanged(self,abool):
+        self.statModWidget.setEnabled(abool)
 
     def newItem(self):
         self.itemd = base_item('')
@@ -241,6 +355,12 @@ class ItemCfgWidget(QtWidgets.QWidget):
             self.checkboxUnique.setChecked(True)
         else:
             self.checkboxUnique.setChecked(False)
+
+        if(self.itemd.reusable != default_reusable):
+            self.checkboxReusable.setChecked(True)
+        else:
+            self.checkboxReusable.setChecked(False)
+
         self.comboboxCategory.setCurrentIndex(0)
         if(self.itemd.category != default_category):
             category_index = item_categories.index(self.itemd.category)
@@ -251,37 +371,57 @@ class ItemCfgWidget(QtWidgets.QWidget):
         else:
             self.actionWidget.setList([])
 
+        if(self.itemd.statMod != default_statMod):
+            self.statModWidget.setValue(self.itemd.statMod)
+        else:
+            self.statModWidget.setValue(default_statMod)
+
     def getItem(self,item=None):
         if(item!=None):
             self.itemd = item
 
         self.itemd.setname(self.nameLineEdit.text())
         self.itemd.setdescription(self.descriptionLineEdit.text())
-        if(self.radioEquipable.isChecked()):
-            self.itemd.setequipable()
-        else:
-            self.itemd.setequipable(False)
 
-        if(self.radioUsable.isChecked()):
-            self.itemd.setusable()
+        if(self.statModWidget.getValue() == default_statMod):
+            self.itemd.setstatmod()
         else:
-            self.itemd.setusable(False)
-
-        if(self.checkboxUnique.isChecked()):
-            self.itemd.setunique()
-        else:
-            self.itemd.setunique(False)
-
-        if(self.comboboxCategory.currentIndex()!=0):
-            self.itemd.setcategory(self.comboboxCategory.currentText())
-        else:
-            self.itemd.setcategory()
+            self.itemd.setstatmod(self.statModWidget.getValue())
 
         if(self.actionWidget.getValue() == []):
             self.itemd.setaction()
         else:
             self.itemd.setaction(self.actionWidget.getValue())
 
+        if(self.checkboxReusable.isChecked()):
+            self.itemd.setreusable(True)
+        else:
+            self.itemd.setreusable(False)
+
+        if(self.radioEquipable.isChecked()):
+            self.itemd.setequipable(True)
+            self.itemd.setaction()
+            self.itemd.seteffect()
+            self.itemd.setreusable(False)
+        else:
+            self.itemd.setequipable(False)
+
+        if(self.radioUsable.isChecked()):
+            self.itemd.setusable(True)
+            self.itemd.setstatmod()
+        else:
+            self.itemd.setusable(False)
+
+        if(self.checkboxUnique.isChecked()):
+            self.itemd.setunique(True)
+        else:
+            self.itemd.setunique(False)
+
+
+        if(self.comboboxCategory.currentIndex()!=0):
+            self.itemd.setcategory(self.comboboxCategory.currentText())
+        else:
+            self.itemd.setcategory()
 
         return self.itemd
 
@@ -351,6 +491,13 @@ class ItemsList(QtWidgets.QWidget):
         else:
             return None
 
+    def getCurrentItemDescriptor(self):
+        itemname = self.currentItem()
+        if(itemname!=None):
+            itemjson = self.itemf.getitem(itemname)
+            item = base_item(itemname,jsonTree=itemjson)
+            return item
+
     def currentChanged(self,current,previous):
         if(current == previous):
             return
@@ -385,6 +532,7 @@ class itemsEditorWidget(QtWidgets.QDialog):
         self.toolbar.addAction("+new",self.newItem)
         self.toolbar.addAction("-delete", self.deleteItem)
         self.toolbar.addAction("save", self.saveCurrentItem)
+        self.toolbar.addAction("reload", self.reloadCurrentItem)
         LVBox.addWidget(self.toolbar)
 
         LVBox.addWidget(self.itemsList)
@@ -409,6 +557,10 @@ class itemsEditorWidget(QtWidgets.QDialog):
         else:
             self.itemsList.removeByName(itemname)
             self.itemsList.saveItem(item)
+
+    def reloadCurrentItem(self):
+        currentItem = self.itemsList.getCurrentItemDescriptor()
+        self.itemCfg.loadItem(currentItem)
 
     def saveNewItem(self):
         item = self.itemCfg.getItem()
