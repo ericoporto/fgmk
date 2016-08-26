@@ -4,6 +4,8 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_model, current_project, fifl, actions_wdgt
 
 item_categories=['none','consumable','collectible','weapon','armor']
+effects_types=['none','hpup','hpdown']
+atr_types=['none','st','dx','iq']
 default_equipable = False
 default_unique = False
 default_reusable = False
@@ -185,6 +187,130 @@ class ItemsFormat(base_model.BaseFormat):
     def getitemsname(self):
         return sorted(self.jsonTree['Items'])
 
+class EffectWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        #elements
+        titleLabel = QtWidgets.QLabel('effect of usable item')
+        self.effectsCombobox = QtWidgets.QComboBox(self)
+        self.basepSpinbox = QtWidgets.QSpinBox(self)
+        self.plusSpinbox = QtWidgets.QSpinBox(self)
+        self.atrCombobox = QtWidgets.QComboBox(self)
+        basepLabel = QtWidgets.QLabel('roll (modifier')
+        atrLabel = QtWidgets.QLabel('+ attribute')
+        plusLabel = QtWidgets.QLabel(') + modifier')
+
+        #starting elements
+        for i in range(len(effects_types)):
+            effect = effects_types[i]
+            self.effectsCombobox.insertItem(i,effect)
+        for i in range(len(atr_types)):
+            atr = atr_types[i]
+            self.atrCombobox.insertItem(i,atr)
+        self.basepSpinbox.setToolTip('Modifier based on selected atribute.')
+        self.basepSpinbox.setMinimum(-10)
+        self.basepSpinbox.setMaximum(10)
+        self.basepSpinbox.setSingleStep(1)
+        self.plusSpinbox.setToolTip('Value to add on resulting roll of atribute and modifier.')
+        self.plusSpinbox.setMinimum(-10)
+        self.plusSpinbox.setMaximum(10)
+        self.plusSpinbox.setSingleStep(1)
+        self.setEnableOthers(False)
+
+        #logic
+        self.effectsCombobox.currentIndexChanged.connect(self.effectsChanged)
+
+        #layout
+        titleLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        basepLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        plusLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        atrLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        VBox = QtWidgets.QVBoxLayout(self)
+        HBox1 = QtWidgets.QHBoxLayout()
+        HBox2 = QtWidgets.QHBoxLayout()
+        HBox1.addWidget(titleLabel)
+        HBox1.addWidget(self.effectsCombobox)
+        HBox2.addWidget(basepLabel)
+        HBox2.addWidget(self.basepSpinbox)
+        HBox2.addWidget(atrLabel)
+        HBox2.addWidget(self.atrCombobox)
+        HBox2.addWidget(plusLabel)
+        HBox2.addWidget(self.plusSpinbox)
+        VBox.addLayout(HBox1)
+        VBox.addLayout(HBox2)
+
+    def effectsChanged(self,index):
+        notzero = index != 0
+        self.setEnableOthers(notzero)
+
+    def setEnableOthers(self,abool):
+        self.basepSpinbox.setEnabled(abool)
+        self.atrCombobox.setEnabled(abool)
+        self.plusSpinbox.setEnabled(abool)
+
+    def clearOthers(self):
+        self.basepSpinbox.setValue(0)
+        self.atrCombobox.setCurrentIndex(0)
+        self.plusSpinbox.setValue(0)
+
+    def setValue(self,effect_json=default_effect):
+        if(effect_json==default_effect or effect_json == {}):
+            self.clearOthers()
+            self.effectsCombobox.setCurrentIndex(0)
+            return
+
+        if('basep' in effect_json):
+            self.basepSpinbox.setValue(effect_json['basep'])
+        else:
+            self.basepSpinbox.setValue(0)
+
+        if('plus' in effect_json):
+            self.plusSpinbox.setValue(effect_json['plus'])
+        else:
+            self.plusSpinbox.setValue(0)
+
+        if('atr' in effect_json):
+            atr_index = atr_types.index(effect_json['atr'])
+            self.atrCombobox.setCurrentIndex(atr_index)
+        else:
+            self.atrCombobox.setCurrentIndex(0)
+
+        if('effect' in effect_json):
+            effect_index = effects_types.index(effect_json['effect'][0])
+            self.effectsCombobox.setCurrentIndex(effect_index)
+        else:
+            self.clearOthers()
+            self.effectsCombobox.setCurrentIndex(0)
+
+    def getValue(self):
+        if(self.effectsCombobox.currentIndex()==0):
+            return default_effect
+
+        effect_json = {}
+
+        effect = self.effectsCombobox.currentText()
+        basep = self.basepSpinbox.value()
+        plus = self.plusSpinbox.value()
+        atr = self.atrCombobox.currentText()
+
+        if(self.atrCombobox.currentIndex()==0 and basep == 0 and plus == 0):
+            return default_effect
+
+        if basep != 0:
+            effect_json['basep']=basep
+        if plus != 0:
+            effect_json['plus']=plus
+        if atr != atr_types[0]:
+            effect_json['atr']=atr
+
+        effect_json['effect']=[]
+        effect_json['effect'].append(effect)
+
+        return effect_json
+
+
+
 class StatModWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
@@ -298,10 +424,12 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.comboboxCategory = QtWidgets.QComboBox(self)
 
         self.statModWidget = StatModWidget(self)
+        self.effectWidget = EffectWidget(self)
         self.actionWidget = actions_wdgt.tinyActionsWdgt(self,current_project.settings,True,True)
 
         self.actionWidget.setEnabled(False)
         self.statModWidget.setEnabled(False)
+        self.effectWidget.setEnabled(False)
         self.checkboxReusable.setEnabled(False)
 
         self.radioUsable.toggled.connect(self.radioUsableChanged)
@@ -326,11 +454,13 @@ class ItemCfgWidget(QtWidgets.QWidget):
         VBox.addWidget(QtWidgets.QLabel('Item category:'))
         VBox.addWidget(self.comboboxCategory)
         VBox.addWidget(self.statModWidget)
+        VBox.addWidget(self.effectWidget)
         VBox.addWidget(self.actionWidget)
 
-    def radioUsableChanged(self,abool):
-        self.actionWidget.setEnabled(abool)
-        self.checkboxReusable.setEnabled(abool)
+    def radioUsableChanged(self,isusable):
+        self.actionWidget.setEnabled(isusable)
+        self.effectWidget.setEnabled(isusable)
+        self.checkboxReusable.setEnabled(isusable)
 
     def radioEquipableChanged(self,abool):
         self.statModWidget.setEnabled(abool)
@@ -376,6 +506,11 @@ class ItemCfgWidget(QtWidgets.QWidget):
         else:
             self.statModWidget.setValue(default_statMod)
 
+        if(self.itemd.effect != default_effect):
+            self.effectWidget.setValue(self.itemd.effect)
+        else:
+            self.effectWidget.setValue(default_effect)
+
     def getItem(self,item=None):
         if(item!=None):
             self.itemd = item
@@ -387,6 +522,11 @@ class ItemCfgWidget(QtWidgets.QWidget):
             self.itemd.setstatmod()
         else:
             self.itemd.setstatmod(self.statModWidget.getValue())
+
+        if(self.effectWidget.getValue() == default_effect):
+            self.itemd.seteffect()
+        else:
+            self.itemd.seteffect(self.effectWidget.getValue())
 
         if(self.actionWidget.getValue() == []):
             self.itemd.setaction()
