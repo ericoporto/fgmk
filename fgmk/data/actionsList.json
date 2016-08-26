@@ -3,6 +3,7 @@
   "alert",
   "teleport",
   "teleportInPlace",
+  "addItem",
   "changeTile",
   "rain",
   "fadeIn",
@@ -28,6 +29,7 @@
     "teleportInPlace":["level"],
     "teleport":["positionx","positiony","level"],
     "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]],
-    "rain":["state"]
+    "rain":["state"],
+    "addItem":["item"]
     }
 }

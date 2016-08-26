@@ -160,6 +160,8 @@ class ItemsFormat(base_model.BaseFormat):
 
     def new(self):
         self.jsonTree = {"Items":{}}
+        if os.path.isfile(self.filename):
+            self.load()
 
     def additem(self, item):
         newitem=False
@@ -565,13 +567,48 @@ class ItemCfgWidget(QtWidgets.QWidget):
 
         return self.itemd
 
-class ItemsList(QtWidgets.QWidget):
-    currentItemChanged = QtCore.pyqtSignal(base_item, 'QString')
-    def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+class tinyItemsList(QtWidgets.QWidget):
+    def __init__(self,parent=None, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.itemf = ItemsFormat()
         self.itemsList = QtWidgets.QListWidget(self)
+        self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.load()
+        VBox = QtWidgets.QVBoxLayout(self)
+        VBox.addWidget(self.itemsList)
+        self.setLayout(VBox)
+        
+    def load(self):
+        self.itemsList.clear()
+        items = self.itemf.getitemsname()
+        for i in range(len(items)):
+            item = items[i]
+            self.itemsList.addItem(item)
+
+    def getItem(self):
+        listitem = self.itemsList.currentItem()
+        if(listitem != None):
+            return listitem.text()
+        else:
+            return None
+
+    def setItem(self,itemname):
+        for i in range(self.itemsList.count()):
+            item = self.itemsList.item(i)
+            if(item.text()==itemname):
+                self.itemsList.setCurrentRow(i)
+                return
+
+
+class ItemsList(QtWidgets.QWidget):
+    currentItemChanged = QtCore.pyqtSignal(base_item, 'QString')
+    def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.itemf = ItemsFormat()
+        self.itemsList = QtWidgets.QListWidget(self)
+        self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.itemsList.currentItemChanged.connect(self.currentChanged)
 
         self.load(itemsfname)
@@ -656,6 +693,8 @@ class itemsEditorWidget(QtWidgets.QDialog):
     def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
+        self.parent = parent
+
         self.itemsList = ItemsList(itemsfname)
         self.itemsList.currentItemChanged.connect(self.itemChanged)
         self.itemCfg = ItemCfgWidget()
@@ -666,6 +705,11 @@ class itemsEditorWidget(QtWidgets.QDialog):
             self.toolbarMain.addAction("new\nitems.json",self.newItems)
             self.toolbarMain.addAction("open\nitems.json", self.openItems)
             self.toolbarMain.addAction("save\nitems.json", self.saveItems)
+            LVBox.addWidget(self.toolbarMain)
+        else:
+            self.toolbarMain = QtWidgets.QToolBar()
+            self.toolbarMain.addAction("save items", self.saveItems)
+            self.toolbarMain.addAction("reopen", self.reopenItems)
             LVBox.addWidget(self.toolbarMain)
 
         self.toolbar = QtWidgets.QToolBar()
@@ -724,6 +768,10 @@ class itemsEditorWidget(QtWidgets.QDialog):
     def newItems(self):
         self.itemsList.new()
 
+    def reopenItems(self):
+        filetoreopen = os.path.join(current_project.settings['gamefolder'], fifl.ITEMSFILE)
+        self.itemsList.load(filetoreopen)
+
     def openItems(self):
         folder_to_open_to=''
         if(current_project.settings['gamefolder'] == ''):
@@ -742,7 +790,6 @@ class itemsEditorWidget(QtWidgets.QDialog):
         if(filename==''):
             filename = self.itemsList.getFileName()
 
-        print(os.path.dirname(filename))
         if os.path.exists(os.path.dirname(filename)):
             self.saveCurrentItem()
             self.itemsList.save(filename)

@@ -2,6 +2,7 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt
+from fgmk import item_editor
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
@@ -820,6 +821,36 @@ class rain(QtWidgets.QDialog):
             rain_state = 'stop'
         return rain_state
 
+
+class addItem(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.LabelText = QtWidgets.QLabel("Select item to add:")
+        self.ListItem = item_editor.tinyItemsList()
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.ListItem)
+        self.VBox.addWidget(self.buttonBox)
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('addItem: select item to add')
+
+        if(edit != None):
+            self.ListItem.setItem(edit[0])
+
+    def getValue(self):
+        itemToReturn = str(self.ListItem.getItem())
+        return itemToReturn
 
 class noEffect(QtWidgets.QDialog):
 

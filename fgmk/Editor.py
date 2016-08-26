@@ -8,7 +8,7 @@ from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, til
 from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
 from fgmk import temp
 from fgmk import help, charas_palette_wdgt
-from fgmk import palette_editor
+from fgmk import palette_editor, item_editor
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
@@ -359,8 +359,9 @@ class MainWindow(QtWidgets.QMainWindow):
                               self.selectStartPosition, '')
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
-        current_projectectMenu.addAction('Edit &charas...', self.editCharas, '')
+        current_projectectMenu.addAction('Edit c&haras...', self.editCharas, '')
         current_projectectMenu.addAction('Edit &palette...', self.editPalette, '')
+        current_projectectMenu.addAction('Edit &Items...', self.editItems, '')
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
         current_projectectMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
@@ -595,6 +596,11 @@ class MainWindow(QtWidgets.QMainWindow):
         myPaletteEditor = palette_editor.PaletteEditorWidget(mappalette,
             self, current_project.settings)
         if myPaletteEditor.exec_() == QtWidgets.QDialog.Accepted:
+            pass
+
+    def editItems(self):
+        myItemEditor = item_editor.itemsEditorWidget(parent=self)
+        if myItemEditor.exec_() == QtWidgets.QDialog.Accepted:
             pass
 
     def changeToFullscreen(self):
