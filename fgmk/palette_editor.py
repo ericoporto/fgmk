@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_model, current_project, fifl, tile_set, base_tile, getdata

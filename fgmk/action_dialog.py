@@ -2,7 +2,6 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt
-from fgmk import item_editor
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
@@ -830,7 +829,7 @@ class addItem(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select item to add:")
-        self.ListItem = item_editor.tinyItemsList()
+        self.ListItem = miniWdgt.miniItemsList()
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
@@ -860,7 +859,7 @@ class subtractItem(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select item to subtract:")
-        self.ListItem = item_editor.tinyItemsList()
+        self.ListItem = miniWdgt.miniItemsList()
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)

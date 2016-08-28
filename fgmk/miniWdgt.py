@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore
-from fgmk import base_tile, tMat, tile_set
+from fgmk import base_tile, tMat, tile_set, item_format
 
 class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -166,3 +166,37 @@ class MiniMapWidget(QtWidgets.QWidget):
 
     def getValue(self):
         return self.selectedPosition
+
+
+class miniItemsList(QtWidgets.QWidget):
+    def __init__(self,parent=None, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.itemf = item_format.ItemsFormat()
+        self.itemsList = QtWidgets.QListWidget(self)
+        self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.load()
+        VBox = QtWidgets.QVBoxLayout(self)
+        VBox.addWidget(self.itemsList)
+        self.setLayout(VBox)
+
+    def load(self):
+        self.itemsList.clear()
+        items = self.itemf.getitemsname()
+        for i in range(len(items)):
+            item = items[i]
+            self.itemsList.addItem(item)
+
+    def getItem(self):
+        listitem = self.itemsList.currentItem()
+        if(listitem != None):
+            return listitem.text()
+        else:
+            return None
+
+    def setItem(self,itemname):
+        for i in range(self.itemsList.count()):
+            item = self.itemsList.item(i)
+            if(item.text()==itemname):
+                self.itemsList.setCurrentRow(i)
+                return

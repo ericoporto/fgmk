@@ -1,193 +1,7 @@
 
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_model, current_project, fifl, actions_wdgt
-
-item_categories=['none','consumable','collectible','weapon','armor']
-effects_types=['none','hpup','hpdown']
-atr_types=['none','st','dx','iq']
-default_equipable = False
-default_unique = False
-default_reusable = False
-default_usable = False
-default_effect = None
-default_statMod = None
-default_description = ''
-default_icon = None
-default_category = None
-default_action = None
-
-class base_item:
-    def __init__(self,name, equipable=default_equipable,
-                            unique=default_unique,
-                            reusable=default_reusable,
-                            usable=default_usable,
-                            effect=default_effect,
-                            statMod=default_statMod,
-                            description=default_description,
-                            icon=default_icon,
-                            category=default_category,
-                            action=default_action,
-                            jsonTree=None):
-        normalized_name = str(name)
-        normalized_name = normalized_name.title()
-        normalized_name = normalized_name.replace(" ", "")
-
-        self.name = name
-        self.equipable = equipable
-        self.unique = unique
-        self.reusable = reusable
-        self.usable = usable
-        self.effect = effect
-        self.statMod = statMod
-        self.description = description
-        self.icon = icon
-        self.category = category
-        self.action = action
-        if(jsonTree!=None):
-            self.loadjsontree(jsonTree)
-
-    def setname(self,name):
-        self.name = name
-
-    def setequipable(self, equipable=True):
-        self.equipable = equipable
-
-    def setunique(self, unique=True):
-        self.unique = unique
-
-    def setreusable(self, reusable=True):
-        self.reusable = reusable
-
-    def setusable(self,usable=True):
-        self.usable = usable
-
-    def seteffect(self,effect=default_effect):
-        self.effect = effect
-
-    def setstatmod(self,statMod=default_statMod):
-        self.statMod = statMod
-
-    def setdescription(self, description=default_description):
-        self.description = description
-
-    def seticon(self, icon=default_icon):
-        self.icon = icon
-
-    def setcategory(self, category=default_category):
-        self.category = category
-
-    def setaction(self,action=default_action):
-        self.action = action
-
-    def getnormalname(self):
-        normalized_name = str(self.name)
-        normalized_name = normalized_name.replace(" ", "")
-        return normalized_name
-
-    def new(self):
-        self.equipable=default_equipable
-        self.unique=default_unique
-        self.reusable=default_reusable
-        self.usable=default_usable
-        self.effect=default_effect
-        self.statMod=default_statMod
-        self.description=default_description
-        self.icon=default_icon
-        self.category=default_category
-        self.action=default_action
-
-    def loadjsontree(self,jsonTree):
-        self.new()
-        if('name' in jsonTree):
-            self.name = jsonTree['name']
-        if('equipable' in jsonTree):
-            self.equipable = jsonTree['equipable']
-        if('usable' in jsonTree):
-            self.usable = jsonTree['usable']
-        if('unique' in jsonTree):
-            self.unique = jsonTree['unique']
-        if('reusable' in jsonTree):
-            self.reusable = jsonTree['reusable']
-        if('effect' in jsonTree):
-            self.effect = jsonTree['effect']
-        if('statMod' in jsonTree):
-            self.statMod = jsonTree['statMod']
-        if('description' in jsonTree):
-            self.description = jsonTree['description']
-        if('icon' in jsonTree):
-            self.icon = jsonTree['icon']
-        if('category' in jsonTree):
-            self.category = jsonTree['category']
-        if('action' in jsonTree):
-            self.action = jsonTree['action']
-
-    def getjsontree(self):
-        jsonTree = {}
-        jsonTree['name'] = self.name
-        if(self.equipable):
-            jsonTree['equipable'] = True
-        if(self.usable):
-            jsonTree['usable'] = True
-        if(self.unique):
-            jsonTree['unique'] = True
-        if(self.reusable):
-            jsonTree['reusable'] = True
-        if(self.effect != None):
-            jsonTree['effect'] = self.effect
-        if(self.statMod != None):
-            jsonTree['statMod'] = self.statMod
-        if(self.description != False or self.description != ''):
-            jsonTree['description'] = self.description
-        if(self.icon != None):
-            jsonTree['icon'] = self.icon
-        if(self.category != None):
-            jsonTree['category'] = self.category
-        if(self.action != None):
-            jsonTree['action'] = self.action
-
-        return jsonTree
-
-
-class ItemsFormat(base_model.BaseFormat):
-    def __init__(self,filename=''):
-        base_model.BaseFormat.__init__(self)
-        if(filename==''):
-            self.filename = os.path.join(current_project.settings['gamefolder'],fifl.ITEMSFILE)
-        else:
-            self.filename = filename
-        self.new()
-
-    def new(self):
-        self.jsonTree = {"Items":{}}
-        if os.path.isfile(self.filename):
-            self.load()
-
-    def additem(self, item):
-        newitem=False
-        if(not item.getnormalname() in self.jsonTree['Items']):
-            newitem=True
-
-        self.jsonTree['Items'][item.getnormalname()] = item.getjsontree()
-        return newitem
-
-    def removebyname(self, name):
-        it = base_item(name)
-        del self.jsonTree['Items'][it.getnormalname()]
-        return self.jsonTree
-
-    def getitems(self):
-        return self.jsonTree['Items']
-
-    def getitem(self,item):
-        tempjson = self.jsonTree['Items'][item]
-        if not 'name' in tempjson:
-            tempjson['name']=item
-
-        return tempjson
-
-    def getitemsname(self):
-        return sorted(self.jsonTree['Items'])
+from fgmk import current_project, fifl, actions_wdgt, item_format
 
 class EffectWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
@@ -204,11 +18,11 @@ class EffectWidget(QtWidgets.QWidget):
         plusLabel = QtWidgets.QLabel(') + modifier')
 
         #starting elements
-        for i in range(len(effects_types)):
-            effect = effects_types[i]
+        for i in range(len(item_format.effects_types)):
+            effect = item_format.effects_types[i]
             self.effectsCombobox.insertItem(i,effect)
-        for i in range(len(atr_types)):
-            atr = atr_types[i]
+        for i in range(len(item_format.atr_types)):
+            atr = item_format.atr_types[i]
             self.atrCombobox.insertItem(i,atr)
         self.basepSpinbox.setToolTip('Modifier based on selected atribute.')
         self.basepSpinbox.setMinimum(-10)
@@ -256,8 +70,8 @@ class EffectWidget(QtWidgets.QWidget):
         self.atrCombobox.setCurrentIndex(0)
         self.plusSpinbox.setValue(0)
 
-    def setValue(self,effect_json=default_effect):
-        if(effect_json==default_effect or effect_json == {}):
+    def setValue(self,effect_json=item_format.default_effect):
+        if(effect_json==item_format.default_effect or effect_json == {}):
             self.clearOthers()
             self.effectsCombobox.setCurrentIndex(0)
             return
@@ -273,13 +87,13 @@ class EffectWidget(QtWidgets.QWidget):
             self.plusSpinbox.setValue(0)
 
         if('atr' in effect_json):
-            atr_index = atr_types.index(effect_json['atr'])
+            atr_index = item_format.atr_types.index(effect_json['atr'])
             self.atrCombobox.setCurrentIndex(atr_index)
         else:
             self.atrCombobox.setCurrentIndex(0)
 
         if('effect' in effect_json):
-            effect_index = effects_types.index(effect_json['effect'][0])
+            effect_index = item_format.effects_types.index(effect_json['effect'][0])
             self.effectsCombobox.setCurrentIndex(effect_index)
         else:
             self.clearOthers()
@@ -287,7 +101,7 @@ class EffectWidget(QtWidgets.QWidget):
 
     def getValue(self):
         if(self.effectsCombobox.currentIndex()==0):
-            return default_effect
+            return item_format.default_effect
 
         effect_json = {}
 
@@ -297,13 +111,13 @@ class EffectWidget(QtWidgets.QWidget):
         atr = self.atrCombobox.currentText()
 
         if(self.atrCombobox.currentIndex()==0 and basep == 0 and plus == 0):
-            return default_effect
+            return item_format.default_effect
 
         if basep != 0:
             effect_json['basep']=basep
         if plus != 0:
             effect_json['plus']=plus
-        if atr != atr_types[0]:
+        if atr != item_format.atr_types[0]:
             effect_json['atr']=atr
 
         effect_json['effect']=[]
@@ -366,7 +180,7 @@ class StatModWidget(QtWidgets.QWidget):
         self.iqSpinbox.setValue(0)
 
     def setValue(self,stat={'st':0,'dx':0,'iq':0}):
-        if stat == default_statMod:
+        if stat == item_format.default_statMod:
             self.clearAll()
             return
 
@@ -400,7 +214,7 @@ class StatModWidget(QtWidgets.QWidget):
         if('st' in stat or 'dx' in stat or 'iq' in stat):
             return stat
         else:
-            return default_statMod
+            return item_format.default_statMod
 
 
 class ItemCfgWidget(QtWidgets.QWidget):
@@ -409,7 +223,7 @@ class ItemCfgWidget(QtWidgets.QWidget):
 
         self.parent = parent
         if(itemd==None):
-            self.itemd = base_item('')
+            self.itemd = item_format.base_item('')
         else:
             self.itemd = itemd
 
@@ -437,8 +251,8 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.radioUsable.toggled.connect(self.radioUsableChanged)
         self.radioEquipable.toggled.connect(self.radioEquipableChanged)
 
-        for i in range(len(item_categories)):
-            category = item_categories[i]
+        for i in range(len(item_format.item_categories)):
+            category = item_format.item_categories[i]
             self.comboboxCategory.insertItem(i,category)
 
         self.loadItem()
@@ -468,7 +282,7 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.statModWidget.setEnabled(abool)
 
     def newItem(self):
-        self.itemd = base_item('')
+        self.itemd = item_format.base_item('')
         self.loadItem()
 
     def loadItem(self,item=None):
@@ -478,40 +292,40 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.nameLineEdit.setText(self.itemd.name)
         self.descriptionLineEdit.setText(self.itemd.description)
         self.radioNone.setChecked(True)
-        if(self.itemd.equipable != default_equipable):
+        if(self.itemd.equipable != item_format.default_equipable):
             self.radioEquipable.setChecked(True)
 
-        if(self.itemd.usable != default_usable):
+        if(self.itemd.usable != item_format.default_usable):
             self.radioUsable.setChecked(True)
-        if(self.itemd.unique != default_unique):
+        if(self.itemd.unique != item_format.default_unique):
             self.checkboxUnique.setChecked(True)
         else:
             self.checkboxUnique.setChecked(False)
 
-        if(self.itemd.reusable != default_reusable):
+        if(self.itemd.reusable != item_format.default_reusable):
             self.checkboxReusable.setChecked(True)
         else:
             self.checkboxReusable.setChecked(False)
 
         self.comboboxCategory.setCurrentIndex(0)
-        if(self.itemd.category != default_category):
-            category_index = item_categories.index(self.itemd.category)
+        if(self.itemd.category != item_format.default_category):
+            category_index = item_format.item_categories.index(self.itemd.category)
             self.comboboxCategory.setCurrentIndex(category_index)
 
-        if(self.itemd.action != default_action):
+        if(self.itemd.action != item_format.default_action):
             self.actionWidget.setList(self.itemd.action)
         else:
             self.actionWidget.setList([])
 
-        if(self.itemd.statMod != default_statMod):
+        if(self.itemd.statMod != item_format.default_statMod):
             self.statModWidget.setValue(self.itemd.statMod)
         else:
-            self.statModWidget.setValue(default_statMod)
+            self.statModWidget.setValue(item_format.default_statMod)
 
-        if(self.itemd.effect != default_effect):
+        if(self.itemd.effect != item_format.default_effect):
             self.effectWidget.setValue(self.itemd.effect)
         else:
-            self.effectWidget.setValue(default_effect)
+            self.effectWidget.setValue(item_format.default_effect)
 
     def getItem(self,item=None):
         if(item!=None):
@@ -520,12 +334,12 @@ class ItemCfgWidget(QtWidgets.QWidget):
         self.itemd.setname(self.nameLineEdit.text())
         self.itemd.setdescription(self.descriptionLineEdit.text())
 
-        if(self.statModWidget.getValue() == default_statMod):
+        if(self.statModWidget.getValue() == item_format.default_statMod):
             self.itemd.setstatmod()
         else:
             self.itemd.setstatmod(self.statModWidget.getValue())
 
-        if(self.effectWidget.getValue() == default_effect):
+        if(self.effectWidget.getValue() == item_format.default_effect):
             self.itemd.seteffect()
         else:
             self.itemd.seteffect(self.effectWidget.getValue())
@@ -567,46 +381,12 @@ class ItemCfgWidget(QtWidgets.QWidget):
 
         return self.itemd
 
-class tinyItemsList(QtWidgets.QWidget):
-    def __init__(self,parent=None, **kwargs):
-        QtWidgets.QWidget.__init__(self, parent, **kwargs)
-
-        self.itemf = ItemsFormat()
-        self.itemsList = QtWidgets.QListWidget(self)
-        self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.load()
-        VBox = QtWidgets.QVBoxLayout(self)
-        VBox.addWidget(self.itemsList)
-        self.setLayout(VBox)
-        
-    def load(self):
-        self.itemsList.clear()
-        items = self.itemf.getitemsname()
-        for i in range(len(items)):
-            item = items[i]
-            self.itemsList.addItem(item)
-
-    def getItem(self):
-        listitem = self.itemsList.currentItem()
-        if(listitem != None):
-            return listitem.text()
-        else:
-            return None
-
-    def setItem(self,itemname):
-        for i in range(self.itemsList.count()):
-            item = self.itemsList.item(i)
-            if(item.text()==itemname):
-                self.itemsList.setCurrentRow(i)
-                return
-
-
 class ItemsList(QtWidgets.QWidget):
-    currentItemChanged = QtCore.pyqtSignal(base_item, 'QString')
+    currentItemChanged = QtCore.pyqtSignal(object, 'QString')
     def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
-        self.itemf = ItemsFormat()
+        self.itemf = item_format.ItemsFormat()
         self.itemsList = QtWidgets.QListWidget(self)
         self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.itemsList.currentItemChanged.connect(self.currentChanged)
@@ -634,7 +414,7 @@ class ItemsList(QtWidgets.QWidget):
             self.itemsList.addItem(item)
 
     def newItem(self):
-        item = base_item('newItem')
+        item = item_format.base_item('newItem')
         needsrefresh = self.itemf.additem(item)
         if(needsrefresh):
             self.load()
@@ -672,7 +452,7 @@ class ItemsList(QtWidgets.QWidget):
         itemname = self.currentItem()
         if(itemname!=None):
             itemjson = self.itemf.getitem(itemname)
-            item = base_item(itemname,jsonTree=itemjson)
+            item = item_format.base_item(itemname,jsonTree=itemjson)
             return item
 
     def currentChanged(self,current,previous):
@@ -686,7 +466,7 @@ class ItemsList(QtWidgets.QWidget):
         if(current != None):
             itemname = current.text()
             itemjson = self.itemf.getitem(itemname)
-            item = base_item(itemname,jsonTree=itemjson)
+            item = item_format.base_item(itemname,jsonTree=itemjson)
             self.currentItemChanged.emit(item,previousname)
 
 class itemsEditorWidget(QtWidgets.QDialog):
