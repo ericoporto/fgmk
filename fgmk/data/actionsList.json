@@ -4,6 +4,7 @@
   "teleport",
   "teleportInPlace",
   "addItem",
+  "subtractItem",
   "changeTile",
   "rain",
   "fadeIn",
@@ -30,6 +31,7 @@
     "teleport":["positionx","positiony","level"],
     "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]],
     "rain":["state"],
-    "addItem":["item"]
+    "addItem":["item"],
+    "subtractItem":["item"]
     }
 }
