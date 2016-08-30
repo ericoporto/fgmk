@@ -1,10 +1,12 @@
 ![Icon](iconTiny.png) fgmk
 ==========================
 
-This is an editor for making 2D SNES era RPG like games. The games are composed
-of plain text files, images and a index.html file containing [the engine](https://github.com/ericoporto/fgmkJsEngine).
+[![Join the chat at https://gitter.im/fgmk/Lobby](https://badges.gitter.im/fgmk/Lobby.svg)](https://gitter.im/fgmk/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![Screenshot](screenshot.png)
+
+This is an editor for making 2D SNES era RPG like games. The games are composed
+of plain text files, images and a index.html file containing [the engine](https://github.com/ericoporto/fgmkJsEngine).
 
 The goal is that these plain text files should be easy to be read by humans and
 software.
