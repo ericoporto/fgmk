@@ -42,6 +42,8 @@ class MapWidget(QtWidgets.QWidget):
 
         self.TileList = []
 
+        self.mousePos = QtCore.QPoint(0,0)
+
         self.DrawMap(parent)
 
     def Rescale(self, scale=None):
@@ -83,6 +85,7 @@ class MapWidget(QtWidgets.QWidget):
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
+                self.TileList[iy][jx].mouseMoved.connect(self.mouseMoved)
                 self.TileList[iy][jx].rightClicked.connect(
                     self.TileInMapRightClicked)
 
@@ -92,13 +95,24 @@ class MapWidget(QtWidgets.QWidget):
         self.setVisible(True)
         # self.show()
 
-    def TileInMapRightClicked(self):
-        self.ClickedATileinMap(tools_wdgt.rightClickTool)
+    def mouseMoved(self, ev):
+        if((tools_wdgt.rightClickTool == 6 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 6 and ev.buttons() == QtCore.Qt.LeftButton)):
+            diff = (ev.pos() - self.mousePos)/1.5
+            self.mousePos = ev.pos()
+            vscroll = self.parent.scrollArea.verticalScrollBar()
+            hscroll = self.parent.scrollArea.horizontalScrollBar()
 
-    def TileInMapClicked(self):
-        self.ClickedATileinMap(tools_wdgt.leftClickTool)
+            vscroll.setValue(vscroll.value()+diff.y())
+            hscroll.setValue(hscroll.value()+diff.x())
 
-    def ClickedATileinMap(self, theClickedTool):
+
+    def TileInMapRightClicked(self, ev):
+        self.ClickedATileinMap(tools_wdgt.rightClickTool, ev)
+
+    def TileInMapClicked(self, ev):
+        self.ClickedATileinMap(tools_wdgt.leftClickTool, ev)
+
+    def ClickedATileinMap(self, theClickedTool, ev):
         global firstClickX
         global firstClickY
 
@@ -169,6 +183,10 @@ class MapWidget(QtWidgets.QWidget):
             charaY = self.sender().tileY
             command = cmd.CommandAddChara("place chara", self.parent.myCharasPalWidget, (charaX, charaY))
             cmd.commandToStack(command)
+
+        elif theClickedTool == 6:
+            # pan
+            self.mousePos = ev.pos()
 
         else:
             firstClickX = None

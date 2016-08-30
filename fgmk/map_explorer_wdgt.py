@@ -64,7 +64,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
 
         self.show()
 
-    def clickedOnIcon(self):
+    def clickedOnIcon(self, ev):
         action = str(self.sender().objectName())
         are_items_selected = len(self.LvlLWidget.selectedItems())>0
         if are_items_selected:

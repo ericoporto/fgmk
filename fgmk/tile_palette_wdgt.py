@@ -66,7 +66,7 @@ class PaletteWidget(QtWidgets.QWidget):
     def paletteItemDoubleClicked(self):
         self.parent.myToolsWidget.changeLeftClickToolTo(tools_wdgt.tools['pen'])
 
-    def setTileCurrent(self):
+    def setTileCurrent(self, ev):
         self.parent.changeTileCurrent(self.sender().tileType[0])
 
     def setImageCurrent(self, imageIndex):

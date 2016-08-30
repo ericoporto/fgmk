@@ -294,7 +294,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
                     self.pal.addtile(T(tiletype[IDLAYER],(jx,iy),tiletype[ANIMLAYER]))
 
 
-    def TileClicked(self):
+    def TileClicked(self, ev):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         if modifiers == QtCore.Qt.ShiftModifier:
             self.currentType+=1
@@ -311,7 +311,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
         command = CommandSetTileType(self, self.sender(), 'id', self.currentType, "set id")
         self.parent.undostack.push(command)
 
-    def TileRightClicked(self):
+    def TileRightClicked(self, ev):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         if modifiers == QtCore.Qt.ShiftModifier:
             self.currentAnim+=1

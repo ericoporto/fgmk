@@ -11,7 +11,8 @@ tools={ "pen": 0,
         "bucket": 2,
         "line":3,
         "rectangle":4,
-        "charaplacer":5}
+        "charaplacer":5,
+        "pan":6}
 
 class ToolsWidget(QtWidgets.QWidget):
 
@@ -27,13 +28,14 @@ class ToolsWidget(QtWidgets.QWidget):
 
         TOOLSTARTINGTILE = 6
         ToolsName = ["pen", "dropper", "bucket",
-                     "line", "rectangle", "charaplacer"]
+                     "line", "rectangle", "charaplacer","pan"]
         ToolsHelp = ["click to change tile to selected tile",
                      "click to get tile type and set to selected tile",
                      "click to fill area with selected tile",
                      "click once to set starting point and again to set ending point",
                      "click once to set first corner and again to set opposing corner",
-                     "places a chara on a selected spot"]
+                     "places a chara on a selected spot",
+                     "click and hold to pan the map"]
         self.MaxTools = len(ToolsName)
         self.ToolTile = []
 
@@ -51,7 +53,7 @@ class ToolsWidget(QtWidgets.QWidget):
         self.updateToolTiles()
         self.show()
 
-    def toolLeftClicked(self):
+    def toolLeftClicked(self, ev):
         global leftClickTool
 
         if str(self.sender().objectName()) == "pen":
@@ -66,11 +68,13 @@ class ToolsWidget(QtWidgets.QWidget):
             leftClickTool = 4
         elif str(self.sender().objectName()) == "charaplacer":
             leftClickTool = 5
+        elif str(self.sender().objectName()) == "pan":
+            leftClickTool = 6
 
         self.updateToolTiles()
         self.show()
 
-    def toolRightClicked(self):
+    def toolRightClicked(self, ev):
         global rightClickTool
 
         if str(self.sender().objectName()) == "pen":
@@ -85,6 +89,8 @@ class ToolsWidget(QtWidgets.QWidget):
             rightClickTool = 4
         elif str(self.sender().objectName()) == "charaplacer":
             rightClickTool = 5
+        elif str(self.sender().objectName()) == "pan":
+            rightClickTool = 6
 
         self.updateToolTiles()
         self.show()

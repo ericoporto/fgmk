@@ -61,7 +61,7 @@ class MiniPaletteWidget(QtWidgets.QWidget):
         self.PaletteItems.resize(6 * tileSetInstance.boxsize, tMat.divideRoundUp(
             len(tileSetInstance.tileset), 6) * tileSetInstance.boxsize)
 
-    def setTileCurrent(self):
+    def setTileCurrent(self, ev):
         self.setImageCurrent(self.sender().tileType[0])
         self.selectedTilePalette.emit()
 
@@ -158,7 +158,7 @@ class MiniMapWidget(QtWidgets.QWidget):
             self.TileList[self.selectedPosition[1]][self.selectedPosition[0]].setVisible(False)
             self.Grid.addWidget(self.xclicked, self.selectedPosition[1], self.selectedPosition[0])
 
-    def TileClicked(self):
+    def TileClicked(self, ev):
         sender = self.sender()
         self.changeSelectXY(sender.tileX, sender.tileY)
 
