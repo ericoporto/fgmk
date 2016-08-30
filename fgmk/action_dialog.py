@@ -851,14 +851,14 @@ class addItem(QtWidgets.QDialog):
         itemToReturn = str(self.ListItem.getItem())
         return itemToReturn
 
-class subtractItem(QtWidgets.QDialog):
+class dropItem(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
-        self.LabelText = QtWidgets.QLabel("Select item to subtract:")
+        self.LabelText = QtWidgets.QLabel("Select item to drop:")
         self.ListItem = miniWdgt.miniItemsList()
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
@@ -872,7 +872,7 @@ class subtractItem(QtWidgets.QDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 40, 350, 350)
-        self.setWindowTitle('subtractItem: select item to subtract')
+        self.setWindowTitle('dropItem: select item to drop')
 
         if(edit != None):
             self.ListItem.setItem(edit[0])
