@@ -66,7 +66,7 @@ class EventsWidget(QtWidgets.QWidget):
         self.deselectActionButton.clicked.connect(self.deselectAction)
 
         self.HBox.addLayout(VBoxEventsList, 1)
-        self.HBox.addLayout(VBoxActionList, 2)
+        self.HBox.addLayout(VBoxActionList, 3)
         self.HBox.addLayout(VBoxLeftButtons)
         self.HBox.addLayout(VBoxButtons)
 
