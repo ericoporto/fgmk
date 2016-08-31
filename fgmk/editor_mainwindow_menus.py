@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
-import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, fifl, current_project
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 import os
+from os import listdir
 import platform
 import subprocess
 
@@ -121,7 +121,6 @@ class newFile(QtWidgets.QDialog):
         self.OutCheckbox = QtWidgets.QCheckBox("Map for other game project")
         self.OutCheckbox.stateChanged.connect(self.otherFolder)
 
-
         self.LabelFolder = QtWidgets.QLabel("Select game Project folder:")
         HBoxFolder = QtWidgets.QHBoxLayout()
         self.LineEditFolder = QtWidgets.QLineEdit()
@@ -142,8 +141,8 @@ class newFile(QtWidgets.QDialog):
             self.ComboBoxWidth.insertItem(i,item)
             self.ComboBoxHeight.insertItem(i,item)
 
-        self.ComboBoxWidth.currentIndexChanged.connect(self.heightWidthChanged)
-        self.ComboBoxHeight.currentIndexChanged.connect(self.heightWidthChanged)
+        self.ComboBoxWidth.currentIndexChanged.connect(self.HWPChanged)
+        self.ComboBoxHeight.currentIndexChanged.connect(self.HWPChanged)
 
         HBoxSize.addWidget(QtWidgets.QLabel("Width:"))
         HBoxSize.addWidget(self.ComboBoxWidth)
@@ -154,18 +153,17 @@ class newFile(QtWidgets.QDialog):
         self.LineEditName = QtWidgets.QLineEdit()
         self.LineEditName.setText(str(self.returnValue["name"]))
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
+        self.LineEditName.textEdited.connect(self.validateLineEditName)
         HBoxName.addWidget(QtWidgets.QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
 
         LabelPalette = QtWidgets.QLabel("Select palette for map:")
         HBoxPalette = QtWidgets.QHBoxLayout()
-        self.LineEditPalette = QtWidgets.QLineEdit()
-        self.LineEditPalette.setReadOnly(True)
-        self.LineEditPalette.setText(str(self.returnValue["palette"]))
-        self.buttonPalette = QtWidgets.QPushButton("Browse")
-        self.buttonPalette.clicked.connect(self.selectMapPalette)
-        HBoxPalette.addWidget(self.LineEditPalette)
-        HBoxPalette.addWidget(self.buttonPalette)
+        self.ComboBoxPalette = QtWidgets.QComboBox()
+        self.findMapPalettes()
+        self.ComboBoxPalette.currentIndexChanged.connect(self.HWPChanged)
+        HBoxPalette.addWidget(LabelPalette)
+        HBoxPalette.addWidget(self.ComboBoxPalette)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
@@ -214,24 +212,30 @@ class newFile(QtWidgets.QDialog):
         self.returnValue["name"] = self.LineEditName.text()
         self.validateIsOk()
 
-    def selectMapPalette(self):
-        filename = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', os.path.join(current_project.settings["gamefolder"], fifl.LEVELS), "JSON Palette (*.pal.json);;All Files (*)")[0]
+    def findMapPalettes(self):
+        gamefolder = self.returnValue["gameFolder"]
+        levels = os.path.join(gamefolder, fifl.LEVELS)
+        filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f)) and f.endswith(".pal.json")]
+        self.palettes = [f[:-9] for f in filelist]
+        for i in range(len(self.palettes)):
+            item = str(self.palettes[i])
+            self.ComboBoxPalette.insertItem(i,item)
 
-        if os.path.isfile(os.path.join(filename)):
-            relpath = os.path.relpath(filename, os.path.join(current_project.settings["gamefolder"], fifl.LEVELS))
-            if(relpath==os.path.basename(filename)):
-                self.LineEditPalette.setText(relpath)
-                self.returnValue["palette"] = self.LineEditPalette.text()
-                self.validateIsOk()
+        self.returnValue["palette"] = os.path.join(gamefolder, fifl.LEVELS, self.palettes[0] + '.pal.json')
 
-    def heightWidthChanged(self, index):
+    def HWPChanged(self, index):
+        # Whenever a combobox is changed, we update the value to return
+        # These combobox are relative to Height, Width and the Palette
+        gamefolder = self.returnValue["gameFolder"]
         wi = self.ComboBoxWidth.currentIndex()
         hi = self.ComboBoxHeight.currentIndex()
+        pi = self.ComboBoxPalette.currentIndex()
         w = self.ComboSizes[wi]
         h = self.ComboSizes[hi]
+        p = os.path.join(gamefolder, fifl.LEVELS, self.palettes[pi] + '.pal.json')
         self.returnValue['width'] = w
         self.returnValue['height'] = h
+        self.returnValue["palette"] = p
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(
