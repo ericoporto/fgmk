@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from fgmk import action_dialog, getdata
 
 class actionItem(QtWidgets.QListWidgetItem):
@@ -9,6 +9,7 @@ class actionItem(QtWidgets.QListWidgetItem):
         QtWidgets.QListWidgetItem.__init__(self, str(actionAndParameter))
         self.setText = str(actionAndParameter)
         self.setData(QtCore.Qt.UserRole, actionAndParameter)
+        self.setIcon(QtGui.QIcon(getdata.path('actions/'+actionAndParameter[0]+'.png')))
 
     def getAction(self):
         actionAndParameterReturn = self.data(QtCore.Qt.UserRole)
@@ -47,7 +48,8 @@ class ActionsWidget(QtWidgets.QDialog):
         self.actionButton = []
 
         for action in e["actionOrder"]:
-            self.actionButton.append(QtWidgets.QPushButton(action, self))
+            icon = QtGui.QIcon(getdata.path('actions/'+action+'.png'))
+            self.actionButton.append(QtWidgets.QPushButton(icon, action, self))
             self.actionButton[-1].setMaximumWidth(330)
             self.actionButton[-1].setMinimumWidth(80)
             self.actionButton[-1].setMinimumHeight(24)
