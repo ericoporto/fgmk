@@ -645,9 +645,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def openFromExplorer(self):
         testMap = mapfile.MapFormat()
-        testMap.load(current_project.settings["workingFile"])
+        try:
+            testMap.load(current_project.settings["workingFile"])
+            testResult = not self.myMap.isEqual(testMap)
+        except FileNotFoundError:
+            testResult = True
         acceptOpen = False
-        if not self.myMap.isEqual(testMap):
+
+        if testResult:
 
             quit_msg = "Do you want to save changes?"
             reply = QtWidgets.QMessageBox.question(self, 'Message',

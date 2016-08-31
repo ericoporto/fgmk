@@ -132,20 +132,23 @@ class newFile(QtWidgets.QDialog):
         HBoxFolder.addWidget(self.LineEditFolder)
         HBoxFolder.addWidget(self.buttonFolder)
 
+        self.ComboSizes = [15,20,25,30,40,50,80,100]
         HBoxSize = QtWidgets.QHBoxLayout()
-        self.LineEditWidth = QtWidgets.QLineEdit()
-        self.LineEditWidth.setInputMask("000")
-        self.LineEditWidth.setText(str(self.returnValue["width"]))
-        self.LineEditWidth.editingFinished.connect(self.validateLineEditWidth)
-        self.LineEditHeight = QtWidgets.QLineEdit()
-        self.LineEditHeight.setInputMask("000")
-        self.LineEditHeight.setText(str(self.returnValue["height"]))
-        self.LineEditHeight.editingFinished.connect(
-            self.validateLineEditHeight)
+        self.ComboBoxWidth = QtWidgets.QComboBox()
+        self.ComboBoxHeight = QtWidgets.QComboBox()
+
+        for i in range(len(self.ComboSizes)):
+            item = str(self.ComboSizes[i])
+            self.ComboBoxWidth.insertItem(i,item)
+            self.ComboBoxHeight.insertItem(i,item)
+
+        self.ComboBoxWidth.currentIndexChanged.connect(self.heightWidthChanged)
+        self.ComboBoxHeight.currentIndexChanged.connect(self.heightWidthChanged)
+
         HBoxSize.addWidget(QtWidgets.QLabel("Width:"))
-        HBoxSize.addWidget(self.LineEditWidth)
+        HBoxSize.addWidget(self.ComboBoxWidth)
         HBoxSize.addWidget(QtWidgets.QLabel("Height:"))
-        HBoxSize.addWidget(self.LineEditHeight)
+        HBoxSize.addWidget(self.ComboBoxHeight)
 
         HBoxName = QtWidgets.QHBoxLayout()
         self.LineEditName = QtWidgets.QLineEdit()
@@ -153,7 +156,6 @@ class newFile(QtWidgets.QDialog):
         self.LineEditName.editingFinished.connect(self.validateLineEditName)
         HBoxName.addWidget(QtWidgets.QLabel("Name:"))
         HBoxName.addWidget(self.LineEditName)
-
 
         LabelPalette = QtWidgets.QLabel("Select palette for map:")
         HBoxPalette = QtWidgets.QHBoxLayout()
@@ -165,7 +167,6 @@ class newFile(QtWidgets.QDialog):
         HBoxPalette.addWidget(self.LineEditPalette)
         HBoxPalette.addWidget(self.buttonPalette)
 
-
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
@@ -173,7 +174,6 @@ class newFile(QtWidgets.QDialog):
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-
 
         self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
@@ -206,26 +206,6 @@ class newFile(QtWidgets.QDialog):
             self.LineEditFolder.hide()
             self.buttonFolder.hide()
 
-    def validateLineEditWidth(self):
-        if int(self.LineEditWidth.text()) < 15:
-            self.LineEditWidth.setText("15")
-        elif int(self.LineEditWidth.text()) > 100:
-            self.LineEditWidth.setText("100")
-        else:
-            self.LineEditWidth.setText(str(int(self.LineEditWidth.text())))
-        self.returnValue["width"] = int(self.LineEditWidth.text())
-        self.validateIsOk()
-
-    def validateLineEditHeight(self):
-        if int(self.LineEditHeight.text()) < 15:
-            self.LineEditHeight.setText("15")
-        elif int(self.LineEditHeight.text()) > 100:
-            self.LineEditHeight.setText("100")
-        else:
-            self.LineEditHeight.setText(str(int(self.LineEditHeight.text())))
-        self.returnValue["height"] = int(self.LineEditHeight.text())
-        self.validateIsOk()
-
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
         tempStr = tempStr.title()
@@ -244,6 +224,14 @@ class newFile(QtWidgets.QDialog):
                 self.LineEditPalette.setText(relpath)
                 self.returnValue["palette"] = self.LineEditPalette.text()
                 self.validateIsOk()
+
+    def heightWidthChanged(self, index):
+        wi = self.ComboBoxWidth.currentIndex()
+        hi = self.ComboBoxHeight.currentIndex()
+        w = self.ComboSizes[wi]
+        h = self.ComboSizes[hi]
+        self.returnValue['width'] = w
+        self.returnValue['height'] = h
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(
