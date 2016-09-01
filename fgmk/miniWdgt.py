@@ -1,6 +1,62 @@
 # -*- coding: utf-8 -*-
+import os.path
 from PyQt5 import QtWidgets, QtCore
-from fgmk import base_tile, tMat, tile_set, item_format
+from fgmk import base_tile, tMat, tile_set, item_format, palette_format
+
+class tinyPreviewPalWidget(QtWidgets.QWidget):
+    selectedTilePalette = QtCore.pyqtSignal()
+
+    def __init__(self, parent=None, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+
+        scrollArea = QtWidgets.QScrollArea()
+
+        #number of collumns
+        self.cn = 12
+
+        self.scale = 1
+        self.PaletteItems = QtWidgets.QWidget()
+        self.Grid = QtWidgets.QGridLayout()
+
+        self.PaletteItems.setLayout(self.Grid)
+        scrollArea.setWidget(self.PaletteItems)
+
+        self.Grid.setHorizontalSpacing(0)
+        self.Grid.setVerticalSpacing(0)
+        self.Grid.setSpacing(0)
+        self.Grid.setContentsMargins(0, 0, 0, 0)
+
+        self.PaletteTileList = []
+
+        self.VBox.addWidget(scrollArea)
+        self.setMinimumSize(32 * (self.cn + 1) * self.scale, 32 * (1 + 1) * self.scale)
+
+    def updatePal(self, palfile,gamefolder):
+        mypal = palette_format.PaletteFormat()
+        mypal.load(palfile)
+        tilePalette=mypal.gettiles()
+        imageFile=os.path.join(gamefolder,mypal.getimg())
+
+        self.tileSetInstance = tile_set.TileSet(imageFile,tilePalette)
+
+        if len(self.PaletteTileList) > 1:
+            for wdgt in self.PaletteTileList:
+                wdgt.deleteLater()
+                wdgt = None
+            self.PaletteTileList = []
+
+        for i in range(len(self.tileSetInstance.tileset)):
+            self.PaletteTileList.append(base_tile.QTile(self))
+            self.Grid.addWidget(self.PaletteTileList[-1], i / self.cn, i % self.cn)
+            self.PaletteTileList[-1].initTile(self.tileSetInstance.tileset,
+                                              i, 0, self.tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
+
+        self.PaletteItems.resize(self.cn * self.tileSetInstance.boxsize  * self.scale, tMat.divideRoundUp(
+            len(self.tileSetInstance.tileset), self.cn) * self.tileSetInstance.boxsize  * self.scale)
+
 
 class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()

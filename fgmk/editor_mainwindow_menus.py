@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, fifl, current_project
+from fgmk import tMat, fifl, current_project, miniWdgt
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 import os
@@ -141,8 +141,8 @@ class newFile(QtWidgets.QDialog):
             self.ComboBoxWidth.insertItem(i,item)
             self.ComboBoxHeight.insertItem(i,item)
 
-        self.ComboBoxWidth.currentIndexChanged.connect(self.HWPChanged)
-        self.ComboBoxHeight.currentIndexChanged.connect(self.HWPChanged)
+        self.ComboBoxWidth.currentIndexChanged.connect(self.HWChanged)
+        self.ComboBoxHeight.currentIndexChanged.connect(self.HWChanged)
 
         HBoxSize.addWidget(QtWidgets.QLabel("Width:"))
         HBoxSize.addWidget(self.ComboBoxWidth)
@@ -161,7 +161,8 @@ class newFile(QtWidgets.QDialog):
         HBoxPalette = QtWidgets.QHBoxLayout()
         self.ComboBoxPalette = QtWidgets.QComboBox()
         self.findMapPalettes()
-        self.ComboBoxPalette.currentIndexChanged.connect(self.HWPChanged)
+        self.ComboBoxPalette.currentIndexChanged.connect(self.updatePalPreview)
+        self.palettePreview = miniWdgt.tinyPreviewPalWidget()
         HBoxPalette.addWidget(LabelPalette)
         HBoxPalette.addWidget(self.ComboBoxPalette)
 
@@ -177,6 +178,8 @@ class newFile(QtWidgets.QDialog):
         self.VBox.addLayout(HBoxSize)
         self.VBox.addLayout(HBoxName)
         self.VBox.addLayout(HBoxPalette)
+        self.VBox.addWidget(self.palettePreview)
+
         self.VBox.addWidget(self.OutCheckbox)
         self.VBox.addWidget(self.LabelFolder)
         self.VBox.addLayout(HBoxFolder)
@@ -186,6 +189,15 @@ class newFile(QtWidgets.QDialog):
         self.setWindowTitle('New map...')
 
         self.otherFolder(False)
+        self.updatePalPreview()
+
+    def updatePalPreview(self, index=0):
+        #updates the palette preview widget based on the combobox palette
+        gamefolder = self.returnValue["gameFolder"]
+        pi = self.ComboBoxPalette.currentIndex()
+        p = os.path.join(gamefolder, fifl.LEVELS, self.palettes[pi] + '.pal.json')
+        self.returnValue["palette"] = p
+        self.palettePreview.updatePal(p,gamefolder)
 
     def otherFolder(self, state):
         if(state):
@@ -223,19 +235,15 @@ class newFile(QtWidgets.QDialog):
 
         self.returnValue["palette"] = os.path.join(gamefolder, fifl.LEVELS, self.palettes[0] + '.pal.json')
 
-    def HWPChanged(self, index):
+    def HWChanged(self, index):
         # Whenever a combobox is changed, we update the value to return
-        # These combobox are relative to Height, Width and the Palette
-        gamefolder = self.returnValue["gameFolder"]
+        # These combobox are relative to Height, Width
         wi = self.ComboBoxWidth.currentIndex()
         hi = self.ComboBoxHeight.currentIndex()
-        pi = self.ComboBoxPalette.currentIndex()
         w = self.ComboSizes[wi]
         h = self.ComboSizes[hi]
-        p = os.path.join(gamefolder, fifl.LEVELS, self.palettes[pi] + '.pal.json')
         self.returnValue['width'] = w
         self.returnValue['height'] = h
-        self.returnValue["palette"] = p
 
     def selectGameFolder(self):
         self.LineEditFolder.setText(

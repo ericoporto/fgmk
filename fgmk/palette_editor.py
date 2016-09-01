@@ -1,114 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_model, current_project, fifl, tile_set, base_tile, getdata
+from fgmk import current_project, fifl, tile_set, base_tile, getdata, palette_format
 
 ANIMLAYER=3
 IDLAYER=4
 
-#T(id,(x,y))
-class T:
-    def __init__(self,id,pos,anim=0):
-        self.set(id,pos,anim)
-
-    def set(self,id,pos,anim=0):
-        self.id=str(id)
-        self.pos=pos
-        self.x=pos[0]
-        self.y=pos[1]
-        if(anim==0):
-            anim=0
-        self.anim=anim
-
-    def setxy(self,x,y):
-        self.pos=(x,y)
-        self.x=x
-        self.y=y
-
-    def setid(self,id):
-        self.id=str(id)
-
-    def setanim(anim=0):
-        self.anim=anim
-
-class PaletteFormat(base_model.BaseFormat):
-    def __init__(self):
-        base_model.BaseFormat.__init__(self)
-        self.new()
-
-    def getfilename(self):
-        return self.filename
-
-    def new(self):
-        self.animtiles = {}
-        self.jsonTree = {'tileImage': 'img/tile.png',
-                         'tiles': {'0':[0,0]},
-                         'tilesAnimated': {}}
-
-    def loadjsondump(self,jsonTree):
-        self.jsonTree = jsonTree
-        for tile in self.jsonTree['tilesAnimated']:
-            self.animtiles[str(tile)] = {}
-            for i in range(len(self.jsonTree['tilesAnimated'][tile])):
-                self.animtiles[tile][str(i)]=self.jsonTree['tilesAnimated'][tile][i]
-
-    def load(self,palfile):
-        base_model.BaseFormat.load(self,palfile)
-        for tile in self.jsonTree['tilesAnimated']:
-            self.animtiles[str(tile)] = {}
-            for i in range(len(self.jsonTree['tilesAnimated'][tile])):
-                self.animtiles[tile][str(i)]=self.jsonTree['tilesAnimated'][tile][i]
-
-
-    def imgloag(self,imgfile):
-        self.jsonTree['tileImage'] = os.path.join(fifl.IMG,os.path.basename(imgfile))
-        return self.jsonTree['tileImage']
-
-    def getimg(self):
-        return self.jsonTree['tileImage']
-
-    def gettile(self, x, y):
-        tiles = self.jsonTree['tiles']
-        tanims = self.jsonTree['tilesAnimated']
-
-        for ttype in tiles:
-            tile = tiles[ttype]
-            if(x==tile[0] and y==tile[1]):
-                if ttype in tanims:
-                    return T(ttype,(x,y), 1)
-                else:
-                    return T(ttype,(x,y))
-
-        for ttype in tanims:
-            animtile = tanims[ttype]
-            if(len(animtile)>0):
-                for i in range(len(animtile)):
-                    tile = animtile[i]
-                    if(x==tile[0] and y==tile[1]):
-                        return T(ttype,(x,y),i+1)
-
-        return T(-1,(x,y))
-
-    def delalltiles(self):
-        self.animtiles = {}
-        self.jsonTree['tiles'] = {}
-        self.jsonTree['tilesAnimated'] = {}
-
-    def addanimtile(self,tileT):
-        if tileT.id in self.animtiles:
-            self.animtiles[tileT.id][tileT.anim] = [tileT.x,tileT.y]
-        else:
-            self.animtiles[tileT.id]={}
-            self.animtiles[tileT.id][tileT.anim] = [tileT.x,tileT.y]
-        animdict = self.animtiles[tileT.id]
-        animlist = [animdict[k] for k in sorted(animdict)]
-        self.jsonTree['tilesAnimated'][tileT.id] = animlist
-
-    def addtile(self,tileT):
-        if(tileT.anim > 0):
-            self.addanimtile(tileT)
-        self.jsonTree['tiles'][tileT.id] = [tileT.x,tileT.y]
-        return self.jsonTree['tiles'][tileT.id]
+"""
+The PaletteEditorWidget implements the whole palette editor, and the visual
+palette you interact in the screen is implemented in the PaletteCfgWidget.
+"""
 
 class PaletteCfgWidget(QtWidgets.QWidget):
     def __init__(self, pal=None, parent=None, **kwargs):
@@ -116,7 +17,7 @@ class PaletteCfgWidget(QtWidgets.QWidget):
 
         self.parent = parent
         if(pal==None):
-            self.pal = PaletteFormat()
+            self.pal = palette_format.PaletteFormat()
         else:
             self.pal = pal
 
@@ -286,12 +187,12 @@ class PaletteCfgWidget(QtWidgets.QWidget):
 
     def updatePalFile(self):
         self.pal.delalltiles()
-        self.pal.addtile(T(0,(0,0),0))
+        self.pal.addtile(palette_format.T(0,(0,0),0))
         for iy in range(self.TileHeight):
             for jx in range(self.TileWidth):
                 tiletype = self.TileList[iy][jx].tileType
                 if(tiletype[IDLAYER]!=0):
-                    self.pal.addtile(T(tiletype[IDLAYER],(jx,iy),tiletype[ANIMLAYER]))
+                    self.pal.addtile(palette_format.T(tiletype[IDLAYER],(jx,iy),tiletype[ANIMLAYER]))
 
 
     def TileClicked(self, ev):
