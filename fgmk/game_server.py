@@ -4,6 +4,8 @@ from threading import Thread
 import webbrowser
 #import BaseHTTPServer
 #import SimpleHTTPServer
+DEBUG = False
+
 try:
     from http.server import HTTPServer as BaseHTTPServer
     from http.server import SimpleHTTPRequestHandler as SimpleHTTPRequestHandler
@@ -20,6 +22,14 @@ class NoCacheHTTPRequestHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")
+    def log_message(self, format, *args):
+        if DEBUG:
+            try:
+                SimpleHTTPRequestHandler.log_message(self, format, *args)
+            except IOError:
+                pass
+        else:
+            return
 
 def servePage(urlToServe):
     tempOrigiCurDir = os.curdir
@@ -46,14 +56,15 @@ def servePage(urlToServe):
 
     sa = httpdGame.socket.getsockname()
     sb = httpdAdm.socket.getsockname()
-    print("\n---\nServing HTTP on {0}, port {1}\n---\n".format(sa[0], sa[1]))
-    print(
-        "\n---\nAdm HTTP listening on {0}, port {1}\n---\n".format(sb[0], sb[1]))
+    if DEBUG:
+        print("\n---\nServing HTTP on {0}, port {1}\n---\n".format(sa[0], sa[1]))
+        print("\n---\nAdm HTTP listening on {0}, port {1}\n---\n".format(sb[0], sb[1]))
     browserOk = webbrowser.open(url, new=new)
 
     def runGameServer():
         httpdGame.serve_forever()
-        print("\nrunGameServer stopped\n")
+        if DEBUG:
+            print("\nrunGameServer stopped\n")
         httpdAdm.shutdown()
         httpdAdm.socket.close()
         httpdGame.socket.close()
@@ -63,7 +74,8 @@ def servePage(urlToServe):
     def runAdmServer():
         httpdAdm.handle_request()
         httpdGame.shutdown()
-        print("\nrunAdmServer stopped\n")
+        if DEBUG:
+            print("\nrunAdmServer stopped\n")
         httpdAdm.socket.close()
         httpdGame.socket.close()
         return
