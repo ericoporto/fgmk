@@ -43,7 +43,6 @@ class tinyPreviewPalWidget(QtWidgets.QWidget):
         self.tileSetInstance = tile_set.TileSet(imageFile,tilePalette)
 
         if len(self.PaletteTileList) > 0:
-            print(len(self.PaletteTileList))
             for wdgt in self.PaletteTileList:
                 self.Grid.removeWidget(wdgt)
                 wdgt.deleteLater()
