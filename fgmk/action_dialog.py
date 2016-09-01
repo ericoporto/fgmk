@@ -5,6 +5,15 @@ from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
+"""
+This module has a class for every possible action. The file actionsList.json
+lists all actions and their parameters.
+Each class is a QDialog that will be presented when adding an action or editing
+it. They all must implement a getValue function that will return the parameters
+as a string, with each parameter separated by a ; in the string.
+"""
+
+
 
 class changeTile(QtWidgets.QDialog):
 
