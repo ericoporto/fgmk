@@ -115,6 +115,14 @@ class newFile(QtWidgets.QDialog):
                             "gameFolder": gamefolder,
                             'palette':palette }
 
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
@@ -160,19 +168,10 @@ class newFile(QtWidgets.QDialog):
         LabelPalette = QtWidgets.QLabel("Select palette for map:")
         HBoxPalette = QtWidgets.QHBoxLayout()
         self.ComboBoxPalette = QtWidgets.QComboBox()
-        self.findMapPalettes()
         self.ComboBoxPalette.currentIndexChanged.connect(self.updatePalPreview)
         self.palettePreview = miniWdgt.tinyPreviewPalWidget()
         HBoxPalette.addWidget(LabelPalette)
         HBoxPalette.addWidget(self.ComboBoxPalette)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(QtWidgets.QLabel("Set map properties:"))
         self.VBox.addLayout(HBoxSize)
@@ -189,21 +188,27 @@ class newFile(QtWidgets.QDialog):
         self.setWindowTitle('New map...')
 
         self.otherFolder(False)
+        self.findMapPalettes()
         self.updatePalPreview()
 
     def updatePalPreview(self, index=0):
         #updates the palette preview widget based on the combobox palette
         gamefolder = self.returnValue["gameFolder"]
-        pi = self.ComboBoxPalette.currentIndex()
-        p = os.path.join(gamefolder, fifl.LEVELS, self.palettes[pi] + '.pal.json')
-        self.returnValue["palette"] = p
-        self.palettePreview.updatePal(p,gamefolder)
+        if self.ComboBoxPalette.count() >0:
+            pi = self.ComboBoxPalette.currentIndex()
+            p = os.path.join(gamefolder, fifl.LEVELS, self.palettes[pi] + '.pal.json')
+            self.returnValue["palette"] = p
+            self.palettePreview.updatePal(p,gamefolder)
+        else:
+            self.palettePreview.clear()
 
     def otherFolder(self, state):
         if(state):
             self.LabelFolder.show()
             self.LineEditFolder.show()
             self.buttonFolder.show()
+            self.returnValue["gameFolder"] = ''
+            self.findMapPalettes()
         else:
             gamefolder = ""
             if "gamefolder" in current_project.settings:
@@ -215,6 +220,7 @@ class newFile(QtWidgets.QDialog):
             self.LabelFolder.hide()
             self.LineEditFolder.hide()
             self.buttonFolder.hide()
+            self.findMapPalettes()
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
@@ -226,14 +232,22 @@ class newFile(QtWidgets.QDialog):
 
     def findMapPalettes(self):
         gamefolder = self.returnValue["gameFolder"]
-        levels = os.path.join(gamefolder, fifl.LEVELS)
-        filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f)) and f.endswith(".pal.json")]
-        self.palettes = [f[:-9] for f in filelist]
-        for i in range(len(self.palettes)):
-            item = str(self.palettes[i])
-            self.ComboBoxPalette.insertItem(i,item)
+        if(gamefolder!=''):
+            self.ComboBoxPalette.clear()
+            levels = os.path.join(gamefolder, fifl.LEVELS)
+            filelist = [f for f in listdir(levels) if os.path.isfile(os.path.join(levels, f)) and f.endswith(".pal.json")]
+            self.palettes = [f[:-9] for f in filelist]
+            for i in range(len(self.palettes)):
+                item = str(self.palettes[i])
+                self.ComboBoxPalette.insertItem(i,item)
 
-        self.returnValue["palette"] = os.path.join(gamefolder, fifl.LEVELS, self.palettes[0] + '.pal.json')
+            self.returnValue["palette"] = os.path.join(gamefolder, fifl.LEVELS, self.palettes[0] + '.pal.json')
+            self.ComboBoxPalette.setEnabled(True)
+        else:
+            self.palettes = []
+            self.ComboBoxPalette.clear()
+            self.ComboBoxPalette.setEnabled(False)
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
     def HWChanged(self, index):
         # Whenever a combobox is changed, we update the value to return
@@ -249,6 +263,7 @@ class newFile(QtWidgets.QDialog):
         self.LineEditFolder.setText(
             str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory")))
         self.returnValue["gameFolder"] = self.LineEditFolder.text()
+        self.findMapPalettes()
         self.validateIsOk()
 
     def validateIsOk(self):

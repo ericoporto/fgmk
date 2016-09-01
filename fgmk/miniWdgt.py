@@ -42,21 +42,34 @@ class tinyPreviewPalWidget(QtWidgets.QWidget):
 
         self.tileSetInstance = tile_set.TileSet(imageFile,tilePalette)
 
-        if len(self.PaletteTileList) > 1:
+        if len(self.PaletteTileList) > 0:
+            print(len(self.PaletteTileList))
             for wdgt in self.PaletteTileList:
+                self.Grid.removeWidget(wdgt)
                 wdgt.deleteLater()
+                wdgt.setParent(None)
                 wdgt = None
             self.PaletteTileList = []
 
         for i in range(len(self.tileSetInstance.tileset)):
-            self.PaletteTileList.append(base_tile.QTile(self))
+            self.PaletteTileList.append(base_tile.QTile())
             self.Grid.addWidget(self.PaletteTileList[-1], i / self.cn, i % self.cn)
             self.PaletteTileList[-1].initTile(self.tileSetInstance.tileset,
                                               i, 0, self.tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
 
-        self.PaletteItems.resize(self.cn * self.tileSetInstance.boxsize  * self.scale, tMat.divideRoundUp(
-            len(self.tileSetInstance.tileset), self.cn) * self.tileSetInstance.boxsize  * self.scale)
 
+        width= self.cn * self.tileSetInstance.boxsize  * self.scale
+        height= tMat.divideRoundUp(len(self.tileSetInstance.tileset), self.cn) * self.tileSetInstance.boxsize  * self.scale
+        self.PaletteItems.resize(width,height)
+
+    def clear(self):
+        if len(self.PaletteTileList) > 1:
+            for wdgt in self.PaletteTileList:
+                self.Grid.removeWidget(wdgt)
+                wdgt.deleteLater()
+                wdgt.setParent(None)
+                wdgt = None
+            self.PaletteTileList = []
 
 class MiniPaletteWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -101,14 +114,16 @@ class MiniPaletteWidget(QtWidgets.QWidget):
     def drawPalette(self, tileSetInstance):
         self.tileSetInstance = tileSetInstance
 
-        if len(self.PaletteTileList) > 1:
+        if len(self.PaletteTileList) > 0:
             for wdgt in self.PaletteTileList:
+                self.Grid.removeWidget(wdgt)
                 wdgt.deleteLater()
+                wdgt.setParent(None)
                 wdgt = None
             self.PaletteTileList = []
 
         for i in range(len(tileSetInstance.tileset)):
-            self.PaletteTileList.append(base_tile.QTile(self))
+            self.PaletteTileList.append(base_tile.QTile())
             self.Grid.addWidget(self.PaletteTileList[-1], i / 6, i % 6)
             self.PaletteTileList[-1].initTile(tileSetInstance.tileset,
                                               i, 0, tileSetInstance.boxsize, [i, 0, 0, 0, 0], self.scale)
