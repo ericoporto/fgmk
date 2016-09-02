@@ -212,7 +212,8 @@ class MapFormat(base_model.BaseFormat):
 
     def getTileListFromLayer(self, layer):
         TileListFromLayer = np.unique(self.LayersMapTiles[layer]).tolist()
-        TileListFromLayer.remove(0)
+        if(0 in TileListFromLayer):
+            TileListFromLayer.remove(0)
         self.listOfEvents = TileListFromLayer
         return TileListFromLayer
 
