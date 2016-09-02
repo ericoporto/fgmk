@@ -6,6 +6,7 @@
   "addItem",
   "dropItem",
   "changeTile",
+  "changeAllTiles",
   "rain",
   "fadeIn",
   "fadeOut",
@@ -29,7 +30,8 @@
     "noEffect":[""],
     "teleportInPlace":["level"],
     "teleport":["positionx","positiony","level"],
-    "changeTile":["tileType","layer",["positionx","positiony","level"],["current"]],
+    "changeAllTiles":["tileType", "tileType", "layer", "colision", "event", "level"],
+    "changeTile":["tileType","layer","colision", "event",["positionx","positiony","level"],["current"]],
     "rain":["state"],
     "addItem":["item"],
     "dropItem":["item"]

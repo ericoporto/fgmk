@@ -213,6 +213,165 @@ class changeTile(QtWidgets.QDialog):
         return text
 
 
+class changeAllTiles(QtWidgets.QDialog):
+
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.nothis = nothis
+        self.gamefolder = gamefolder
+        self.edit = edit
+        self.parent = parent
+
+        self.initFile = game_init.openInitFile(gamefolder)
+
+        self.useCurrentPlace = "current"
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.LabelText1 = QtWidgets.QLabel("Select the map for tile change:")
+        self.LabelText2 = QtWidgets.QLabel("What type to change from?")
+        self.LabelText3 = QtWidgets.QLabel("To what type change to?")
+        self.LabelText4 = QtWidgets.QLabel("Change to modify colision layer:")
+        self.LabelText5 = QtWidgets.QLabel("Select if event should also change:")
+
+        self.comboBox = QtWidgets.QComboBox()
+
+        self.colisionList = ["keep", "noColision", "collidable"]
+
+        if(self.nothis is False):
+            self.levelsList = ["this"]
+        else:
+            self.levelsList = []
+
+        for level in self.initFile['LevelsList']:
+            self.levelsList.append(level)
+
+        for level in self.levelsList:
+            self.comboBox.addItem(str(level))
+
+        self.scrollArea = QtWidgets.QScrollArea()
+
+        if(self.nothis is False):
+            if(self.edit == None):
+                self.currentLevel = self.parent.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.myTileSet
+        else:
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.comboBox.itemText(0)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+
+        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
+            self.currentLevel, self.currentTileSet, self, indicativeToUse=0)
+
+        self.eventList = self.currentLevel.getTileListFromLayer(EVENTSLAYER)[:]
+        self.eventList.insert(0, "remove")
+        self.eventList.insert(0, "keep")
+        self.eventList = [str(x) for x in self.eventList]
+
+        self.scrollArea.setWidget(self.myMiniMapWidget)
+
+        self.oriMPWidget = miniWdgt.MiniPaletteWidget(self.currentTileSet, self)
+        self.newMPWidget = miniWdgt.MiniPaletteWidget(self.currentTileSet, self)
+
+        self.comboBoxLayers = QtWidgets.QComboBox()
+
+        for layer in mapfile.LayersNameViewable:
+            self.comboBoxLayers.addItem(str(layer))
+
+        self.comboBoxColision = QtWidgets.QComboBox()
+
+        for item in self.colisionList:
+            self.comboBoxColision.addItem(str(item))
+
+        self.comboBoxEvent = QtWidgets.QComboBox()
+
+        for item in self.eventList:
+            self.comboBoxEvent.addItem(str(item))
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+        self.comboBox.currentIndexChanged.connect(self.updateMap)
+
+        if(edit != None):
+            self.oriMPWidget.setImageCurrent(int(edit[0]))
+            self.newMPWidget.setImageCurrent(int(edit[1]))
+            for idx, val in enumerate(mapfile.LayersNameViewable):
+                if(val == edit[2]):
+                    self.comboBoxLayers.setCurrentIndex(idx)
+
+            for idx, val in enumerate(self.colisionList):
+                if(val == edit[3]):
+                    self.comboBoxColision.setCurrentIndex(idx)
+
+            for idx, val in enumerate(self.eventList):
+                if(val == edit[4]):
+                    self.comboBoxEvent.setCurrentIndex(idx)
+
+            for idx, val in enumerate(self.levelsList):
+                if(val == edit[5]):
+                    self.comboBox.setCurrentIndex(idx)
+
+        self.VBox.addWidget(self.LabelText1)
+        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.scrollArea)
+        self.VBox.addWidget(self.LabelText2)
+        self.VBox.addWidget(self.oriMPWidget)
+        self.VBox.addWidget(self.LabelText3)
+        self.VBox.addWidget(self.newMPWidget)
+        self.VBox.addWidget(self.comboBoxLayers)
+
+        self.VBox.addWidget(self.LabelText4)
+        self.VBox.addWidget(self.comboBoxColision)
+        self.VBox.addWidget(self.LabelText5)
+        self.VBox.addWidget(self.comboBoxEvent)
+
+        self.VBox.addWidget(self.buttonBox)
+
+        self.setGeometry(300, 200, 350, 650)
+        self.setWindowTitle('Select what tile and where to change to...')
+
+    def updateMap(self, levelIndex):
+
+        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.comboBox.itemText(levelIndex)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+        else:
+            if(self.edit == None):
+                self.currentLevel = self.parent.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.parent.myMap
+                self.currentTileSet = self.parent.parent.myTileSet
+
+        self.myMiniMapWidget.DrawMap(
+            self, self.currentLevel, self.currentTileSet)
+        self.oriMPWidget.drawPalette(self.currentTileSet)
+        self.newMPWidget.drawPalette(self.currentTileSet)
+
+    def getValue(self):
+        oriTile = "{0}".format(self.oriMPWidget.getValue())
+        newTile = "{0}".format(self.newMPWidget.getValue())
+        text = str(oriTile) + ";" +str(newTile) + ";" + str(self.comboBoxLayers.currentText()) + ";" + str(
+            self.comboBoxColision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.comboBox.currentText())
+        return text
+
+
 class teleport(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, selectStartPosition=None,  **kwargs):
         #super().__init__(parent, **kwargs)
