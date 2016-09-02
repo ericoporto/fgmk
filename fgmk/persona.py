@@ -3,7 +3,8 @@ import os
 import sys
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import actions_wdgt, action_dialog, fifl, tile_charaset, base_model
+from fgmk import actions_wdgt, action_dialog, fifl, tile_charaset
+from fgmk.ff import charas_format
 
 from fgmk.flowlayout import FlowLayout as FlowLayout
 
@@ -12,35 +13,6 @@ from fgmk.flowlayout import FlowLayout as FlowLayout
 # also a follow chara option will be added next and a random movement
 
 moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"move", "follow": "player"}
-
-class CharasFormat(base_model.BaseFormat):
-    def __init__( self ):
-        #super().__init__()
-        base_model.BaseFormat.__init__(self)
-
-        self.new()
-
-    def new(self):
-        self.jsonTree = { "Charas": {} }
-
-    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[], properties={"nocolision":0}):
-
-        self.jsonTree["Charas"][name]= {    "charaset": charaset,
-                                            "actions":actions,
-                                            "movements":movements,
-                                            "properties":properties
-                                            }
-
-    def addMovements(self, name, movements):
-        self.jsonTree["Charas"][name]["movements"] = movements
-
-    def addActions(self, name, actions):
-        self.jsonTree["Charas"][name]["actions"] = actions
-
-    def getCharaset(self,name):
-        return self.jsonTree["Charas"][name]["charaset"]
-
-
 
 class MoveButtons(QtWidgets.QWidget):
     buttonup = QtCore.pyqtSignal()
@@ -350,7 +322,7 @@ class CharaList(QtWidgets.QWidget):
 
     def getCharas(self):
         self.charaslistSelectionChanged()
-        charas = CharasFormat()
+        charas = charas_format.CharasFormat()
         for itemIndex in range(self.charaslist.count()):
             charaname = str(self.charaslist.item(itemIndex).aname)
             jt = self.charaslist.item(itemIndex).jsonTree
@@ -419,7 +391,7 @@ class CharaSelector(QtWidgets.QWidget):
             charafile = self.charafile
 
         self.charafile = charafile
-        charas = CharasFormat()
+        charas = charas_format.CharasFormat()
         charas.load(charafile)
         self.setList(charas.jsonTree["Charas"])
 
@@ -476,7 +448,7 @@ class MiniCharaTile(QtWidgets.QWidget):
             charafile = self.charafile
 
         self.charafile = charafile
-        charas = CharasFormat()
+        charas = charas_format.CharasFormat()
         charas.load(charafile)
         return charas
 
@@ -535,7 +507,7 @@ class CharaEditor(QtWidgets.QDialog):
             charafile = self.charafile
 
         self.charafile = charafile
-        charas = CharasFormat()
+        charas = charas_format.CharasFormat()
         charas.load(charafile)
         self.charalist.setList(charas.jsonTree["Charas"])
 

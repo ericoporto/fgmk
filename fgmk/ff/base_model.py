@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from fgmk import write_file
+from fgmk.ff import write_file
 
 class BaseFormat:
     def __init__(self, filename=""):

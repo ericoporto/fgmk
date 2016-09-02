@@ -5,13 +5,15 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, persona, game_init, current_project
-from fgmk import  tile_palette_wdgt, tools_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, mapfile, tile_set, configure_project
-from fgmk import temp
+from fgmk import  tile_palette_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, tile_set, configure_project
+from fgmk import tools_wdgt, tools_logic
 from fgmk import help, charas_palette_wdgt
 from fgmk import palette_editor, item_editor
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.ff import mapfile
+from fgmk.util import temp
 
 firstClickX = None
 firstClickY = None
@@ -198,21 +200,21 @@ class MapWidget(QtWidgets.QWidget):
         cmd.commandToStack(command)
 
     def toolBucketFill(self, changeTypeTo):
-        listToChange = mapfile.tileFill(self.sender().tileX, self.sender(
+        listToChange = tools_logic.tileFill(self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = cmd.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "bucket fill")
         cmd.commandToStack(command)
 
     def toolLine(self, changeTypeTo, firstX, firstY):
-        listToChange = mapfile.tileLine(firstX, firstY, self.sender().tileX, self.sender(
+        listToChange = tools_logic.tileLine(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = cmd.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "line")
         cmd.commandToStack(command)
 
     def toolRect(self, changeTypeTo, firstX, firstY):
-        listToChange = mapfile.tileRect(firstX, firstY, self.sender().tileX, self.sender(
+        listToChange = tools_logic.tileRect(firstX, firstY, self.sender().tileX, self.sender(
         ).tileY, self.parent.myMap.LayersMapTiles[self.currentLayer], changeTypeTo)
         command = cmd.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")

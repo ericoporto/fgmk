@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore, QtGui
-from fgmk import mapfile
+from fgmk.ff import mapfile
 
 COLISIONLAYER = 3
 EVENTSLAYER = 4

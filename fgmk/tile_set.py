@@ -2,7 +2,8 @@
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, current_project, img_util
+from fgmk import tMat, getdata, current_project
+from fgmk.util import img_util
 
 emptyTile = img_util.open(getdata.path('emptyTile.png'))
 

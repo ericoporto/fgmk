@@ -88,7 +88,7 @@ setup(
     tests_require=test_requirements,
     keywords='game development',
     install_requires=install_requires,
-    packages = ["fgmk"],
+    packages = ["fgmk","fgmk.ff","fgmk.util"],
     entry_points={
         'gui_scripts': [
             'fgmk = fgmk.__main__:main'

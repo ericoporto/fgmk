@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import current_project, fifl, tile_set, base_tile, getdata, palette_format
+from fgmk import current_project, fifl, tile_set, base_tile, getdata
+from fgmk.ff import palette_format
 
 ANIMLAYER=3
 IDLAYER=4

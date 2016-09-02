@@ -1,7 +1,7 @@
 
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_model, current_project, fifl
+from fgmk.ff import base_model
 
 item_categories=['none','consumable','collectible','weapon','armor']
 effects_types=['none','hpup','hpdown']
@@ -152,10 +152,7 @@ class base_item:
 class ItemsFormat(base_model.BaseFormat):
     def __init__(self,filename=''):
         base_model.BaseFormat.__init__(self)
-        if(filename==''):
-            self.filename = os.path.join(current_project.settings['gamefolder'],fifl.ITEMSFILE)
-        else:
-            self.filename = filename
+        self.filename = filename
         self.new()
 
     def new(self):

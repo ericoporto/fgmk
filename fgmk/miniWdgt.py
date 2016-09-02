@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os.path
 from PyQt5 import QtWidgets, QtCore
-from fgmk import base_tile, tMat, tile_set, item_format, palette_format
+from fgmk import base_tile, tMat, tile_set, current_project, fifl
+from fgmk.ff import item_format, palette_format
 
 class tinyPreviewPalWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -242,7 +243,7 @@ class miniItemsList(QtWidgets.QWidget):
     def __init__(self,parent=None, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
-        self.itemf = item_format.ItemsFormat()
+        self.itemf = item_format.ItemsFormat(os.path.join(current_project.settings['gamefolder'],fifl.ITEMSFILE))
         self.itemsList = QtWidgets.QListWidget(self)
         self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.load()

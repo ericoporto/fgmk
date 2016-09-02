@@ -3,7 +3,8 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image
 from PIL.ImageQt import ImageQt
 
-from fgmk import tMat, getdata, current_project, img_util, tile_set
+from fgmk import tMat, getdata, current_project, tile_set
+from fgmk.util import img_util
 
 
 class QTile(QtWidgets.QLabel):

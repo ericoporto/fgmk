@@ -1,7 +1,8 @@
 
 import os
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import current_project, fifl, actions_wdgt, item_format
+from fgmk import current_project, fifl, actions_wdgt
+from fgmk.ff import item_format
 
 class EffectWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
@@ -386,7 +387,7 @@ class ItemsList(QtWidgets.QWidget):
     def __init__(self,itemsfname=None, parent=None, ssettings={}, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
-        self.itemf = item_format.ItemsFormat()
+        self.itemf = item_format.ItemsFormat(os.path.join(current_project.settings['gamefolder'],fifl.ITEMSFILE))
         self.itemsList = QtWidgets.QListWidget(self)
         self.itemsList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.itemsList.currentItemChanged.connect(self.currentChanged)

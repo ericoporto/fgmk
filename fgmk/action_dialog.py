@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import tMat, game_init, current_project, mapfile, tile_set, miniWdgt
+from fgmk import tMat, game_init, current_project, tile_set, miniWdgt
+from fgmk.ff import mapfile
 from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
 from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
 
@@ -203,8 +204,7 @@ class changeTile(QtWidgets.QDialog):
                 self.currentLevel = self.parent.parent.myMap
                 self.currentTileSet = self.parent.parent.myTileSet
 
-        self.myMiniMapWidget.DrawMap(
-            self, self.currentLevel, self.currentTileSet)
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
         self.myMiniPaletteWidget.drawPalette(self.currentTileSet)
 
     def getValue(self):
@@ -359,8 +359,7 @@ class changeAllTiles(QtWidgets.QDialog):
                 self.currentLevel = self.parent.parent.myMap
                 self.currentTileSet = self.parent.parent.myTileSet
 
-        self.myMiniMapWidget.DrawMap(
-            self, self.currentLevel, self.currentTileSet)
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
         self.oriMPWidget.drawPalette(self.currentTileSet)
         self.newMPWidget.drawPalette(self.currentTileSet)
 
@@ -494,8 +493,7 @@ class teleport(QtWidgets.QDialog):
                 self.currentLevel = self.parent.myMap
                 self.currentTileSet = self.parent.myTileSet
 
-        self.myMiniMapWidget.DrawMap(
-            self.currentLevel, self.currentTileSet)
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
 
     def getValue(self):
         text = str(self.LineText.text()) + ";" + \
@@ -596,8 +594,7 @@ class teleportInPlace(QtWidgets.QDialog):
                 self.currentTileSet = self.parent.parent.myTileSet
 
 
-        self.myMiniMapWidget.DrawMap(
-            self.currentLevel, self.currentTileSet)
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
 
     def getValue(self):
         text = str(self.comboBox.currentText())

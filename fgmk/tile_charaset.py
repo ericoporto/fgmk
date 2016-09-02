@@ -5,7 +5,9 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, base_model, current_project, img_util
+from fgmk import fifl, current_project
+from fgmk.util import img_util
+from fgmk.ff import charaset_format
 
 # TODO fix enter on QLineEdit
 
@@ -14,55 +16,6 @@ standardStateset = ["normalSet"]
 standardMovement = ["standing", "walking"]
 
 GAMEFOLDER = "gamefolder"
-
-class CharasetFormat(base_model.BaseFormat):
-
-    def __init__(self):
-        #super().__init__()
-        base_model.BaseFormat.__init__(self)
-
-        self.size = [32, 64]
-        self.boxsize = 32
-
-        self.new()
-
-    def new(self):
-        self.jsonTree = {"Charaset": {}}
-
-    def setTileImage(self, tileImage):
-        self.jsonTree["Charaset"]["tileImage"] = tileImage
-
-    def getTileImage(self):
-        if "tileImage" in self.jsonTree["Charaset"]:
-            return self.jsonTree["Charaset"]["tileImage"]
-        else:
-            return False
-
-    def addCharaset(self, name, jsonTree={}):
-        self.jsonTree["Charaset"][name] = jsonTree
-
-    def getCharasets(self):
-        charasetsa = self.jsonTree["Charaset"]
-        excludes = ["tileImage"]
-        resultset = [key for key, value in charasetsa.items()
-                     if key not in excludes]
-        return sorted(resultset)
-
-    def getAnimation(self, charaset):
-        csetTree = self.jsonTree["Charaset"][charaset]
-        csetTL1 = sorted(csetTree)
-        tests = standardMovement[:]
-        tests.append(sorted(csetTree)[0])
-        for test in tests:
-            if test in csetTL1:
-                if (isinstance(csetTree[test], list)):
-                    return csetTree[test]
-                else:
-                    csetTL2 = sorted(csetTree[test])
-                    for face in sorted(facing):
-                        if face in csetTL2:
-                            return csetTree[test][face]
-
 
 class BaseCharaset:
     def __init__(self, image_file):
@@ -361,7 +314,7 @@ class CharasetSelector(QtWidgets.QWidget):
         if (cset is not None):
             self.cset = cset
         else:
-            self.cset = CharasetFormat()
+            self.cset = charaset_format.CharasetFormat()
 
         self.csetList = QtWidgets.QListWidget()
         self.myBC = BaseCharaset(None)
@@ -431,7 +384,7 @@ class CharasetPreviewer(QtWidgets.QWidget):
         if (cset is not None):
             self.cset = cset
         else:
-            self.cset = CharasetFormat()
+            self.cset = charaset_format.CharasetFormat()
 
         self.cset.getTileImage()
         self.myBC = BaseCharaset(None)
@@ -476,7 +429,7 @@ class CharasetEditorWidget(QtWidgets.QDialog):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
-        self.cset = CharasetFormat()
+        self.cset = charaset_format.CharasetFormat()
 
         self.ssettings = ssettings
 

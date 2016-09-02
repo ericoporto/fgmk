@@ -3,7 +3,7 @@ import os
 import json
 import sys
 from numbers import Number
-from fgmk import print_error
+from fgmk.util import print_error
 
 try:
   basestring

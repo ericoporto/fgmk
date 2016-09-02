@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-from fgmk import base_model, fifl
+from fgmk.ff import base_model
+from fgmk import fifl
 
 """
 This module deals with the palette format, which is how are palette files saved

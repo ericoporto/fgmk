@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from fgmk import __title__, __version__, __copyright__, __license__
-from fgmk import temp, getdata, current_project, game_init
+from fgmk import getdata, current_project, game_init
+from fgmk.util import temp
 from PyQt5 import QtWidgets
 import os
 import tarfile
