@@ -3,6 +3,24 @@ import json
 from fgmk.ff import write_file
 
 class BaseFormat:
+    """
+    If you want to create a basic json, instantiate this class. If you want to
+    define a json descriptor, inherit from this class.
+
+    . this class has a property called jsonTree, which contains a dict, and a
+    property filename, which has the filename to save it.
+    . Calling save prints the jsonTree to a file named filename.
+    . Calling load opens a json file named filename and loads it's contents to
+    jsonTree
+    . Both functions accept a filename as parameter to change it's filename
+    value.
+    . it's method isEqual allows comparing it with an object that inherits from
+    itself.
+
+    If you need to update the content of the jsonTree automatically before
+    saving, you can replace the method updateJsonTree.
+    """
+
     def __init__(self, filename=""):
         self.jsonTree = {}
         self.filename = filename
