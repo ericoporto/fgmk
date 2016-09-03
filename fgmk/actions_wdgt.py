@@ -6,8 +6,8 @@ from fgmk import action_dialog, getdata
 class actionItem(QtWidgets.QListWidgetItem):
     def __init__(self, actionAndParameter):
         #super().__init__(str(actionAndParameter))
-        QtWidgets.QListWidgetItem.__init__(self, str(actionAndParameter))
-        self.setText = str(actionAndParameter)
+        QtWidgets.QListWidgetItem.__init__(self, '')
+        self.setText('["'+actionAndParameter[0]+'","'+actionAndParameter[1]+'"]')
         self.setData(QtCore.Qt.UserRole, actionAndParameter)
         self.setIcon(QtGui.QIcon(getdata.path('actions/'+actionAndParameter[0]+'.png')))
 
