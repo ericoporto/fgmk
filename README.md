@@ -4,9 +4,8 @@
 [![Join the chat at https://gitter.im/fgmk/Lobby](https://badges.gitter.im/fgmk/Lobby.svg)](https://gitter.im/fgmk/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![PyPI](https://img.shields.io/pypi/v/fgmk.svg?maxAge=3600)](https://pypi.python.org/pypi/fgmk)
 [![Github All Releases](https://img.shields.io/github/downloads/ericoporto/fgmk/total.svg?maxAge=3600)](https://github.com/ericoporto/fgmk/releases)
-[![PyPI](https://img.shields.io/pypi/l/fgmk.svg?maxAge=2592000)]()
 [![PyPI](https://img.shields.io/pypi/pyversions/fgmk.svg?maxAge=2592000)]()
-[![PyPI](https://img.shields.io/pypi/status/fgmk.svg?maxAge=2592000)]()
+[![PyPI](https://img.shields.io/pypi/l/fgmk.svg?maxAge=2592000)]()
 
 ![Screenshot](screenshot.png)
 
