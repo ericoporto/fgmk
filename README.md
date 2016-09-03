@@ -2,6 +2,7 @@
 ==========================
 
 [![Join the chat at https://gitter.im/fgmk/Lobby](https://badges.gitter.im/fgmk/Lobby.svg)](https://gitter.im/fgmk/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![PyPI version](https://badge.fury.io/py/fgmk.svg)](https://badge.fury.io/py/fgmk)
 
 ![Screenshot](screenshot.png)
 
