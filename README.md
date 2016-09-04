@@ -9,11 +9,13 @@
 
 ![Screenshot](screenshot.png)
 
-This is an editor for making 2D SNES era RPG like games. The games are composed
-of plain text files, images and a index.html file containing [the engine](https://github.com/ericoporto/fgmkJsEngine).
+This is an editor for making 2D RPG games.
+Games are composed of plain text files, images and a index.html file containing
+[the engine](https://github.com/ericoporto/fgmkJsEngine).
 
-The goal is that these plain text files should be easy to be read by humans and
-software.
+These plain text files are easy to read by software and humans.
+
+[Click here to try a demo game (1MB size). ](https://ericoporto.github.io/fgmkJsEngine/index.html)
 
 Recommended Install and Run
 --------------------------
