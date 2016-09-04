@@ -220,7 +220,14 @@ class newFile(QtWidgets.QDialog):
             self.LabelFolder.hide()
             self.LineEditFolder.hide()
             self.buttonFolder.hide()
-            self.findMapPalettes()
+            try:
+                self.findMapPalettes()
+            except FileNotFoundError:
+                self.palettePreview.clear()
+                self.palettes = []
+                self.ComboBoxPalette.clear()
+                self.ComboBoxPalette.setEnabled(False)
+                self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 
     def validateLineEditName(self):
         tempStr = str(self.LineEditName.text())
