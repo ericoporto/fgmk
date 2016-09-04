@@ -3,8 +3,8 @@ import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, tile_set, miniWdgt
 from fgmk.ff import mapfile
-from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
-from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
 """
 This module has a class for every possible action. The file actionsList.json

@@ -2,8 +2,8 @@
 import json
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, fifl, current_project, miniWdgt
-from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
-from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 import os
 from os import listdir
 import platform

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets
-from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
 class Box:
     pass

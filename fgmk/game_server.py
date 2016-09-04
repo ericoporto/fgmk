@@ -23,13 +23,13 @@ and the control server (httpdAdm) will detect this and kill the main web server
 """
 
 # Make DEBUG=True to view log messages from servers.
-DEBUG = False
+DEBUG = True
 
 try:
-    from http.server import HTTPServer as BaseHTTPServer
+    from http.server import HTTPServer
     from http.server import SimpleHTTPRequestHandler as SimpleHTTPRequestHandler
 except ImportError:
-    import BaseHTTPServer
+    from BaseHTTPServer import HTTPServer
     from  SimpleHTTPServer import SimpleHTTPRequestHandler as SimpleHTTPRequestHandler
 
 
@@ -70,10 +70,9 @@ def servePage(urlToServe):
     """
     Creates the server
     """
-
     tempOrigiCurDir = os.curdir
     os.chdir(urlToServe)
-    serverClass = BaseHTTPServer
+    serverClass = HTTPServer
     handlerClass = NoCacheHTTPRequestHandler
 
     Protocol = "HTTP/1.0"

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk.ff import mapfile
-
-COLISIONLAYER = 3
-EVENTSLAYER = 4
+from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
 class LayerWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):

@@ -5,13 +5,14 @@ import os
 import tarfile
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, persona, game_init, current_project
-from fgmk import  tile_palette_wdgt, events_wdgt, layer_wdgt, map_explorer_wdgt, getdata, tile_set, configure_project
-from fgmk import tools_wdgt, tools_logic
-from fgmk import help, charas_palette_wdgt
+from fgmk import  getdata, tile_set, configure_project
+from fgmk import tools_logic
+from fgmk import help
 from fgmk import palette_editor, item_editor
+from fgmk.dock import events_wdgt, layer_wdgt, map_explorer_wdgt, charas_palette_wdgt, tools_wdgt, tile_palette_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
-from fgmk.layer_wdgt import COLISIONLAYER as COLISIONLAYER
-from fgmk.layer_wdgt import EVENTSLAYER as EVENTSLAYER
+from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 from fgmk.ff import mapfile
 from fgmk.util import temp
 
@@ -357,7 +358,7 @@ class MainWindow(QtWidgets.QMainWindow):
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
         current_projectectMenu = self.menubar.addMenu('&Project')
-        fileMenu.addAction('&New', self.newFile, "Ctrl+N")
+        fileMenu.addAction('&New Map...', self.newFile, "Ctrl+N")
         fileMenu.addAction('&Open...', self.openFile, "Ctrl+O")
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
         fileMenu.addAction('&Save As...', self.saveFileAs, "Shift+Ctrl+S")
@@ -372,8 +373,8 @@ class MainWindow(QtWidgets.QMainWindow):
         redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
 
-        current_projectectMenu.addAction('&New Project', self.newProject, 'Ctrl+Shift+N')
-        current_projectectMenu.addAction('&Open Project', self.openProject, 'Ctrl+Shift+O')
+        current_projectectMenu.addAction('&New Project...', self.newProject, 'Ctrl+Shift+N')
+        current_projectectMenu.addAction('&Open Project...', self.openProject, 'Ctrl+Shift+O')
         current_projectectMenu.addSeparator()
         current_projectectMenu.addAction('Set starting &position...',
                               self.selectStartPosition, '')

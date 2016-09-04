@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import base_tile, tMat, tools_wdgt
+from fgmk import base_tile, tMat
+from fgmk.dock import tools_wdgt
 
 class PaletteWidget(QtWidgets.QWidget):
 

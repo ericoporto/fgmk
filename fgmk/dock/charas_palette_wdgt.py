@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import persona, current_project, cmd, tools_wdgt
+from fgmk import persona, current_project, cmd
+from fgmk.dock import tools_wdgt
 
 
 class CharasPalWidget(QtWidgets.QWidget):
