@@ -9,7 +9,7 @@ from fgmk import  getdata, tile_set, configure_project
 from fgmk import tools_logic
 from fgmk import help
 from fgmk import palette_editor, item_editor
-from fgmk.dock import events_wdgt, layer_wdgt, map_explorer_wdgt, charas_palette_wdgt, tools_wdgt, tile_palette_wdgt
+from fgmk.dock import events_wdgt, layer_wdgt, map_explorer_wdgt, charas_palette_wdgt, tools_wdgt, tile_palette_wdgt, exit_fullscreen_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
 from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
@@ -18,7 +18,6 @@ from fgmk.util import temp
 
 firstClickX = None
 firstClickY = None
-
 
 class MapWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
@@ -220,27 +219,6 @@ class MapWidget(QtWidgets.QWidget):
         command = cmd.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
         cmd.commandToStack(command)
-
-
-
-class ExitFSWidget(QtWidgets.QWidget):
-    def __init__(self, parent=None, **kwargs):
-        QtWidgets.QWidget.__init__(self,parent, **kwargs)
-        #super().__init__(parent, **kwargs)
-
-        self.parent = parent
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.ButtonExitFS = QtWidgets.QPushButton("exit\nfullscreen")
-        self.ButtonExitFS.clicked.connect(self.ExitFS)
-        self.VBox.addWidget(self.ButtonExitFS)
-        self.setMaximumHeight(60)
-        # self.setMinimumHeight(60)
-        self.setMaximumWidth(90)
-        # self.setMinimumWidth(84)
-
-    def ExitFS(self):
-        self.parent.fullscreenViewAction.toggle()
-
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -497,7 +475,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewMenu.addAction(self.gridViewAction)
         self.gridViewAction.changed.connect(self.changeGridMargin)
 
-        self.myExitFSWidget = ExitFSWidget(self)
+        self.myExitFSWidget = exit_fullscreen_wdgt.ExitFSWidget(self)
         self.exitFSDockWdgt = QtWidgets.QDockWidget("", self)
         self.exitFSDockWdgt.setObjectName("ExitFullScreen")
         self.exitFSDockWdgt.setWidget(self.myExitFSWidget)
