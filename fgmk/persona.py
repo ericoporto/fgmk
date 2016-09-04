@@ -12,7 +12,7 @@ from fgmk.flowlayout import FlowLayout as FlowLayout
 # so a radio to select move or face and for buttons - one for each direction.
 # also a follow chara option will be added next and a random movement
 
-moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"move", "follow": "player"}
+moves = {"move":tile_charaset.facing , "face":tile_charaset.facing, "random":"move", "away": "player","follow": "player"}
 
 class MoveButtons(QtWidgets.QWidget):
     buttonup = QtCore.pyqtSignal()
@@ -84,12 +84,16 @@ class PropertiesWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
-        self.nocolision = QtWidgets.QCheckBox("igone colision")
-        self.nocolision.setToolTip("This makes the object ignore the colision map.")
+        self.nocolision = QtWidgets.QCheckBox("collidable")
+        self.nocolision.setToolTip("Checking makes the player and chars collide with it.")
         self.nocolision.setCheckState(QtCore.Qt.Unchecked)
+        self.pushable = QtWidgets.QCheckBox("pushable object")
+        self.pushable.setToolTip("This makes the object pushable, like a bigbox you can't lift.")
+        self.pushable.setCheckState(QtCore.Qt.Unchecked)
 
         self.propertys =  {}
         self.propertys['nocolision']=self.nocolision
+        self.propertys['pushable']=self.pushable
 
         for key in self.propertys:
             self.VBox.addWidget(self.propertys[key])
@@ -98,7 +102,7 @@ class PropertiesWidget(QtWidgets.QWidget):
 
     def setList(self,listToSet):
         for propertyy in listToSet:
-            if(propertyy == 'nocolision'):
+            if(propertyy == 'nocolision' or propertyy == 'pushable'):
                 if(listToSet[propertyy]==0 or listToSet[propertyy]==False):
                     self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
                 else:
@@ -106,7 +110,7 @@ class PropertiesWidget(QtWidgets.QWidget):
 
     def clear(self):
         for propertyy in self.propertys:
-            if(propertyy == 'nocolision'):
+            if(propertyy == 'nocolision' or propertyy == 'pushable'):
                 self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
 
     def getValue(self):
@@ -132,16 +136,19 @@ class MoveWidget(QtWidgets.QWidget):
         self.radiomove = QtWidgets.QRadioButton("move")
         self.radioface = QtWidgets.QRadioButton("face")
         self.random = QtWidgets.QPushButton("random")
+        self.away = QtWidgets.QPushButton("away")
         self.follow = QtWidgets.QPushButton("follow")
 
 
         self.radioface.setToolTip("Face a direction is when a chara looks at certain direction.")
         self.follow.setToolTip("Chara will make one movement or face in the player direction.")
+        self.away.setToolTip("Chara will make one movement or face against player direction.")
         self.random.setToolTip("Chara will face or move in a random direction, one time.")
 
 
         self.random.clicked.connect(self.randombclick)
         self.follow.clicked.connect(self.followbclick)
+        self.away.clicked.connect(self.awaybclick)
 
         self.movList = QtWidgets.QListWidget(self)
         self.movList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
@@ -162,6 +169,7 @@ class MoveWidget(QtWidgets.QWidget):
         VBoxR.addWidget(self.radioface)
         VBoxR.addWidget(self.random)
         VBoxR.addWidget(self.follow)
+        VBoxR.addWidget(self.away)
 
         HBoxT = QtWidgets.QHBoxLayout()
         HBoxT.addWidget(self.dirButtons)
@@ -176,7 +184,6 @@ class MoveWidget(QtWidgets.QWidget):
     def setList(self,listToSet):
         self.movList.clear()
         for move in listToSet:
-            print(move)
             self.movList.addItem(MoveItem(move[0],move[1]))
 
     def clear(self):
@@ -218,6 +225,12 @@ class MoveWidget(QtWidgets.QWidget):
         else:
             self.movList.addItem(MoveItem("movefollow"))
 
+    def awaybclick(self):
+        if(self.radioface.isChecked()):
+            self.movList.addItem(MoveItem("faceaway"))
+        else:
+            self.movList.addItem(MoveItem("moveaway"))
+
     def upbclick(self):
         if(self.radioface.isChecked()):
             self.movList.addItem(MoveItem("faceup"))
@@ -249,7 +262,7 @@ class CharaItem(QtWidgets.QListWidgetItem):
         QtWidgets.QListWidgetItem.__init__(self, aname)
 
         if(jsonTree == {}):
-             jsonTree = {'movements': [], 'actions': {'type': [], 'list': []}, 'charaset': ''}
+             jsonTree = {'movements': [], 'actions': {'type': [], 'list': []}, 'charaset': '', 'properties':{}}
 
         self.aname = aname
         self.jsonTree = jsonTree
@@ -326,7 +339,6 @@ class CharaList(QtWidgets.QWidget):
         for itemIndex in range(self.charaslist.count()):
             charaname = str(self.charaslist.item(itemIndex).aname)
             jt = self.charaslist.item(itemIndex).jsonTree
-            print(jt)
             charas.addChara(charaname,jt["charaset"],jt["actions"],jt["movements"],jt["properties"])
 
         return charas
@@ -522,7 +534,6 @@ class CharaEditor(QtWidgets.QDialog):
     def getAll(self):
         charas = {}
         charas = self.charalist.getCharas()
-        print(charas.jsonTree)
 
 
     def charaSelectionChanged(self):

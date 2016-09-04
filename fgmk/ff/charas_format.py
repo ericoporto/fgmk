@@ -10,7 +10,7 @@ class CharasFormat(base_model.BaseFormat):
     def new(self):
         self.jsonTree = { "Charas": {} }
 
-    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[], properties={"nocolision":0}):
+    def addChara(self, name, charaset = "", actions = {"type":[1,0],"list":[]}, movements=[], properties={"nocolision":0, "pushable":False}):
 
         self.jsonTree["Charas"][name]= {    "charaset": charaset,
                                             "actions":actions,
