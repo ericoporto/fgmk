@@ -2,7 +2,7 @@
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, tile_set, miniWdgt
-from fgmk.ff import mapfile
+from fgmk.ff import mapfile, charaset_format, charas_format
 from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
@@ -984,6 +984,90 @@ class rain(QtWidgets.QDialog):
         if self.radiostop.isChecked():
             rain_state = 'stop'
         return rain_state
+
+class changePlayerAnimation(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.LabelText = QtWidgets.QLabel("Select animation to change to")
+
+        charasetname = game_init.playerInitCharaset()
+        charaset = charaset_format.CharasetFormat()
+        charaset.loadGameFolder(gamefolder)
+        self.animationList = charaset.getAnimations(charasetname)
+
+        self.comboBoxAnim = QtWidgets.QComboBox()
+
+        self.comboBoxAnim.addItem('default')
+        for item in self.animationList:
+            self.comboBoxAnim.addItem(str(item))
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.comboBoxAnim)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            for idx, val in enumerate(self.animationList):
+                if(str(val) == str(edit[0])):
+                    self.comboBoxAnim.setCurrentIndex(idx)
+                    break
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('Change animation of player...')
+
+    def getValue(self):
+        text = str(self.comboBoxAnim.currentText())
+        return text
+
+
+class waitCycle(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.LabelText = QtWidgets.QLabel("Select time to wait in cycles")
+
+        self.waitList = [1,2,3,4,5,10,20,30,60]
+        self.comboBoxWait = QtWidgets.QComboBox()
+
+        for item in self.waitList:
+            self.comboBoxWait.addItem(str(item))
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.comboBoxWait)
+        self.VBox.addWidget(self.buttonBox)
+
+        if(edit != None):
+            for idx, val in enumerate(self.waitList):
+                if(str(val) == str(edit[0])):
+                    self.comboBoxWait.setCurrentIndex(idx)
+                    break
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('Block wait for cycles...')
+
+    def getValue(self):
+        text = str(self.comboBoxWait.currentText())
+        return text
 
 
 class addItem(QtWidgets.QDialog):

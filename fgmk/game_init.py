@@ -21,6 +21,10 @@ def openInitFile(gamefolder):
     else:
         return None
 
+def playerInitCharaset():
+    initJsonTree = getInitFile()
+    return initJsonTree['Player']['charaSet']
+
 
 def saveInitFile(gamefolder, initFileJsonTree):
     f = open(os.path.join(str(gamefolder),

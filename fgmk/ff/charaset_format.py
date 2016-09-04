@@ -1,3 +1,5 @@
+import os
+from fgmk import fifl
 from fgmk.ff import base_model
 
 facing = ["up", "left", "down", "right"]
@@ -16,6 +18,16 @@ class CharasetFormat(base_model.BaseFormat):
         self.boxsize = 32
 
         self.new()
+
+    def loadGameFolder(self,gamefolder):
+        if gamefolder != '':
+            for f in os.listdir(os.path.join(gamefolder, fifl.CHARASETS)):
+                if f.endswith(".json"):
+                    break
+
+            f = os.path.join(gamefolder, fifl.CHARASETS, f)
+            if(os.path.isfile(f)):
+                self.load(f)
 
     def new(self):
         self.jsonTree = {"Charaset": {}}
@@ -38,6 +50,10 @@ class CharasetFormat(base_model.BaseFormat):
         resultset = [key for key, value in charasetsa.items()
                      if key not in excludes]
         return sorted(resultset)
+
+    def getAnimations(self, charaset):
+        csetTree = self.jsonTree["Charaset"][charaset]
+        return csetTree.keys()
 
     def getAnimation(self, charaset):
         csetTree = self.jsonTree["Charaset"][charaset]
