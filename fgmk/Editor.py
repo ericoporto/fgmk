@@ -731,7 +731,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
-        self.myMapExplorerWidget.reloadInitFile()
+        game_init.regenerateLevelList()
+        hasinit = self.myMapExplorerWidget.reloadInitFile()
+        self.setEnabledAll(hasinit == True)
         self.changeTileCurrent(0)
         cmd.clearCommandStack()
 
