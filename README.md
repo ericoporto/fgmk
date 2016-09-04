@@ -31,7 +31,7 @@ After install, just open a terminal and type:
 
 ### Windows install and run
 
-In Windows, install Python 3 from https://www.python.org/, and then open `cmd.exe` and type (press enter after):
+In Windows, install Python 3 from [www.python.org](https://www.python.org/downloads/), and then open `cmd.exe` and type (press enter after):
 
     python -m pip install fgmk
 
