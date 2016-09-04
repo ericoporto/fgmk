@@ -23,7 +23,7 @@ and the control server (httpdAdm) will detect this and kill the main web server
 """
 
 # Make DEBUG=True to view log messages from servers.
-DEBUG = True
+DEBUG = False
 
 try:
     from http.server import HTTPServer

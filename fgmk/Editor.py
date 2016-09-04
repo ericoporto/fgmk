@@ -732,6 +732,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
         self.myMapExplorerWidget.reloadInitFile()
+        self.changeTileCurrent(0)
         cmd.clearCommandStack()
 
     def saveFile(self):
@@ -794,6 +795,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.setEnabledAll(hasinit == True)
             cmd.clearCommandStack()
             self.firsttime = False
+            self.changeTileCurrent(0)
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):
