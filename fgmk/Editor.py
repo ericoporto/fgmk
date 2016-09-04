@@ -19,6 +19,16 @@ from fgmk.util import temp
 firstClickX = None
 firstClickY = None
 
+"""
+This is the MainWindow, the most important module.
+
+it's 'a little' massive right now.
+The MapWidget is the main widget you interact in the map editor.
+The map editor implements the MainWindow, from the scroollarea, to all dockable,
+(from fgmk.dock) and the menus (in editor_mainwindow_menus, item_editor,
+palette_editor, persona and tile_charaset)
+"""
+
 class MapWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, **kwargs):
         #super().__init__(parent, **kwargs)
