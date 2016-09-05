@@ -129,12 +129,8 @@ class EventsWidget(QtWidgets.QWidget):
             self.enableButtonsBecauseEventsList)
         self.ActionList.itemSelectionChanged.connect(
             self.enableButtonsBecauseActionList)
-#        self.EventsList.itemClicked.connect(self.selectedItemFromEventsList)
         self.EventsList.itemSelectionChanged.connect(
             self.selectedItemFromEventsList)
-
-        # ActionListModel = self.ActionList.model()
-        # ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
         self.addActionButton.setEnabled(False)
         self.removeActionButton.setEnabled(False)
@@ -146,19 +142,6 @@ class EventsWidget(QtWidgets.QWidget):
         self.show()
 
         self.pMap = pMap
-
-    # def updateActionFromWidget(self):
-    #     print("update action from widget")
-    #
-    #     self.pMap.removeAllActionsOnEvent(
-    #         self.EventsList.selectedItems()[0].whatsThis())
-    #     i = 0
-    #     while i < self.ActionList.count():
-    #         item = self.ActionList.item(i)
-    #         actionToAdd = item.getAction()
-    #         self.pMap.addActionToEvent(
-    #             actionToAdd, self.EventsList.selectedItems()[0].whatsThis())
-    #         i += 1
 
     def editAction(self):
         if self.EventsList.selectedItems() is not None:
@@ -367,5 +350,3 @@ class EventsWidget(QtWidgets.QWidget):
             self.removeActionButton.setEnabled(False)
             self.editActionButton.setEnabled(False)
             self.deselectActionButton.setEnabled(False)
-
-    # def getActionListFromEvent(self):
