@@ -278,12 +278,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def changeEventCurrent(self, changeTo):
         self.myMapWidget.currentEvent = changeTo
-        self.myEventsWidget.eventSelectSpinbox.setValue(changeTo)
+        self.myEventsWidget.eventsAndColision.eventSelectSpinbox.setValue(changeTo)
         self.changeLayerCurrent(EVENTSLAYER)
 
     def changeColisionCurrent(self, changeTo):
         self.myMapWidget.currentColision = changeTo
-        self.myEventsWidget.setColisionValueView(changeTo)
+        self.myEventsWidget.eventsAndColision.setColisionValueView(changeTo)
 
     def changeTileCurrent(self, changeTo):
         self.myMapWidget.currentTile = changeTo

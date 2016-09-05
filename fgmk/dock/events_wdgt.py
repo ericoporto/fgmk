@@ -4,6 +4,59 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
+class EventAndColisionPalette(QtWidgets.QWidget):
+    """
+    Allow changing current event and current colision selection
+    """
+
+    def __init__(self, parent=None, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.parent = parent
+
+        VBox = QtWidgets.QVBoxLayout(self)
+        VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.labelEventsCurrent = QtWidgets.QLabel("Event Nº")
+        self.eventSelectSpinbox = QtWidgets.QSpinBox(self)
+        self.eventSelectSpinbox.setToolTip("Event 0 means No Event.")
+        self.eventSelectSpinbox.setMinimum(0)
+        self.eventSelectSpinbox.setMaximum(100)
+        self.eventSelectSpinbox.setSingleStep(1)
+        self.eventSelectSpinbox.valueChanged.connect(self.parent.parent.changeEventCurrent)
+
+        self.labelColisionCurrent = QtWidgets.QLabel("Colision")
+        self.radiocolision = QtWidgets.QRadioButton("Colide")
+        self.radionocolision = QtWidgets.QRadioButton("Clear")
+        self.radiocolision.setChecked(True)
+        self.radiocolision.toggled.connect(self.radioColisionToggled)
+        self.radionocolision.toggled.connect(self.radioNoColisionToggled)
+        self.radiocolision.clicked.connect(self.colisionRadioSelected)
+        self.radionocolision.clicked.connect(self.colisionRadioSelected)
+
+        VBox.addWidget(self.labelEventsCurrent)
+        VBox.addWidget(self.eventSelectSpinbox)
+        VBox.addWidget(self.labelColisionCurrent)
+        VBox.addWidget(self.radiocolision)
+        VBox.addWidget(self.radionocolision)
+
+    def colisionRadioSelected(self):
+        self.parent.parent.changeLayerCurrent(COLISIONLAYER)
+
+    def setColisionValueView(self,colisionValue):
+        if(colisionValue==1):
+            self.radiocolision.setChecked(True)
+        else:
+            self.radionocolision.setChecked(True)
+
+    def radioColisionToggled(self):
+        if(self.radiocolision.isChecked()):
+            self.parent.parent.myMapWidget.currentColision = 1;
+
+    def radioNoColisionToggled(self):
+        if(self.radionocolision.isChecked()):
+            self.parent.parent.myMapWidget.currentColision = 0;
 
 
 class EventsWidget(QtWidgets.QWidget):
@@ -27,29 +80,11 @@ class EventsWidget(QtWidgets.QWidget):
         self.labelActionList = QtWidgets.QLabel("List of Actions:")
         self.ActionList = QtWidgets.QListWidget(self)
 
+        self.eventsAndColision = EventAndColisionPalette(self)
+
         VBoxEventsList = QtWidgets.QVBoxLayout()
         VBoxActionList = QtWidgets.QVBoxLayout()
-        VBoxLeftButtons = QtWidgets.QVBoxLayout()
         VBoxButtons = QtWidgets.QVBoxLayout()
-
-        VBoxLeftButtons.setAlignment(QtCore.Qt.AlignTop)
-
-        self.labelEventsCurrent = QtWidgets.QLabel("Event Nº")
-        self.eventSelectSpinbox = QtWidgets.QSpinBox(self)
-        self.eventSelectSpinbox.setToolTip("Event 0 means No Event.")
-        self.eventSelectSpinbox.setMinimum(0)
-        self.eventSelectSpinbox.setMaximum(100)
-        self.eventSelectSpinbox.setSingleStep(1)
-        self.eventSelectSpinbox.valueChanged.connect(self.parent.changeEventCurrent)
-
-        self.labelColisionCurrent = QtWidgets.QLabel("Colision")
-        self.radiocolision = QtWidgets.QRadioButton("Colide")
-        self.radionocolision = QtWidgets.QRadioButton("Clear")
-        self.radiocolision.setChecked(True)
-        self.radiocolision.toggled.connect(self.radioColisionToggled)
-        self.radionocolision.toggled.connect(self.radioNoColisionToggled)
-        self.radiocolision.clicked.connect(self.colisionRadioSelected)
-        self.radionocolision.clicked.connect(self.colisionRadioSelected)
 
         self.addActionButton = QtWidgets.QPushButton("Add Action", self)
         self.editActionButton = QtWidgets.QPushButton("Edit Action", self)
@@ -67,14 +102,8 @@ class EventsWidget(QtWidgets.QWidget):
 
         self.HBox.addLayout(VBoxEventsList, 1)
         self.HBox.addLayout(VBoxActionList, 3)
-        self.HBox.addLayout(VBoxLeftButtons)
         self.HBox.addLayout(VBoxButtons)
-
-        VBoxLeftButtons.addWidget(self.labelEventsCurrent)
-        VBoxLeftButtons.addWidget(self.eventSelectSpinbox)
-        VBoxLeftButtons.addWidget(self.labelColisionCurrent)
-        VBoxLeftButtons.addWidget(self.radiocolision)
-        VBoxLeftButtons.addWidget(self.radionocolision)
+        self.HBox.addWidget(self.eventsAndColision)
 
         VBoxEventsList.addWidget(self.labelEventsList)
         VBoxEventsList.addWidget(self.EventsList)
@@ -117,23 +146,6 @@ class EventsWidget(QtWidgets.QWidget):
         self.show()
 
         self.pMap = pMap
-
-    def colisionRadioSelected(self):
-        self.parent.changeLayerCurrent(COLISIONLAYER)
-
-    def setColisionValueView(self,colisionValue):
-        if(colisionValue==1):
-            self.radiocolision.setChecked(True)
-        else:
-            self.radionocolision.setChecked(True)
-
-    def radioColisionToggled(self):
-        if(self.radiocolision.isChecked()):
-            self.parent.myMapWidget.currentColision = 1;
-
-    def radioNoColisionToggled(self):
-        if(self.radionocolision.isChecked()):
-            self.parent.myMapWidget.currentColision = 0;
 
     # def updateActionFromWidget(self):
     #     print("update action from widget")
