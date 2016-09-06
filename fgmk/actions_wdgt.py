@@ -151,8 +151,8 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
             self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
             self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
-            self.checkboxes[0].stateChanged.connect(self.checkboxTypeChanged0)
-            self.checkboxes[1].stateChanged.connect(self.checkboxTypeChanged1)
+            self.checkboxes[0].clicked.connect(self.checkboxTypeChanged0)
+            self.checkboxes[1].clicked.connect(self.checkboxTypeChanged1)
 
         self.addActionButton.clicked.connect(self.addAction)
         self.editActionButton.clicked.connect(self.editAction)
@@ -247,7 +247,7 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             parent=self,
             edit=paramArrayOfEdit,
             nothis=self.nothis)
-            
+
         if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
 
