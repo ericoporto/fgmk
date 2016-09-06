@@ -14,11 +14,8 @@ it. They all must implement a getValue function that will return the parameters
 as a string, with each parameter separated by a ; in the string.
 """
 
-
-
-class changeTile(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class actionDialog(QtWidgets.QDialog):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, myTileSet=None, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
@@ -26,8 +23,15 @@ class changeTile(QtWidgets.QDialog):
         self.gamefolder = gamefolder
         self.edit = edit
         self.parent = parent
+        self.myMap = myMap
+        self.myTileSet = myTileSet
 
-        self.initFile = game_init.openInitFile(gamefolder)
+class changeTile(actionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
+
+        self.initFile = game_init.openInitFile(self.gamefolder)
 
         self.useCurrentPlace = "current"
 
@@ -121,32 +125,32 @@ class changeTile(QtWidgets.QDialog):
         self.LineTextPlace.setReadOnly(True)
         self.LineTextTile.setReadOnly(True)
 
-        if(edit != None):
+        if(self.edit != None):
 
-            self.myMiniPaletteWidget.setImageCurrent(int(edit[0]))
+            self.myMiniPaletteWidget.setImageCurrent(int(self.edit[0]))
 
             for idx, val in enumerate(mapfile.LayersNameViewable):
-                if(val == edit[1]):
+                if(val == self.edit[1]):
                     self.comboBoxLayers.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.colisionList):
-                if(val == edit[2]):
+                if(val == self.edit[2]):
                     self.comboBoxColision.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.eventList):
-                if(val == edit[3]):
+                if(val == self.edit[3]):
                     self.comboBoxEvent.setCurrentIndex(idx)
 
-            if(edit[4] != self.useCurrentPlace):
+            if(self.edit[4] != self.useCurrentPlace):
                 self.checkbox.setCheckState(QtCore.Qt.Unchecked)
                 self.LineTextPlace.setText(
-                    "{0};{1};{2}".format(edit[4], edit[5], edit[6]))
+                    "{0};{1};{2}".format(self.edit[4], self.edit[5], self.edit[6]))
 
                 for idx, val in enumerate(self.levelsList):
-                    if(val == edit[6]):
+                    if(val == self.edit[6]):
                         self.comboBox.setCurrentIndex(idx)
 
-                self.myMiniMapWidget.changeSelectXY(int(edit[4]), int(edit[5]))
+                self.myMiniMapWidget.changeSelectXY(int(self.edit[4]), int(self.edit[5]))
 
             else:
                 self.checkbox.setCheckState(QtCore.Qt.Checked)
@@ -219,18 +223,12 @@ class changeTile(QtWidgets.QDialog):
         return text
 
 
-class changeAllTiles(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class changeAllTiles(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
-        self.nothis = nothis
-        self.gamefolder = gamefolder
-        self.edit = edit
-        self.parent = parent
-
-        self.initFile = game_init.openInitFile(gamefolder)
+        self.initFile = game_init.openInitFile(self.gamefolder)
 
         self.useCurrentPlace = "current"
 
@@ -314,23 +312,23 @@ class changeAllTiles(QtWidgets.QDialog):
         self.buttonBox.rejected.connect(self.reject)
         self.comboBox.currentIndexChanged.connect(self.updateMap)
 
-        if(edit != None):
-            self.oriMPWidget.setImageCurrent(int(edit[0]))
-            self.newMPWidget.setImageCurrent(int(edit[1]))
+        if(self.edit != None):
+            self.oriMPWidget.setImageCurrent(int(self.edit[0]))
+            self.newMPWidget.setImageCurrent(int(self.edit[1]))
             for idx, val in enumerate(mapfile.LayersNameViewable):
-                if(val == edit[2]):
+                if(val == self.edit[2]):
                     self.comboBoxLayers.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.colisionList):
-                if(val == edit[3]):
+                if(val == self.edit[3]):
                     self.comboBoxColision.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.eventList):
-                if(val == edit[4]):
+                if(val == self.edit[4]):
                     self.comboBoxEvent.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.levelsList):
-                if(val == edit[5]):
+                if(val == self.edit[5]):
                     self.comboBox.setCurrentIndex(idx)
 
         self.VBox.addWidget(self.LabelText1)
@@ -385,24 +383,20 @@ class changeAllTiles(QtWidgets.QDialog):
         return text
 
 
-class teleport(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, selectStartPosition=None,  **kwargs):
+class teleport(actionDialog):
+    def __init__(self, **kwargs):
+        #if selectStartPosition is here, we should not pass it along
+        self.selectStartPosition =  kwargs.pop('selectStartPosition',None)
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
-        self.nothis = nothis
-        self.selectStartPosition = selectStartPosition
-        self.gamefolder = gamefolder
-        self.edit = edit
-        self.parent = parent
+        self.initFile = game_init.openInitFile(self.gamefolder)
 
-        self.initFile = game_init.openInitFile(gamefolder)
-
-        if(selectStartPosition == None):
+        if(self.selectStartPosition == None):
             self.setWindowTitle('Select where to teleport...')
             indicative = 1
         else:
-            self.setWindowTitle(selectStartPosition)
+            self.setWindowTitle(self.selectStartPosition)
             indicative = 2
 
         self.VBox = QtWidgets.QVBoxLayout(self)
@@ -475,16 +469,16 @@ class teleport(QtWidgets.QDialog):
 
 
 
-        if(edit != None):
-            self.LineText.setText("{0};{1}".format(edit[0], edit[1]))
+        if(self.edit != None):
+            self.LineText.setText("{0};{1}".format(self.edit[0], self.edit[1]))
 
             for idx, val in enumerate(self.levelsList):
-                if(val == edit[2]):
+                if(val == self.edit[2]):
                     self.comboBox.setCurrentIndex(idx)
                     break
 
             self.updateMap(idx)
-            self.myMiniMapWidget.changeSelectXY(int(edit[0]), int(edit[1]))
+            self.myMiniMapWidget.changeSelectXY(int(self.edit[0]), int(self.edit[1]))
 
     def setTeleportPlace(self):
         position = self.myMiniMapWidget.getValue()
@@ -523,17 +517,12 @@ class teleport(QtWidgets.QDialog):
         return text
 
 
-class teleportInPlace(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False,  **kwargs):
+class teleportInPlace(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
-        self.nothis = nothis
-        self.gamefolder = gamefolder
-        self.edit = edit
-        self.parent = parent
-
-        self.initFile = game_init.openInitFile(gamefolder)
+        self.initFile = game_init.openInitFile(self.gamefolder)
 
         self.setWindowTitle('Select map to teleport...')
         self.VBox = QtWidgets.QVBoxLayout(self)
@@ -595,9 +584,9 @@ class teleportInPlace(QtWidgets.QDialog):
 
         self.setGeometry(300, 200, 350, 650)
 
-        if(edit != None):
+        if(self.edit != None):
             for idx, val in enumerate(self.levelsList):
-                if(val == edit[0]):
+                if(val == self.edit[0]):
                     self.comboBox.setCurrentIndex(idx)
                     break
 
@@ -631,11 +620,10 @@ class teleportInPlace(QtWidgets.QDialog):
         return text
 
 
-class END(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class END(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -652,11 +640,10 @@ class END(QtWidgets.QDialog):
         return ""
 
 
-class ELSE(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class ELSE(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -673,11 +660,10 @@ class ELSE(QtWidgets.QDialog):
         return ""
 
 
-class IF(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class IF(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -710,10 +696,10 @@ class IF(QtWidgets.QDialog):
         self.VBox.addWidget(self.var2LineEdit)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
-            self.var1LineEdit.setText(edit[0])
-            self.operLineEdit.setText(edit[1])
-            self.var2LineEdit.setText(edit[2])
+        if(self.edit != None):
+            self.var1LineEdit.setText(self.edit[0])
+            self.operLineEdit.setText(self.edit[1])
+            self.var2LineEdit.setText(self.edit[2])
 
         self.setGeometry(300, 40, 350, 650)
         self.setWindowTitle('IF conditional...')
@@ -724,10 +710,10 @@ class IF(QtWidgets.QDialog):
         return text
 
 
-class setVar(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class setVar(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -750,9 +736,9 @@ class setVar(QtWidgets.QDialog):
         self.VBox.addWidget(self.valueLineEdit)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
-            self.varNameLineEdit.setText(edit[0])
-            self.valueLineEdit.setText(edit[1])
+        if(self.edit != None):
+            self.varNameLineEdit.setText(self.edit[0])
+            self.valueLineEdit.setText(self.edit[1])
 
         self.setGeometry(300, 40, 350, 650)
         self.setWindowTitle('Change var to value')
@@ -763,10 +749,10 @@ class setVar(QtWidgets.QDialog):
         return text
 
 
-class varPlusOne(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class varPlusOne(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -785,8 +771,8 @@ class varPlusOne(QtWidgets.QDialog):
         self.VBox.addWidget(self.varNameLineEdit)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
-            self.varNameLineEdit.setText(edit[0])
+        if(self.edit != None):
+            self.varNameLineEdit.setText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
         self.setWindowTitle('You can add 1 to a var.')
@@ -835,10 +821,10 @@ class alert(QtWidgets.QDialog):
             textToReturn += '\\n' + line
         return textToReturn
 
-class showText(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class showText(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -860,8 +846,8 @@ class showText(QtWidgets.QDialog):
         self.VBox.addWidget(self.downLabelText)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
-            self.LineText.setPlainText(edit[0])
+        if(self.edit != None):
+            self.LineText.setPlainText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
         self.setWindowTitle('Write text to show in text box...')
@@ -875,10 +861,10 @@ class showText(QtWidgets.QDialog):
         return textToReturn
 
 
-class fadeIn(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class fadeIn(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -910,12 +896,12 @@ class fadeIn(QtWidgets.QDialog):
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('fadeIn: select the effect to apply')
 
-        if(edit != None):
+        if(self.edit != None):
             for idx, val in enumerate(effects):
-                if(val[1] == edit[0]):
+                if(val[1] == self.edit[0]):
                     self.ListEffect.setCurrentRow(idx)
 
-            if(edit[1] == 'keepEffect'):
+            if(self.edit[1] == 'keepEffect'):
                 self.checkbox.setCheckState(QtCore.Qt.Checked)
 
     def getValue(self):
@@ -926,10 +912,10 @@ class fadeIn(QtWidgets.QDialog):
         return effecToReturn + ';' + keepEffect
 
 
-class fadeOut(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class fadeOut(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -961,12 +947,12 @@ class fadeOut(QtWidgets.QDialog):
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('fadeOut: select the effect to apply')
 
-        if(edit != None):
+        if(self.edit != None):
             for idx, val in enumerate(effects):
-                if(val[1] == edit[0]):
+                if(val[1] == self.edit[0]):
                     self.ListEffect.setCurrentRow(idx)
 
-            if(edit[1] == 'keepEffect'):
+            if(self.edit[1] == 'keepEffect'):
                 self.checkbox.setCheckState(QtCore.Qt.Checked)
 
     def getValue(self):
@@ -976,10 +962,10 @@ class fadeOut(QtWidgets.QDialog):
             keepEffect = 'keepEffect'
         return effecToReturn + ';' + keepEffect
 
-class rain(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class rain(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -1005,8 +991,8 @@ class rain(QtWidgets.QDialog):
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('rain: choose if starts raining')
 
-        if(edit != None):
-            if(edit[0] == 'stop'):
+        if(self.edit != None):
+            if(self.edit[0] == 'stop'):
                 self.radiostop.setChecked(True)
 
     def getValue(self):
@@ -1015,10 +1001,10 @@ class rain(QtWidgets.QDialog):
             rain_state = 'stop'
         return rain_state
 
-class changePlayerAnimation(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class changePlayerAnimation(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -1027,12 +1013,17 @@ class changePlayerAnimation(QtWidgets.QDialog):
 
         charasetname = game_init.playerInitCharaset()
         charaset = charaset_format.CharasetFormat()
-        charaset.loadGameFolder(gamefolder)
-        self.animationList = charaset.getAnimations(charasetname)
+        charaset.loadGameFolder(self.gamefolder)
+        animation_dict_keys = charaset.getAnimations(charasetname)
+
+        # get the list of animations,
+        # sort to give a predictable order
+        # and then insert the default attribute
+        self.animationList = list(animation_dict_keys)
+        self.animationList.sort()
+        self.animationList.insert(0,'default')
 
         self.comboBoxAnim = QtWidgets.QComboBox()
-
-        self.comboBoxAnim.addItem('default')
         for item in self.animationList:
             self.comboBoxAnim.addItem(str(item))
 
@@ -1046,9 +1037,9 @@ class changePlayerAnimation(QtWidgets.QDialog):
         self.VBox.addWidget(self.comboBoxAnim)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
+        if(self.edit != None):
             for idx, val in enumerate(self.animationList):
-                if(str(val) == str(edit[0])):
+                if( str(val) == str(self.edit[0]) ):
                     self.comboBoxAnim.setCurrentIndex(idx)
                     break
 
@@ -1060,10 +1051,10 @@ class changePlayerAnimation(QtWidgets.QDialog):
         return text
 
 
-class waitCycle(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class waitCycle(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -1086,9 +1077,9 @@ class waitCycle(QtWidgets.QDialog):
         self.VBox.addWidget(self.comboBoxWait)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
+        if(self.edit != None):
             for idx, val in enumerate(self.waitList):
-                if(str(val) == str(edit[0])):
+                if(str(val) == str(self.edit[0])):
                     self.comboBoxWait.setCurrentIndex(idx)
                     break
 
@@ -1100,10 +1091,10 @@ class waitCycle(QtWidgets.QDialog):
         return text
 
 
-class addItem(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class addItem(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -1123,17 +1114,17 @@ class addItem(QtWidgets.QDialog):
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('addItem: select item to add')
 
-        if(edit != None):
-            self.ListItem.setItem(edit[0])
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
 
     def getValue(self):
         itemToReturn = str(self.ListItem.getItem())
         return itemToReturn
 
-class dropItem(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class dropItem(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -1153,19 +1144,18 @@ class dropItem(QtWidgets.QDialog):
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('dropItem: select item to drop')
 
-        if(edit != None):
-            self.ListItem.setItem(edit[0])
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
 
     def getValue(self):
         itemToReturn = str(self.ListItem.getItem())
         return itemToReturn
 
 
-class noEffect(QtWidgets.QDialog):
-
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class noEffect(actionDialog):
+    def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.accept
 

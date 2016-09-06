@@ -20,7 +20,11 @@ def selectStartingPosition(parent):
                 edit = [initx, inity, level]
 
         myTeleporDialog = action_dialog.teleport(
-            psSettings["gamefolder"], parent, edit, False, "select starting position")
+            gamefolder=psSettings["gamefolder"],
+            parent=parent,
+            edit=edit,
+            nothis=False, 
+            selectStartPosition="select starting position")
         if myTeleporDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(myTeleporDialog.getValue())
             position = returnActDlg.split(';')

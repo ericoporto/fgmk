@@ -46,6 +46,8 @@ class ActionsWidget(QtWidgets.QDialog):
 
         self.psSettings = psSettings
         self.ischaras = ischaras
+        self.myMap = self.parent.myMap
+        self.myTileSet = self.parent.myTileSet
 
         self.mainVBox = QtWidgets.QVBoxLayout(self)
         self.mainVBox.setAlignment(QtCore.Qt.AlignTop)
@@ -97,12 +99,16 @@ class ActionsWidget(QtWidgets.QDialog):
             if(self.ischaras is False):
                 self.myActionsDialog = newDialogFromName(
                     gamefolder=self.psSettings["gamefolder"],
-                    parent=self)
+                    parent=self,
+                    myMap=self.myMap,
+                    myTileSet=self.myTileSet)
             else:
                 self.myActionsDialog = newDialogFromName(
                     gamefolder=self.psSettings["gamefolder"],
                     parent=self,
-                    nothis=True)
+                    nothis=True,
+                    myMap=self.myMap,
+                    myTileSet=self.myTileSet)
 
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
@@ -126,6 +132,13 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.ischara = ischara
         self.isitem = isitem
         self.nothis = nothis
+
+        if(not self.nothis):
+            self.myMap = self.parent.parent.myMap
+            self.myTileSet = self.parent.parent.myTileSet
+        else:
+            self.myMap = None
+            self.myTileSet = None
 
         self.HBox = QtWidgets.QHBoxLayout(self)
         self.HBox.setAlignment(QtCore.Qt.AlignTop)
@@ -246,7 +259,9 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             gamefolder=self.ssettings["gamefolder"],
             parent=self,
             edit=paramArrayOfEdit,
-            nothis=self.nothis)
+            nothis=self.nothis,
+            myMap=self.myMap,
+            myTileSet=self.myTileSet)
 
         if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
