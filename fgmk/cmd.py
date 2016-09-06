@@ -62,81 +62,29 @@ def delAsteriskFromStr(title):
     else:
         return title
 
-class CommandAddAction(QtWidgets.QUndoCommand):
+class CommandEventAction(QtWidgets.QUndoCommand):
     """
     Class for adding an action to an event.
     This class operates in the event
     widget and the map (that has the jsontree)
     """
-    def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontoadd):
+    def __init__(self, description, pEventsWidget, event,  current_actions, previous_actions, what):
         #super().__init__(description)
         QtWidgets.QUndoCommand.__init__(self, description)
 
         self.pEventsWidget = pEventsWidget
-        self.actionindex = actionindex
-        self.eventindex = eventindex
-        self.actiontoadd = actiontoadd
+        self.current_actions = current_actions
+        self.previous_actions = previous_actions
+        self.event = event
+        self.what = what
 
     def redo(self):
-        self.pEventsWidget.addActionIndex(self.actionindex,
-                                          self.eventindex,
-                                          self.actiontoadd)
+        self.pEventsWidget.doAction(self.event,
+                                    self.current_actions)
 
     def undo(self):
-        self.pEventsWidget.removeActionIndex(self.actionindex, self.eventindex)
-
-
-class CommandChangeAction(QtWidgets.QUndoCommand):
-    """
-    Class for editing an action in an event.
-    This class operates in the event
-    widget and the map (that has the jsontree)
-    """
-    def __init__(self, description, pEventsWidget, actionindex,  eventindex, oldaction, newaction):
-        #super().__init__(description)
-        QtWidgets.QUndoCommand.__init__(self, description)
-
-        self.pEventsWidget = pEventsWidget
-        self.actionindex = actionindex
-        self.eventindex = eventindex
-        self.oldaction = oldaction
-        self.newaction = newaction
-
-    def redo(self):
-        self.pEventsWidget.changeAction(self.actionindex,
-                                        self.eventindex,
-                                        self.newaction)
-
-    def undo(self):
-        self.pEventsWidget.changeAction(self.actionindex,
-                                        self.eventindex,
-                                        self.oldaction)
-
-
-class CommandDelAction(QtWidgets.QUndoCommand):
-    """
-    Class for deleting an action from an event.
-    This class operates in the event
-    widget and the map (that has the jsontree)
-    """
-    def __init__(self, description, pEventsWidget, actionindex,  eventindex, actiontodel):
-        #super().__init__(description)
-        QtWidgets.QUndoCommand.__init__(self, description)
-
-        self.pEventsWidget = pEventsWidget
-        self.actionindex = actionindex
-        self.eventindex = eventindex
-        self.actiontodel = actiontodel
-
-    def redo(self):
-        self.pEventsWidget.removeActionIndex(self.actionindex, self.eventindex)
-
-    def undo(self):
-        self.pEventsWidget.addActionIndex(self.actionindex,
-                                          self.eventindex,
-                                          self.actiontodel)
-
-
+        self.pEventsWidget.doAction(self.event,
+                                    self.previous_actions)
 
 class CommandAddChara(QtWidgets.QUndoCommand):
     """

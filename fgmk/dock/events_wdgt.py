@@ -4,6 +4,13 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
+class EventItem(QtWidgets.QListWidgetItem):
+    def __init__(self, eventNumber):
+        #super().__init__(str(actionAndParameter))
+        QtWidgets.QListWidgetItem.__init__(self, '')
+        self.setWhatsThis("%d" % eventNumber)
+        self.setText("Event %03d" % eventNumber)
+
 class EventAndColisionPalette(QtWidgets.QWidget):
     """
     Allow changing current event and current colision selection
@@ -77,136 +84,30 @@ class EventsWidget(QtWidgets.QWidget):
         self.labelEventsList = QtWidgets.QLabel("List of Events:")
         self.EventsList = QtWidgets.QListWidget(self)
 
-        self.labelActionList = QtWidgets.QLabel("List of Actions:")
-        self.ActionList = QtWidgets.QListWidget(self)
+        self.ActionList = actions_wdgt.tinyActionsWdgt(self,current_project.settings,nothis=False,dragDrop=True)
 
         self.eventsAndColision = EventAndColisionPalette(self)
 
         VBoxEventsList = QtWidgets.QVBoxLayout()
-        VBoxActionList = QtWidgets.QVBoxLayout()
-        VBoxButtons = QtWidgets.QVBoxLayout()
-
-        self.addActionButton = QtWidgets.QPushButton("Add Action", self)
-        self.editActionButton = QtWidgets.QPushButton("Edit Action", self)
-        self.removeActionButton = QtWidgets.QPushButton("Remove Action", self)
-        self.deselectActionButton = QtWidgets.QPushButton("Deselect Actions", self)
-
-        self.checkboxes = []
-        self.checkboxes.append(QtWidgets.QCheckBox("on click", self))
-        self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
-
-        self.addActionButton.clicked.connect(self.addAction)
-        self.editActionButton.clicked.connect(self.editAction)
-        self.removeActionButton.clicked.connect(self.removeAction)
-        self.deselectActionButton.clicked.connect(self.deselectAction)
 
         self.HBox.addLayout(VBoxEventsList, 1)
-        self.HBox.addLayout(VBoxActionList, 3)
-        self.HBox.addLayout(VBoxButtons)
+        self.HBox.addWidget(self.ActionList, 3)
         self.HBox.addWidget(self.eventsAndColision)
 
         VBoxEventsList.addWidget(self.labelEventsList)
         VBoxEventsList.addWidget(self.EventsList)
 
-        VBoxActionList.addWidget(self.labelActionList)
-        VBoxActionList.addWidget(self.ActionList)
-
-        VBoxButtons.addWidget(self.addActionButton)
-        VBoxButtons.addWidget(self.editActionButton)
-        VBoxButtons.addWidget(self.removeActionButton)
-        VBoxButtons.addWidget(self.deselectActionButton)
-
-        self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
-        self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
-
-        for checkbox in self.checkboxes:
-            VBoxButtons.addWidget(checkbox)
-            checkbox.stateChanged.connect(self.checkboxesChanged)
-
-        self.ActionList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
-
         self.EventsList.itemSelectionChanged.connect(
             self.enableButtonsBecauseEventsList)
-        self.ActionList.itemSelectionChanged.connect(
-            self.enableButtonsBecauseActionList)
         self.EventsList.itemSelectionChanged.connect(
             self.selectedItemFromEventsList)
+        self.ActionList.somethingChanged.connect(self.actionListChanged)
 
-        self.addActionButton.setEnabled(False)
-        self.removeActionButton.setEnabled(False)
-        self.ActionList.setEnabled(False)
-        self.labelActionList.setEnabled(False)
-        self.deselectActionButton.setEnabled(False)
-        self.editActionButton.setEnabled(False)
+        self.ActionList.setAllState(False)
 
         self.show()
 
         self.pMap = pMap
-
-    def editAction(self):
-        if self.EventsList.selectedItems() is not None:
-            indexOfAction = self.ActionList.row(
-                self.ActionList.selectedItems()[0])
-            actionParamToEdit = self.pMap.getActionOnEvent(
-                indexOfAction, self.EventsList.selectedItems()[0].whatsThis())
-
-            actionToEdit = actionParamToEdit[0]
-            paramOfEdit = actionParamToEdit[1]
-
-            paramArrayOfEdit = paramOfEdit.split(';')
-
-            newDialogFromName = getattr(action_dialog, str(actionToEdit))
-
-            self.myActionsDialog = newDialogFromName(
-                current_project.settings["gamefolder"], self, paramArrayOfEdit)
-            if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
-                returnActDlg = str(self.myActionsDialog.getValue())
-
-                actionToAdd = [actionToEdit, str(returnActDlg)]
-
-                command = cmd.CommandChangeAction("edited action",
-                                 self,
-                                 indexOfAction,
-                                 self.EventsList.selectedItems()[0].whatsThis(),
-                                 actionParamToEdit,
-                                 actionToAdd)
-                cmd.commandToStack(command)
-
-
-    def changeAction(self, actionindex, eventindex, newaction):
-        self.pMap.changeActionOnEvent(actionindex, newaction, eventindex)
-
-        if(len(self.EventsList.selectedItems())>0):
-            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
-            if(seleventindex==eventindex):
-                self.ActionList.takeItem(actionindex)
-                self.ActionList.insertItem(
-                    actionindex, actions_wdgt.actionItem(newaction))
-
-
-    def deselectAction(self):
-        for i in range(self.ActionList.count()):
-            item = self.ActionList.item(i)
-            item.setSelected(False)
-
-    def deselectAll(self):
-        self.deselectAction()
-        for i in range(self.EventsList.count()):
-            item = self.EventsList.item(i)
-            item.setSelected(False)
-
-        self.enableButtonsBecauseEventsList()
-
-    def checkboxesChanged(self, newState):
-        if self.EventsList.selectedItems() is not None:
-            checkboxesStates = []
-            for checkbox in self.checkboxes:
-                checkboxesStates.append(int(checkbox.isChecked()))
-
-            self.pMap.setEventType(str(self.EventsList.selectedItems()[0].whatsThis()),
-                                   [int(self.checkboxes[0].isChecked()),
-                                    int(self.checkboxes[1].isChecked())
-                                    ])
 
     def updateEventsList(self):
         updatedListOfEvents = self.pMap.getTileListFromLayer(EVENTSLAYER)
@@ -228,125 +129,49 @@ class EventsWidget(QtWidgets.QWidget):
 
         if updatedListOfEvents is not None:
             for event in updatedListOfEvents:
-                item = QtWidgets.QListWidgetItem("Event %03d" % event)
-                item.setWhatsThis("%d" % event)
+                item = EventItem(event)
                 self.EventsList.addItem(item)
 
         self.EventsList.sortItems()
 
         self.show()
 
-    def addAction(self):
-        self.myActionsWidget = actions_wdgt.ActionsWidget(current_project.settings, self)
-        if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
-            actionToAdd = self.myActionsWidget.getValue()
-
-            if self.EventsList.selectedItems() is not None:
-                if not self.ActionList.selectedItems():
-                    lastactionitem = self.ActionList.count()
-
-                    command = cmd.CommandAddAction("added action",
-                                               self,
-                                               lastactionitem,
-                                               self.EventsList.selectedItems()[0].whatsThis(),
-                                               actionToAdd)
-                    cmd.commandToStack(command)
-
-                else:
-                    indexOfAction = self.ActionList.row(
-                        self.ActionList.selectedItems()[0])
-
-
-                    command = cmd.CommandAddAction("added action",
-                                               self,
-                                               indexOfAction,
-                                               self.EventsList.selectedItems()[0].whatsThis(),
-                                               actionToAdd)
-                    cmd.commandToStack(command)
-
-
-    def addActionIndex(self, actionindex, eventindex, acctiontoadd):
-        self.pMap.insertActionToEvent(actionindex, acctiontoadd, eventindex)
-
+    def actionListChanged(self, previous_actions,current_actions,what,description):
+        #Let's get the event when somethingChanged in the actionsList
         if(len(self.EventsList.selectedItems())>0):
-            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
-            if(seleventindex==eventindex):
-                self.ActionList.insertItem(actionindex,
-                                           actions_wdgt.actionItem(acctiontoadd))
+            event = self.EventsList.selectedItems()[0].whatsThis()
+        else:
+            return
 
-    def removeAction(self):
-        for item in self.ActionList.selectedItems():
-            itemIndex = self.ActionList.row(item)
+        command = cmd.CommandEventAction(description,
+            self,
+            event,
+            current_actions,
+            previous_actions,
+            what)
 
-            actiontodel = self.pMap.getActionOnEvent(
-                itemIndex, self.EventsList.selectedItems()[0].whatsThis())
+        cmd.commandToStack(command)
 
-            command = cmd.CommandDelAction("deleted action",
-                                       self,
-                                       itemIndex,
-                                       self.EventsList.selectedItems()[0].whatsThis(),
-                                       actiontodel)
-            cmd.commandToStack(command)
-
-    def removeActionIndex(self, actionindex, eventindex):
-        self.pMap.removeActionByIndexOnEvent(actionindex, eventindex)
-        if(len(self.EventsList.selectedItems())>0):
-            seleventindex = self.EventsList.selectedItems()[0].whatsThis()
-            if(seleventindex==eventindex):
-                self.ActionList.takeItem(actionindex)
+    def doAction(self, event, actions):
+        self.pMap.setEventList(actions, event)
+        self.selectedItemFromEventsList()
 
     def selectedItemFromEventsList(self):
         if(len(self.EventsList.selectedItems())>0):
             item = self.EventsList.selectedItems()[0]
 
-            self.ActionList.clear()
+            actions = self.pMap.getActionListOnEvent(item.whatsThis())
+            eventType = self.pMap.getEventType(item.whatsThis())
+            typeAndActions = {'list':actions, 'type':eventType }
 
-            for actionitemInList in self.pMap.getActionListOnEvent(item.whatsThis()):
-                self.ActionList.addItem(actions_wdgt.actionItem(actionitemInList))
-
-            state = self.pMap.getEventType(item.whatsThis())
-
-            for i in range(len(self.checkboxes)):
-                self.checkboxes[i].setCheckState(2 * state[i])
-                self.checkboxes[i].show()
-
-            self.ActionList.show()
+            self.ActionList.setList(typeAndActions)
 
     def enableButtonsBecauseEventsList(self):
         if(self.EventsList.currentItem() == None):
-            self.addActionButton.setEnabled(False)
-            self.removeActionButton.setEnabled(False)
-            self.ActionList.setEnabled(False)
-            self.labelActionList.setEnabled(False)
-            self.deselectActionButton.setEnabled(False)
-            self.editActionButton.setEnabled(False)
+            self.ActionList.setAllState(False)
             return
 
         if (self.EventsList.currentItem().isSelected() == True):
-            self.addActionButton.setEnabled(True)
-            self.ActionList.setEnabled(True)
-            self.labelActionList.setEnabled(True)
+            self.ActionList.setAllState(True)
         else:
-            self.addActionButton.setEnabled(False)
-            self.removeActionButton.setEnabled(False)
-            self.ActionList.setEnabled(False)
-            self.labelActionList.setEnabled(False)
-            self.deselectActionButton.setEnabled(False)
-            self.editActionButton.setEnabled(False)
-
-    def enableButtonsBecauseActionList(self):
-        enable = True
-        if (self.ActionList.currentItem() is None):
-            enable = False
-        else:
-            if (self.ActionList.currentItem().isSelected() == False):
-                enable = False
-
-        if (enable):
-            self.removeActionButton.setEnabled(True)
-            self.deselectActionButton.setEnabled(True)
-            self.editActionButton.setEnabled(True)
-        else:
-            self.removeActionButton.setEnabled(False)
-            self.editActionButton.setEnabled(False)
-            self.deselectActionButton.setEnabled(False)
+            self.setAllState.setEnabled(False)

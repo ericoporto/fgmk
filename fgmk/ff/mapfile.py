@@ -204,3 +204,10 @@ class MapFormat(base_model.BaseFormat):
         if self.listOfEventsTypes.get(str(event), None) is None:
             self.listOfEventsTypes[str(event)] = [1, 0]
         return self.listOfEventsTypes[str(event)]
+
+    def setEventList(self,actionsAndType,event):
+        eventType = actionsAndType['type']
+        actionsList = actionsAndType['list']
+        self.listOfActions[str(event)] = actionsList
+        self.listOfEventsTypes[str(event)] = eventType
+        self.updateJsonTree()

@@ -17,6 +17,28 @@ class actionItem(QtWidgets.QListWidgetItem):
         parameter = str(actionAndParameterReturn[1])
         return [action, parameter]
 
+class DragAndDropList(QtWidgets.QListWidget):
+    itemMoved = QtCore.pyqtSignal(int, int) # Oldindex, newindex
+
+    def __init__(self, parent=None, **args):
+        QtWidgets.QListWidget.__init__(self, parent, **args)
+
+        self.setAcceptDrops(True)
+        self.setDragEnabled(True)
+        self.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.drag_item = None
+        self.drag_row = None
+
+    def dropEvent(self, event):
+        QtWidgets.QListWidget.dropEvent(self, event)
+        self.itemMoved.emit(self.drag_row, self.row(self.drag_item))
+        self.drag_item = None
+
+    def startDrag(self, supportedActions):
+        self.drag_item = self.currentItem()
+        self.drag_row = self.row(self.drag_item)
+        QtWidgets.QListWidget.startDrag(self, supportedActions)
+
 class ActionsWidget(QtWidgets.QDialog):
     def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
         #super().__init__(parent, **kwargs)
@@ -74,15 +96,17 @@ class ActionsWidget(QtWidgets.QDialog):
             newDialogFromName = getattr(action_dialog, str(self.returnValue))
             if(self.ischaras is False):
                 self.myActionsDialog = newDialogFromName(
-                    self.psSettings["gamefolder"], self)
+                    gamefolder=self.psSettings["gamefolder"],
+                    parent=self)
             else:
                 self.myActionsDialog = newDialogFromName(
-                    self.psSettings["gamefolder"], self, None, True)
+                    gamefolder=self.psSettings["gamefolder"],
+                    parent=self,
+                    nothis=True)
 
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
 
-                # self.returnValue.append('|')
                 self.returnValue = [str(self.returnValue), str(returnActDlg)]
                 self.accept()
 
@@ -91,7 +115,9 @@ class ActionsWidget(QtWidgets.QDialog):
 
 
 class tinyActionsWdgt(QtWidgets.QWidget):
-    def __init__(self, parent=None, ssettings={}, ischara=False, isitem=False , **kwargs):
+    somethingChanged = QtCore.pyqtSignal(object,object,'QString','QString')
+    # the dragDrop option is temporary until I can connect itemMoved for everyone
+    def __init__(self, parent=None, ssettings={}, nothis=True, ischara=False, isitem=False, dragDrop=False, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
@@ -99,12 +125,17 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.parent = parent
         self.ischara = ischara
         self.isitem = isitem
+        self.nothis = nothis
 
         self.HBox = QtWidgets.QHBoxLayout(self)
         self.HBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.labelActionList = QtWidgets.QLabel("List of Actions:")
-        self.ActionList = QtWidgets.QListWidget(self)
+        if(dragDrop):
+            self.ActionList = DragAndDropList(self)
+            self.ActionList.itemMoved.connect(self.actionListItemMoved)
+        else:
+            self.ActionList = QtWidgets.QListWidget(self)
 
         VBoxActionList = QtWidgets.QVBoxLayout()
         VBoxButtons = QtWidgets.QVBoxLayout()
@@ -120,6 +151,8 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
             self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
             self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
+            self.checkboxes[0].stateChanged.connect(self.checkboxTypeChanged0)
+            self.checkboxes[1].stateChanged.connect(self.checkboxTypeChanged1)
 
         self.addActionButton.clicked.connect(self.addAction)
         self.editActionButton.clicked.connect(self.editAction)
@@ -141,15 +174,19 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             for checkbox in self.checkboxes:
                 VBoxButtons.addWidget(checkbox)
 
-        self.ActionList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
-
         self.ActionList.itemSelectionChanged.connect(self.enableButtonsBecauseActionList)
 
         ActionListModel = self.ActionList.model()
         ActionListModel.layoutChanged.connect(self.updateActionFromWidget)
 
     def setList(self,actionToSet):
+        # I am reusing this widget for when we have a list of actions and a type
+        # selections (charas, events place in the map) and when we are adding
+        # events to things that always have a definite trigger (items which you
+        # hit use, maps when you get teleported, scripts,...)
         if(not self.isitem):
+            # the actionToSet has two parts, a type (onover or click for example)
+            # and also a list, which has all the actions, the most interesting part
             atype = actionToSet['type']
             for i in range(len(atype)):
                 if(atype[i]):
@@ -159,9 +196,10 @@ class tinyActionsWdgt(QtWidgets.QWidget):
 
             listToSet = actionToSet['list']
         else:
+            # this else deals when actionToSet is just a list of actions
             listToSet = actionToSet
 
-
+        #Whatever we had, delete and fill with all the new actions
         self.ActionList.clear()
         for action in listToSet:
             self.ActionList.addItem(actionItem(action))
@@ -177,6 +215,10 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.deselectActionButton.setEnabled(state)
         self.editActionButton.setEnabled(state)
         self.enableButtonsBecauseActionList()
+
+        if(not self.isitem):
+            for checkbox in self.checkboxes:
+                checkbox.setEnabled(state)
 
     def updateActionFromWidget(self):
         i = 0
@@ -200,19 +242,38 @@ class tinyActionsWdgt(QtWidgets.QWidget):
 
         newDialogFromName = getattr(action_dialog, str(actionToEdit))
 
-        self.myActionsDialog = newDialogFromName(self.ssettings["gamefolder"],self,paramArrayOfEdit,True)
+        self.myActionsDialog = newDialogFromName(
+            gamefolder=self.ssettings["gamefolder"],
+            parent=self,
+            edit=paramArrayOfEdit,
+            nothis=self.nothis)
+            
         if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
 
             actionToAdd = [actionToEdit,str(returnActDlg)]
 
+            previous_actions = self.getValue()
+
+            #Where action is actually edited
             self.ActionList.takeItem(indexOfAction)
             self.ActionList.insertItem(indexOfAction,actionItem(actionToAdd))
+
+            current_actions = self.getValue()
+            self.somethingChanged.emit(previous_actions,current_actions,'edit','edit action')
 
     def deselectAction(self):
         for i in range(self.ActionList.count()):
             item = self.ActionList.item(i)
             self.ActionList.setItemSelected(item, False)
+
+    def actionListItemMoved(self, old_i, new_i):
+        previous_actions = self.getValue()
+        moved_item = previous_actions['list'][new_i]
+        previous_actions['list'].pop(new_i)
+        previous_actions['list'].insert(old_i, moved_item)
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'actionmoved','moved action')
 
     def addAction(self):
         if(self.ssettings == {} ):
@@ -222,19 +283,32 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
+            previous_actions = self.getValue()
+
             if not self.ActionList.selectedItems():
                 self.ActionList.addItem(actionItem(actionToAdd))
             else:
                 indexOfAction = self.ActionList.row(self.ActionList.selectedItems()[0])
                 self.ActionList.insertItem(indexOfAction,actionItem(actionToAdd))
 
+            current_actions = self.getValue()
+            self.somethingChanged.emit(previous_actions,current_actions,'add','add action')
+
     def removeAction(self):
         if(self.ssettings == {} ):
             return
 
+        if(len(self.ActionList.selectedItems())<1):
+            return
+
+        previous_actions = self.getValue()
+
         for item in self.ActionList.selectedItems():
             itemIndex = self.ActionList.row(item)
             self.ActionList.takeItem(itemIndex)
+
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'remove','remove action')
 
     def enableButtonsBecauseActionList(self):
         enable = True
@@ -253,8 +327,19 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             self.editActionButton.setEnabled(False)
             self.deselectActionButton.setEnabled(False)
 
-    def getValue(self):
+    def checkboxTypeChanged0(self, int):
+        previous_actions = self.getValue()
+        previous_actions['type'][0] = not previous_actions['type'][0]
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on click')
 
+    def checkboxTypeChanged1(self, int):
+        previous_actions = self.getValue()
+        previous_actions['type'][1] = not previous_actions['type'][1]
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on over')
+
+    def getValue(self):
         allactions = []
         for itemIndex in range(self.ActionList.count()):
             allactions.append(self.ActionList.item(itemIndex).getAction())

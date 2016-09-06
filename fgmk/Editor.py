@@ -800,7 +800,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.gridViewAction.setChecked(False)  # gambiarra
             self.myPaletteWidget.drawPalette(self.myTileSet)
             self.myEventsWidget.updateEventsList()
-            self.myEventsWidget.deselectAll()
+            self.myEventsWidget.enableButtonsBecauseEventsList()
             self.myCharasPalWidget.reinit()
             game_init.regenerateLevelList()
             hasinit = self.myMapExplorerWidget.reloadInitFile()
