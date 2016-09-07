@@ -14,7 +14,7 @@ it. They all must implement a getValue function that will return the parameters
 as a string, with each parameter separated by a ; in the string.
 """
 
-class actionDialog(QtWidgets.QDialog):
+class ActionDialog(QtWidgets.QDialog):
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
@@ -27,10 +27,10 @@ class actionDialog(QtWidgets.QDialog):
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
-class changeTile(actionDialog):
+class changeTile(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.initFile = game_init.openInitFile(self.gamefolder)
 
@@ -207,10 +207,10 @@ class changeTile(actionDialog):
         return text
 
 
-class changeAllTiles(actionDialog):
+class changeAllTiles(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.initFile = game_init.openInitFile(self.gamefolder)
 
@@ -348,12 +348,12 @@ class changeAllTiles(actionDialog):
         return text
 
 
-class teleport(actionDialog):
+class teleport(ActionDialog):
     def __init__(self, **kwargs):
         #if selectStartPosition is here, we should not pass it along
         self.selectStartPosition =  kwargs.pop('selectStartPosition',None)
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.initFile = game_init.openInitFile(self.gamefolder)
 
@@ -469,10 +469,10 @@ class teleport(actionDialog):
         return text
 
 
-class teleportInPlace(actionDialog):
+class teleportInPlace(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.initFile = game_init.openInitFile(self.gamefolder)
 
@@ -553,10 +553,10 @@ class teleportInPlace(actionDialog):
         return text
 
 
-class END(actionDialog):
+class END(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
@@ -570,10 +570,10 @@ class END(actionDialog):
         return ""
 
 
-class ELSE(actionDialog):
+class ELSE(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
@@ -587,10 +587,10 @@ class ELSE(actionDialog):
         return ""
 
 
-class IF(actionDialog):
+class IF(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         notefont = QtGui.QFont()
         notefont.setItalic(True)
@@ -634,10 +634,10 @@ class IF(actionDialog):
         return text
 
 
-class setVar(actionDialog):
+class setVar(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.varLabelText = QtWidgets.QLabel("Write var name:")
         self.valLabelText = QtWidgets.QLabel("Write value:")
@@ -670,10 +670,10 @@ class setVar(actionDialog):
         return text
 
 
-class varPlusOne(actionDialog):
+class varPlusOne(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.varLabelText = QtWidgets.QLabel("Write var name")
 
@@ -700,10 +700,10 @@ class varPlusOne(actionDialog):
         return text
 
 
-class alert(actionDialog):
+class alert(ActionDialog):
     def __init__(self,  **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
         self.downLabelText = QtWidgets.QLabel(
@@ -736,10 +736,10 @@ class alert(actionDialog):
             textToReturn += '\\n' + line
         return textToReturn
 
-class showText(actionDialog):
+class showText(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
         self.downLabelText = QtWidgets.QLabel(
@@ -773,10 +773,10 @@ class showText(actionDialog):
         return textToReturn
 
 
-class fadeIn(actionDialog):
+class fadeIn(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select the effect to use:")
         self.ListEffect = QtWidgets.QListWidget()
@@ -822,10 +822,10 @@ class fadeIn(actionDialog):
         return effecToReturn + ';' + keepEffect
 
 
-class fadeOut(actionDialog):
+class fadeOut(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select the effect to use:")
         self.ListEffect = QtWidgets.QListWidget()
@@ -870,10 +870,10 @@ class fadeOut(actionDialog):
             keepEffect = 'keepEffect'
         return effecToReturn + ';' + keepEffect
 
-class rain(actionDialog):
+class rain(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select either start or stop:")
         self.ListEffect = QtWidgets.QListWidget()
@@ -907,10 +907,10 @@ class rain(actionDialog):
             rain_state = 'stop'
         return rain_state
 
-class changePlayerAnimation(actionDialog):
+class changePlayerAnimation(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select animation to change to")
 
@@ -954,10 +954,10 @@ class changePlayerAnimation(actionDialog):
         return text
 
 
-class waitCycle(actionDialog):
+class waitCycle(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select time to wait in cycles")
 
@@ -991,10 +991,10 @@ class waitCycle(actionDialog):
         return text
 
 
-class addItem(actionDialog):
+class addItem(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select item to add:")
         self.ListItem = miniWdgt.miniItemsList()
@@ -1019,10 +1019,10 @@ class addItem(actionDialog):
         itemToReturn = str(self.ListItem.getItem())
         return itemToReturn
 
-class dropItem(actionDialog):
+class dropItem(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.LabelText = QtWidgets.QLabel("Select item to drop:")
         self.ListItem = miniWdgt.miniItemsList()
@@ -1048,10 +1048,10 @@ class dropItem(actionDialog):
         return itemToReturn
 
 
-class noEffect(actionDialog):
+class noEffect(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
-        actionDialog.__init__(self, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
 
         self.accept
 
