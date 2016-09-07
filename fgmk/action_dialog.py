@@ -24,6 +24,8 @@ class actionDialog(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
         self.myMap = myMap
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
 class changeTile(actionDialog):
     def __init__(self, **kwargs):
@@ -33,9 +35,6 @@ class changeTile(actionDialog):
         self.initFile = game_init.openInitFile(self.gamefolder)
 
         self.useCurrentPlace = "current"
-
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.LabelText1 = QtWidgets.QLabel("Select where is the tile to change:")
         self.LabelText2 = QtWidgets.QLabel("Select to what type change:")
@@ -217,9 +216,6 @@ class changeAllTiles(actionDialog):
 
         self.useCurrentPlace = "current"
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.LabelText1 = QtWidgets.QLabel("Select the map for tile change:")
         self.LabelText2 = QtWidgets.QLabel("What type to change from?")
         self.LabelText3 = QtWidgets.QLabel("To what type change to?")
@@ -368,9 +364,6 @@ class teleport(actionDialog):
             self.setWindowTitle(self.selectStartPosition)
             indicative = 2
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.LabelText = QtWidgets.QLabel('Select where to teleport:')
 
         self.comboBox = QtWidgets.QComboBox()
@@ -428,8 +421,6 @@ class teleport(actionDialog):
 
         self.setGeometry(300, 200, 350, 650)
 
-
-
         if(self.edit != None):
             self.LineText.setText("{0};{1}".format(self.edit[0], self.edit[1]))
 
@@ -486,8 +477,6 @@ class teleportInPlace(actionDialog):
         self.initFile = game_init.openInitFile(self.gamefolder)
 
         self.setWindowTitle('Select map to teleport...')
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.LabelText = QtWidgets.QLabel('Select where to teleport:')
 
@@ -569,9 +558,6 @@ class END(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
@@ -589,9 +575,6 @@ class ELSE(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
@@ -608,9 +591,6 @@ class IF(actionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
-
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         notefont = QtGui.QFont()
         notefont.setItalic(True)
@@ -659,9 +639,6 @@ class setVar(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.varLabelText = QtWidgets.QLabel("Write var name:")
         self.valLabelText = QtWidgets.QLabel("Write value:")
 
@@ -698,9 +675,6 @@ class varPlusOne(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.varLabelText = QtWidgets.QLabel("Write var name")
 
         self.varNameLineEdit = QtWidgets.QLineEdit()
@@ -730,9 +704,6 @@ class alert(actionDialog):
     def __init__(self,  **kwargs):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
-
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
         self.downLabelText = QtWidgets.QLabel(
@@ -769,9 +740,6 @@ class showText(actionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
-
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
         self.downLabelText = QtWidgets.QLabel(
@@ -810,8 +778,6 @@ class fadeIn(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select the effect to use:")
         self.ListEffect = QtWidgets.QListWidget()
 
@@ -861,8 +827,6 @@ class fadeOut(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select the effect to use:")
         self.ListEffect = QtWidgets.QListWidget()
 
@@ -911,8 +875,6 @@ class rain(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select either start or stop:")
         self.ListEffect = QtWidgets.QListWidget()
 
@@ -949,9 +911,6 @@ class changePlayerAnimation(actionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
-
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.LabelText = QtWidgets.QLabel("Select animation to change to")
 
@@ -1000,9 +959,6 @@ class waitCycle(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
-
         self.LabelText = QtWidgets.QLabel("Select time to wait in cycles")
 
         self.waitList = [1,2,3,4,5,10,20,30,60]
@@ -1040,8 +996,6 @@ class addItem(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select item to add:")
         self.ListItem = miniWdgt.miniItemsList()
 
@@ -1070,8 +1024,6 @@ class dropItem(actionDialog):
         #super().__init__(parent, **kwargs)
         actionDialog.__init__(self, **kwargs)
 
-        self.VBox = QtWidgets.QVBoxLayout(self)
-        self.VBox.setAlignment(QtCore.Qt.AlignTop)
         self.LabelText = QtWidgets.QLabel("Select item to drop:")
         self.ListItem = miniWdgt.miniItemsList()
 
