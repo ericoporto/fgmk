@@ -84,7 +84,7 @@ class EventsWidget(QtWidgets.QWidget):
         self.labelEventsList = QtWidgets.QLabel("List of Events:")
         self.EventsList = QtWidgets.QListWidget(self)
 
-        self.ActionList = actions_wdgt.tinyActionsWdgt(self,current_project.settings,nothis=False,dragDrop=True)
+        self.ActionList = actions_wdgt.tinyActionsWdgt(self,current_project.settings,nothis=False)
 
         self.eventsAndColision = EventAndColisionPalette(self)
 

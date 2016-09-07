@@ -242,7 +242,10 @@ class ItemCfgWidget(QtWidgets.QWidget):
 
         self.statModWidget = StatModWidget(self)
         self.effectWidget = EffectWidget(self)
-        self.actionWidget = actions_wdgt.tinyActionsWdgt(self,current_project.settings,True,True)
+        self.actionWidget = actions_wdgt.tinyActionsWdgt(parent=self,
+                                                         ssettings=current_project.settings,
+                                                         nothis=True,
+                                                         isitem=True)
 
         self.actionWidget.setEnabled(False)
         self.statModWidget.setEnabled(False)

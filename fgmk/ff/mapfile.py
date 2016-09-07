@@ -16,10 +16,11 @@ class MapFormat(base_model.BaseFormat):
     jsonTree, saving to file, loading a file over, new map creation, and more.
     The map only exists in memory, it's not an image, canvas or similar.
     """
-    def __init__(self):
+    def __init__(self, parent=None):
         #super().__init__()
         base_model.BaseFormat.__init__(self)
 
+        self.parent = parent
         self.palette = []
 
         self.tileImage = ""

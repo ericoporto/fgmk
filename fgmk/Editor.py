@@ -244,7 +244,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.levelName = "newFile"
         current_project.settings["workingFile"] = self.levelName + ".map.json"
 
-        self.myMap = mapfile.MapFormat()
+        self.myMap = mapfile.MapFormat(self)
 
         self.myMap.new(self.levelName, 10, 10)
 

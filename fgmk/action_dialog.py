@@ -15,7 +15,7 @@ as a string, with each parameter separated by a ; in the string.
 """
 
 class actionDialog(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, myTileSet=None, **kwargs):
+    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
@@ -24,7 +24,6 @@ class actionDialog(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
         self.myMap = myMap
-        self.myTileSet = myTileSet
 
 class changeTile(actionDialog):
     def __init__(self, **kwargs):
@@ -61,14 +60,8 @@ class changeTile(actionDialog):
         self.scrollArea = QtWidgets.QScrollArea()
 
         if(self.nothis is False):
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-            else:
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
@@ -203,16 +196,8 @@ class changeTile(actionDialog):
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-            else:
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
 
         self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
         self.myMiniPaletteWidget.drawPalette(self.currentTileSet)
@@ -259,16 +244,8 @@ class changeAllTiles(actionDialog):
         self.scrollArea = QtWidgets.QScrollArea()
 
         if(self.nothis is False):
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-            else:
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
@@ -360,16 +337,8 @@ class changeAllTiles(actionDialog):
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-            else:
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
 
         self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
         self.oriMPWidget.drawPalette(self.currentTileSet)
@@ -421,16 +390,8 @@ class teleport(actionDialog):
 
         if(self.nothis is False):
             if(self.selectStartPosition == None):
-                if(self.edit == None):
-                    #Journey to get the map
-                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.parent.parent.parent.parent.myMap
-                    self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-                else:
-                    #Journey to get the map
-                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.parent.parent.parent.myMap
-                    self.currentTileSet = self.parent.parent.parent.myTileSet
+                self.currentLevel = self.myMap
+                self.currentTileSet = self.myMap.parent.myTileSet
             else:
                 self.currentLevel = self.parent.myMap
                 self.currentTileSet = self.parent.myTileSet
@@ -498,13 +459,13 @@ class teleport(actionDialog):
                 if(self.edit == None):
                     #Journey to get the map
                     #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.parent.parent.parent.parent.myMap
-                    self.currentTileSet = self.parent.parent.parent.parent.myTileSet
+                    self.currentLevel = self.myMap
+                    self.currentTileSet = self.myMap.parent.myTileSet
                 else:
                     #Journey to get the map
                     #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.parent.parent.parent.myMap
-                    self.currentTileSet = self.parent.parent.parent.myTileSet
+                    self.currentLevel = self.myMap
+                    self.currentTileSet = self.myMap.parent.myTileSet
             else:
                 self.currentLevel = self.parent.myMap
                 self.currentTileSet = self.parent.myTileSet
@@ -546,17 +507,8 @@ class teleportInPlace(actionDialog):
         self.scrollArea = QtWidgets.QScrollArea()
 
         if(self.nothis is False):
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
-            else:
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
-
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
@@ -604,13 +556,13 @@ class teleportInPlace(actionDialog):
             if(self.edit == None):
                 #Journey to get the map
                 #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.parent.myTileSet
+                self.currentLevel = self.myMap
+                self.currentTileSet = self.myMap.parent.myTileSet
             else:
                 #Journey to get the map
                 #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.parent.parent.parent.myMap
-                self.currentTileSet = self.parent.parent.parent.myTileSet
+                self.currentLevel = self.myMap
+                self.currentTileSet = self.myMap.parent.myTileSet
 
 
         self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)

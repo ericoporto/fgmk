@@ -478,7 +478,9 @@ class CharaEditor(QtWidgets.QDialog):
         self.movement = MoveWidget()
         self.properties = PropertiesWidget()
 
-        self.actions = actions_wdgt.tinyActionsWdgt(parent,ssettings,True)
+        self.actions = actions_wdgt.tinyActionsWdgt(parent=parent,
+                                                    ssettings=ssettings,
+                                                    nothis=True)
         self.actions.setAllState(True)
         self.reopen = QtWidgets.QPushButton("Reopen", self)
         self.reopen.clicked.connect(self.reopenfile)

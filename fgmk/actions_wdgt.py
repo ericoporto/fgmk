@@ -40,14 +40,12 @@ class DragAndDropList(QtWidgets.QListWidget):
         QtWidgets.QListWidget.startDrag(self, supportedActions)
 
 class ActionsWidget(QtWidgets.QDialog):
-    def __init__(self, psSettings, parent=None, ischaras=False, **kwargs):
+    def __init__(self, psSettings, parent=None, nothis=False, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         self.psSettings = psSettings
-        self.ischaras = ischaras
-        self.myMap = self.parent.myMap
-        self.myTileSet = self.parent.myTileSet
+        self.nothis = nothis
 
         self.mainVBox = QtWidgets.QVBoxLayout(self)
         self.mainVBox.setAlignment(QtCore.Qt.AlignTop)
@@ -96,19 +94,16 @@ class ActionsWidget(QtWidgets.QDialog):
             self.accept()
         else:
             newDialogFromName = getattr(action_dialog, str(self.returnValue))
-            if(self.ischaras is False):
+            if(self.nothis is False):
                 self.myActionsDialog = newDialogFromName(
                     gamefolder=self.psSettings["gamefolder"],
                     parent=self,
-                    myMap=self.myMap,
-                    myTileSet=self.myTileSet)
+                    myMap=self.parent.parent.parent.myMap)
             else:
                 self.myActionsDialog = newDialogFromName(
                     gamefolder=self.psSettings["gamefolder"],
                     parent=self,
-                    nothis=True,
-                    myMap=self.myMap,
-                    myTileSet=self.myTileSet)
+                    nothis=True)
 
             if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
                 returnActDlg = str(self.myActionsDialog.getValue())
@@ -123,32 +118,27 @@ class ActionsWidget(QtWidgets.QDialog):
 class tinyActionsWdgt(QtWidgets.QWidget):
     somethingChanged = QtCore.pyqtSignal(object,object,'QString','QString')
     # the dragDrop option is temporary until I can connect itemMoved for everyone
-    def __init__(self, parent=None, ssettings={}, nothis=True, ischara=False, isitem=False, dragDrop=False, **kwargs):
+    def __init__(self, parent=None, ssettings={}, nothis=True, isitem=False, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.ssettings = ssettings
         self.parent = parent
-        self.ischara = ischara
         self.isitem = isitem
         self.nothis = nothis
 
         if(not self.nothis):
-            self.myMap = self.parent.parent.myMap
-            self.myTileSet = self.parent.parent.myTileSet
+            self.pMap = self.parent.parent.myMap
         else:
-            self.myMap = None
-            self.myTileSet = None
+            self.pMap = None
 
         self.HBox = QtWidgets.QHBoxLayout(self)
         self.HBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.labelActionList = QtWidgets.QLabel("List of Actions:")
-        if(dragDrop):
-            self.ActionList = DragAndDropList(self)
-            self.ActionList.itemMoved.connect(self.actionListItemMoved)
-        else:
-            self.ActionList = QtWidgets.QListWidget(self)
+
+        self.ActionList = DragAndDropList(self)
+        self.ActionList.itemMoved.connect(self.actionListItemMoved)
 
         VBoxActionList = QtWidgets.QVBoxLayout()
         VBoxButtons = QtWidgets.QVBoxLayout()
@@ -260,8 +250,7 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             parent=self,
             edit=paramArrayOfEdit,
             nothis=self.nothis,
-            myMap=self.myMap,
-            myTileSet=self.myTileSet)
+            myMap=self.pMap)
 
         if self.myActionsDialog.exec_() == QtWidgets.QDialog.Accepted:
             returnActDlg = str(self.myActionsDialog.getValue())
@@ -294,7 +283,7 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         if(self.ssettings == {} ):
             return
 
-        self.myActionsWidget = ActionsWidget(self.ssettings,self,self.ischara)
+        self.myActionsWidget = ActionsWidget(self.ssettings,self,nothis=self.nothis)
         if self.myActionsWidget.exec_() == QtWidgets.QDialog.Accepted:
             actionToAdd = self.myActionsWidget.getValue()
 
