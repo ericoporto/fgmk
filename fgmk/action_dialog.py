@@ -553,16 +553,8 @@ class teleportInPlace(actionDialog):
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
         else:
-            if(self.edit == None):
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.myMap
-                self.currentTileSet = self.myMap.parent.myTileSet
-            else:
-                #Journey to get the map
-                #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                self.currentLevel = self.myMap
-                self.currentTileSet = self.myMap.parent.myTileSet
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
 
 
         self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
@@ -734,10 +726,10 @@ class varPlusOne(actionDialog):
         return text
 
 
-class alert(QtWidgets.QDialog):
-    def __init__(self, gamefolder, parent=None, edit=None, nothis=False, **kwargs):
+class alert(actionDialog):
+    def __init__(self,  **kwargs):
         #super().__init__(parent, **kwargs)
-        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        actionDialog.__init__(self, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
@@ -759,8 +751,8 @@ class alert(QtWidgets.QDialog):
         self.VBox.addWidget(self.downLabelText)
         self.VBox.addWidget(self.buttonBox)
 
-        if(edit != None):
-            self.LineEdit.setText(edit[0])
+        if(self.edit != None):
+            self.LineEdit.setText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
         self.setWindowTitle('Write text to show in text box...')

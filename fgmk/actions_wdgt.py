@@ -3,7 +3,21 @@ import json
 from PyQt5 import QtCore, QtWidgets, QtGui
 from fgmk import action_dialog, getdata
 
+"""
+this module concentrates dealing with a list of actions.
+
+A list of actions is the programmable logic behind games.
+So an event can trigger placing a list of actions in the engine actionFiFo,
+items, a chara you interact and other things.
+
+"""
+
 class actionItem(QtWidgets.QListWidgetItem):
+    """
+    the item in the an actions list.
+    the item is easily recognisable by the icons and the text with the
+    action and the parameter.
+    """
     def __init__(self, actionAndParameter):
         #super().__init__(str(actionAndParameter))
         QtWidgets.QListWidgetItem.__init__(self, '')
@@ -18,6 +32,12 @@ class actionItem(QtWidgets.QListWidgetItem):
         return [action, parameter]
 
 class DragAndDropList(QtWidgets.QListWidget):
+    """
+    I needed to detect when a dragDrop changing the order of the items happened
+    to trigger the proper undoStack response.
+    This code was modded on the code taken from here:
+    https://riverbankcomputing.com/pipermail/pyqt/2011-June/030002.html
+    """
     itemMoved = QtCore.pyqtSignal(int, int) # Oldindex, newindex
 
     def __init__(self, parent=None, **args):
@@ -39,7 +59,26 @@ class DragAndDropList(QtWidgets.QListWidget):
         self.drag_row = self.row(self.drag_item)
         QtWidgets.QListWidget.startDrag(self, supportedActions)
 
+class ActionButton(QtWidgets.QPushButton):
+    """
+    When you select addAction, a list of possible actions are presented in
+    buttons. This is one of these buttons. Again, we have icons to properly
+    identify them.
+    """
+    def __init__(self, action='noEffect', parent=None):
+        icon = QtGui.QIcon(getdata.path('actions/'+action+'.png'))
+        QtWidgets.QPushButton.__init__(self,icon, action, parent)
+        self.setMaximumWidth(330)
+        self.setMinimumWidth(80)
+        self.setMinimumHeight(24)
+
 class ActionsWidget(QtWidgets.QDialog):
+    """
+    This widget is just a simple scrollable list of actions.
+    When you click addAction, this is the window that opens.
+    I should be as simple as possible, I had to do some layout mumble jumble to
+    get the exact look I wanted.
+    """
     def __init__(self, psSettings, parent=None, nothis=False, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
@@ -70,11 +109,7 @@ class ActionsWidget(QtWidgets.QDialog):
         self.actionButton = []
 
         for action in e["actionOrder"]:
-            icon = QtGui.QIcon(getdata.path('actions/'+action+'.png'))
-            self.actionButton.append(QtWidgets.QPushButton(icon, action, self))
-            self.actionButton[-1].setMaximumWidth(330)
-            self.actionButton[-1].setMinimumWidth(80)
-            self.actionButton[-1].setMinimumHeight(24)
+            self.actionButton.append(ActionButton(action=action, parent=self))
             self.VBox.addWidget(self.actionButton[-1])
             self.actionButton[-1].clicked.connect(self.getAction)
 
@@ -116,6 +151,17 @@ class ActionsWidget(QtWidgets.QDialog):
 
 
 class tinyActionsWdgt(QtWidgets.QWidget):
+    """
+    This is the main widget, where there is the actions list and the buttons
+    that allow you to add more actions, delete and edit them.
+
+    This widget is reused throughout the whole applictation, since this is the
+    main way to logically set what should happen when.
+
+    Note:
+    I am considering separating the checkboxes that set the types in it's own
+    widget.
+    """
     somethingChanged = QtCore.pyqtSignal(object,object,'QString','QString')
     # the dragDrop option is temporary until I can connect itemMoved for everyone
     def __init__(self, parent=None, ssettings={}, nothis=True, isitem=False, **kwargs):
