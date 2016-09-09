@@ -174,4 +174,4 @@ class EventsWidget(QtWidgets.QWidget):
         if (self.EventsList.currentItem().isSelected() == True):
             self.ActionList.setAllState(True)
         else:
-            self.setAllState.setEnabled(False)
+            self.ActionList.setAllState(False)
