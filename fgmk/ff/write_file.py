@@ -102,6 +102,24 @@ def writesafe(data, fname, varname=None):
 def fwriteKeyVals(data, f, indent=0):
     """
     Recursively write a JSON from dict data to an opened file f.
+
+    Two main differences from regular json writer:
+     1 - a 2d matrixes will be printed in square fashion.
+     [[ 0, 0],
+      [ 0, 0]]
+
+      instead of
+
+     [[0,
+       0],
+       [0,
+       0]]
+
+      or [[0,0],[0,0]]
+
+      2 - dicts should be ordered.
+          This should allow placing a json file under version control and have
+          sane diffs.
     """
 
     if isinstance(data, list):
@@ -163,10 +181,11 @@ def fwriteKeyVals(data, f, indent=0):
 
     elif isinstance(data, dict):
         f.write("\n" + "    " * indent + "{")
-        for k, v in data.items():
+        sorted_data = sorted(data.items())
+        for k, v in sorted_data:
             f.write("\n" + "    " * indent + "\"" + k + "\"" + ": ")
             fwriteKeyVals(v, f, indent + 1)
-            if(list(data)[-1] != k):
+            if(sorted_data[-1][0] != k):
                 f.write(",")
         f.write("\n" + "    " * indent + "}")
     elif isinstance(data, bool):
