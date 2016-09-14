@@ -2,6 +2,7 @@
 import os
 import json
 import sys
+import re
 from numbers import Number
 from fgmk.util import print_error
 
@@ -99,6 +100,12 @@ def writesafe(data, fname, varname=None):
 
 
 
+def natural_sort_list(l):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
+
+
 def fwriteKeyVals(data, f, indent=0):
     """
     Recursively write a JSON from dict data to an opened file f.
@@ -181,7 +188,7 @@ def fwriteKeyVals(data, f, indent=0):
 
     elif isinstance(data, dict):
         f.write("\n" + "    " * indent + "{")
-        sorted_data = sorted(data.items())
+        sorted_data = [ (k,data[k]) for k in natural_sort_list(data) ]
         for k, v in sorted_data:
             f.write("\n" + "    " * indent + "\"" + k + "\"" + ": ")
             fwriteKeyVals(v, f, indent + 1)
