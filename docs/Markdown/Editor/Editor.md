@@ -20,7 +20,7 @@ When you draw a map, it uses selected tiles, grouped in a palette, this is how
 you make your own palettes.
 
 ## Item Editor
-Itens are an important part of how the player interacts with the map. This is
+Items are an important part of how the player interacts with the map. This is
 where you make them.
 
 ## Charaset Editor
