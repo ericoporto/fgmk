@@ -23,7 +23,7 @@ should help you getting started.
 ## Introduction
 
 The fgmk project is a small project, it's composed of this repository, which
-is the Game Editor, and some addtional ones:
+is the Game Editor, and some additional ones:
 
 - [fgmkJsEngine](https://github.com/ericoporto/fgmkJsEngine): this is a
 javascript engine, it can be contained in a single `index.html` file that can
@@ -43,7 +43,7 @@ easy to open in a text editor so you can understand the logic the engine is
 playing.
 
 It should be easy enough that a child should be able to open and modify a text
-file and see the change in the game without breaking it - so the formating
+file and see the change in the game without breaking it - so the formatting
 of the descriptor files should be intuitive.
 
 Last but not least, the editor should be accompanied by an interesting and small
@@ -85,7 +85,7 @@ demand having a place to store and download them.
 
 ## Testing
 
-for humam testing see [BugHunting](#bughunting).
+for human testing see [BugHunting](#bughunting).
 
 The interface could use some automated testing, if you want to help writing
 tests, this would be awesome!
