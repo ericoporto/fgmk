@@ -42,3 +42,7 @@ What to expect of the FGMK project
 - [ ] Drag and Drop files in any editor. Also accept project folders.
 
 - [ ] Open any editor as standalone, through command line.
+
+
+
+[*back*](../index.md)

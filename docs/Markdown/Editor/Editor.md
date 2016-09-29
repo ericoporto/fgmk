@@ -7,6 +7,10 @@ How to build a game with the fgmk interface, what to expect.
 ## Actions System
 The system expects actions, and deals with them in the first in first out order.
 
+### All Actions
+
+[Click here to see a list of all actions](actions.md)
+
 ## The Map Editor
 The central thing in the FGMK Games are the maps. This is where the player will
 spend most of his time.
@@ -40,3 +44,7 @@ the monsters.
 ## Scripted Battle Editor
 Meaningful battles should work like puzzles, the scripted battle editor is
 design for just that.
+
+
+
+[*back*](../index.md)
