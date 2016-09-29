@@ -21,6 +21,7 @@ What to expect of the FGMK project
 - [ ] Add Undo and Redo for Charas Editor
 
 ### Tidyup
+- [ ] Have the documentation available in the help menu
 - [ ] Rework the Charaset Editor
 - [ ] Rework the Charas Editor
 

@@ -83,6 +83,15 @@ work.
 
 [Details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
 
+Documentation
+-------------
+
+[The documentation is here](docs/Markdown/index.md). When it's more mature, it
+will be presented in the interface, inside the help menu.
+
+[There is also a Quickstart](docs/Markdown/Quickstart/Quickstart.md).
+
+
 Contributing
 ------------
 
