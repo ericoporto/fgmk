@@ -4,6 +4,7 @@ mkdir -p build
 #clean directory
 rm -rf Rst
 rm -rf source/Editor
+rm -rf source/Actions
 rm -rf source/EditorCode
 rm -rf source/Future
 rm -rf source/Quickstart
@@ -23,6 +24,7 @@ find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sed -i 's/.md/.html/g
 #lets go back
 cd ..
 
+cp -rf Rst/Actions source/Actions
 cp -rf Rst/Editor source/Editor
 cp -rf Rst/EditorCode source/EditorCode
 cp -rf Rst/Future source/Future
