@@ -1,0 +1,4 @@
+Palette files (filename.pal.json)
+=================================
+
+`*back* <Specification.html>`__

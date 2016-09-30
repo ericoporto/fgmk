@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Editor &mdash; FGMK 0.5.4 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="FGMK 0.5.4 documentation" href="../index.html"/>
+        <link rel="next" title="&lt;no title&gt;" href="../EditorCode/EditorCode.html"/>
+        <link rel="prev" title="Specification" href="../Specification/Specification.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> FGMK
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Specification/Specification.html">Specification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Editor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#actions-system">Actions System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#all-actions">All Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-map-editor">The Map Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#palette-editor">Palette Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#item-editor">Item Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#charaset-editor">Charaset Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#charas-editor">Charas Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jokenpo-editor">Jokenpo Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#heroes-monsters-and-skills-editor">Heroes, Monsters and Skills Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scripted-battle-editor">Scripted Battle Editor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Roadmap/Roadmap.html">Roadmap</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">FGMK</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Editor</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/Editor/Editor.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="editor">
+<h1>Editor<a class="headerlink" href="#editor" title="Permalink to this headline">¶</a></h1>
+<p>Describes each part and screen of the Editor.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>How to build a game with the fgmk interface, what to expect.</p>
+</div>
+<div class="section" id="actions-system">
+<h2>Actions System<a class="headerlink" href="#actions-system" title="Permalink to this headline">¶</a></h2>
+<p>The system expects actions, and deals with them in the first in first
+out order.</p>
+<div class="section" id="all-actions">
+<h3>All Actions<a class="headerlink" href="#all-actions" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="actions.html">Click here to see a list of all actions</a></p>
+</div>
+</div>
+<div class="section" id="the-map-editor">
+<h2>The Map Editor<a class="headerlink" href="#the-map-editor" title="Permalink to this headline">¶</a></h2>
+<p>The central thing in the FGMK Games are the maps. This is where the
+player will spend most of his time.</p>
+</div>
+<div class="section" id="palette-editor">
+<h2>Palette Editor<a class="headerlink" href="#palette-editor" title="Permalink to this headline">¶</a></h2>
+<p>When you draw a map, it uses selected tiles, grouped in a palette, this
+is how you make your own palettes.</p>
+</div>
+<div class="section" id="item-editor">
+<h2>Item Editor<a class="headerlink" href="#item-editor" title="Permalink to this headline">¶</a></h2>
+<p>Items are an important part of how the player interacts with the map.
+This is where you make them.</p>
+</div>
+<div class="section" id="charaset-editor">
+<h2>Charaset Editor<a class="headerlink" href="#charaset-editor" title="Permalink to this headline">¶</a></h2>
+<p>Charasets are a file that points to pieces of an image, and describe the
+animations used by Charas (and the player chara).</p>
+</div>
+<div class="section" id="charas-editor">
+<h2>Charas Editor<a class="headerlink" href="#charas-editor" title="Permalink to this headline">¶</a></h2>
+<p>Usually the NPCs you interact appear in the form of a Chara, in the
+Chara editor you can set how a Chara moves or which actions would be
+executed.</p>
+</div>
+<div class="section" id="jokenpo-editor">
+<h2>Jokenpo Editor<a class="headerlink" href="#jokenpo-editor" title="Permalink to this headline">¶</a></h2>
+<p>Here you can set the elements available in your world, and how they
+relate with each other (paper wins over rock).</p>
+<p><em>still to be developed</em></p>
+</div>
+<div class="section" id="heroes-monsters-and-skills-editor">
+<h2>Heroes, Monsters and Skills Editor<a class="headerlink" href="#heroes-monsters-and-skills-editor" title="Permalink to this headline">¶</a></h2>
+<p>You can calibrate how each hero should level up, develop new skills, and
+specify the monsters.</p>
+<p><em>still to be developed</em></p>
+</div>
+<div class="section" id="scripted-battle-editor">
+<h2>Scripted Battle Editor<a class="headerlink" href="#scripted-battle-editor" title="Permalink to this headline">¶</a></h2>
+<p>Meaningful battles should work like puzzles, the scripted battle editor
+is design for just that.</p>
+<p><em>still to be developed</em></p>
+<p><a class="reference external" href="../index.html">*back*</a></p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../EditorCode/EditorCode.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../Specification/Specification.html" class="btn btn-neutral" title="Specification" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Érico Vieira Porto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.5.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
