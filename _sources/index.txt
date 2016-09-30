@@ -21,6 +21,7 @@ Contents:
    Quickstart/Quickstart
    Specification/Specification
    Editor/Editor
+   Actions/Actions
    EditorCode/EditorCode
    Roadmap/Roadmap
    Future/Future

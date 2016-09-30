@@ -6,12 +6,35 @@ Whenever something happens, what happens, are actions!
 Actions are usually not alone, the is usually some list that has actions
 in a certain order to be executed.
 
-A list of the available actions is presented below.
+How they work
+-------------
 
-|image0| showText
+.. figure:: actions_list.png
+   :alt: 
+
+When you are offered to list actions, it means something happened,
+perhaps the player interacted with a Chara or an Event ("clicked"),
+perhaps he used an item, or something else. The list of actions is a
+recipe of what will happen.
+
+Clicking Add Action with no action selected will insert the new action
+after the current list of actions. If any action is selected, clicking
+Add Action will insert the new action above the selected action.
+
+Actions are read from top to bottom, they are then placed in a FIFO
+buffer. The IF action can interact with this buffer, which will change
+execution flow.
+
+Available Actions
 -----------------
 
+|image0| showText
+~~~~~~~~~~~~~~~~~
+
 Parameter: "text"
+
+.. figure:: actions/screenshots/showText.png
+   :alt: 
 
 **showText** presents a text to the player and blocks, waiting for him
 to interact. Currently it supports text wrapping and shows a word per
@@ -24,48 +47,66 @@ Right now, though, I have no idea how to implement everything in a nice
 way.
 
 |image1| alert
---------------
+~~~~~~~~~~~~~~
 
 Parameter: "text"
+
+.. figure:: actions/screenshots/alert.png
+   :alt: 
 
 **alert** is a way to show quick texts, that doesn't require the player
 to interact.
 
 |image2| teleport
------------------
+~~~~~~~~~~~~~~~~~
 
 Parameter:"positionx", "positiony", "level"
+
+.. figure:: actions/screenshots/teleport.png
+   :alt: 
 
 **teleport** enables moving in a single frame the player from anywhere
 in the screen to a defined position at a defined level and it's usually
 meant to be used in doors in a dungeon or town.
 
 |image3| teleportInPlace
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Parameter: "level"
+
+.. figure:: actions/screenshots/teleportInPlace.png
+   :alt: 
 
 **teleportInPlace** enables moving in a single frame the player from a
 map to another map, preserving the player exact position.
 
 |image4| addItem
-----------------
+~~~~~~~~~~~~~~~~
 
 Parameter: "item"
+
+.. figure:: actions/screenshots/addItem.png
+   :alt: 
 
 **addItem** adds an item to the player inventory.
 
 |image5| dropItem
------------------
+~~~~~~~~~~~~~~~~~
 
 Parameter: "item"
+
+.. figure:: actions/screenshots/dropItem.png
+   :alt: 
 
 **dropItem** drops one item from the player inventory.
 
 |image6| changeTile
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Parameter:"tileType","layer","colision","event",["positionx","positiony","level"]/["current"]
+
+.. figure:: actions/screenshots/changeTile.png
+   :alt: 
 
 **changeTile** can change a tile from a type, to any other type and also
 change that tile event mark and remove or add colision. It can also
@@ -74,16 +115,19 @@ contains the event. It's a very powerful action and adds a lot of
 possibilities.
 
 |image7| changeAllTiles
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Parameter: "tileType", "tileType", "layer", "colision", "event", "level"
+
+.. figure:: actions/screenshots/changeAllTiles.png
+   :alt: 
 
 **changeAllTiles** changes a single tile that has a type the chosen
 layer, for another tile of different type. You can also set those tiles
 to a different value of colision or event number.
 
 |image8| changePlayerAnimation
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Parameter: "charaset\_animation"
 
@@ -91,64 +135,118 @@ Parameter: "charaset\_animation"
 set to default to let animations flow as usual.
 
 |image9| rain
--------------
+~~~~~~~~~~~~~
 
 Parameter:"start/stop"
+
+.. figure:: actions/screenshots/rain.png
+   :alt: 
 
 **rain** makes rain. You can stop the rain using stop.
 
 |image10| fadeOut
------------------
+~~~~~~~~~~~~~~~~~
 
 Parameter:"effect", "keepEffect"
+
+.. figure:: actions/screenshots/fadeOut.png
+   :alt: 
 
 **fadeOut** fades the screen using a effect and can optionally keep that
 effect, usually when you want to do something in between and then play a
 fadeIn.
 
 |image11| fadeIn
-----------------
+~~~~~~~~~~~~~~~~
 
 Parameter:"effect", "keepEffect"
+
+.. figure:: actions/screenshots/fadeIn.png
+   :alt: 
 
 **fadeIn** is similar to fadeOut, but instead it's meant to bring the
 screen back from a fadeOut.
 
 |image12| setVar
-----------------
+~~~~~~~~~~~~~~~~
 
 Parameter:"variable","value"
 
+.. figure:: actions/screenshots/setVar.png
+   :alt: 
+
 **setVar** allow to change a Variable to a specific value. Value can be
-a number, a string or a special string. Right now the only supported
-special string is "var:varname", where varname should be changed to the
-name of a variable which the value you want to pass to the Variable -
-the first parameter.
+a number, a string or a *special string*.
+
+Right now the only supported *special string* is "var:varname", where
+varname should be changed to the name of a variable which the value you
+want to pass to the Variable - the first parameter.
 
 |image13| varPlusOne
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Parameter:"variable"
 
-**varPlusOne** sums integer 1 on variable. If variable doesn't exist, it
-creates it!
+.. figure:: actions/screenshots/varPlusOne.png
+   :alt: 
+
+**varPlusOne** sums integer 1 on variable (var).
+
+If variable doesn't exist, it creates it!
 
 |image14| waitCycle
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Parameter:"int"
+
+.. figure:: actions/screenshots/waitCycle.png
+   :alt: 
 
 **waitCycle** blocks the player for a number of specified cycles.
 
 |image15| IF
-------------
+~~~~~~~~~~~~
 
 Parameter:"condition"
 
+.. figure:: actions/screenshots/IF.png
+   :alt: 
+
 **IF** condition is a special type of parameter, right now it must be in
-the format "varOrValue1;oper;varOrValue2", where oper is the operator
-(right now only "bigger", "smaller" and "equal"). If varOrValue is to be
-a variable, must be written in the format "var:varname".
+the format "varOrValue1;oper;varOrValue2", where oper is the operator.
+
+Possible operators:
+
+-  ``>``,\ ``bigger``,\ ``greater``
+
+-  ``<``,\ ``smaller``,\ ``less``
+
+-  ``>=``
+
+-  \`<=\`\`
+
+-  ``==``,\ ``=``,\ ``equal``
+
+The field **var of value** can be either a value (like ``1``, ``42`` or
+``house``), or a variable. If it's a variable, the following variables
+available:
+
+-  ``var:varname``, where ``varname`` is the name of a user defined
+   variable.
+
+-  ``ans:answer``, where ``answer`` is the answer of the last
+   questionBox.
+
+-  ``lastbattle:``, return True if the player won the last battle.
+
+-  ``hero:face``, returns on of the following directions
+   ``up``,\ ``down``,\ ``left``,\ ``right``.
+
+-  ``hero:x``, returns the x position of the Hero in the map.
+
+-  ``hero:y``, returns the y position of the Hero in the map.
+
+-  ``map:this``, returns the name of the current map.
 
 If the condition is met, this is, it evaluates to TRUE, then it runs
 whatever code is next until ELSE or END action are met, and jumps to
@@ -156,46 +254,62 @@ after the END. If the condition is FALSE then it ignores any actions
 until ELSE or END.
 
 |image16| ELSE
---------------
+~~~~~~~~~~~~~~
 
 Parameter: ""
 
 **ELSE** is to be used with IF action.
 
 |image17| END
--------------
+~~~~~~~~~~~~~
 
 Parameter: ""
 
 **END** is to be used with IF action.
 
 |image18| noEffect
-------------------
+~~~~~~~~~~~~~~~~~~
 
 No parameter
 
 This a placeholder, but it's meant to turn off all effects, like the
 ones from fadeIn and fadeOut.
 
-`*back* <Editor.html>`__
-
 .. |image0| image:: actions/icons/showText.png
+   :width: 16px
 .. |image1| image:: actions/icons/alert.png
+   :width: 16px
 .. |image2| image:: actions/icons/teleport.png
+   :width: 16px
 .. |image3| image:: actions/icons/teleportInPlace.png
+   :width: 16px
 .. |image4| image:: actions/icons/addItem.png
+   :width: 16px
 .. |image5| image:: actions/icons/dropItem.png
+   :width: 16px
 .. |image6| image:: actions/icons/changeTile.png
+   :width: 16px
 .. |image7| image:: actions/icons/changeAllTiles.png
+   :width: 16px
 .. |image8| image:: actions/icons/changePlayerAnimation.png
+   :width: 16px
 .. |image9| image:: actions/icons/rain.png
+   :width: 16px
 .. |image10| image:: actions/icons/fadeOut.png
+   :width: 16px
 .. |image11| image:: actions/icons/fadeIn.png
+   :width: 16px
 .. |image12| image:: actions/icons/setVar.png
+   :width: 16px
 .. |image13| image:: actions/icons/varPlusOne.png
+   :width: 16px
 .. |image14| image:: actions/icons/waitCycle.png
+   :width: 16px
 .. |image15| image:: actions/icons/IF.png
+   :width: 16px
 .. |image16| image:: actions/icons/ELSE.png
+   :width: 16px
 .. |image17| image:: actions/icons/END.png
+   :width: 16px
 .. |image18| image:: actions/icons/noEffect.png
-
+   :width: 16px

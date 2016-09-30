@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Actions &mdash; fgmk 0.5.4 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="fgmk 0.5.4 documentation" href="../index.html"/>
+        <link rel="next" title="&lt;no title&gt;" href="../EditorCode/EditorCode.html"/>
+        <link rel="prev" title="Editor" href="../Editor/Editor.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> fgmk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Specification/Specification.html">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Actions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-they-work">How they work</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#available-actions">Available Actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#image0-showtext"> showText</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image1-alert"> alert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image2-teleport"> teleport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image3-teleportinplace"> teleportInPlace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image4-additem"> addItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image5-dropitem"> dropItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image6-changetile"> changeTile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image7-changealltiles"> changeAllTiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image8-changeplayeranimation"> changePlayerAnimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image9-rain"> rain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image10-fadeout"> fadeOut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image11-fadein"> fadeIn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image12-setvar"> setVar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image13-varplusone"> varPlusOne</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image14-waitcycle"> waitCycle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image15-if"> IF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image16-else"> ELSE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image17-end"> END</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image18-noeffect"> noEffect</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Roadmap/Roadmap.html">Roadmap</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">fgmk</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Actions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/Actions/Actions.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="actions">
+<h1>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h1>
+<p>Whenever something happens, what happens, are actions!</p>
+<p>Actions are usually not alone, the is usually some list that has actions
+in a certain order to be executed.</p>
+<div class="section" id="how-they-work">
+<h2>How they work<a class="headerlink" href="#how-they-work" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="" src="../_images/actions_list.png" />
+</div>
+<p>When you are offered to list actions, it means something happened,
+perhaps the player interacted with a Chara or an Event (&#8220;clicked&#8221;),
+perhaps he used an item, or something else. The list of actions is a
+recipe of what will happen.</p>
+<p>Clicking Add Action with no action selected will insert the new action
+after the current list of actions. If any action is selected, clicking
+Add Action will insert the new action above the selected action.</p>
+<p>Actions are read from top to bottom, they are then placed in a FIFO
+buffer. The IF action can interact with this buffer, which will change
+execution flow.</p>
+</div>
+<div class="section" id="available-actions">
+<h2>Available Actions<a class="headerlink" href="#available-actions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="image0-showtext">
+<h3><a class="reference internal" href="../_images/showText.png"><img alt="image0" src="../_images/showText.png" style="width: 16px;" /></a> showText<a class="headerlink" href="#image0-showtext" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;text&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/showText1.png" />
+</div>
+<p><strong>showText</strong> presents a text to the player and blocks, waiting for him
+to interact. Currently it supports text wrapping and shows a word per
+time, and plays a small noise for each word.</p>
+<p>This is a very important part that can be a lot more complex than it
+seems, like supporting multiple sounds, characters for pausing, auto
+skipping text and all, which can give each conversation bigger depth.
+Right now, though, I have no idea how to implement everything in a nice
+way.</p>
+</div>
+<div class="section" id="image1-alert">
+<h3><a class="reference internal" href="../_images/alert.png"><img alt="image1" src="../_images/alert.png" style="width: 16px;" /></a> alert<a class="headerlink" href="#image1-alert" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;text&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/alert1.png" />
+</div>
+<p><strong>alert</strong> is a way to show quick texts, that doesn&#8217;t require the player
+to interact.</p>
+</div>
+<div class="section" id="image2-teleport">
+<h3><a class="reference internal" href="../_images/teleport.png"><img alt="image2" src="../_images/teleport.png" style="width: 16px;" /></a> teleport<a class="headerlink" href="#image2-teleport" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;positionx&#8221;, &#8220;positiony&#8221;, &#8220;level&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/teleport1.png" />
+</div>
+<p><strong>teleport</strong> enables moving in a single frame the player from anywhere
+in the screen to a defined position at a defined level and it&#8217;s usually
+meant to be used in doors in a dungeon or town.</p>
+</div>
+<div class="section" id="image3-teleportinplace">
+<h3><a class="reference internal" href="../_images/teleportInPlace.png"><img alt="image3" src="../_images/teleportInPlace.png" style="width: 16px;" /></a> teleportInPlace<a class="headerlink" href="#image3-teleportinplace" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;level&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/teleportInPlace1.png" />
+</div>
+<p><strong>teleportInPlace</strong> enables moving in a single frame the player from a
+map to another map, preserving the player exact position.</p>
+</div>
+<div class="section" id="image4-additem">
+<h3><a class="reference internal" href="../_images/addItem.png"><img alt="image4" src="../_images/addItem.png" style="width: 16px;" /></a> addItem<a class="headerlink" href="#image4-additem" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;item&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/addItem1.png" />
+</div>
+<p><strong>addItem</strong> adds an item to the player inventory.</p>
+</div>
+<div class="section" id="image5-dropitem">
+<h3><a class="reference internal" href="../_images/dropItem.png"><img alt="image5" src="../_images/dropItem.png" style="width: 16px;" /></a> dropItem<a class="headerlink" href="#image5-dropitem" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;item&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/dropItem1.png" />
+</div>
+<p><strong>dropItem</strong> drops one item from the player inventory.</p>
+</div>
+<div class="section" id="image6-changetile">
+<h3><a class="reference internal" href="../_images/changeTile.png"><img alt="image6" src="../_images/changeTile.png" style="width: 16px;" /></a> changeTile<a class="headerlink" href="#image6-changetile" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;tileType&#8221;,&#8221;layer&#8221;,&#8221;colision&#8221;,&#8221;event&#8221;,[&#8220;positionx&#8221;,&#8221;positiony&#8221;,&#8221;level&#8221;]/[&#8220;current&#8221;]</p>
+<div class="figure">
+<img alt="" src="../_images/changeTile1.png" />
+</div>
+<p><strong>changeTile</strong> can change a tile from a type, to any other type and also
+change that tile event mark and remove or add colision. It can also
+target a specific position in a level or just the current tile that
+contains the event. It&#8217;s a very powerful action and adds a lot of
+possibilities.</p>
+</div>
+<div class="section" id="image7-changealltiles">
+<h3><a class="reference internal" href="../_images/changeAllTiles.png"><img alt="image7" src="../_images/changeAllTiles.png" style="width: 16px;" /></a> changeAllTiles<a class="headerlink" href="#image7-changealltiles" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;tileType&#8221;, &#8220;tileType&#8221;, &#8220;layer&#8221;, &#8220;colision&#8221;, &#8220;event&#8221;, &#8220;level&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/changeAllTiles1.png" />
+</div>
+<p><strong>changeAllTiles</strong> changes a single tile that has a type the chosen
+layer, for another tile of different type. You can also set those tiles
+to a different value of colision or event number.</p>
+</div>
+<div class="section" id="image8-changeplayeranimation">
+<h3><a class="reference internal" href="../_images/changePlayerAnimation.png"><img alt="image8" src="../_images/changePlayerAnimation.png" style="width: 16px;" /></a> changePlayerAnimation<a class="headerlink" href="#image8-changeplayeranimation" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;charaset_animation&#8221;</p>
+<p><strong>changePlayerAnimation</strong> changes the current player animation. You can
+set to default to let animations flow as usual.</p>
+</div>
+<div class="section" id="image9-rain">
+<h3><a class="reference internal" href="../_images/rain.png"><img alt="image9" src="../_images/rain.png" style="width: 16px;" /></a> rain<a class="headerlink" href="#image9-rain" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;start/stop&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/rain1.png" />
+</div>
+<p><strong>rain</strong> makes rain. You can stop the rain using stop.</p>
+</div>
+<div class="section" id="image10-fadeout">
+<h3><a class="reference internal" href="../_images/fadeOut.png"><img alt="image10" src="../_images/fadeOut.png" style="width: 16px;" /></a> fadeOut<a class="headerlink" href="#image10-fadeout" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;effect&#8221;, &#8220;keepEffect&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/fadeOut1.png" />
+</div>
+<p><strong>fadeOut</strong> fades the screen using a effect and can optionally keep that
+effect, usually when you want to do something in between and then play a
+fadeIn.</p>
+</div>
+<div class="section" id="image11-fadein">
+<h3><a class="reference internal" href="../_images/fadeIn.png"><img alt="image11" src="../_images/fadeIn.png" style="width: 16px;" /></a> fadeIn<a class="headerlink" href="#image11-fadein" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;effect&#8221;, &#8220;keepEffect&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/fadeIn1.png" />
+</div>
+<p><strong>fadeIn</strong> is similar to fadeOut, but instead it&#8217;s meant to bring the
+screen back from a fadeOut.</p>
+</div>
+<div class="section" id="image12-setvar">
+<h3><a class="reference internal" href="../_images/setVar.png"><img alt="image12" src="../_images/setVar.png" style="width: 16px;" /></a> setVar<a class="headerlink" href="#image12-setvar" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;variable&#8221;,&#8221;value&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/setVar1.png" />
+</div>
+<p><strong>setVar</strong> allow to change a Variable to a specific value. Value can be
+a number, a string or a <em>special string</em>.</p>
+<p>Right now the only supported <em>special string</em> is &#8220;var:varname&#8221;, where
+varname should be changed to the name of a variable which the value you
+want to pass to the Variable - the first parameter.</p>
+</div>
+<div class="section" id="image13-varplusone">
+<h3><a class="reference internal" href="../_images/varPlusOne.png"><img alt="image13" src="../_images/varPlusOne.png" style="width: 16px;" /></a> varPlusOne<a class="headerlink" href="#image13-varplusone" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;variable&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/varPlusOne1.png" />
+</div>
+<p><strong>varPlusOne</strong> sums integer 1 on variable (var).</p>
+<p>If variable doesn&#8217;t exist, it creates it!</p>
+</div>
+<div class="section" id="image14-waitcycle">
+<h3><a class="reference internal" href="../_images/waitCycle.png"><img alt="image14" src="../_images/waitCycle.png" style="width: 16px;" /></a> waitCycle<a class="headerlink" href="#image14-waitcycle" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;int&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/waitCycle1.png" />
+</div>
+<p><strong>waitCycle</strong> blocks the player for a number of specified cycles.</p>
+</div>
+<div class="section" id="image15-if">
+<h3><a class="reference internal" href="../_images/IF.png"><img alt="image15" src="../_images/IF.png" style="width: 16px;" /></a> IF<a class="headerlink" href="#image15-if" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;condition&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/IF1.png" />
+</div>
+<p><strong>IF</strong> condition is a special type of parameter, right now it must be in
+the format &#8220;varOrValue1;oper;varOrValue2&#8221;, where oper is the operator.</p>
+<p>Possible operators:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">&gt;</span></code>,<code class="docutils literal"><span class="pre">bigger</span></code>,<code class="docutils literal"><span class="pre">greater</span></code></li>
+<li><code class="docutils literal"><span class="pre">&lt;</span></code>,<code class="docutils literal"><span class="pre">smaller</span></code>,<code class="docutils literal"><span class="pre">less</span></code></li>
+<li><code class="docutils literal"><span class="pre">&gt;=</span></code></li>
+<li>`&lt;=``</li>
+<li><code class="docutils literal"><span class="pre">==</span></code>,<code class="docutils literal"><span class="pre">=</span></code>,<code class="docutils literal"><span class="pre">equal</span></code></li>
+</ul>
+<p>The field <strong>var of value</strong> can be either a value (like <code class="docutils literal"><span class="pre">1</span></code>, <code class="docutils literal"><span class="pre">42</span></code> or
+<code class="docutils literal"><span class="pre">house</span></code>), or a variable. If it&#8217;s a variable, the following variables
+available:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">var:varname</span></code>, where <code class="docutils literal"><span class="pre">varname</span></code> is the name of a user defined
+variable.</li>
+<li><code class="docutils literal"><span class="pre">ans:answer</span></code>, where <code class="docutils literal"><span class="pre">answer</span></code> is the answer of the last
+questionBox.</li>
+<li><code class="docutils literal"><span class="pre">lastbattle:</span></code>, return True if the player won the last battle.</li>
+<li><code class="docutils literal"><span class="pre">hero:face</span></code>, returns on of the following directions
+<code class="docutils literal"><span class="pre">up</span></code>,<code class="docutils literal"><span class="pre">down</span></code>,<code class="docutils literal"><span class="pre">left</span></code>,<code class="docutils literal"><span class="pre">right</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">hero:x</span></code>, returns the x position of the Hero in the map.</li>
+<li><code class="docutils literal"><span class="pre">hero:y</span></code>, returns the y position of the Hero in the map.</li>
+<li><code class="docutils literal"><span class="pre">map:this</span></code>, returns the name of the current map.</li>
+</ul>
+<p>If the condition is met, this is, it evaluates to TRUE, then it runs
+whatever code is next until ELSE or END action are met, and jumps to
+after the END. If the condition is FALSE then it ignores any actions
+until ELSE or END.</p>
+</div>
+<div class="section" id="image16-else">
+<h3><a class="reference internal" href="../_images/ELSE.png"><img alt="image16" src="../_images/ELSE.png" style="width: 16px;" /></a> ELSE<a class="headerlink" href="#image16-else" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;&#8221;</p>
+<p><strong>ELSE</strong> is to be used with IF action.</p>
+</div>
+<div class="section" id="image17-end">
+<h3><a class="reference internal" href="../_images/END.png"><img alt="image17" src="../_images/END.png" style="width: 16px;" /></a> END<a class="headerlink" href="#image17-end" title="Permalink to this headline">¶</a></h3>
+<p>Parameter: &#8220;&#8221;</p>
+<p><strong>END</strong> is to be used with IF action.</p>
+</div>
+<div class="section" id="image18-noeffect">
+<h3><a class="reference internal" href="../_images/noEffect.png"><img alt="image18" src="../_images/noEffect.png" style="width: 16px;" /></a> noEffect<a class="headerlink" href="#image18-noeffect" title="Permalink to this headline">¶</a></h3>
+<p>No parameter</p>
+<p>This a placeholder, but it&#8217;s meant to turn off all effects, like the
+ones from fadeIn and fadeOut.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../EditorCode/EditorCode.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../Editor/Editor.html" class="btn btn-neutral" title="Editor" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Érico Vieira Porto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.5.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
