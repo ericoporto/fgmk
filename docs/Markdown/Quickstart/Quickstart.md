@@ -32,7 +32,7 @@ option to save later.
 
 ![](screenshot/the_outside.png)
 
-Now, in the Map Explorer, click in **ahouse**. If it asks if you want to save,
+Now, in the Map Explorer, double click in **ahouse**. If it asks if you want to save,
 click yes.
 
 The house map will be loaded again. Notice in the **Events** dock, there is a

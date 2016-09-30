@@ -13,7 +13,7 @@ The objective of this function is to:
 3. seeing the current version by using `--version`, and not opening the Editor
 4. being able to clean the settings in case a invalid setting is loaded somehow
 
-Addtionally, I plan to enable expanding to being able to manipulate some files
+Additionally, I plan to enable expanding to being able to manipulate some files
 and also opening directly a sub editor - like the palette editor.
 """
 
