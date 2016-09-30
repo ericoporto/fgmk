@@ -31,19 +31,23 @@ animations used by Charas (and the player chara).
 Usually the NPCs you interact appear in the form of a Chara, in the Chara editor
 you can set how a Chara moves or which actions would be executed.
 
-# Still to be developed :
-
 ## Jokenpo Editor
 Here you can set the elements available in your world, and how they relate with
 each other (paper wins over rock).
+
+*still to be developed*
 
 ## Heroes, Monsters and Skills Editor
 You can calibrate how each hero should level up, develop new skills, and specify
 the monsters.
 
+*still to be developed*
+
 ## Scripted Battle Editor
 Meaningful battles should work like puzzles, the scripted battle editor is
 design for just that.
+
+*still to be developed*
 
 
 

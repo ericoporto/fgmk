@@ -1,6 +1,6 @@
 # Docs on docs
 
-If you are looking for the FGMK documentation, 
+If you are looking for the FGMK documentation,
 [you can read it here](Markdown/index.md).
 
 
@@ -23,4 +23,5 @@ FGMK itself.
 
 # Dependencies
 
-The script requires: sphinx (python3) and pandoc installed.
+The script requires: sphinx, sphinx_rtd_theme (both on python3) and pandoc
+installed.
