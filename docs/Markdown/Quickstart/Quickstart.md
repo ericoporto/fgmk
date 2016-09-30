@@ -12,8 +12,10 @@ keep your projects, and the name of the specific project (the game) you are
 building.
 
 Let's create an additional map, this will be the outside of this house.
-Click New ![New](screenshot/map_explorer_new.png) in the Map Explorer. You can
-also use the File -> New Map... in the menu.
+
+![New](screenshot/map_explorer_new.png){ width=16px } Click New in the
+**Map Explorer**.
+You can also use the menu and select `File -> New Map...`.
 
 ![](screenshot/new_menu.png)
 
@@ -21,14 +23,16 @@ From here, you can select the map size, change it's palette, or change it's
 name. Let's change the name from `NewFile` to `Outside`. After changing to
 `Outside`, click Ok.
 
-We can now draw a little map called Outside, by clicking the tiles in the
-**Palette** on the right and using the **pen tool** (show below) in the menu in
-the left.
+We the Outside map open, select the tiles in the **Palette** on the right and
+use the **pen tool** from the **Tools** dock to draw in the map. We are going to
+draw the outside of the house.
 
-![the pen tool](screenshot/selected_pen_tool.png) *the pen tool*
+![the pen tool](screenshot/selected_pen_tool.png){ width=32px } *the pen tool*
 
-When you are done, just save. Don't worry, if you forget, you will be presented with an
-option to save later.
+When you are done, just save.
+
+Don't worry, if you forget, you will be presented with an option to save if it's
+needed.
 
 ![](screenshot/the_outside.png)
 
@@ -61,7 +65,3 @@ map. Going out of the door should land you in front of the sand house.
 
 In the future there will be more tutorials, but for now, you are free to explore
 the interface.
-
-
-
-[*back*](../index.md)

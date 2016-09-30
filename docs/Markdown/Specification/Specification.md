@@ -89,7 +89,3 @@ change this.
 
 - `index.html` - this is the engine. It should be placed at the root of the
 game project folder.
-
-
-
-[*back*](../index.md)

@@ -13,6 +13,8 @@ you just want to use the editor as fast as possible.
 - [`Specification`](Specification/Specification.md) - how the FGMK project  
 describes a RPG game with text.
 
+- [`Actions`](Actions/Actions.md) - actions are the logic of the engine.
+
 - [`Editor`](Editor/Editor.md) - how to use this graphic editor.
 
 - [`EditorCode`](EditorCode/EditorCode.md) - how the code of the graphic editor
