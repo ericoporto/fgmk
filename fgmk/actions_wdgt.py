@@ -39,6 +39,7 @@ class DragAndDropList(QtWidgets.QListWidget):
     https://riverbankcomputing.com/pipermail/pyqt/2011-June/030002.html
     """
     itemMoved = QtCore.pyqtSignal(int, int) # Oldindex, newindex
+    delKeyPress = QtCore.pyqtSignal() #signal when del key is pressed
 
     def __init__(self, parent=None, **args):
         QtWidgets.QListWidget.__init__(self, parent, **args)
@@ -58,6 +59,11 @@ class DragAndDropList(QtWidgets.QListWidget):
         self.drag_item = self.currentItem()
         self.drag_row = self.row(self.drag_item)
         QtWidgets.QListWidget.startDrag(self, supportedActions)
+
+    #this will help me delete with del key
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Delete:
+            self.delKeyPress.emit()
 
 class ActionButton(QtWidgets.QPushButton):
     """
@@ -207,6 +213,8 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.editActionButton.clicked.connect(self.editAction)
         self.removeActionButton.clicked.connect(self.removeAction)
         self.deselectActionButton.clicked.connect(self.deselectAction)
+
+        self.ActionList.delKeyPress.connect(self.removeAction)
 
         self.HBox.addLayout(VBoxActionList)
         self.HBox.addLayout(VBoxButtons)

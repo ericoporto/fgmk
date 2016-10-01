@@ -2,7 +2,7 @@
 import os.path
 from PyQt5 import QtWidgets, QtCore
 from fgmk import base_tile, tMat, tile_set, current_project, fifl, game_init
-from fgmk.ff import item_format, palette_format
+from fgmk.ff import item_format, palette_format, mapfile
 
 class tinyPreviewPalWidget(QtWidgets.QWidget):
     selectedTilePalette = QtCore.pyqtSignal()
@@ -259,6 +259,62 @@ class levelSelector(QtWidgets.QComboBox):
         for idx, val in enumerate(self.levelsList):
             if(val == param):
                 self.setCurrentIndex(idx)
+
+
+class MiniMapViewer(QtWidgets.QWidget):
+    selectedTile = QtCore.pyqtSignal()
+    def __init__(self,parent=None, mapAtStart=None, nothis=False, myMap=None, indicative=1, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.myMap = myMap
+        self.mapAtStart = mapAtStart
+        self.nothis = nothis
+        self.gamefolder = current_project.settings["gamefolder"]
+
+        if(self.nothis is False):
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
+
+        elif(self.mapAtStart != None):
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.mapAtStart))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                self.gamefolder, self.currentLevel.tileImage),
+                self.currentLevel.palette)
+        else:
+            self.currentLevel = mapfile.MapFormat()
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                self.gamefolder, self.currentLevel.tileImage),
+                self.currentLevel.palette)
+
+        self.scrollArea = QtWidgets.QScrollArea()
+        self.myMiniMapWidget = MiniMapWidget(self.currentLevel, self.currentTileSet, None, indicative)
+        self.myMiniMapWidget.selectedTile.connect(self.emitSelectedTile)
+        self.scrollArea.setWidget(self.myMiniMapWidget)
+        self.VBox = QtWidgets.QVBoxLayout(self)
+        self.VBox.setAlignment(QtCore.Qt.AlignTop)
+        self.VBox.addWidget(self.scrollArea)
+
+    def getValue(self):
+        return self.myMiniMapWidget.getValue()
+
+    def updateMap(self, mapname):
+        if (str(mapname) != "this"):
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, mapname))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                self.gamefolder, self.currentLevel.tileImage),
+                self.currentLevel.palette)
+        else:
+            self.currentLevel = self.myMap
+            self.currentTileSet = self.myMap.parent.myTileSet
+
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
+
+    def emitSelectedTile(self):
+        self.selectedTile.emit()
 
 
 

@@ -428,38 +428,23 @@ class teleportInPlace(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         ActionDialog.__init__(self, **kwargs)
-
         self.initFile = game_init.openInitFile(self.gamefolder)
-
         self.setWindowTitle('teleportInPlace: Select map to teleport...')
 
         self.LabelText = QtWidgets.QLabel('Select where to teleport:')
-
         self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
-        self.scrollArea = QtWidgets.QScrollArea()
-
-        if(self.nothis is False):
-            self.currentLevel = self.myMap
-            self.currentTileSet = self.myMap.parent.myTileSet
-        else:
-            self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.levelSelector.itemText(0)))
-            self.currentTileSet = tile_set.TileSet(os.path.join(
-                current_project.settings["gamefolder"], self.currentLevel.tileImage),
-                self.currentLevel.palette)
-
-        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
-            self.currentLevel, self.currentTileSet, None, 0)
-
-        self.scrollArea.setWidget(self.myMiniMapWidget)
+        self.myMiniMapViewer = miniWdgt.MiniMapViewer(
+                                    mapAtStart=self.levelSelector.itemText(0),
+                                    nothis=self.nothis,
+                                    myMap=self.myMap,
+                                    indicative=0)
 
         self.levelSelector.currentIndexChanged.connect(self.updateMap)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.levelSelector)
-        self.VBox.addWidget(self.scrollArea)
+        self.VBox.addWidget(self.myMiniMapViewer)
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
@@ -468,19 +453,7 @@ class teleportInPlace(ActionDialog):
             self.levelSelector.edit(self.edit[0])
 
     def updateMap(self, levelIndex):
-        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
-            self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.levelSelector.itemText(levelIndex)))
-            self.currentTileSet = tile_set.TileSet(os.path.join(
-                current_project.settings["gamefolder"], self.currentLevel.tileImage),
-                self.currentLevel.palette)
-        else:
-            self.currentLevel = self.myMap
-            self.currentTileSet = self.myMap.parent.myTileSet
-
-
-        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
+        self.myMiniMapViewer.updateMap(self.levelSelector.itemText(levelIndex))
 
     def getValue(self):
         text = str(self.levelSelector.currentText())
