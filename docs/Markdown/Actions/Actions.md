@@ -187,7 +187,9 @@ a variable. If it's a variable, the following variables available:
 
 - `var:varname`, where `varname` is the name of a user defined variable.
 
-- `ans:answer`, where `answer` is the answer of the last questionBox.
+- `ans:`, is the answer of the last questionBox, as text.
+
+- `ans:num`, the number of the answer of the last questionBox. First answer is `0`.
 
 - `lastbattle:`, return True if the player won the last battle.
 
