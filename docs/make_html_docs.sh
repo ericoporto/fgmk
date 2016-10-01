@@ -1,4 +1,7 @@
 #!/bin/bash
+# this script is temporary until I learn ReStructured Text
+# optionally this script should be converted to python for better portability.
+
 mkdir -p build
 
 #clean directory
@@ -10,6 +13,11 @@ rm -rf source/Future
 rm -rf source/Quickstart
 rm -rf source/Roadmap
 rm -rf source/Specification
+rm -rf build/*
+
+# using copy with cp is a bad idea. It can corrupt files.
+# TODO: rewrite the copy safely with Python.
+# alternatively, findout how available it's rsync
 
 #a brand new from the Markdown
 cp -rf Markdown Rst
@@ -33,7 +41,5 @@ cp -rf Rst/Roadmap source/Roadmap
 cp -rf Rst/Specification source/Specification
 
 cp index.rst source/index.rst
-
-rm -rf build/*
 
 make html

@@ -28,3 +28,6 @@ scratch.
 
 For more information visit the project on Github :  
 https://github.com/ericoporto/fgmk
+
+The project website contains a better visualization of this documentation:
+https://ericoporto.github.io/fgmk
