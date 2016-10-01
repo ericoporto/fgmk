@@ -5,6 +5,9 @@ I am very happy you are interested in contributing!!!
 There are several ways one could contribute to the fgmk project. This guide
 should help you getting started.
 
+The first rule is don't be afraid of opening issues. They don't have to be code
+related only.
+
 ## Table of Contents
 
 [Introduction](#introduction)
@@ -18,6 +21,8 @@ should help you getting started.
 [Testing](#testing)
 
 [BugHunting](#bughunting)
+
+[Translating](#translating)
 
 
 ## Introduction
@@ -52,9 +57,12 @@ game.
 
 ## Documentation
 
-There is some documentation floating around, but this is a important part of the
-project, if you want to help me getting things out of my head, mail me - you can
-find my email in the [setup.py](https://github.com/ericoporto/fgmk/blob/master/setup.py).
+Documentation is stored in the `docs/` folder. This is the official documentation.
+You can help by editing there.
+
+YouTube videos are considered documentation too, since they are faster to learn
+from. If you make something tell in the gitter channel or open an issue!
+
 
 ## Coding
 
@@ -65,6 +73,7 @@ games, reflect about the minimum customization that feature could have. Adding
 a feature to the engine will imply knowing how to modify the jsons so it can
 be accessed, if needed, and in this case it will imply in changing the editor so
 it can generate cohesive json files, and also being able to open and edit them.
+
 
 ## Assets
 
@@ -83,6 +92,7 @@ available with a permissive license should be submitted. This asset also won't
 be accepted right a way, since once a great number of assets exist that will
 demand having a place to store and download them.
 
+
 ## Testing
 
 for human testing see [BugHunting](#bughunting).
@@ -96,7 +106,15 @@ The tests should be able to run by typing
 
     # note: in your system the python 3 executable may be named just python
 
+
 ## BugHunting
 
 If you have time to do help catch some usability bugs, please use the project
 and submit your thoughts through the [issues page](https://github.com/ericoporto/fgmk/issues).
+
+## Translating
+
+I have no idea how to make multilanguage python qt projects.
+So right now it would be more useful translating the documentation.
+Alternatively, if you do know, please share!
+You can find my email in the [`setup.py`](setup.py).
