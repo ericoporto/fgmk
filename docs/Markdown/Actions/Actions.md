@@ -178,7 +178,7 @@ Possible operators:
 
 - `>=`
 
-- `<=``
+- `<=`
 
 - `==`,`=`,`equal`
 
