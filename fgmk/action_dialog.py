@@ -18,7 +18,10 @@ from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 class ActionDialog(QtWidgets.QDialog):
     """ActionDialog is the base of every Actions menu
 
-    Each action should extend from this class.
+    Each action should extend from this class, and provide a getValue() method
+    to return parameters as a string, separated by `;` - like `param1;param2` or
+    just `param1`.
+
 
     """
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, **kwargs):
@@ -44,6 +47,248 @@ class ActionDialog(QtWidgets.QDialog):
 
         MainVBox.addLayout(self.VBox)
         MainVBox.addWidget(self.buttonBox)
+
+class showText(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
+        self.downLabelText = QtWidgets.QLabel(
+            "tip: you can type var:varname to get the content of that variable.")
+
+        self.LineText = QtWidgets.QPlainTextEdit()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.LineText)
+        self.VBox.addWidget(self.downLabelText)
+
+
+        if(self.edit != None):
+            self.LineText.setPlainText(self.edit[0])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('showText: Text box that waits player interaction...')
+
+    def getValue(self):
+        text = str(self.LineText.toPlainText())
+        textListLf = text.split("\n")
+        textToReturn = textListLf[0]
+        for line in textListLf[1:]:
+            textToReturn += '\\n' + line
+        return textToReturn
+
+
+class alert(ActionDialog):
+    def __init__(self,  **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
+        self.downLabelText = QtWidgets.QLabel(
+            "tip: you can type var:varname to get the content of that variable.")
+
+        self.LineEdit = QtWidgets.QLineEdit()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.LineEdit)
+        self.VBox.addWidget(self.downLabelText)
+
+
+        if(self.edit != None):
+            self.LineEdit.setText(self.edit[0])
+
+        self.setGeometry(300, 40, 350, 650)
+        self.setWindowTitle('alert: Write text to show in text box...')
+
+    def getValue(self):
+        text = str(self.LineEdit.text())
+        textListLf = text.split("\n")
+        textToReturn = textListLf[0]
+        for line in textListLf[1:]:
+            textToReturn += '\\n' + line
+        return textToReturn
+
+
+class teleport(ActionDialog):
+    def __init__(self, **kwargs):
+        #if selectStartPosition is here, we should not pass it along
+        self.selectStartPosition =  kwargs.pop('selectStartPosition',None)
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.initFile = game_init.openInitFile(self.gamefolder)
+
+        if(self.selectStartPosition == None):
+            self.setWindowTitle('teleport: Select where to teleport...')
+            indicative = 1
+        else:
+            self.setWindowTitle(self.selectStartPosition)
+            indicative = 2
+
+        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
+
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
+
+        self.scrollArea = QtWidgets.QScrollArea()
+
+        if(self.nothis is False):
+            if(self.selectStartPosition == None):
+                self.currentLevel = self.myMap
+                self.currentTileSet = self.myMap.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.myMap
+                self.currentTileSet = self.parent.myTileSet
+        else:
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.levelSelector.itemText(0)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+
+        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
+            self.currentLevel, self.currentTileSet, None, indicative)
+
+        self.scrollArea.setWidget(self.myMiniMapWidget)
+
+        self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
+
+        self.LineText = QtWidgets.QLineEdit()
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
+
+        self.LineText.setReadOnly(True)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.levelSelector)
+        self.VBox.addWidget(self.scrollArea)
+        self.VBox.addWidget(self.LineText)
+
+        self.setGeometry(300, 200, 350, 650)
+
+        if(self.edit != None):
+            self.LineText.setText("{0};{1}".format(self.edit[0], self.edit[1]))
+            self.levelSelector.edit(self.edit[2])
+            self.myMiniMapWidget.changeSelectXY(int(self.edit[0]), int(self.edit[1]))
+
+    def setTeleportPlace(self):
+        position = self.myMiniMapWidget.getValue()
+        textToReturn = "{0};{1}".format(position[0], position[1])
+        self.LineText.setText(textToReturn)
+
+    def updateMap(self, levelIndex):
+        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
+            self.currentLevel = mapfile.MapFormat()
+            self.currentLevel.load(game_init.getLevelPathFromInitFile(
+                self.gamefolder, self.levelSelector.itemText(levelIndex)))
+            self.currentTileSet = tile_set.TileSet(os.path.join(
+                current_project.settings["gamefolder"], self.currentLevel.tileImage),
+                self.currentLevel.palette)
+        else:
+            if(self.selectStartPosition == None):
+                if(self.edit == None):
+                    #Journey to get the map
+                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
+                    self.currentLevel = self.myMap
+                    self.currentTileSet = self.myMap.parent.myTileSet
+                else:
+                    #Journey to get the map
+                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
+                    self.currentLevel = self.myMap
+                    self.currentTileSet = self.myMap.parent.myTileSet
+            else:
+                self.currentLevel = self.parent.myMap
+                self.currentTileSet = self.parent.myTileSet
+
+        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
+
+    def getValue(self):
+        text = str(self.LineText.text()) + ";" + \
+            str(self.levelSelector.currentText())
+        return text
+
+
+class teleportInPlace(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+        self.initFile = game_init.openInitFile(self.gamefolder)
+        self.setWindowTitle('teleportInPlace: Select map to teleport...')
+
+        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
+
+        self.myMiniMapViewer = miniWdgt.MiniMapViewer(
+                                    mapAtStart=self.levelSelector.itemText(0),
+                                    nothis=self.nothis,
+                                    myMap=self.myMap,
+                                    indicative=0)
+
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.levelSelector)
+        self.VBox.addWidget(self.myMiniMapViewer)
+
+
+        self.setGeometry(300, 200, 350, 650)
+
+        if(self.edit != None):
+            self.levelSelector.edit(self.edit[0])
+
+    def updateMap(self, levelIndex):
+        self.myMiniMapViewer.updateMap(self.levelSelector.itemText(levelIndex))
+
+    def getValue(self):
+        text = str(self.levelSelector.currentText())
+        return text
+
+
+class addItem(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select item to add:")
+        self.ListItem = miniWdgt.miniItemsList()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.ListItem)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('addItem: select item to add')
+
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
+
+    def getValue(self):
+        itemToReturn = str(self.ListItem.getItem())
+        return itemToReturn
+
+
+class dropItem(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select item to drop:")
+        self.ListItem = miniWdgt.miniItemsList()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.ListItem)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('dropItem: select item to drop')
+
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
+
+    def getValue(self):
+        itemToReturn = str(self.ListItem.getItem())
+        return itemToReturn
+
 
 class changeTile(ActionDialog):
     def __init__(self, **kwargs):
@@ -329,140 +574,6 @@ class changeAllTiles(ActionDialog):
         return text
 
 
-class teleport(ActionDialog):
-    def __init__(self, **kwargs):
-        #if selectStartPosition is here, we should not pass it along
-        self.selectStartPosition =  kwargs.pop('selectStartPosition',None)
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
-
-        self.initFile = game_init.openInitFile(self.gamefolder)
-
-        if(self.selectStartPosition == None):
-            self.setWindowTitle('teleport: Select where to teleport...')
-            indicative = 1
-        else:
-            self.setWindowTitle(self.selectStartPosition)
-            indicative = 2
-
-        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
-
-        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
-
-        self.scrollArea = QtWidgets.QScrollArea()
-
-        if(self.nothis is False):
-            if(self.selectStartPosition == None):
-                self.currentLevel = self.myMap
-                self.currentTileSet = self.myMap.parent.myTileSet
-            else:
-                self.currentLevel = self.parent.myMap
-                self.currentTileSet = self.parent.myTileSet
-        else:
-            self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.levelSelector.itemText(0)))
-            self.currentTileSet = tile_set.TileSet(os.path.join(
-                current_project.settings["gamefolder"], self.currentLevel.tileImage),
-                self.currentLevel.palette)
-
-        self.myMiniMapWidget = miniWdgt.MiniMapWidget(
-            self.currentLevel, self.currentTileSet, None, indicative)
-
-        self.scrollArea.setWidget(self.myMiniMapWidget)
-
-        self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
-
-        self.LineText = QtWidgets.QLineEdit()
-        self.levelSelector.currentIndexChanged.connect(self.updateMap)
-
-        self.LineText.setReadOnly(True)
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.levelSelector)
-        self.VBox.addWidget(self.scrollArea)
-        self.VBox.addWidget(self.LineText)
-
-        self.setGeometry(300, 200, 350, 650)
-
-        if(self.edit != None):
-            self.LineText.setText("{0};{1}".format(self.edit[0], self.edit[1]))
-            self.levelSelector.edit(self.edit[2])
-            self.myMiniMapWidget.changeSelectXY(int(self.edit[0]), int(self.edit[1]))
-
-    def setTeleportPlace(self):
-        position = self.myMiniMapWidget.getValue()
-        textToReturn = "{0};{1}".format(position[0], position[1])
-        self.LineText.setText(textToReturn)
-
-    def updateMap(self, levelIndex):
-        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
-            self.currentLevel = mapfile.MapFormat()
-            self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.levelSelector.itemText(levelIndex)))
-            self.currentTileSet = tile_set.TileSet(os.path.join(
-                current_project.settings["gamefolder"], self.currentLevel.tileImage),
-                self.currentLevel.palette)
-        else:
-            if(self.selectStartPosition == None):
-                if(self.edit == None):
-                    #Journey to get the map
-                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.myMap
-                    self.currentTileSet = self.myMap.parent.myTileSet
-                else:
-                    #Journey to get the map
-                    #ActionsWidget -> tinyActionsWdgt -> EventsWidget -> Editor
-                    self.currentLevel = self.myMap
-                    self.currentTileSet = self.myMap.parent.myTileSet
-            else:
-                self.currentLevel = self.parent.myMap
-                self.currentTileSet = self.parent.myTileSet
-
-        self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
-
-    def getValue(self):
-        text = str(self.LineText.text()) + ";" + \
-            str(self.levelSelector.currentText())
-        return text
-
-
-class teleportInPlace(ActionDialog):
-    def __init__(self, **kwargs):
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
-        self.initFile = game_init.openInitFile(self.gamefolder)
-        self.setWindowTitle('teleportInPlace: Select map to teleport...')
-
-        self.LabelText = QtWidgets.QLabel('Select where to teleport:')
-        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
-
-        self.myMiniMapViewer = miniWdgt.MiniMapViewer(
-                                    mapAtStart=self.levelSelector.itemText(0),
-                                    nothis=self.nothis,
-                                    myMap=self.myMap,
-                                    indicative=0)
-
-        self.levelSelector.currentIndexChanged.connect(self.updateMap)
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.levelSelector)
-        self.VBox.addWidget(self.myMiniMapViewer)
-
-
-        self.setGeometry(300, 200, 350, 650)
-
-        if(self.edit != None):
-            self.levelSelector.edit(self.edit[0])
-
-    def updateMap(self, levelIndex):
-        self.myMiniMapViewer.updateMap(self.levelSelector.itemText(levelIndex))
-
-    def getValue(self):
-        text = str(self.levelSelector.currentText())
-        return text
-
-
 class END(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
@@ -573,65 +684,7 @@ class varPlusOne(ActionDialog):
         return text
 
 
-class alert(ActionDialog):
-    def __init__(self,  **kwargs):
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
 
-        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
-        self.downLabelText = QtWidgets.QLabel(
-            "tip: you can type var:varname to get the content of that variable.")
-
-        self.LineEdit = QtWidgets.QLineEdit()
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.LineEdit)
-        self.VBox.addWidget(self.downLabelText)
-
-
-        if(self.edit != None):
-            self.LineEdit.setText(self.edit[0])
-
-        self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('alert: Write text to show in text box...')
-
-    def getValue(self):
-        text = str(self.LineEdit.text())
-        textListLf = text.split("\n")
-        textToReturn = textListLf[0]
-        for line in textListLf[1:]:
-            textToReturn += '\\n' + line
-        return textToReturn
-
-class showText(ActionDialog):
-    def __init__(self, **kwargs):
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
-
-        self.LabelText = QtWidgets.QLabel("Write the text in the box below:")
-        self.downLabelText = QtWidgets.QLabel(
-            "tip: you can type var:varname to get the content of that variable.")
-
-        self.LineText = QtWidgets.QPlainTextEdit()
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.LineText)
-        self.VBox.addWidget(self.downLabelText)
-
-
-        if(self.edit != None):
-            self.LineText.setPlainText(self.edit[0])
-
-        self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('showText: Text box that waits player interaction...')
-
-    def getValue(self):
-        text = str(self.LineText.toPlainText())
-        textListLf = text.split("\n")
-        textToReturn = textListLf[0]
-        for line in textListLf[1:]:
-            textToReturn += '\\n' + line
-        return textToReturn
 
 
 class fadeIn(ActionDialog):
@@ -824,51 +877,6 @@ class waitCycle(ActionDialog):
     def getValue(self):
         text = str(self.comboBoxWait.currentText())
         return text
-
-
-class addItem(ActionDialog):
-    def __init__(self, **kwargs):
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
-
-        self.LabelText = QtWidgets.QLabel("Select item to add:")
-        self.ListItem = miniWdgt.miniItemsList()
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.ListItem)
-
-
-        self.setGeometry(300, 40, 350, 350)
-        self.setWindowTitle('addItem: select item to add')
-
-        if(self.edit != None):
-            self.ListItem.setItem(self.edit[0])
-
-    def getValue(self):
-        itemToReturn = str(self.ListItem.getItem())
-        return itemToReturn
-
-class dropItem(ActionDialog):
-    def __init__(self, **kwargs):
-        #super().__init__(parent, **kwargs)
-        ActionDialog.__init__(self, **kwargs)
-
-        self.LabelText = QtWidgets.QLabel("Select item to drop:")
-        self.ListItem = miniWdgt.miniItemsList()
-
-        self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.ListItem)
-
-
-        self.setGeometry(300, 40, 350, 350)
-        self.setWindowTitle('dropItem: select item to drop')
-
-        if(self.edit != None):
-            self.ListItem.setItem(self.edit[0])
-
-    def getValue(self):
-        itemToReturn = str(self.ListItem.getItem())
-        return itemToReturn
 
 
 class noEffect(ActionDialog):
