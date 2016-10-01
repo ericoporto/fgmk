@@ -1,20 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 """
-This code implements the main routine.
+.. module:: fgmk
+   :platform: Unix, Windows
+   :synopsis: An Open Retro RPG Game Maker in Python.
 
-When you use `python -m fgmk`, the main routine is called.
-If you use `pip install fgmk`, typing fgmk will also call this routine.
+.. moduleauthor:: Érico Vieira Porto
 
-The objective of this function is to:
-1. load the Editor when called without args
-2. if the arg is a map, and no additional args, load the Editor and open the map
-3. seeing the current version by using `--version`, and not opening the Editor
-4. being able to clean the settings in case a invalid setting is loaded somehow
 
-Additionally, I plan to enable expanding to being able to manipulate some files
-and also opening directly a sub editor - like the palette editor.
 """
 
 from os import environ as environ
@@ -27,7 +20,22 @@ from fgmk import __title__, __version__, __copyright__, __license__
 import argparse
 
 def main():
-    """The main routine."""
+    """"
+    fgmk main routine
+
+    When you use `python -m fgmk`, the main routine is called.
+    If you use `pip install fgmk`, typing fgmk will also call this routine.
+
+    The objective of this function is to:
+    1. load the Editor when called without args
+    2. if the arg is a map, and no additional args, load the Editor and open the map
+    3. seeing the current version by using `--version`, and not opening the Editor
+    4. being able to clean the settings in case a invalid setting is loaded somehow
+
+    Additionally, I plan to enable expanding to being able to manipulate some files
+    and also opening directly a sub editor - like the palette editor.
+    """
+
     environ["LIBOVERLAY_SCROLLBAR"] = "0"
     parser = argparse.ArgumentParser(
                 prog=__title__,

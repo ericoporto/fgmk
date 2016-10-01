@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os.path
 from PyQt5 import QtWidgets, QtCore
-from fgmk import base_tile, tMat, tile_set, current_project, fifl
+from fgmk import base_tile, tMat, tile_set, current_project, fifl, game_init
 from fgmk.ff import item_format, palette_format
 
 class tinyPreviewPalWidget(QtWidgets.QWidget):
@@ -239,6 +239,29 @@ class MiniMapWidget(QtWidgets.QWidget):
         return self.selectedPosition
 
 
+class levelSelector(QtWidgets.QComboBox):
+    def __init__(self,parent=None, nothis=False, **kwargs):
+        QtWidgets.QComboBox.__init__(self, parent, **kwargs)
+
+        self.nothis = nothis
+        self.initFile = game_init.openInitFile(current_project.settings['gamefolder'])
+        if(self.nothis is False):
+            self.levelsList = ["this"]
+        else:
+            self.levelsList = []
+
+        for level in self.initFile['LevelsList']:
+            self.levelsList.append(level)
+        for level in self.levelsList:
+            self.addItem(str(level))
+
+    def edit(self, param):
+        for idx, val in enumerate(self.levelsList):
+            if(val == param):
+                self.setCurrentIndex(idx)
+
+
+
 class miniItemsList(QtWidgets.QWidget):
     def __init__(self,parent=None, **kwargs):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
@@ -257,6 +280,8 @@ class miniItemsList(QtWidgets.QWidget):
         for i in range(len(items)):
             item = items[i]
             self.itemsList.addItem(item)
+
+        self.itemsList.setCurrentRow(0)
 
     def getItem(self):
         listitem = self.itemsList.currentItem()

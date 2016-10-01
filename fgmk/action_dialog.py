@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+"""
+.. module:: fgmk.action_dialog
+
+This module has a class for every possible action. The file actionsList.json
+lists all actions and their parameters.
+Each class is a QDialog that will be presented when adding an action or editing
+it. They all must implement a getValue function that will return the parameters
+as a string, with each parameter separated by a ; in the string.
+"""
 import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, tile_set, miniWdgt
@@ -6,15 +15,12 @@ from fgmk.ff import mapfile, charaset_format, charas_format
 from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
-"""
-This module has a class for every possible action. The file actionsList.json
-lists all actions and their parameters.
-Each class is a QDialog that will be presented when adding an action or editing
-it. They all must implement a getValue function that will return the parameters
-as a string, with each parameter separated by a ; in the string.
-"""
-
 class ActionDialog(QtWidgets.QDialog):
+    """ActionDialog is the base of every Actions menu
+
+    Each action should extend from this class.
+
+    """
     def __init__(self, gamefolder, parent=None, edit=None, nothis=False, myMap=None, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
@@ -26,6 +32,12 @@ class ActionDialog(QtWidgets.QDialog):
         self.myMap = myMap
         self.VBox = QtWidgets.QVBoxLayout(self)
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
 
 class changeTile(ActionDialog):
     def __init__(self, **kwargs):
@@ -41,20 +53,9 @@ class changeTile(ActionDialog):
         self.LabelText3 = QtWidgets.QLabel("Change to modify colision layer:")
         self.LabelText4 = QtWidgets.QLabel("Select if event should also change:")
 
-        self.comboBox = QtWidgets.QComboBox()
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
         self.colisionList = ["keep", "noColision", "collidable"]
-
-        if(self.nothis is False):
-            self.levelsList = ["this"]
-        else:
-            self.levelsList = []
-
-        for level in self.initFile['LevelsList']:
-            self.levelsList.append(level)
-
-        for level in self.levelsList:
-            self.comboBox.addItem(str(level))
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -64,7 +65,7 @@ class changeTile(ActionDialog):
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(0)))
+                self.gamefolder, self.levelSelector.itemText(0)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -104,12 +105,7 @@ class changeTile(ActionDialog):
         for item in self.eventList:
             self.comboBoxEvent.addItem(str(item))
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        self.comboBox.currentIndexChanged.connect(self.updateMap)
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
         self.checkbox.stateChanged.connect(self.checkboxChanged)
 
         self.checkbox.setCheckState(QtCore.Qt.Checked)
@@ -118,6 +114,17 @@ class changeTile(ActionDialog):
         self.LineTextTile.setReadOnly(True)
 
         if(self.edit != None):
+            if(self.edit[4] != self.useCurrentPlace):
+                self.checkbox.setCheckState(QtCore.Qt.Unchecked)
+                self.LineTextPlace.setText(
+                    "{0};{1};{2}".format(self.edit[4], self.edit[5], self.edit[6]))
+
+                self.levelSelector.edit(self.edit[6])
+
+                self.myMiniMapWidget.changeSelectXY(int(self.edit[4]), int(self.edit[5]))
+
+            else:
+                self.checkbox.setCheckState(QtCore.Qt.Checked)
 
             self.myMiniPaletteWidget.setImageCurrent(int(self.edit[0]))
 
@@ -133,22 +140,10 @@ class changeTile(ActionDialog):
                 if(val == self.edit[3]):
                     self.comboBoxEvent.setCurrentIndex(idx)
 
-            if(self.edit[4] != self.useCurrentPlace):
-                self.checkbox.setCheckState(QtCore.Qt.Unchecked)
-                self.LineTextPlace.setText(
-                    "{0};{1};{2}".format(self.edit[4], self.edit[5], self.edit[6]))
 
-                for idx, val in enumerate(self.levelsList):
-                    if(val == self.edit[6]):
-                        self.comboBox.setCurrentIndex(idx)
-
-                self.myMiniMapWidget.changeSelectXY(int(self.edit[4]), int(self.edit[5]))
-
-            else:
-                self.checkbox.setCheckState(QtCore.Qt.Checked)
 
         self.VBox.addWidget(self.LabelText1)
-        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LineTextPlace)
         self.VBox.addWidget(self.checkbox)
@@ -165,7 +160,7 @@ class changeTile(ActionDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
-        self.setWindowTitle('Select what tile and where to change to...')
+        self.setWindowTitle('changeTile: Select what tile and where to change to...')
 
         self.setTileToChange()
 
@@ -176,7 +171,7 @@ class changeTile(ActionDialog):
     def setTeleportPlace(self):
         position = self.myMiniMapWidget.getValue()
         textToReturn = "{0};{1};{2}".format(
-            position[0], position[1], str(self.comboBox.currentText()))
+            position[0], position[1], str(self.levelSelector.currentText()))
         self.LineTextPlace.setText(textToReturn)
         self.checkbox.setCheckState(QtCore.Qt.Unchecked)
 
@@ -187,10 +182,10 @@ class changeTile(ActionDialog):
 
     def updateMap(self, levelIndex):
 
-        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(levelIndex)))
+                self.gamefolder, self.levelSelector.itemText(levelIndex)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -222,20 +217,9 @@ class changeAllTiles(ActionDialog):
         self.LabelText4 = QtWidgets.QLabel("Change to modify colision layer:")
         self.LabelText5 = QtWidgets.QLabel("Select if event should also change:")
 
-        self.comboBox = QtWidgets.QComboBox()
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
         self.colisionList = ["keep", "noColision", "collidable"]
-
-        if(self.nothis is False):
-            self.levelsList = ["this"]
-        else:
-            self.levelsList = []
-
-        for level in self.initFile['LevelsList']:
-            self.levelsList.append(level)
-
-        for level in self.levelsList:
-            self.comboBox.addItem(str(level))
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -245,7 +229,7 @@ class changeAllTiles(ActionDialog):
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(0)))
+                self.gamefolder, self.levelSelector.itemText(0)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -278,14 +262,10 @@ class changeAllTiles(ActionDialog):
         for item in self.eventList:
             self.comboBoxEvent.addItem(str(item))
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        self.comboBox.currentIndexChanged.connect(self.updateMap)
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
 
         if(self.edit != None):
+            self.levelSelector.edit(self.edit[5])
             self.oriMPWidget.setImageCurrent(int(self.edit[0]))
             self.newMPWidget.setImageCurrent(int(self.edit[1]))
             for idx, val in enumerate(mapfile.LayersNameViewable):
@@ -300,12 +280,9 @@ class changeAllTiles(ActionDialog):
                 if(val == self.edit[4]):
                     self.comboBoxEvent.setCurrentIndex(idx)
 
-            for idx, val in enumerate(self.levelsList):
-                if(val == self.edit[5]):
-                    self.comboBox.setCurrentIndex(idx)
 
         self.VBox.addWidget(self.LabelText1)
-        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LabelText2)
         self.VBox.addWidget(self.oriMPWidget)
@@ -321,14 +298,14 @@ class changeAllTiles(ActionDialog):
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
-        self.setWindowTitle('Select what tile and where to change to...')
+        self.setWindowTitle('changeAllTiles: Select what tile and where to change to...')
 
     def updateMap(self, levelIndex):
 
-        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(levelIndex)))
+                self.gamefolder, self.levelSelector.itemText(levelIndex)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -344,7 +321,7 @@ class changeAllTiles(ActionDialog):
         oriTile = "{0}".format(self.oriMPWidget.getValue())
         newTile = "{0}".format(self.newMPWidget.getValue())
         text = str(oriTile) + ";" +str(newTile) + ";" + str(self.comboBoxLayers.currentText()) + ";" + str(
-            self.comboBoxColision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.comboBox.currentText())
+            self.comboBoxColision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.levelSelector.currentText())
         return text
 
 
@@ -358,7 +335,7 @@ class teleport(ActionDialog):
         self.initFile = game_init.openInitFile(self.gamefolder)
 
         if(self.selectStartPosition == None):
-            self.setWindowTitle('Select where to teleport...')
+            self.setWindowTitle('teleport: Select where to teleport...')
             indicative = 1
         else:
             self.setWindowTitle(self.selectStartPosition)
@@ -366,18 +343,7 @@ class teleport(ActionDialog):
 
         self.LabelText = QtWidgets.QLabel('Select where to teleport:')
 
-        self.comboBox = QtWidgets.QComboBox()
-
-        if(self.nothis is False):
-            self.levelsList = ["this"]
-        else:
-            self.levelsList = []
-
-        for level in self.initFile['LevelsList']:
-            self.levelsList.append(level)
-
-        for level in self.levelsList:
-            self.comboBox.addItem(str(level))
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -391,7 +357,7 @@ class teleport(ActionDialog):
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(0)))
+                self.gamefolder, self.levelSelector.itemText(0)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -404,17 +370,12 @@ class teleport(ActionDialog):
         self.myMiniMapWidget.selectedTile.connect(self.setTeleportPlace)
 
         self.LineText = QtWidgets.QLineEdit()
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        self.comboBox.currentIndexChanged.connect(self.updateMap)
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
 
         self.LineText.setReadOnly(True)
 
         self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LineText)
         self.VBox.addWidget(self.buttonBox)
@@ -423,13 +384,7 @@ class teleport(ActionDialog):
 
         if(self.edit != None):
             self.LineText.setText("{0};{1}".format(self.edit[0], self.edit[1]))
-
-            for idx, val in enumerate(self.levelsList):
-                if(val == self.edit[2]):
-                    self.comboBox.setCurrentIndex(idx)
-                    break
-
-            self.updateMap(idx)
+            self.levelSelector.edit(self.edit[2])
             self.myMiniMapWidget.changeSelectXY(int(self.edit[0]), int(self.edit[1]))
 
     def setTeleportPlace(self):
@@ -438,10 +393,10 @@ class teleport(ActionDialog):
         self.LineText.setText(textToReturn)
 
     def updateMap(self, levelIndex):
-        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(levelIndex)))
+                self.gamefolder, self.levelSelector.itemText(levelIndex)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -465,7 +420,7 @@ class teleport(ActionDialog):
 
     def getValue(self):
         text = str(self.LineText.text()) + ";" + \
-            str(self.comboBox.currentText())
+            str(self.levelSelector.currentText())
         return text
 
 
@@ -476,22 +431,11 @@ class teleportInPlace(ActionDialog):
 
         self.initFile = game_init.openInitFile(self.gamefolder)
 
-        self.setWindowTitle('Select map to teleport...')
+        self.setWindowTitle('teleportInPlace: Select map to teleport...')
 
         self.LabelText = QtWidgets.QLabel('Select where to teleport:')
 
-        self.comboBox = QtWidgets.QComboBox()
-
-        if(self.nothis is False):
-            self.levelsList = ["this"]
-        else:
-            self.levelsList = []
-
-        for level in self.initFile['LevelsList']:
-            self.levelsList.append(level)
-
-        for level in self.levelsList:
-            self.comboBox.addItem(str(level))
+        self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -501,7 +445,7 @@ class teleportInPlace(ActionDialog):
         else:
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(0)))
+                self.gamefolder, self.levelSelector.itemText(0)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -511,33 +455,23 @@ class teleportInPlace(ActionDialog):
 
         self.scrollArea.setWidget(self.myMiniMapWidget)
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        self.comboBox.currentIndexChanged.connect(self.updateMap)
+        self.levelSelector.currentIndexChanged.connect(self.updateMap)
 
         self.VBox.addWidget(self.LabelText)
-        self.VBox.addWidget(self.comboBox)
+        self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
 
         if(self.edit != None):
-            for idx, val in enumerate(self.levelsList):
-                if(val == self.edit[0]):
-                    self.comboBox.setCurrentIndex(idx)
-                    break
-
-            self.updateMap(idx)
+            self.levelSelector.edit(self.edit[0])
 
     def updateMap(self, levelIndex):
-        if (str(self.comboBox.itemText(levelIndex)) != "this"):
+        if (str(self.levelSelector.itemText(levelIndex)) != "this"):
             self.currentLevel = mapfile.MapFormat()
             self.currentLevel.load(game_init.getLevelPathFromInitFile(
-                self.gamefolder, self.comboBox.itemText(levelIndex)))
+                self.gamefolder, self.levelSelector.itemText(levelIndex)))
             self.currentTileSet = tile_set.TileSet(os.path.join(
                 current_project.settings["gamefolder"], self.currentLevel.tileImage),
                 self.currentLevel.palette)
@@ -549,7 +483,7 @@ class teleportInPlace(ActionDialog):
         self.myMiniMapWidget.DrawMap(self.currentLevel, self.currentTileSet)
 
     def getValue(self):
-        text = str(self.comboBox.currentText())
+        text = str(self.levelSelector.currentText())
         return text
 
 
@@ -557,12 +491,6 @@ class END(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         ActionDialog.__init__(self, **kwargs)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.buttonBox)
 
@@ -574,12 +502,6 @@ class ELSE(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         ActionDialog.__init__(self, **kwargs)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.buttonBox)
 
@@ -605,12 +527,6 @@ class IF(ActionDialog):
         self.operLineEdit = QtWidgets.QLineEdit()
         self.var2LineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.var1LabelText)
         self.VBox.addWidget(note)
         self.VBox.addWidget(self.var1LineEdit)
@@ -626,7 +542,7 @@ class IF(ActionDialog):
             self.var2LineEdit.setText(self.edit[2])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('IF conditional...')
+        self.setWindowTitle('IF: conditional...')
 
     def getValue(self):
         text = str(self.var1LineEdit.text()) + ";" + \
@@ -645,12 +561,6 @@ class setVar(ActionDialog):
         self.varNameLineEdit = QtWidgets.QLineEdit()
         self.valueLineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.varLabelText)
         self.VBox.addWidget(self.varNameLineEdit)
         self.VBox.addWidget(self.valLabelText)
@@ -662,7 +572,7 @@ class setVar(ActionDialog):
             self.valueLineEdit.setText(self.edit[1])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Change var to value')
+        self.setWindowTitle('setVar: Change var to value')
 
     def getValue(self):
         text = str(self.varNameLineEdit.text()) + \
@@ -679,12 +589,6 @@ class varPlusOne(ActionDialog):
 
         self.varNameLineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.varLabelText)
         self.VBox.addWidget(self.varNameLineEdit)
         self.VBox.addWidget(self.buttonBox)
@@ -693,7 +597,7 @@ class varPlusOne(ActionDialog):
             self.varNameLineEdit.setText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('You can add 1 to a var.')
+        self.setWindowTitle('varPlusOne: You can add 1 to a var.')
 
     def getValue(self):
         text = str(self.varNameLineEdit.text())
@@ -711,12 +615,6 @@ class alert(ActionDialog):
 
         self.LineEdit = QtWidgets.QLineEdit()
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.LineEdit)
         self.VBox.addWidget(self.downLabelText)
@@ -726,7 +624,7 @@ class alert(ActionDialog):
             self.LineEdit.setText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Write text to show in text box...')
+        self.setWindowTitle('alert: Write text to show in text box...')
 
     def getValue(self):
         text = str(self.LineEdit.text())
@@ -747,12 +645,6 @@ class showText(ActionDialog):
 
         self.LineText = QtWidgets.QPlainTextEdit()
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.LineText)
         self.VBox.addWidget(self.downLabelText)
@@ -762,7 +654,7 @@ class showText(ActionDialog):
             self.LineText.setPlainText(self.edit[0])
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Write text to show in text box...')
+        self.setWindowTitle('showText: Text box that waits player interaction...')
 
     def getValue(self):
         text = str(self.LineText.toPlainText())
@@ -789,14 +681,10 @@ class fadeIn(ActionDialog):
             item.setWhatsThis(effect[1])
             self.ListEffect.addItem(item)
 
+        self.ListEffect.setCurrentRow(0)
+
         self.checkbox = QtWidgets.QCheckBox("keep effect after")
         self.checkbox.setCheckState(QtCore.Qt.Unchecked)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListEffect)
@@ -838,14 +726,10 @@ class fadeOut(ActionDialog):
             item.setWhatsThis(effect[1])
             self.ListEffect.addItem(item)
 
+        self.ListEffect.setCurrentRow(0)
+
         self.checkbox = QtWidgets.QCheckBox("keep effect after")
         self.checkbox.setCheckState(QtCore.Qt.Unchecked)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListEffect)
@@ -882,12 +766,6 @@ class rain(ActionDialog):
         self.radiostop = QtWidgets.QRadioButton("stop", self)
 
         self.radiostart.setChecked(True)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.radiostart)
@@ -930,12 +808,6 @@ class changePlayerAnimation(ActionDialog):
         for item in self.animationList:
             self.comboBoxAnim.addItem(str(item))
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.comboBoxAnim)
         self.VBox.addWidget(self.buttonBox)
@@ -947,7 +819,7 @@ class changePlayerAnimation(ActionDialog):
                     break
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Change animation of player...')
+        self.setWindowTitle('changePlayerAnimation: Change animation of player...')
 
     def getValue(self):
         text = str(self.comboBoxAnim.currentText())
@@ -967,12 +839,6 @@ class waitCycle(ActionDialog):
         for item in self.waitList:
             self.comboBoxWait.addItem(str(item))
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.comboBoxWait)
         self.VBox.addWidget(self.buttonBox)
@@ -984,7 +850,7 @@ class waitCycle(ActionDialog):
                     break
 
         self.setGeometry(300, 40, 350, 650)
-        self.setWindowTitle('Block wait for cycles...')
+        self.setWindowTitle('waitCycle: Block wait for cycles...')
 
     def getValue(self):
         text = str(self.comboBoxWait.currentText())
@@ -998,12 +864,6 @@ class addItem(ActionDialog):
 
         self.LabelText = QtWidgets.QLabel("Select item to add:")
         self.ListItem = miniWdgt.miniItemsList()
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListItem)
@@ -1026,12 +886,6 @@ class dropItem(ActionDialog):
 
         self.LabelText = QtWidgets.QLabel("Select item to drop:")
         self.ListItem = miniWdgt.miniItemsList()
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
-
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListItem)
