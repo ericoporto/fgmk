@@ -1,0 +1,28 @@
+{
+    "CharasFileList": {
+        "charas1": "charas1.json"
+    }, 
+    "CharasetFileList": {
+        "charaset1": "charaset1.json"
+    }, 
+    "HMSFile": "hms.json", 
+    "LevelsList": {
+        "ahouse": "ahouse.map.json"
+    }, 
+    "PictureList":["test"]
+    ,
+    "Player": {
+        "charaFile": "person.json", 
+        "charaSet": "person", 
+        "facing": "down", 
+        "initPosX": 224, 
+        "initPosY": 224, 
+        "party": [
+            "hero"
+        ]
+    }, 
+    "World": {
+        "initLevel": "ahouse"
+    }, 
+    "itemsFile": "items.json"
+}

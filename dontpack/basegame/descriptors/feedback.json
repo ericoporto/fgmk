@@ -1,0 +1,20 @@
+{
+    "Feedback":{
+        "stop":{"s":"audioStop",
+                "v":[10,5,10]
+        },
+        "text":{
+            "s":"audioText",
+            "v":[25]
+        },
+        "word":{
+        "s": "audioWord",
+        "v": [10]
+        }
+    },
+    "resources":{
+        "audio":[["audioWord","wordBlop.wav"],
+                ["text","TextboxBloop8-Bit.ogg"],
+                ["audioStop","stop.wav"]]
+                }
+}

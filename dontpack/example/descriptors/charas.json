@@ -1,0 +1,123 @@
+{
+    "Charas": {
+        "sack": {
+            "movements": [],
+            "properties": {
+                "pushable": false,
+                "nocolision": 0
+            },
+            "actions": {
+                "type": [0, 1],
+                "list": [
+                    ["addItem", "potion"],
+                    ["showText", "found a potion!"],
+                    ["charAutoDelete", ""]
+                ]
+            },
+            "charaset": "sack"
+        },
+        "bunny": {
+            "movements": [
+                ["move", "follow"],
+                ["move", "follow"],
+                ["move", "random"],
+                ["move", "random"],
+                ["move", "follow"]
+            ],
+            "properties": {
+                "pushable": false,
+                "nocolision": 0
+            },
+            "actions": {
+                "type": [0, 1],
+                "list": [
+                    ["battle", "bunny"],
+                    ["charAutoDelete", ""]
+                ]
+            },
+            "charaset": "bunny"
+        },
+        "bunny2": {
+            "movements": [
+                ["move", "random"]
+            ],
+            "properties": {
+                "pushable": false,
+                "nocolision": 0
+            },
+            "actions": {
+                "type": [0, 1],
+                "list": [
+                    ["battle", "bunny;bunny;bunny"],
+                    ["charAutoDelete", ""]
+                ]
+            },
+            "charaset": "bunny"
+        },
+        "skeleton1": {
+            "movements": [
+                ["face", "right"]
+            ],
+            "properties": {
+                "pushable": false,
+                "nocolision": 1
+            },
+            "actions": {
+                "type": [1, 0],
+                "list": [
+                    ["showText", "..."],
+                    ["rain", "start"]
+                ]
+            },
+            "charaset": "skeleton"
+        },
+        "skeleton2": {
+            "movements": [
+                ["face", "left"]
+            ],
+            "properties": {
+                "pushable": false,
+                "nocolision": 1
+            },
+            "actions": {
+                "type": [1, 0],
+                "list": [
+                    ["showText", "!!!"],
+                    ["rain", "stop"]
+                ]
+            },
+            "charaset": "skeleton"
+        },
+        "bear": {
+            "movements": [
+                ["face", "up"],
+                ["face", "left"],
+                ["face", "down"],
+                ["face", "right"]
+            ],
+            "properties": {
+                "pushable": false,
+                "nocolision": 1
+            },
+            "actions": {
+                "type": [1, 0],
+                "list": [
+                    ["varPlusOne", "test"],
+                    ["IF", "var:test;>=;3"],
+                    ["showText", "Are you alright sir?"],
+                    ["questionBox", "Yes;Not really..."],
+                    ["IF", "ans:;==;Yes"],
+                    ["showText", "Good! Yes is very good!"],
+                    ["ELSE", ""],
+                    ["showText", "Perhaps a fight will cheer you up!"],
+                    ["battle", "bear"],
+                    ["END", ""],
+                    ["ELSE", ""],
+                    ["showText", "spinning spinning"],
+                    ["END", ""]
+                ]
+            },
+            "charaset": "bear"
+        }
+    }
+}
