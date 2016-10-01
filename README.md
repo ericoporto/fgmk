@@ -91,6 +91,8 @@ will be presented in the interface, inside the help menu.
 
 [There is also a Quickstart](docs/Markdown/Quickstart/Quickstart.md).
 
+You can also browse the documentation here: [ericoporto.github.io/fgmk/](http://ericoporto.github.io/fgmk/). 
+
 
 Contributing
 ------------
