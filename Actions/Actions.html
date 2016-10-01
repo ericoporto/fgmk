@@ -335,7 +335,7 @@ the format &#8220;varOrValue1;oper;varOrValue2&#8221;, where oper is the operato
 <li><code class="docutils literal"><span class="pre">&gt;</span></code>,<code class="docutils literal"><span class="pre">bigger</span></code>,<code class="docutils literal"><span class="pre">greater</span></code></li>
 <li><code class="docutils literal"><span class="pre">&lt;</span></code>,<code class="docutils literal"><span class="pre">smaller</span></code>,<code class="docutils literal"><span class="pre">less</span></code></li>
 <li><code class="docutils literal"><span class="pre">&gt;=</span></code></li>
-<li>`&lt;=``</li>
+<li><code class="docutils literal"><span class="pre">&lt;=</span></code></li>
 <li><code class="docutils literal"><span class="pre">==</span></code>,<code class="docutils literal"><span class="pre">=</span></code>,<code class="docutils literal"><span class="pre">equal</span></code></li>
 </ul>
 <p>The field <strong>var of value</strong> can be either a value (like <code class="docutils literal"><span class="pre">1</span></code>, <code class="docutils literal"><span class="pre">42</span></code> or
@@ -344,8 +344,9 @@ available:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">var:varname</span></code>, where <code class="docutils literal"><span class="pre">varname</span></code> is the name of a user defined
 variable.</li>
-<li><code class="docutils literal"><span class="pre">ans:answer</span></code>, where <code class="docutils literal"><span class="pre">answer</span></code> is the answer of the last
-questionBox.</li>
+<li><code class="docutils literal"><span class="pre">ans:</span></code>, is the answer of the last questionBox, as text.</li>
+<li><code class="docutils literal"><span class="pre">ans:num</span></code>, the number of the answer of the last questionBox. First
+answer is <code class="docutils literal"><span class="pre">0</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">lastbattle:</span></code>, return True if the player won the last battle.</li>
 <li><code class="docutils literal"><span class="pre">hero:face</span></code>, returns on of the following directions
 <code class="docutils literal"><span class="pre">up</span></code>,<code class="docutils literal"><span class="pre">down</span></code>,<code class="docutils literal"><span class="pre">left</span></code>,<code class="docutils literal"><span class="pre">right</span></code>.</li>
