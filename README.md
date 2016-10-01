@@ -72,16 +72,6 @@ If you satisfy all dependencies you don't need to install, and [can run from sou
 Experimental compatibility to python2 (2.7 and on) is added to versions above
 0.3.0 .
 
-Known Issues with PyQt5 in Ubuntu
----------------------------------
-
-### Application has no keyboard shortcuts
-
-If instead of using pip3 you are installing dependencies using `apt install`,
-the menu will be nicely integrated. Unfortunately, keyboard shortcuts won't
-work.
-
-[Details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
 
 Documentation
 -------------
@@ -91,7 +81,7 @@ will be presented in the interface, inside the help menu.
 
 [There is also a Quickstart](docs/Markdown/Quickstart/Quickstart.md).
 
-You can also browse the documentation here: [ericoporto.github.io/fgmk/](http://ericoporto.github.io/fgmk/). 
+You can also browse the documentation here: [ericoporto.github.io/fgmk/](http://ericoporto.github.io/fgmk/).
 
 
 Contributing
@@ -105,7 +95,20 @@ Author
 
 Made by Érico Vieira Porto
 
+
 License
 -------
 
 Distributed under GPLv2 license. See [`LICENSE`](LICENSE) for more information
+
+
+Known Issues with PyQt5 in Ubuntu
+---------------------------------
+
+### Application has no keyboard shortcuts
+
+If instead of using pip3 you are installing dependencies using `apt install`,
+the menu will be nicely integrated. Unfortunately, keyboard shortcuts won't
+work.
+
+[Details in the bug here](https://bugs.launchpad.net/appmenu-qt5/+bug/1380702)
