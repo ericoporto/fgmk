@@ -37,4 +37,3 @@ cp index.rst source/index.rst
 rm -rf build/*
 
 make html
-make qthelp
