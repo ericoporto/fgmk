@@ -30,7 +30,10 @@ class ActionDialog(QtWidgets.QDialog):
         self.edit = edit
         self.parent = parent
         self.myMap = myMap
-        self.VBox = QtWidgets.QVBoxLayout(self)
+
+        MainVBox =  QtWidgets.QVBoxLayout(self)
+        MainVBox.setAlignment(QtCore.Qt.AlignTop)
+        self.VBox = QtWidgets.QVBoxLayout()
         self.VBox.setAlignment(QtCore.Qt.AlignTop)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(
@@ -38,6 +41,9 @@ class ActionDialog(QtWidgets.QDialog):
 
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
+
+        MainVBox.addLayout(self.VBox)
+        MainVBox.addWidget(self.buttonBox)
 
 class changeTile(ActionDialog):
     def __init__(self, **kwargs):
@@ -156,8 +162,6 @@ class changeTile(ActionDialog):
         self.VBox.addWidget(self.comboBoxColision)
         self.VBox.addWidget(self.LabelText4)
         self.VBox.addWidget(self.comboBoxEvent)
-
-        self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
         self.setWindowTitle('changeTile: Select what tile and where to change to...')
@@ -295,7 +299,7 @@ class changeAllTiles(ActionDialog):
         self.VBox.addWidget(self.LabelText5)
         self.VBox.addWidget(self.comboBoxEvent)
 
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 200, 350, 650)
         self.setWindowTitle('changeAllTiles: Select what tile and where to change to...')
@@ -378,7 +382,6 @@ class teleport(ActionDialog):
         self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.scrollArea)
         self.VBox.addWidget(self.LineText)
-        self.VBox.addWidget(self.buttonBox)
 
         self.setGeometry(300, 200, 350, 650)
 
@@ -445,7 +448,7 @@ class teleportInPlace(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.levelSelector)
         self.VBox.addWidget(self.myMiniMapViewer)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 200, 350, 650)
 
@@ -465,8 +468,6 @@ class END(ActionDialog):
         #super().__init__(parent, **kwargs)
         ActionDialog.__init__(self, **kwargs)
 
-        self.VBox.addWidget(self.buttonBox)
-
     def getValue(self):
         return ""
 
@@ -475,8 +476,6 @@ class ELSE(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
         ActionDialog.__init__(self, **kwargs)
-
-        self.VBox.addWidget(self.buttonBox)
 
     def getValue(self):
         return ""
@@ -507,7 +506,6 @@ class IF(ActionDialog):
         self.VBox.addWidget(self.operLineEdit)
         self.VBox.addWidget(self.var2LabelText)
         self.VBox.addWidget(self.var2LineEdit)
-        self.VBox.addWidget(self.buttonBox)
 
         if(self.edit != None):
             self.var1LineEdit.setText(self.edit[0])
@@ -538,7 +536,6 @@ class setVar(ActionDialog):
         self.VBox.addWidget(self.varNameLineEdit)
         self.VBox.addWidget(self.valLabelText)
         self.VBox.addWidget(self.valueLineEdit)
-        self.VBox.addWidget(self.buttonBox)
 
         if(self.edit != None):
             self.varNameLineEdit.setText(self.edit[0])
@@ -564,7 +561,6 @@ class varPlusOne(ActionDialog):
 
         self.VBox.addWidget(self.varLabelText)
         self.VBox.addWidget(self.varNameLineEdit)
-        self.VBox.addWidget(self.buttonBox)
 
         if(self.edit != None):
             self.varNameLineEdit.setText(self.edit[0])
@@ -591,7 +587,7 @@ class alert(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.LineEdit)
         self.VBox.addWidget(self.downLabelText)
-        self.VBox.addWidget(self.buttonBox)
+
 
         if(self.edit != None):
             self.LineEdit.setText(self.edit[0])
@@ -621,7 +617,7 @@ class showText(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.LineText)
         self.VBox.addWidget(self.downLabelText)
-        self.VBox.addWidget(self.buttonBox)
+
 
         if(self.edit != None):
             self.LineText.setPlainText(self.edit[0])
@@ -662,7 +658,7 @@ class fadeIn(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListEffect)
         self.VBox.addWidget(self.checkbox)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('fadeIn: select the effect to apply')
@@ -707,7 +703,7 @@ class fadeOut(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListEffect)
         self.VBox.addWidget(self.checkbox)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('fadeOut: select the effect to apply')
@@ -743,7 +739,7 @@ class rain(ActionDialog):
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.radiostart)
         self.VBox.addWidget(self.radiostop)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('rain: choose if starts raining')
@@ -783,7 +779,7 @@ class changePlayerAnimation(ActionDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.comboBoxAnim)
-        self.VBox.addWidget(self.buttonBox)
+
 
         if(self.edit != None):
             for idx, val in enumerate(self.animationList):
@@ -814,7 +810,7 @@ class waitCycle(ActionDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.comboBoxWait)
-        self.VBox.addWidget(self.buttonBox)
+
 
         if(self.edit != None):
             for idx, val in enumerate(self.waitList):
@@ -840,7 +836,7 @@ class addItem(ActionDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListItem)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('addItem: select item to add')
@@ -862,7 +858,7 @@ class dropItem(ActionDialog):
 
         self.VBox.addWidget(self.LabelText)
         self.VBox.addWidget(self.ListItem)
-        self.VBox.addWidget(self.buttonBox)
+
 
         self.setGeometry(300, 40, 350, 350)
         self.setWindowTitle('dropItem: select item to drop')
