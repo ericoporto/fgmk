@@ -83,7 +83,10 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Specification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#map-json">.map.json</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Actions/Actions.html">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Roadmap/Roadmap.html">Roadmap</a></li>
@@ -222,6 +225,104 @@ to change this.</p>
 <li><code class="docutils literal"><span class="pre">index.html</span></code> - this is the engine. It should be placed at the root
 of the game project folder.</li>
 </ul>
+<div class="section" id="map-json">
+<h2>.map.json<a class="headerlink" href="#map-json" title="Permalink to this headline">¶</a></h2>
+<p>Below is an example file with each field that is expected to be
+available. Each numeric 2d matrix is of the same size, which is defined
+as map width and height. The matrix is described as a list (y dimension)
+of lists (x dimension).</p>
+<p>You can think of a map as having for layers, the <strong>first</strong> layer, named
+<code class="docutils literal"><span class="pre">layer1</span></code> is drawn first, and <strong>second</strong> the <code class="docutils literal"><span class="pre">layer2</span></code> is drawn next,
+the <code class="docutils literal"><span class="pre">player</span></code> and <code class="docutils literal"><span class="pre">charas</span></code> are drawn in the <strong>third</strong> layer where the
+<code class="docutils literal"><span class="pre">colision</span></code> takes place to, and on top the fourth layer, <code class="docutils literal"><span class="pre">layer4</span></code>, is
+drawn.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Level&quot;</span><span class="p">:</span>
+    <span class="p">{</span> <span class="s2">&quot;charas&quot;</span><span class="p">:</span>  <span class="p">[],</span>
+      <span class="s2">&quot;colision&quot;</span><span class="p">:</span>
+            <span class="p">[[]],</span>
+      <span class="s2">&quot;events&quot;</span><span class="p">:</span>
+            <span class="p">[[]],</span>
+      <span class="s2">&quot;eventsActions&quot;</span><span class="p">:</span>
+          <span class="p">{</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+              <span class="p">[[</span><span class="s2">&quot;ACTIONNAME&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">],</span>
+               <span class="p">[</span><span class="s2">&quot;ACTIONNAME&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">]],</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+              <span class="p">[[</span><span class="s2">&quot;ACTIONNAME&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">]]</span> <span class="p">},</span>
+      <span class="s2">&quot;eventsType&quot;</span><span class="p">:</span>
+          <span class="p">{</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]},</span>
+      <span class="s2">&quot;layer1&quot;</span><span class="p">:</span>
+          <span class="p">[[]],</span>
+      <span class="s2">&quot;layer2&quot;</span><span class="p">:</span>
+          <span class="p">[[]],</span>
+      <span class="s2">&quot;layer4&quot;</span><span class="p">:</span>
+          <span class="p">[[]],</span>
+      <span class="s2">&quot;levelName&quot;</span><span class="p">:</span> <span class="s2">&quot;very_simple_map&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;tileImage&quot;</span><span class="p">:</span> <span class="s2">&quot;img/tile.png&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;tiles&quot;</span><span class="p">:</span>
+          <span class="p">{</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>  <span class="p">[</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">]</span> <span class="p">},</span>
+      <span class="s2">&quot;tilesAnimated&quot;</span><span class="p">:</span>
+          <span class="p">{</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Each <code class="docutils literal"><span class="pre">.map.json</span></code> file has the keywork <code class="docutils literal"><span class="pre">Level</span></code> at top-level.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">charas</span></code> : a list of the charas that should be placed in the map
+and their x and y position.</li>
+<li><code class="docutils literal"><span class="pre">&quot;charas&quot;:</span> <span class="pre">[[&quot;CHARANAME&quot;,X,Y],[&quot;CHARANAME&quot;,X,Y],...]</span></code> .</li>
+<li>Example: <code class="docutils literal"><span class="pre">&quot;charas&quot;:</span> <span class="pre">[[&quot;bear&quot;,12,7]]</span></code></li>
+<li><code class="docutils literal"><span class="pre">colision</span></code> : a 2d numeric matrix, where 0 represents floor and 1
+represents walls.</li>
+<li><code class="docutils literal"><span class="pre">events</span></code> : a 2d numeric matrix, where 0 represents no event, and
+any other number represents an event.</li>
+<li><code class="docutils literal"><span class="pre">eventsActions</span></code> : a dictionary where each event is represented by a
+number and each number contains a list of actions and parameters.</li>
+<li><code class="docutils literal"><span class="pre">&quot;eventsActions&quot;:</span> <span class="pre">{</span> <span class="pre">&quot;1&quot;:[[&quot;ACTIONNAME&quot;,&quot;PARAM1&quot;],</span> <span class="pre">[&quot;ACTIONNAME&quot;,&quot;PARAM1;PARAM2&quot;]]</span> <span class="pre">}</span></code></li>
+<li><code class="docutils literal"><span class="pre">eventsType</span></code> : a dictionary where each event is represented by a
+number and each number contains an array representing when the event
+is triggered.<ul>
+<li>possible triggers are:<ul>
+<li>onclick : means the event is triggered when the player is
+adjacent to the tile, and presses the interaction button.<ul>
+<li>this is represented by the list <code class="docutils literal"><span class="pre">[1,0]</span></code></li>
+</ul>
+</li>
+<li>ontouch : means the event is triggered when the player
+character is on the same tile.<ul>
+<li>this is represented by the list <code class="docutils literal"><span class="pre">[0,1]</span></code></li>
+</ul>
+</li>
+<li>ideally a simple list that could contain the <code class="docutils literal"><span class="pre">onclick</span></code> and
+<code class="docutils literal"><span class="pre">ontouch</span></code> words would be clearer.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">layer1</span></code> : a 2d numeric matrix, where 0 represents a clear tile,
+and any other number represents a tile that is going to be drawn.</li>
+<li><code class="docutils literal"><span class="pre">layer2</span></code> : a 2d numeric matrix, where 0 represents a clear tile,
+and any other number represents a tile that is going to be drawn.</li>
+<li><code class="docutils literal"><span class="pre">layer4</span></code> : a 2d numeric matrix, where 0 represents a clear tile,
+and any other number represents a tile that is going to be drawn on
+top of the first, second and third layer.</li>
+<li><code class="docutils literal"><span class="pre">levelName</span></code> : the name of the map.</li>
+<li>Right now this needs to be the same as the map file name without the
+.map.json .</li>
+<li><code class="docutils literal"><span class="pre">tileImage</span></code> : the relative path to a png image that is used by the
+palette.</li>
+<li><code class="docutils literal"><span class="pre">tiles</span></code> : this contains a dictionary of numbers, and each number
+points to a 32x32 pixel piece of the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>.<ul>
+<li><code class="docutils literal"><span class="pre">tiles:</span> <span class="pre">&quot;1&quot;</span> <span class="pre">:</span> <span class="pre">[X,Y],</span> <span class="pre">&quot;2&quot;</span> <span class="pre">:</span> <span class="pre">[X,Y],</span> <span class="pre">...</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">tilesAnimated</span></code> : this contains a dictionary of numbers, and each
+number points to a list that points a different 32x32 pixel piece of
+the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>, describing an animated tile.</li>
+</ul>
+</div>
 </div>
 
 

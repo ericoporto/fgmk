@@ -94,3 +94,115 @@ to change this.
 
 -  ``index.html`` - this is the engine. It should be placed at the root
    of the game project folder.
+
+.map.json
+---------
+
+Below is an example file with each field that is expected to be
+available. Each numeric 2d matrix is of the same size, which is defined
+as map width and height. The matrix is described as a list (y dimension)
+of lists (x dimension).
+
+You can think of a map as having for layers, the **first** layer, named
+``layer1`` is drawn first, and **second** the ``layer2`` is drawn next,
+the ``player`` and ``charas`` are drawn in the **third** layer where the
+``colision`` takes place to, and on top the fourth layer, ``layer4``, is
+drawn.
+
+::
+
+    { "Level":
+        { "charas":  [],
+          "colision":
+                [[]],
+          "events":
+                [[]],
+          "eventsActions":
+              { "1":
+                  [["ACTIONNAME","PARAM1;PARAM2;..."],
+                   ["ACTIONNAME","PARAM1;PARAM2;..."]],
+                "2":
+                  [["ACTIONNAME","PARAM1;PARAM2;..."]] },
+          "eventsType":
+              { "1":  [  1,  0],
+                "2":  [  1,  0]},
+          "layer1":
+              [[]],
+          "layer2":
+              [[]],
+          "layer4":
+              [[]],
+          "levelName": "very_simple_map",
+          "tileImage": "img/tile.png",
+          "tiles":
+              { "1":  [ 11, 12],
+                "2":  [  1,  1] },
+          "tilesAnimated":
+              { }
+        }
+    }
+
+Each ``.map.json`` file has the keywork ``Level`` at top-level.
+
+-  ``charas`` : a list of the charas that should be placed in the map
+   and their x and y position.
+-  ``"charas": [["CHARANAME",X,Y],["CHARANAME",X,Y],...]`` .
+
+-  Example: ``"charas": [["bear",12,7]]``
+
+-  ``colision`` : a 2d numeric matrix, where 0 represents floor and 1
+   represents walls.
+
+-  ``events`` : a 2d numeric matrix, where 0 represents no event, and
+   any other number represents an event.
+
+-  ``eventsActions`` : a dictionary where each event is represented by a
+   number and each number contains a list of actions and parameters.
+
+-  ``"eventsActions": { "1":[["ACTIONNAME","PARAM1"], ["ACTIONNAME","PARAM1;PARAM2"]] }``
+
+-  ``eventsType`` : a dictionary where each event is represented by a
+   number and each number contains an array representing when the event
+   is triggered.
+
+   -  possible triggers are:
+
+      -  onclick : means the event is triggered when the player is
+         adjacent to the tile, and presses the interaction button.
+
+         -  this is represented by the list ``[1,0]``
+
+      -  ontouch : means the event is triggered when the player
+         character is on the same tile.
+
+         -  this is represented by the list ``[0,1]``
+
+      -  ideally a simple list that could contain the ``onclick`` and
+         ``ontouch`` words would be clearer.
+
+-  ``layer1`` : a 2d numeric matrix, where 0 represents a clear tile,
+   and any other number represents a tile that is going to be drawn.
+
+-  ``layer2`` : a 2d numeric matrix, where 0 represents a clear tile,
+   and any other number represents a tile that is going to be drawn.
+
+-  ``layer4`` : a 2d numeric matrix, where 0 represents a clear tile,
+   and any other number represents a tile that is going to be drawn on
+   top of the first, second and third layer.
+
+-  ``levelName`` : the name of the map.
+
+-  Right now this needs to be the same as the map file name without the
+   .map.json .
+
+-  ``tileImage`` : the relative path to a png image that is used by the
+   palette.
+
+-  ``tiles`` : this contains a dictionary of numbers, and each number
+   points to a 32x32 pixel piece of the image pointed by ``tileImage``.
+
+   -  ``tiles: "1" : [X,Y], "2" : [X,Y], ...``
+
+-  ``tilesAnimated`` : this contains a dictionary of numbers, and each
+   number points to a list that points a different 32x32 pixel piece of
+   the image pointed by ``tileImage``, describing an animated tile.
