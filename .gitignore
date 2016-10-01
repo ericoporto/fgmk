@@ -54,5 +54,11 @@ docs/_build/
 # PyBuilder
 target/
 
-#My gedit files
+# My gedit files
 *~
+
+# Specific fgmk things
+dontpack/basegame/index.html
+dontpack/basegame/basegame.tar.gz
+dontpack/example/index.html
+dontpack/example/example.tar.gz
