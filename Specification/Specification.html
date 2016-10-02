@@ -87,6 +87,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#palette-files-pal-json">palette files - .pal.json</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#map-files-map-json">map files - .map.json</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#init-json">init.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#items-json">items.json</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
@@ -281,7 +282,14 @@ the image pointed by <code class="docutils literal"><span class="pre">tileImage<
 <p>Below is an example file with each field that is expected to be
 available. Each numeric 2d matrix is of the same size, which is defined
 as map width and height. The matrix is described as a list (y dimension)
-of lists (x dimension).</p>
+of lists (x dimension). In a 4 x 3 fictious map, this matrix would be
+something like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;layer:&quot;</span>
+    <span class="p">[[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
 <p>You can think of a map as having for layers, the <strong>first</strong> layer, named
 <code class="docutils literal"><span class="pre">layer1</span></code> is drawn first, and <strong>second</strong> the <code class="docutils literal"><span class="pre">layer2</span></code> is drawn next,
 the <code class="docutils literal"><span class="pre">player</span></code> and <code class="docutils literal"><span class="pre">charas</span></code> are drawn in the <strong>third</strong> layer where the
@@ -453,6 +461,125 @@ starting party - this only matters for battle.</li>
 <li><code class="docutils literal"><span class="pre">initLevel</span></code> : the key name of the level the player chara begins.
 This is the first map you see after the start screen.</li>
 </ul>
+</li>
+</ul>
+</div>
+<div class="section" id="items-json">
+<h2>items.json<a class="headerlink" href="#items-json" title="Permalink to this headline">¶</a></h2>
+<p>The file that describes items, all items here can be added to the player
+inventory by using the action addItem(&#8216;ITEMKEYNAME&#8217;) or removed by using
+the action dropItem(&#8216;ITEMKEYNAME&#8217;). When referencing an item, the
+actions will always use ITEMKEYNAME, which must be composed of only
+alphanumeric characters and no spaces.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;Items&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;ITEMKEYNAME1&quot;</span><span class="p">:{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+                <span class="s2">&quot;equipable&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;statMod&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+                <span class="s2">&quot;usable&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+                <span class="s2">&quot;effect&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+                <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;unique&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">null</span>
+             <span class="p">},</span>
+    <span class="s2">&quot;ITEMKEYNAME2&quot;</span><span class="p">:{</span>
+            <span class="o">...</span>
+            <span class="p">}</span>
+            <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The file must have a top level statement <code class="docutils literal"><span class="pre">Items</span></code>, which will start a
+dictionary containing the items. Items are referenced by their key
+names. You can define how many different items as you like.</p>
+<p>Each item then can have one of the following fields defined along. Above
+are the default values for all fields. All fields of an item is
+optional, so you can only include what is necessary to describe that
+item.</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">name</span></code> : if this field is not provided, the engine will fill this
+field with the value of the ITEMKEYNAME instead. Whenever the name of
+the item is shown to the player in the game interface, it will be
+taken from here.</p>
+</li>
+<li><div class="first line-block">
+<div class="line"><code class="docutils literal"><span class="pre">equipable</span></code> : if this field is provided and has the value true,
+this item will have an option to equip it, and a property
+<code class="docutils literal"><span class="pre">equiped=false</span></code>. If you select equip,</div>
+<div class="line">the value of <code class="docutils literal"><span class="pre">equiped</span></code> will be set to <code class="docutils literal"><span class="pre">true</span></code>. Also, if the item
+has a <code class="docutils literal"><span class="pre">statMod</span></code>, it will be applied. An item should not be
+<code class="docutils literal"><span class="pre">equipable</span></code> and <code class="docutils literal"><span class="pre">usable</span></code> at the same time.</div>
+</div>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">statMod</span></code> : provides how the item modify the stats of the Hero who
+equips it. If this field is provided, it must contain the dict below:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">{&quot;st&quot;:</span> <span class="pre">INT,</span>&#160; <span class="pre">&quot;dx&quot;:</span> <span class="pre">INT,</span>&#160; <span class="pre">&quot;iq&quot;:</span> <span class="pre">INT</span> <span class="pre">}</span></code></li>
+<li><code class="docutils literal"><span class="pre">st</span></code> : how this item modify the Hero <code class="docutils literal"><span class="pre">st</span></code> attribute.</li>
+<li><code class="docutils literal"><span class="pre">dx</span></code> : how this item modify the Hero <code class="docutils literal"><span class="pre">dx</span></code> attribute.</li>
+<li><code class="docutils literal"><span class="pre">iq</span></code> : how this item modify the Hero <code class="docutils literal"><span class="pre">iq</span></code> attribute.</li>
+<li>You only need to specify the attributes that are modified. For
+example, <code class="docutils literal"><span class="pre">{&quot;st&quot;:1}</span></code> is a valid value of <code class="docutils literal"><span class="pre">statMod</span></code>.</li>
+</ul>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">usable</span></code> : if this field is provided and is true, the person
+playing will have see an option in the inventory to <strong>use</strong> this
+item. When the person selects this option, three things happen:
+applies the item <code class="docutils literal"><span class="pre">effect</span></code> if available, then it&#8217;s actions are
+placed in the engine buffer and at last, if the item doesn&#8217;t have the
+property <code class="docutils literal"><span class="pre">reusable</span></code> set to true, it&#8217;s dropped.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">effect</span></code> : an effect is a useful way of describing simple
+<code class="docutils literal"><span class="pre">usable</span></code> items. If it is specified, it must accompany the
+dictionary below:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">{&quot;atr&quot;:st/iq/dx/null,&quot;basep&quot;:INT,&quot;plus&quot;:INT,&quot;effect&quot;:[EFFECTNAME,...]}</span></code><ul>
+<li>an effect generates a value of points from a dice roll n times
+and sum the value of <code class="docutils literal"><span class="pre">plus</span></code>. The n value is <code class="docutils literal"><span class="pre">basep</span></code> plus
+the item user&#8217;s attribute <code class="docutils literal"><span class="pre">atr</span></code>.</li>
+<li>the number of poins is then passed to effect, that is a list
+containing a effect. These can be any of:<ul>
+<li><code class="docutils literal"><span class="pre">hpup</span></code> : adds to the item user&#8217;s hp.</li>
+<li>more effects are going to be specified as the project
+evolves.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>example : <code class="docutils literal"><span class="pre">{&quot;dl&quot;:0,&quot;basep&quot;:0,&quot;plus&quot;:10,&quot;effect&quot;:[&quot;hpup&quot;]}</span></code></li>
+</ul>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">action</span></code> : the effect is useful to generally describing battle
+relevant items, but sometimes you need a more complex item. This can
+usually be accomplished with action, that can contain a list of
+actions and parameters that are placed on the engine buffer when the
+item is used.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">reusable</span></code> : if this field is specified and is <code class="docutils literal"><span class="pre">true</span></code>, using the
+item doesn&#8217;t cause it to be dropped.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">unique</span></code> : you can&#8217;t have more than one of this item, also it can&#8217;t
+be purposely dropped by the player. Unique items are usually
+meaningful to the storyline of the game.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">description</span></code> : a string containing the description of the item,
+think on the description as the shortest as possible sentence that
+you could say about the item by looking at it.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">category</span></code> : the item category is a single word (alphanumeric
+without spaces) string. The recommended values are <code class="docutils literal"><span class="pre">consumable</span></code>,
+<code class="docutils literal"><span class="pre">collectible</span></code>, <code class="docutils literal"><span class="pre">weapon</span></code> and <code class="docutils literal"><span class="pre">armor</span></code>. You could specify other
+values for your particular game implementation, but you must support
+these. They are only useful for filtering the inventory or comparing.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">icon</span></code> : if specified, it is an integer specifying in the
+<code class="docutils literal"><span class="pre">printer.png</span></code> which 64x64 pixel image should be used to draw the
+item in the menu.</p>
 </li>
 </ul>
 </div>
