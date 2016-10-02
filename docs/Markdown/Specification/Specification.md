@@ -91,7 +91,7 @@ change this.
 game project folder.
 
 
-## .pal.json
+## palette files - .pal.json
 
 A palette specifies how an image is going to be sliced in tiles to be available
 for drawing maps. An image can be like below - note, the first 32x32 pixel tile
@@ -138,7 +138,7 @@ to a list that points a different 32x32 pixel piece of the image pointed by
 `tileImage`, describing an animated tile.
 
 
-## .map.json
+## map files - .map.json
 
 Below is an example file with each field that is expected to be available. Each
 numeric 2d matrix is of the same size, which is defined as map width and height.
@@ -237,3 +237,86 @@ and third layer.
 - `tilesAnimated` : this contains a dictionary of numbers, and each number points
 to a list that points a different 32x32 pixel piece of the image pointed by
 `tileImage`, describing an animated tile.
+
+## init.json
+
+The `init.json` file is the first json file that the game engine should read.
+It contains information on what's needed to successfully start the engine, being
+the most notable, the initial information about the player chara - the chara the
+person playing the game controls and uses to interact with the maps.
+
+It's important to notice that *javascript* can't look for any files in a
+directory in a webserver from the client side, it must previously know the full
+name of the files. So some minimal information about the files to expect are
+available here too.
+
+Below is an example of a `init.json` file. Note that the engine will look for
+this exact name and case matters, so the file must be named `init.json`, and
+placed inside the `game_root_folder/descriptors/` folder.
+
+    {
+        "CharasFileList": {
+            "charas1": "charas1.json"
+        },
+        "CharasetFileList": {
+            "charaset1": "charaset1.json"
+        },
+        "HMSFile": "hms.json",
+        "LevelsList": {
+            "ahouse": "ahouse.map.json"
+        },
+        "PictureList":["test"]
+        ,
+        "Player": {
+            "charaSet": "person",
+            "facing": "down",
+            "initPosX": 224,
+            "initPosY": 224,
+            "party": [
+                "hero"
+            ]
+        },
+        "World": {
+            "initLevel": "ahouse"
+        },
+        "itemsFile": "items.json"
+    }
+
+***note:*** all path in this file is relative to the root of the `descriptors`
+folder.
+
+- `CharasFileList` : points to a list of `chara` files, where each key is the name
+of the file minus it's extension.
+
+- `CharasetFileList` : points to a list of `charaset` files, where each key is the
+name of the file minus it's extension.
+
+- `HMSFile` : points to where to look for the Heroes Monsters Skills file and
+it's name. It's advised to keep this value as `hms.json` to avoid confusion.
+
+- `LevelsList` : points to a list of map (`.map.json`) files, where each key is
+the name of the file minus it's extension.
+
+- `PictureList` : points to a list of pictures, minus extension. These files
+should be png files, placed in the `game_root_folder/img/pictures/` for the
+engine to find these files. This is the only path not relative to the
+descriptors folder in the `init.json` file.
+
+- `itemsFile` : "items.json"
+
+- `Player` : describes the initial states of the player chara when the engine is
+the first time in the map state.
+
+    - `charaSet` : the name of the charaset used by the player chara.
+
+    - `facing` : which direction the player chara will be facing, can be either `up`,`down`,`left` or `right`.
+
+    - `initPosX` : at what x (horizontal) position in the map should the player chara start.
+
+    - `initPosY` : at what y (vertical) position in the map should the player chara start.
+
+    - `party` : a list containing the key names of the Heroes in the starting party - this only matters for battle.
+
+- `World`: describes the initial states of the environment.
+
+    - `initLevel` : the key name of the level the player chara begins. This is the first map you see after the start screen.
