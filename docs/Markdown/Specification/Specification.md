@@ -407,7 +407,7 @@ it is specified, it must accompany the dictionary below:
 
             - more effects are going to be specified as the project evolves.
 
-    - example : `{"dl":0,"basep":0,"plus":10,"effect":["hpup"]}`
+    - example : `{"plus":10,"effect":["hpup"]}`
 
 - `action` : the effect is useful to generally describing battle relevant items,
 but sometimes you need a more complex item. This can usually be accomplished with
