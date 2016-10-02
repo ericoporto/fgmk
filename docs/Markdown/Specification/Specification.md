@@ -142,7 +142,13 @@ to a list that points a different 32x32 pixel piece of the image pointed by
 
 Below is an example file with each field that is expected to be available. Each
 numeric 2d matrix is of the same size, which is defined as map width and height.
-The matrix is described as a list (y dimension) of lists (x dimension).
+The matrix is described as a list (y dimension) of lists (x dimension). In a
+4 x 3 fictious map, this matrix would be something like:
+
+    "layer:"
+        [[ 0, 0, 0, 0],
+         [ 0, 0, 0, 0],
+         [ 0, 0, 0, 0]]
 
 You can think of a map as having for layers, the **first** layer, named `layer1`
 is drawn first, and **second** the `layer2` is drawn next, the `player` and
@@ -320,3 +326,110 @@ the first time in the map state.
 - `World`: describes the initial states of the environment.
 
     - `initLevel` : the key name of the level the player chara begins. This is the first map you see after the start screen.
+
+## items.json
+
+The file that describes items, all items here can be added to the player
+inventory by using the action addItem('ITEMKEYNAME') or removed by using the
+action dropItem('ITEMKEYNAME'). When referencing an item, the actions will
+always use ITEMKEYNAME, which must be composed of only alphanumeric characters
+and no spaces.
+
+    {
+    "Items": {
+        "ITEMKEYNAME1":{
+                    "name": null,
+                    "equipable": false,
+                    "statMod": null,
+                    "usable": false,
+                    "action": null,
+                    "effect": null,
+                    "reusable": false,
+                    "unique": false,
+                    "description": false,
+                    "category": null,
+                    "icon": null
+                 },
+        "ITEMKEYNAME2":{
+                ...
+                }
+                ...
+        }
+    }
+
+The file must have a top level statement `Items`, which will start a dictionary
+containing the items. Items are referenced by their key names. You can define
+how many different items as you like.
+
+Each item then can have one of the following fields defined along. Above are the
+default values for all fields. All fields of an item is optional, so you can
+only include what is necessary to describe that item.
+
+- `name` : if this field is not provided, the engine will fill this field with
+the value of the ITEMKEYNAME instead. Whenever the name of the item is shown to
+the player in the game interface, it will be taken from here.
+
+- `equipable` : if this field is provided and has the value true, this item will
+have an option to equip it, and a property `equiped=false`. If you select equip,  
+the value of `equiped` will be set to `true`. Also, if the item has a `statMod`,
+it will be applied. An item should not be `equipable` and `usable` at the same
+time.
+
+- `statMod` : provides how the item modify the stats of the Hero who equips it.
+If this field is provided, it must contain the dict below:
+
+    - `{"st": INT,  "dx": INT,  "iq": INT }`
+
+    - `st` : how this item modify the Hero `st` attribute.
+
+    - `dx` : how this item modify the Hero `dx` attribute.
+
+    - `iq` : how this item modify the Hero `iq` attribute.
+
+    - You only need to specify the attributes that are modified. For example, `{"st":1}` is a valid value of `statMod`.
+
+- `usable` : if this field is provided and is true, the person playing will have
+see an option in the inventory to **use** this item. When the person selects
+this option, three things happen: applies the item `effect` if available, then
+it's actions are placed in the engine buffer and at last, if the item doesn't
+have the property `reusable` set to true, it's dropped.
+
+- `effect` : an effect is a useful way of describing simple `usable` items. If
+it is specified, it must accompany the dictionary below:
+
+    - `{"atr":st/iq/dx/null,"basep":INT,"plus":INT,"effect":[EFFECTNAME,...]}`
+
+        - an effect generates a value of points from a dice roll n times and sum the value of `plus`. The n value is `basep` plus the item user's attribute `atr`.
+
+        - the number of poins is then passed to effect, that is a list containing a effect. These can be any of:
+
+            - `hpup` : adds to the item user's hp.
+
+            - more effects are going to be specified as the project evolves.
+
+    - example : `{"dl":0,"basep":0,"plus":10,"effect":["hpup"]}`
+
+- `action` : the effect is useful to generally describing battle relevant items,
+but sometimes you need a more complex item. This can usually be accomplished with
+action, that can contain a list of actions and parameters that are placed on the
+engine buffer when the item is used.
+
+- `reusable` : if this field is specified and is `true`, using the item doesn't
+cause it to be dropped.
+
+- `unique` : you can't have more than one of this item, also it can't be purposely
+dropped by the player. Unique items are usually meaningful to the storyline of
+the game.
+
+- `description` : a string containing the description of the item, think on the
+description as the shortest as possible sentence that you could say about the
+item by looking at it.
+
+- `category` : the item category is a single word (alphanumeric without spaces)
+string. The recommended values are `consumable`, `collectible`, `weapon` and
+`armor`. You could specify other values for your particular game implementation,
+but you must support these. They are only useful for filtering the inventory
+or comparing.
+
+- `icon` : if specified, it is an integer specifying in the `printer.png` which
+64x64 pixel image should be used to draw the item in the menu.
