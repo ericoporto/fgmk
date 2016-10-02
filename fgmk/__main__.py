@@ -56,7 +56,10 @@ def main():
 
     if args.palette == True:
         a = QApplication([])
-        m = palette_editor.main()
+        mw_arg=[]
+        if 'mapfile' in args:
+            mw_arg = [args.mapfile]
+        m = palette_editor.main(palettefiles=mw_arg)
         a.processEvents()
         m.show()
         m.raise_()

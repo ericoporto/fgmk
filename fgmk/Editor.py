@@ -602,8 +602,9 @@ class MainWindow(QtWidgets.QMainWindow):
         mappalette = { 'tiles': self.myMap.palette,
                        'tileImage': self.myMap.tileImage,
                        'tilesAnimated': self.myMap.tilesAnimated}
-        myPaletteEditor = palette_editor.PaletteEditorWidget(mappalette,
-            self, current_project.settings)
+        myPaletteEditor = palette_editor.main(mappalette=mappalette,
+                                              parent=self,
+                                              ssettings=current_project.settings )
         if myPaletteEditor.exec_() == QtWidgets.QDialog.Accepted:
             pass
 

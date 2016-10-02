@@ -72,8 +72,16 @@ class PaletteCfgWidget(QtWidgets.QWidget):
     def LoadPal(self, pal=None):
         if(pal!=None):
             self.pal.load(pal)
+
         self.img = os.path.join(current_project.settings['gamefolder'], self.pal.getimg())
-        self.LoadImage()
+        if os.path.isfile(self.img):
+            self.LoadImage()
+            return
+
+        self.img = os.path.join(os.path.dirname(self.pal.getfilename()), self.pal.getimg())
+        if os.path.isfile(self.img):
+            self.LoadImage()
+            return
 
     def LoadImage(self,img=None):
         if(img!=None):
@@ -292,7 +300,7 @@ class CommandSetTileType(QtWidgets.QUndoCommand):
 
 
 class PaletteEditorWidget(QtWidgets.QDialog):
-    def __init__(self,mappalette=None, parent=None, ssettings={}, **kwargs):
+    def __init__(self,mappalette=None, parent=None, ssettings={}, palettefiles=None, **kwargs):
         QtWidgets.QDialog.__init__(self, parent, **kwargs)
 
         #this will create a undo stack
@@ -394,7 +402,13 @@ class PaletteEditorWidget(QtWidgets.QDialog):
 
         if(mappalette!=None):
             self.openMapPalette(mappalette)
-
+        elif(palettefiles!=None):
+            if os.path.isfile(os.path.join(palettefiles[0])):
+                # if path is absolute
+                self.myPalWidget.LoadPal(os.path.join(palettefiles[0]))
+            elif os.path.isfile(os.path.join(os.getcwd(),palettefiles[0])):
+                # if path is relative
+                self.myPalWidget.LoadPal(os.path.join(os.getcwd(),palettefiles[0]))
 
     def openMapPalette(self, mappalette):
         self.myPalWidget.LoadJsonDumpPal(mappalette)
@@ -482,11 +496,11 @@ class PaletteEditorWidget(QtWidgets.QDialog):
         projectfolder = os.path.join(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Project Directory"))
         current_project.settings["gamefolder"] = projectfolder
 
-def main(args=None):
-    if(args!=None):
-        return PaletteEditorWidget(args)
-    else:
-        return PaletteEditorWidget()
+def main(mappalette=None, parent=None, ssettings={},palettefiles=None):
+    return PaletteEditorWidget(mappalette=mappalette,
+                               parent=parent,
+                               ssettings=ssettings,
+                               palettefiles=palettefiles)
 
 if __name__ == "__main__":
     from sys import argv, exit
