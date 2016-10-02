@@ -95,6 +95,59 @@ to change this.
 -  ``index.html`` - this is the engine. It should be placed at the root
    of the game project folder.
 
+.pal.json
+---------
+
+A palette specifies how an image is going to be sliced in tiles to be
+available for drawing maps. An image can be like below - note, the first
+32x32 pixel tile should always be empty.
+
+.. figure:: tile4x.png
+   :alt: 
+
+This file holds a palette of tiles, it's used to "paint" maps, each tile
+in a map layer (1,2 and 4) will be translated to a cropped piece of 32
+pixels in width and height from the image.
+
+::
+
+    {
+        "tilesAnimated":
+        {
+            "8":
+                 [[  0, 2],
+                  [  1, 2],
+                  [  2, 2],
+                  [  3, 2]] },
+        "tiles":
+        {   "1":  [  1, 0],
+            "2":  [  2, 0],
+            "3":  [  3, 0],
+            "4":  [  0, 1],
+            "5":  [  1, 1],
+            "6":  [  2, 1],
+            "7":  [  3, 1],
+            "8":  [  1, 2]  },
+        "tileImage": "img/tile.png"
+    }
+
+.. figure:: tile4x_marks.png
+   :alt: 
+
+*the image above represents the palette*
+
+-  ``tileImage`` : the relative path to a png image that is used by the
+   palette.
+
+-  ``tiles`` : this contains a dictionary of numbers, and each number
+   points to a 32x32 pixel piece of the image pointed by ``tileImage``.
+
+   -  ``tiles: "1" : [X,Y], "2" : [X,Y], ...``
+
+-  ``tilesAnimated`` : this contains a dictionary of numbers, and each
+   number points to a list that points a different 32x32 pixel piece of
+   the image pointed by ``tileImage``, describing an animated tile.
+
 .map.json
 ---------
 

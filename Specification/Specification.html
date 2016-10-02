@@ -84,6 +84,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pal-json">.pal.json</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#map-json">.map.json</a></li>
 </ul>
 </li>
@@ -225,6 +226,55 @@ to change this.</p>
 <li><code class="docutils literal"><span class="pre">index.html</span></code> - this is the engine. It should be placed at the root
 of the game project folder.</li>
 </ul>
+<div class="section" id="pal-json">
+<h2>.pal.json<a class="headerlink" href="#pal-json" title="Permalink to this headline">¶</a></h2>
+<p>A palette specifies how an image is going to be sliced in tiles to be
+available for drawing maps. An image can be like below - note, the first
+32x32 pixel tile should always be empty.</p>
+<div class="figure">
+<img alt="" src="../_images/tile4x.png" />
+</div>
+<p>This file holds a palette of tiles, it&#8217;s used to &#8220;paint&#8221; maps, each tile
+in a map layer (1,2 and 4) will be translated to a cropped piece of 32
+pixels in width and height from the image.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;tilesAnimated&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;8&quot;</span><span class="p">:</span>
+             <span class="p">[[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span> <span class="p">},</span>
+    <span class="s2">&quot;tiles&quot;</span><span class="p">:</span>
+    <span class="p">{</span>   <span class="s2">&quot;1&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;2&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;3&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;4&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;5&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;6&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;7&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;8&quot;</span><span class="p">:</span>  <span class="p">[</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="p">},</span>
+    <span class="s2">&quot;tileImage&quot;</span><span class="p">:</span> <span class="s2">&quot;img/tile.png&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="figure">
+<img alt="" src="../_images/tile4x_marks.png" />
+</div>
+<p><em>the image above represents the palette</em></p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">tileImage</span></code> : the relative path to a png image that is used by the
+palette.</li>
+<li><code class="docutils literal"><span class="pre">tiles</span></code> : this contains a dictionary of numbers, and each number
+points to a 32x32 pixel piece of the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>.<ul>
+<li><code class="docutils literal"><span class="pre">tiles:</span> <span class="pre">&quot;1&quot;</span> <span class="pre">:</span> <span class="pre">[X,Y],</span> <span class="pre">&quot;2&quot;</span> <span class="pre">:</span> <span class="pre">[X,Y],</span> <span class="pre">...</span></code></li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">tilesAnimated</span></code> : this contains a dictionary of numbers, and each
+number points to a list that points a different 32x32 pixel piece of
+the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>, describing an animated tile.</li>
+</ul>
+</div>
 <div class="section" id="map-json">
 <h2>.map.json<a class="headerlink" href="#map-json" title="Permalink to this headline">¶</a></h2>
 <p>Below is an example file with each field that is expected to be
