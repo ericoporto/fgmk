@@ -84,8 +84,9 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Specification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pal-json">.pal.json</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#map-json">.map.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#palette-files-pal-json">palette files - .pal.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#map-files-map-json">map files - .map.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#init-json">init.json</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
@@ -226,8 +227,8 @@ to change this.</p>
 <li><code class="docutils literal"><span class="pre">index.html</span></code> - this is the engine. It should be placed at the root
 of the game project folder.</li>
 </ul>
-<div class="section" id="pal-json">
-<h2>.pal.json<a class="headerlink" href="#pal-json" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="palette-files-pal-json">
+<h2>palette files - .pal.json<a class="headerlink" href="#palette-files-pal-json" title="Permalink to this headline">¶</a></h2>
 <p>A palette specifies how an image is going to be sliced in tiles to be
 available for drawing maps. An image can be like below - note, the first
 32x32 pixel tile should always be empty.</p>
@@ -275,8 +276,8 @@ number points to a list that points a different 32x32 pixel piece of
 the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>, describing an animated tile.</li>
 </ul>
 </div>
-<div class="section" id="map-json">
-<h2>.map.json<a class="headerlink" href="#map-json" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="map-files-map-json">
+<h2>map files - .map.json<a class="headerlink" href="#map-files-map-json" title="Permalink to this headline">¶</a></h2>
 <p>Below is an example file with each field that is expected to be
 available. Each numeric 2d matrix is of the same size, which is defined
 as map width and height. The matrix is described as a list (y dimension)
@@ -371,6 +372,88 @@ points to a 32x32 pixel piece of the image pointed by <code class="docutils lite
 <li><code class="docutils literal"><span class="pre">tilesAnimated</span></code> : this contains a dictionary of numbers, and each
 number points to a list that points a different 32x32 pixel piece of
 the image pointed by <code class="docutils literal"><span class="pre">tileImage</span></code>, describing an animated tile.</li>
+</ul>
+</div>
+<div class="section" id="init-json">
+<h2>init.json<a class="headerlink" href="#init-json" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">init.json</span></code> file is the first json file that the game engine
+should read. It contains information on what&#8217;s needed to successfully
+start the engine, being the most notable, the initial information about
+the player chara - the chara the person playing the game controls and
+uses to interact with the maps.</p>
+<p>It&#8217;s important to notice that <em>javascript</em> can&#8217;t look for any files in a
+directory in a webserver from the client side, it must previously know
+the full name of the files. So some minimal information about the files
+to expect are available here too.</p>
+<p>Below is an example of a <code class="docutils literal"><span class="pre">init.json</span></code> file. Note that the engine will
+look for this exact name and case matters, so the file must be named
+<code class="docutils literal"><span class="pre">init.json</span></code>, and placed inside the <code class="docutils literal"><span class="pre">game_root_folder/descriptors/</span></code>
+folder.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;CharasFileList&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;charas1&quot;</span><span class="p">:</span> <span class="s2">&quot;charas1.json&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;CharasetFileList&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;charaset1&quot;</span><span class="p">:</span> <span class="s2">&quot;charaset1.json&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;HMSFile&quot;</span><span class="p">:</span> <span class="s2">&quot;hms.json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LevelsList&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ahouse&quot;</span><span class="p">:</span> <span class="s2">&quot;ahouse.map.json&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;PictureList&quot;</span><span class="p">:[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
+    <span class="p">,</span>
+    <span class="s2">&quot;Player&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;charaSet&quot;</span><span class="p">:</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;facing&quot;</span><span class="p">:</span> <span class="s2">&quot;down&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;initPosX&quot;</span><span class="p">:</span> <span class="mi">224</span><span class="p">,</span>
+        <span class="s2">&quot;initPosY&quot;</span><span class="p">:</span> <span class="mi">224</span><span class="p">,</span>
+        <span class="s2">&quot;party&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;hero&quot;</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;World&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;initLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;ahouse&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;itemsFile&quot;</span><span class="p">:</span> <span class="s2">&quot;items.json&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>*note:*</strong> all path in this file is relative to the root of the
+<code class="docutils literal"><span class="pre">descriptors</span></code> folder.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CharasFileList</span></code> : points to a list of <code class="docutils literal"><span class="pre">chara</span></code> files, where each
+key is the name of the file minus it&#8217;s extension.</li>
+<li><code class="docutils literal"><span class="pre">CharasetFileList</span></code> : points to a list of <code class="docutils literal"><span class="pre">charaset</span></code> files, where
+each key is the name of the file minus it&#8217;s extension.</li>
+<li><code class="docutils literal"><span class="pre">HMSFile</span></code> : points to where to look for the Heroes Monsters Skills
+file and it&#8217;s name. It&#8217;s advised to keep this value as <code class="docutils literal"><span class="pre">hms.json</span></code>
+to avoid confusion.</li>
+<li><code class="docutils literal"><span class="pre">LevelsList</span></code> : points to a list of map (<code class="docutils literal"><span class="pre">.map.json</span></code>) files, where
+each key is the name of the file minus it&#8217;s extension.</li>
+<li><code class="docutils literal"><span class="pre">PictureList</span></code> : points to a list of pictures, minus extension.
+These files should be png files, placed in the
+<code class="docutils literal"><span class="pre">game_root_folder/img/pictures/</span></code> for the engine to find these
+files. This is the only path not relative to the descriptors folder
+in the <code class="docutils literal"><span class="pre">init.json</span></code> file.</li>
+<li><code class="docutils literal"><span class="pre">itemsFile</span></code> : &#8220;items.json&#8221;</li>
+<li><code class="docutils literal"><span class="pre">Player</span></code> : describes the initial states of the player chara when
+the engine is the first time in the map state.<ul>
+<li><code class="docutils literal"><span class="pre">charaSet</span></code> : the name of the charaset used by the player chara.</li>
+<li><code class="docutils literal"><span class="pre">facing</span></code> : which direction the player chara will be facing, can
+be either <code class="docutils literal"><span class="pre">up</span></code>,<code class="docutils literal"><span class="pre">down</span></code>,<code class="docutils literal"><span class="pre">left</span></code> or <code class="docutils literal"><span class="pre">right</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">initPosX</span></code> : at what x (horizontal) position in the map should
+the player chara start.</li>
+<li><code class="docutils literal"><span class="pre">initPosY</span></code> : at what y (vertical) position in the map should the
+player chara start.</li>
+<li><code class="docutils literal"><span class="pre">party</span></code> : a list containing the key names of the Heroes in the
+starting party - this only matters for battle.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">World</span></code>: describes the initial states of the environment.<ul>
+<li><code class="docutils literal"><span class="pre">initLevel</span></code> : the key name of the level the player chara begins.
+This is the first map you see after the start screen.</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
