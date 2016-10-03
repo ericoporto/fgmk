@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; fgmk 0.5.4 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="fgmk 0.5.4 documentation" href="../index.html"/>
+        <link rel="next" title="Quickstart" href="../Quickstart/Quickstart.html"/>
+        <link rel="prev" title="Welcome to FGMK’s documentation!" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> fgmk
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-install-and-run">Recommended Install and run</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#windows-installation">Windows Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unix-install-and-run">Unix install and run</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#from-source-installation">From Source Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-from-source">Running from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Quickstart/Quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Specification/Specification.html">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Actions/Actions.html">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Roadmap/Roadmap.html">Roadmap</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">fgmk</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Installation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/Installation/Installation.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p><strong>fgmk</strong> is packed as a regular Python project, in the <a class="reference external" href="https://pypi.python.org/pypi/fgmk">Python Package
+Indexer</a>.</p>
+<p>As such, installation is fairly easy, and easier if you already have
+Python installed.</p>
+<div class="section" id="recommended-install-and-run">
+<h2>Recommended Install and run<a class="headerlink" href="#recommended-install-and-run" title="Permalink to this headline">¶</a></h2>
+<p>If you are already familiar with Python, just use the commands below in
+your terminal to install and run <strong>fgmk</strong>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">fgmk</span>
+<span class="n">fgmk</span>
+</pre></div>
+</div>
+<div class="section" id="windows-installation">
+<h3>Windows Installation<a class="headerlink" href="#windows-installation" title="Permalink to this headline">¶</a></h3>
+<div class="figure" id="id1">
+<img alt="Installation on Windows with pip" src="../_images/win_fgmk_install.gif" />
+<p class="caption"><span class="caption-text">Installation on Windows with pip</span></p>
+</div>
+<p>In Windows, install Python 3 from
+<a class="reference external" href="https://www.python.org/downloads/">www.python.org</a>, and then open
+<code class="docutils literal"><span class="pre">.html.exe</span></code> and type (press enter after):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+<p>To run, you can type the following in <code class="docutils literal"><span class="pre">.html.exe</span></code> or the <code class="docutils literal"><span class="pre">run...</span></code>
+prompt</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+<p>If your python/scripts folder is in your Windows PATH, you can omit the
+preceding <code class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span></code> command, and just type <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">fgmk</span></code> and
+then <code class="docutils literal"><span class="pre">fgmk</span></code>.</p>
+</div>
+<div class="section" id="unix-install-and-run">
+<h3>Unix install and run<a class="headerlink" href="#unix-install-and-run" title="Permalink to this headline">¶</a></h3>
+<p>First you need <code class="docutils literal"><span class="pre">pip3</span></code> for <code class="docutils literal"><span class="pre">Python3</span></code>.</p>
+<ul class="simple">
+<li>in Ubuntu or Debian, open the terminal and use
+<code class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-pip</span></code>.</li>
+<li>After you will be able to run <code class="docutils literal"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">fgmk</span></code>. You can just
+type <code class="docutils literal"><span class="pre">fgmk</span></code> at command line to launch the editor.</li>
+<li>In Ubuntu, <strong>fgmk</strong> will be also added to the Unity Applications
+entry.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="from-source-installation">
+<h2>From Source Installation<a class="headerlink" href="#from-source-installation" title="Permalink to this headline">¶</a></h2>
+<p>Clone this repository, meet the dependencies and install this with pip3.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ericoporto</span><span class="o">/</span><span class="n">fgmk</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">fgmk</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-from-source">
+<h2>Running from source<a class="headerlink" href="#running-from-source" title="Permalink to this headline">¶</a></h2>
+<p>Clone this repository, meet the dependencies and type
+<code class="docutils literal"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">fgmk</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ericoporto</span><span class="o">/</span><span class="n">fgmk</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">fgmk</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>This tool is written using Python 3. Needs <code class="docutils literal"><span class="pre">pillow</span></code>, <code class="docutils literal"><span class="pre">numpy</span></code> and
+<code class="docutils literal"><span class="pre">PyQt5</span></code> - you can <code class="docutils literal"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-pyqt5</span></code> and similar (in
+Ubuntu) or use pip.</p>
+<p>If you satisfy all dependencies you don&#8217;t need to install, and can run
+from source.</p>
+<p><strong>*Experimental compatibility to python2*</strong> (2.7 and on) is added to
+versions above 0.3.0 . Note that Python 2.7 pip doesn&#8217;t provide an easy
+way to install PyQt5 so you will have to install it on your own - if you
+are in Ubuntu, use <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python-pyqt5</span></code></p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Quickstart/Quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to FGMK’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Érico Vieira Porto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.5.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -13,10 +13,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   Installation/Installation
    Quickstart/Quickstart
    Specification/Specification
    Editor/Editor
    Actions/Actions
-   EditorCode/EditorCode
    Roadmap/Roadmap
-   Future/Future
+
+For more information, check the Project's Github Page: `github.com/ericoporto/fgmk <http://github.com/ericoporto/fgmk>`_
