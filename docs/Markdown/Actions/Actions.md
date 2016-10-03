@@ -20,6 +20,21 @@ insert the new action above the selected action.
 Actions are read from top to bottom, they are then placed in a FIFO buffer.
 The IF action can interact with this buffer, which will change execution flow.
 
+A list of actions will have the following format:
+
+    [["actionName","PARAM1;PARAM2;..."],
+     ["actionName","PARAM1;PARAM2;..."],
+     ...
+     ["actionName","PARAM1;PARAM2;..."]]
+
+
+An example of a list of actions:
+
+    [["showText","Got a sword!"],
+     ["addItem","sword"]]
+
+The interface will provide a clean and easy way to create, edit, reorder and
+remove actions.
 
 ## Available Actions
 
@@ -168,19 +183,24 @@ Parameter:"condition"
 ![](actions/screenshots/IF.png)
 
 **IF** condition is a special type of parameter, right now it must be in the
-format "varOrValue1;oper;varOrValue2", where oper is the operator.
+format `"varOrValue1;oper;varOrValue2"`, where `oper` is the operator.
 
 Possible operators:
 
-- `>`,`bigger`,`greater`
+- `>`,`bigger`,`greater` : returns `true` if `varOrValue1` is bigger than
+`varOrValue2`.
 
-- `<`,`smaller`,`less`
+- `<`,`smaller`,`less` : returns `true` if `varOrValue1` is smaller than
+`varOrValue2`.
 
-- `>=`
+- `>=` : returns `true` if `varOrValue1` is bigger than or equal to
+`varOrValue2`.
 
-- `<=`
+- `<=` : returns `true` if `varOrValue1` is smaller than or equal to
+`varOrValue2`.
 
-- `==`,`=`,`equal`
+- `==`,`=`,`equal` : returns `true` if `varOrValue1` is equal to `varOrValue2`.
+Works with non numeric values too.
 
 The field **var of value** can be either a value (like `1`, `42` or `house`), or
 a variable. If it's a variable, the following variables available:
@@ -189,11 +209,13 @@ a variable. If it's a variable, the following variables available:
 
 - `ans:`, is the answer of the last questionBox, as text.
 
-- `ans:num`, the number of the answer of the last questionBox. First answer is `0`.
+- `ans:num`, the number of the answer of the last questionBox. First answer is
+`0`.
 
 - `lastbattle:`, return True if the player won the last battle.
 
-- `hero:face`, returns on of the following directions `up`,`down`,`left`,`right`.
+- `hero:face`, returns on of the following directions `up`,`down`,`left`,
+`right`.
 
 - `hero:x`, returns the x position of the Hero in the map.
 
@@ -204,6 +226,15 @@ a variable. If it's a variable, the following variables available:
 If the condition is met, this is, it evaluates to TRUE, then it runs whatever
 code is next until ELSE or END action are met, and jumps to after the END.
 If the condition is FALSE  then it ignores any actions until ELSE or END.
+
+An example below of a possible use of IF in a magical item that takes you
+between two maps:
+
+    [["IF","map:this;equal;darkworld"],
+     ["teleportInPlace","lightworld"],
+     ["ELSE",""],
+     ["teleportInPlace","darkworld"],
+     ["END"]]
 
 
 ### ![](actions/icons/ELSE.png){ width=16px } ELSE

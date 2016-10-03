@@ -433,3 +433,50 @@ or comparing.
 
 - `icon` : if specified, it is an integer specifying in the `printer.png` which
 64x64 pixel image should be used to draw the item in the menu.
+
+## Charaset
+
+A **charaset** is a description of the frames that compose the animations.
+When a **chara** is presented to the screen (example: NPCs you interact with),
+it will have a drawing in the screen, each chara is associated to a charaset
+describing it. At minimum, each chara has two animations: standing, and walking,
+each having at least a frame assigned per facing direction. A facing direction
+is always one the following: `down`, `right`, `up`, `left`.
+
+    { "Charaset": {
+        "tileImage": "charaset.png",
+        "CHARASET_NAME": {
+            "standing": {
+                "down":
+                    [[  X,  Y], [  X,  Y], [  X,  Y]...],
+                "right":
+                    [[  X,  Y]...],
+                "up":
+                    [[  X,  Y]...],
+                "left":
+                    [[  X,  Y]...] },
+            "walking": {
+                "down":
+                    [[  X,  Y]...],
+                "right":
+                    [[  X,  Y]...],
+                "up":
+                    [[  X,  Y]...],
+                "left":
+                    [[  X,  Y]...] },
+             ...
+            },
+        ....
+        } }
+
+A frame is described by a piece that is 64 pixels in height and 32 pixels in
+width of the `tileImage` indicated. This `tileImage` path is relative to the
+`img` folder.
+
+The image will be divided in a grid, where each cell has 64 pixels in height
+and 32 pixels in width. The first cell at top left is where X and Y are both
+zeros. Each cell in horizontal line towards right increments 1 to X, and
+each cell in vertical line towards bottom increments 1 to Y. You can have as
+many frames as necessary.
+
+You can define other animations with different names, as necessary.
