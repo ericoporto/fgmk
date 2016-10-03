@@ -6,6 +6,7 @@ mkdir -p build
 
 #clean directory
 rm -rf Rst
+rm -rf source/Installation
 rm -rf source/Editor
 rm -rf source/Actions
 rm -rf source/EditorCode
@@ -16,30 +17,32 @@ rm -rf source/Specification
 rm -rf build/*
 
 # using copy with cp is a bad idea. It can corrupt files.
+# alternatively, I am using rsync.
 # TODO: rewrite the copy safely with Python.
-# alternatively, findout how available it's rsync
+
 
 #a brand new from the Markdown
-cp -rf Markdown Rst
+rsync -a Markdown/ Rst
 
 #lets convert everything to RestructuredText
 python3 recursiveMd2Rst.py
 
 #lets make all links correct
 cd Rst
-find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sed -i 's/.md/.html/g'
+ find . -type f -iname "*.rst" -exec sed -i 's/.md/.html/g' {} \;
 
 #lets go back
 cd ..
 
-cp -rf Rst/Actions source/Actions
-cp -rf Rst/Editor source/Editor
-cp -rf Rst/EditorCode source/EditorCode
-cp -rf Rst/Future source/Future
-cp -rf Rst/Quickstart source/Quickstart
-cp -rf Rst/Roadmap source/Roadmap
-cp -rf Rst/Specification source/Specification
+rsync -a Rst/Installation/ source/Installation
+rsync -a Rst/Actions/ source/Actions
+rsync -a Rst/Editor/ source/Editor
+rsync -a Rst/EditorCode/ source/EditorCode
+rsync -a Rst/Future/ source/Future
+rsync -a Rst/Quickstart/ source/Quickstart
+rsync -a Rst/Roadmap/ source/Roadmap
+rsync -a Rst/Specification/ source/Specification
 
-cp index.rst source/index.rst
+rsync -a index.rst source/index.rst
 
 make html

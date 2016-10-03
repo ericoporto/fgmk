@@ -1,5 +1,0 @@
-TBD
-
-
-
-[*back*](Specification.md)

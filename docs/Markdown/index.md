@@ -7,6 +7,9 @@ The project seeks to reach this goal by providing a spec for writing and
 interpret text files as games, a tool for writing these files in an easy to use
 interface, and an engine to allow playing these files as a game.
 
+- [`Installation`](Installation/Installation.md) - How to install fgmk on your
+computer.
+
 - [`Quickstart`](Quickstart/Quickstart.md) - This is the TL;DR. Click here if
 you just want to use the editor as fast as possible.
 
