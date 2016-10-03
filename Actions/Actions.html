@@ -177,6 +177,20 @@ Add Action will insert the new action above the selected action.</p>
 <p>Actions are read from top to bottom, they are then placed in a FIFO
 buffer. The IF action can interact with this buffer, which will change
 execution flow.</p>
+<p>A list of actions will have the following format:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="s2">&quot;actionName&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;actionName&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">],</span>
+ <span class="o">...</span>
+ <span class="p">[</span><span class="s2">&quot;actionName&quot;</span><span class="p">,</span><span class="s2">&quot;PARAM1;PARAM2;...&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>An example of a list of actions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="s2">&quot;showText&quot;</span><span class="p">,</span><span class="s2">&quot;Got a sword!&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;addItem&quot;</span><span class="p">,</span><span class="s2">&quot;sword&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>The interface will provide a clean and easy way to create, edit, reorder
+and remove actions.</p>
 </div>
 <div class="section" id="available-actions">
 <h2>Available Actions<a class="headerlink" href="#available-actions" title="Permalink to this headline">¶</a></h2>
@@ -330,14 +344,20 @@ want to pass to the Variable - the first parameter.</p>
 <img alt="" src="../_images/IF1.png" />
 </div>
 <p><strong>IF</strong> condition is a special type of parameter, right now it must be in
-the format &#8220;varOrValue1;oper;varOrValue2&#8221;, where oper is the operator.</p>
+the format <code class="docutils literal"><span class="pre">&quot;varOrValue1;oper;varOrValue2&quot;</span></code>, where <code class="docutils literal"><span class="pre">oper</span></code> is the
+operator.</p>
 <p>Possible operators:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">&gt;</span></code>,<code class="docutils literal"><span class="pre">bigger</span></code>,<code class="docutils literal"><span class="pre">greater</span></code></li>
-<li><code class="docutils literal"><span class="pre">&lt;</span></code>,<code class="docutils literal"><span class="pre">smaller</span></code>,<code class="docutils literal"><span class="pre">less</span></code></li>
-<li><code class="docutils literal"><span class="pre">&gt;=</span></code></li>
-<li><code class="docutils literal"><span class="pre">&lt;=</span></code></li>
-<li><code class="docutils literal"><span class="pre">==</span></code>,<code class="docutils literal"><span class="pre">=</span></code>,<code class="docutils literal"><span class="pre">equal</span></code></li>
+<li><code class="docutils literal"><span class="pre">&gt;</span></code>,<code class="docutils literal"><span class="pre">bigger</span></code>,<code class="docutils literal"><span class="pre">greater</span></code> : returns <code class="docutils literal"><span class="pre">true</span></code> if
+<code class="docutils literal"><span class="pre">varOrValue1</span></code> is bigger than <code class="docutils literal"><span class="pre">varOrValue2</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">&lt;</span></code>,<code class="docutils literal"><span class="pre">smaller</span></code>,<code class="docutils literal"><span class="pre">less</span></code> : returns <code class="docutils literal"><span class="pre">true</span></code> if <code class="docutils literal"><span class="pre">varOrValue1</span></code>
+is smaller than <code class="docutils literal"><span class="pre">varOrValue2</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">&gt;=</span></code> : returns <code class="docutils literal"><span class="pre">true</span></code> if <code class="docutils literal"><span class="pre">varOrValue1</span></code> is bigger than or equal
+to <code class="docutils literal"><span class="pre">varOrValue2</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">&lt;=</span></code> : returns <code class="docutils literal"><span class="pre">true</span></code> if <code class="docutils literal"><span class="pre">varOrValue1</span></code> is smaller than or equal
+to <code class="docutils literal"><span class="pre">varOrValue2</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">==</span></code>,<code class="docutils literal"><span class="pre">=</span></code>,<code class="docutils literal"><span class="pre">equal</span></code> : returns <code class="docutils literal"><span class="pre">true</span></code> if <code class="docutils literal"><span class="pre">varOrValue1</span></code> is
+equal to <code class="docutils literal"><span class="pre">varOrValue2</span></code>. Works with non numeric values too.</li>
 </ul>
 <p>The field <strong>var of value</strong> can be either a value (like <code class="docutils literal"><span class="pre">1</span></code>, <code class="docutils literal"><span class="pre">42</span></code> or
 <code class="docutils literal"><span class="pre">house</span></code>), or a variable. If it&#8217;s a variable, the following variables
@@ -350,7 +370,7 @@ variable.</li>
 answer is <code class="docutils literal"><span class="pre">0</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">lastbattle:</span></code>, return True if the player won the last battle.</li>
 <li><code class="docutils literal"><span class="pre">hero:face</span></code>, returns on of the following directions
-<code class="docutils literal"><span class="pre">up</span></code>,<code class="docutils literal"><span class="pre">down</span></code>,<code class="docutils literal"><span class="pre">left</span></code>,<code class="docutils literal"><span class="pre">right</span></code>.</li>
+<code class="docutils literal"><span class="pre">up</span></code>,<code class="docutils literal"><span class="pre">down</span></code>,<code class="docutils literal"><span class="pre">left</span></code>, <code class="docutils literal"><span class="pre">right</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">hero:x</span></code>, returns the x position of the Hero in the map.</li>
 <li><code class="docutils literal"><span class="pre">hero:y</span></code>, returns the y position of the Hero in the map.</li>
 <li><code class="docutils literal"><span class="pre">map:this</span></code>, returns the name of the current map.</li>
@@ -359,6 +379,15 @@ answer is <code class="docutils literal"><span class="pre">0</span></code>.</li>
 whatever code is next until ELSE or END action are met, and jumps to
 after the END. If the condition is FALSE then it ignores any actions
 until ELSE or END.</p>
+<p>An example below of a possible use of IF in a magical item that takes
+you between two maps:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="s2">&quot;IF&quot;</span><span class="p">,</span><span class="s2">&quot;map:this;equal;darkworld&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;teleportInPlace&quot;</span><span class="p">,</span><span class="s2">&quot;lightworld&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;ELSE&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;teleportInPlace&quot;</span><span class="p">,</span><span class="s2">&quot;darkworld&quot;</span><span class="p">],</span>
+ <span class="p">[</span><span class="s2">&quot;END&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="image16-else">
 <h3><a class="reference internal" href="../_images/ELSE.png"><img alt="image16" src="../_images/ELSE.png" style="width: 16px;" /></a> ELSE<a class="headerlink" href="#image16-else" title="Permalink to this headline">¶</a></h3>

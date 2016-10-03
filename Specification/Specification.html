@@ -89,6 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#map-files-map-json">map files - .map.json</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#init-json">init.json</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#items-json">items.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#charaset">Charaset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Editor/Editor.html">Editor</a></li>
@@ -583,6 +584,52 @@ these. They are only useful for filtering the inventory or comparing.</p>
 item in the menu.</p>
 </li>
 </ul>
+</div>
+<div class="section" id="charaset">
+<h2>Charaset<a class="headerlink" href="#charaset" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>charaset</strong> is a description of the frames that compose the
+animations. When a <strong>chara</strong> is presented to the screen (example: NPCs
+you interact with), it will have a drawing in the screen, each chara is
+associated to a charaset describing it. At minimum, each chara has two
+animations: standing, and walking, each having at least a frame assigned
+per facing direction. A facing direction is always one the following:
+<code class="docutils literal"><span class="pre">down</span></code>, <code class="docutils literal"><span class="pre">right</span></code>, <code class="docutils literal"><span class="pre">up</span></code>, <code class="docutils literal"><span class="pre">left</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Charaset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;tileImage&quot;</span><span class="p">:</span> <span class="s2">&quot;charaset.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CHARASET_NAME&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;standing&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;down&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">],</span> <span class="p">[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">],</span> <span class="p">[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;up&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">]</span> <span class="p">},</span>
+        <span class="s2">&quot;walking&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;down&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;up&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">],</span>
+            <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+                <span class="p">[[</span>  <span class="n">X</span><span class="p">,</span>  <span class="n">Y</span><span class="p">]</span><span class="o">...</span><span class="p">]</span> <span class="p">},</span>
+         <span class="o">...</span>
+        <span class="p">},</span>
+    <span class="o">....</span>
+    <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>A frame is described by a piece that is 64 pixels in height and 32
+pixels in width of the <code class="docutils literal"><span class="pre">tileImage</span></code> indicated. This <code class="docutils literal"><span class="pre">tileImage</span></code> path
+is relative to the <code class="docutils literal"><span class="pre">img</span></code> folder.</p>
+<p>The image will be divided in a grid, where each cell has 64 pixels in
+height and 32 pixels in width. The first cell at top left is where X and
+Y are both zeros. Each cell in horizontal line towards right increments
+1 to X, and each cell in vertical line towards bottom increments 1 to Y.
+You can have as many frames as necessary.</p>
+<p>You can define other animations with different names, as necessary.</p>
 </div>
 </div>
 
