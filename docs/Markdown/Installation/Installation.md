@@ -20,11 +20,11 @@ terminal to install and run **fgmk**.
 ![Installation on Windows with pip](win_fgmk_install.gif)
 
 In Windows, install Python 3 from [www.python.org](https://www.python.org/downloads/),
-and then open `cmd.exe` and type (press enter after):
+and then open **cmd.exe** and type (press enter after):
 
     python -m pip install fgmk
 
-To run, you can type the following in `cmd.exe` or the `run...` prompt
+To run, you can type the following in **cmd.exe** or the **run...** prompt:
 
     python -m fgmk
 
