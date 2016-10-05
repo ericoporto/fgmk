@@ -21,3 +21,5 @@ Contents:
    Roadmap/Roadmap
 
 For more information, check the Project's Github Page: `github.com/ericoporto/fgmk <http://github.com/ericoporto/fgmk>`_
+
+If you are curious about the engine that's packed together, it's code is here: `github.com/ericoporto/fgmkJsEngine <https://github.com/ericoporto/fgmkJsEngine>`_
