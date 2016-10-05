@@ -29,7 +29,7 @@ python3 recursiveMd2Rst.py
 
 #lets make all links correct
 cd Rst
- find . -type f -iname "*.rst" -exec sed -i 's/.md/.html/g' {} \;
+ find . -type f -iname "*.rst" -exec sed -i 's/\.md/\.html/g' {} \;
 
 #lets go back
 cd ..
