@@ -28,13 +28,13 @@ Windows Installation
 
 In Windows, install Python 3 from
 `www.python.org <https://www.python.org/downloads/>`__, and then open
-**.html.exe** and type (press enter after):
+**cmd.exe** and type (press enter after):
 
 ::
 
     python -m pip install fgmk
 
-To run, you can type the following in **.html.exe** or the **run...**
+To run, you can type the following in **cmd.exe** or the **run...**
 prompt:
 
 ::
