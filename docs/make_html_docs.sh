@@ -43,6 +43,7 @@ rsync -a Rst/Quickstart/ source/Quickstart
 rsync -a Rst/Roadmap/ source/Roadmap
 rsync -a Rst/Specification/ source/Specification
 
-rsync -a index.rst source/index.rst
+rsync -a index_html.rst source/index.rst
+rsync -a conf_html.py source/conf.py
 
 make html
