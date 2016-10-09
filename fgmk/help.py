@@ -175,15 +175,7 @@ class HelpWindow (QtWidgets.QDialog):
 
     def close(self):
         self.browser.close()
-        # self.hcontent.linkActivated.disconnect()
-        # self.hindex.linkActivated.disconnect()
-        # self.resultSearch.requestShowLink.disconnect()
-        # self.querySearch.search.disconnect()
-        # del self.browser
-        # del self.resultSearch
-        # del self.querySearch
         del self.engine
-        print('closing')
 
 def main():
     return HelpWindow()

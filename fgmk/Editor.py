@@ -499,6 +499,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fullscreenViewAction.changed.connect(self.changeToFullscreen)
 
         helpMenu = self.menubar.addMenu('&Help')
+        helpMenu.addAction('Help...', self.help)
         helpMenu.addSeparator()
         helpMenu.addAction('Load example...', self.load_example)
         helpMenu.addSeparator()
@@ -885,6 +886,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         return self.settings.value("firsttime",True, type=bool)
 
+    def help(self):
+        myHelp = help.HelpWindow(parent=self)
+        if myHelp.exec_() == QtWidgets.QDialog.Accepted:
+            pass
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About...", help.aboutstr)
