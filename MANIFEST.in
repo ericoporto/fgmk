@@ -1,3 +1,3 @@
 include setup.py AUTHORS README.rst COPYING LICENSE
-include fgmk/data/*.json fgmk/data/*.png fgmk/data/actions/*.png fgmk/data/basegame.tar.gz fgmk/data/example.tar.gz
+include fgmk/data/*.json fgmk/data/*.png fgmk/data/actions/*.png fgmk/data/basegame.tar.gz fgmk/data/example.tar.gz fgmk/data/fgmk.qhc fgmk/data/fgmk.qch
 include platform/ubuntu/fgmk.desktop platform/ubuntu/fgmk-map.svg platform/ubuntu/fgmk.svg platform/ubuntu/fgmk.xml
