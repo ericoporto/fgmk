@@ -1,40 +1,40 @@
 # Editor
 The game style intended to be produced by the FGMK interface is usually called
-JRPG and is inspired by the old RPGs from the SNES era. 
+JRPG and is inspired by the old RPGs from the SNES era.
 
-The central idea of the games are a series of maps, that the player explores 
+The central idea of the games are a series of maps, that the player explores
 in 2D fashion, in a Front Top Down view. These maps can contain characters for
 the player interact with (called Charas in the FGMK Editor) and also with the
-map itself (called Events), and these interactions lead things to happen 
-(called Actions). By using these elements the user can create interactive 
+map itself (called Events), and these interactions lead things to happen
+(called Actions). By using these elements the user can create interactive
 stories.
 
-Interesting stories usually require struggle and growth from the player and 
+Interesting stories usually require struggle and growth from the player and
 the classic way of dealing with this in RPGs is through Battle and Leveling.
 The editor denominates the playable characters as Heroes, and anything you
-fight with are called Monsters. The player can also during it's journey 
-collect Items that can help the Heroes or even be important to advance the 
+fight with are called Monsters. The player can also during it's journey
+collect Items that can help the Heroes or even be important to advance the
 story.
 
 ## Overview
-When the interface launches, it will open in your last opened project. If no
+When the interface launches, it will show your last opened project. If no
 project is open, you can create a new one or open an existing project by using
 the project entry in the menu. Using the project menu you can also access the
-editors for other parts of the game, as the Charas (the characters), the 
+editors for other parts of the game, as the Charas (the characters), the
 Charasets (their animation frames), Items (like swords, potions, ...), and
 every other parts important to building your game.
 
 The interface contains a map editor at it's core. Each map in a game project
 is available at the Map Explorer dock, which you can use to create and delete
-maps also, other than navigate. Using the Pallete dock you can select the 
+maps also, other than navigate. Using the Palette dock you can select the
 current tile and draw using one of the available tools in the Tool dock.
 
 The Events dock allow drawing Events, adding actions to them, and also drawing
-in the colision layer. You can change the current layer by using the Layers 
+in the collision layer. You can change the current layer by using the Layers
 dock.
 
 ## The Map Editor
-The central thing in the FGMK Games are the maps. This is where the player will
+The central thing in the FGMK Games are the maps. This is where the user will
 spend most of his time.
 
 ## Palette Editor
