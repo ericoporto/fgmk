@@ -41,7 +41,7 @@ to type:
 If for some reason it doesn't work, you can also try
 
     pip uninstall fgmk
-    pip install -no-cache-dir fgmk
+    pip install --no-cache-dir fgmk
 
 ### Unix install and run
 
@@ -63,7 +63,7 @@ to type:
 If for some reason it doesn't work, you can also try
 
     pip3 uninstall fgmk
-    pip3 install -no-cache-dir fgmk
+    pip3 install --no-cache-dir fgmk
 
 
 ## From Source Installation
