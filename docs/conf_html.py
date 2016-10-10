@@ -63,7 +63,9 @@ author = 'Érico Vieira Porto'
 # The short X.Y version.
 
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-with open(curr_dir+'../../fgmk/__init__.py', 'r') as fd:
+init_fgmk_file = os.path.join(curr_dir,'../../fgmk/__init__.py')
+print(init_fgmk_file)
+with open(init_fgmk_file, 'r') as fd:
     fgmk_version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
