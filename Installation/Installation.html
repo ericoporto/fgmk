@@ -84,8 +84,14 @@
                 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#recommended-install-and-run">Recommended Install and run</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#windows-installation">Windows Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#unix-install-and-run">Unix install and run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows-installation">Windows Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#upgrading">Upgrading</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#unix-install-and-run">Unix install and run</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Upgrading</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#from-source-installation">From Source Installation</a></li>
@@ -158,7 +164,7 @@ your terminal to install and run <strong>fgmk</strong>.</p>
 </div>
 <div class="section" id="windows-installation">
 <h3>Windows Installation<a class="headerlink" href="#windows-installation" title="Permalink to this headline">¶</a></h3>
-<div class="figure" id="id1">
+<div class="figure" id="id2">
 <img alt="Installation on Windows with pip" src="../_images/win_fgmk_install.gif" />
 <p class="caption"><span class="caption-text">Installation on Windows with pip</span></p>
 </div>
@@ -176,6 +182,19 @@ prompt:</p>
 <p>If your python/scripts folder is in your Windows PATH, you can omit the
 preceding <code class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span></code> command, and just type <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">fgmk</span></code> and
 then <code class="docutils literal"><span class="pre">fgmk</span></code>.</p>
+<div class="section" id="upgrading">
+<h4>Upgrading<a class="headerlink" href="#upgrading" title="Permalink to this headline">¶</a></h4>
+<p>The easier way to upgrade your version of <code class="docutils literal"><span class="pre">fgmk</span></code> when a new one is
+released, is to type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+<p>If for some reason it doesn&#8217;t work, you can also try</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">fgmk</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="unix-install-and-run">
 <h3>Unix install and run<a class="headerlink" href="#unix-install-and-run" title="Permalink to this headline">¶</a></h3>
@@ -188,6 +207,19 @@ type <code class="docutils literal"><span class="pre">fgmk</span></code> at comm
 <li>In Ubuntu, <strong>fgmk</strong> will be also added to the Unity Applications
 entry.</li>
 </ul>
+<div class="section" id="id1">
+<h4>Upgrading<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>The easier way to upgrade your version of <code class="docutils literal"><span class="pre">fgmk</span></code> when a new one is
+released, is to type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+<p>If for some reason it doesn&#8217;t work, you can also try</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">uninstall</span> <span class="n">fgmk</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">fgmk</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="from-source-installation">

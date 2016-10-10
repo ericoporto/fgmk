@@ -87,7 +87,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../Specification/Specification.html">Specification</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Editor</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#actions-system">Actions System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-map-editor">The Map Editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#palette-editor">Palette Editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#item-editor">Item Editor</a></li>
@@ -146,20 +145,41 @@
             
   <div class="section" id="editor">
 <h1>Editor<a class="headerlink" href="#editor" title="Permalink to this headline">¶</a></h1>
-<p>Describes each part and screen of the Editor.</p>
+<p>The game style intended to be produced by the FGMK interface is usually
+called JRPG and is inspired by the old RPGs from the SNES era.</p>
+<p>The central idea of the games are a series of maps, that the player
+explores in 2D fashion, in a Front Top Down view. These maps can contain
+characters for the player interact with (called Charas in the FGMK
+Editor) and also with the map itself (called Events), and these
+interactions lead things to happen (called Actions). By using these
+elements the user can create interactive stories.</p>
+<p>Interesting stories usually require struggle and growth from the player
+and the classic way of dealing with this in RPGs is through Battle and
+Leveling. The editor denominates the playable characters as Heroes, and
+anything you fight with are called Monsters. The player can also during
+it&#8217;s journey collect Items that can help the Heroes or even be important
+to advance the story.</p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>How to build a game with the fgmk interface, what to expect.</p>
-</div>
-<div class="section" id="actions-system">
-<h2>Actions System<a class="headerlink" href="#actions-system" title="Permalink to this headline">¶</a></h2>
-<p>The system expects actions, and deals with them in the first in first
-out order.</p>
+<p>When the interface launches, it will show your last opened project. If
+no project is open, you can create a new one or open an existing project
+by using the project entry in the menu. Using the project menu you can
+also access the editors for other parts of the game, as the Charas (the
+characters), the Charasets (their animation frames), Items (like swords,
+potions, ...), and every other parts important to building your game.</p>
+<p>The interface contains a map editor at it&#8217;s core. Each map in a game
+project is available at the Map Explorer dock, which you can use to
+create and delete maps also, other than navigate. Using the Palette dock
+you can select the current tile and draw using one of the available
+tools in the Tool dock.</p>
+<p>The Events dock allow drawing Events, adding actions to them, and also
+drawing in the collision layer. You can change the current layer by
+using the Layers dock.</p>
 </div>
 <div class="section" id="the-map-editor">
 <h2>The Map Editor<a class="headerlink" href="#the-map-editor" title="Permalink to this headline">¶</a></h2>
-<p>The central thing in the FGMK Games are the maps. This is where the
-player will spend most of his time.</p>
+<p>The central thing in the FGMK Games are the maps. This is where the user
+will spend most of his time.</p>
 </div>
 <div class="section" id="palette-editor">
 <h2>Palette Editor<a class="headerlink" href="#palette-editor" title="Permalink to this headline">¶</a></h2>
