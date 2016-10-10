@@ -31,6 +31,17 @@ To run, you can type the following in **cmd.exe** or the **run...** prompt:
 If your python/scripts folder is in your Windows PATH, you can omit the
 preceding `python -m` command, and just type `pip install fgmk` and then `fgmk`.
 
+#### Upgrading
+
+The easier way to upgrade your version of `fgmk` when a new one is released, is
+to type:
+
+    pip install --upgrade fgmk
+
+If for some reason it doesn't work, you can also try
+
+    pip uninstall fgmk
+    pip install -no-cache-dir fgmk
 
 ### Unix install and run
 
@@ -41,6 +52,18 @@ First you need `pip3` for `Python3`.
    - After you will be able to run `pip3 install fgmk`. You can just type `fgmk` at command line to launch the editor.
 
    - In Ubuntu, **fgmk** will be also added to the Unity Applications entry.
+
+#### Upgrading
+
+The easier way to upgrade your version of `fgmk` when a new one is released, is
+to type:
+
+    pip3 install --upgrade fgmk
+
+If for some reason it doesn't work, you can also try
+
+    pip3 uninstall fgmk
+    pip3 install -no-cache-dir fgmk
 
 
 ## From Source Installation
