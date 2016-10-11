@@ -907,6 +907,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapExplorerWidget.setEnabled(torf)
         self.myMapWidget.setEnabled(torf)
 
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Space:
+            self.myToolsWidget.switchLCToolToPan()
+
+    def keyReleaseEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Space:
+            self.myToolsWidget.swithcLCToolBack()
+
 
 def Icon():
     return QtGui.QPixmap(getdata.path('icon.png'))

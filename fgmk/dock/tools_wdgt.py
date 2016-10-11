@@ -39,6 +39,9 @@ class ToolsWidget(QtWidgets.QWidget):
         self.MaxTools = len(ToolsName)
         self.ToolTile = []
 
+        self.lastLeftClickTool = 0
+        self.lastLeftClickTool = 1
+
         for i in range(self.MaxTools):
             self.ToolTile.append(base_tile.QTile(self))
             self.ToolTile[-1].initTile(self.toolTileset.tileset, 0, 0, self.toolTileset.boxsize, [
@@ -94,6 +97,14 @@ class ToolsWidget(QtWidgets.QWidget):
 
         self.updateToolTiles()
         self.show()
+
+    def switchLCToolToPan(self):
+        global leftClickTool
+        self.lastLeftClickTool = leftClickTool
+        self.changeLeftClickToolTo(tools['pan'])
+
+    def swithcLCToolBack(self):
+        self.changeLeftClickToolTo(self.lastLeftClickTool)
 
     def changeLeftClickToolTo(self, tooltochange):
         global leftClickTool
