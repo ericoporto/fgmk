@@ -21,7 +21,7 @@ What to expect of the FGMK project
 - [ ] Add Undo and Redo for Charas Editor
 
 ### Tidyup
-- [ ] Have the documentation available in the help menu
+- [x] Have the documentation available in the help menu
 - [ ] Rework the Charaset Editor
 - [ ] Rework the Charas Editor
 
@@ -36,7 +36,7 @@ What to expect of the FGMK project
 - [ ] Multipage Charas:
   This is the same as throwing IFs in the code, only it will be prettier.
 
-- [ ] Holding spacebar switches to pan tool.
+- [x] Holding spacebar switches to pan tool.
 
 - [ ] Drag and Drop when editing Charasets.
 
