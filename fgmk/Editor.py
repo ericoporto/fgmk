@@ -59,6 +59,7 @@ class MapWidget(QtWidgets.QWidget):
 
         self.DrawMap(parent)
 
+    # allows resizing the map, used with Zoom feature!
     def Rescale(self, scale=None):
         if(scale != None):
             self.myScale = scale
@@ -73,8 +74,8 @@ class MapWidget(QtWidgets.QWidget):
 
         self.parent.myCharasPalWidget.reinit()
 
+    # this is the function to draw and redraw all tiles!
     def DrawMap(self, parent):
-        # self.setUpdatesEnabled(False)
         self.setVisible(False)
         LayersMapTiles = parent.myMap.LayersMapTiles
 
@@ -104,11 +105,10 @@ class MapWidget(QtWidgets.QWidget):
 
         self.resize(self.TileWidth * parent.myTileSet.boxsize * self.myScale,
                     self.TileHeight * parent.myTileSet.boxsize * self.myScale)
-        # self.setUpdatesEnabled(True)
         self.setVisible(True)
-        # self.show()
 
     def mouseMoved(self, ev):
+        # this is for the pan/move tool to work!
         if((tools_wdgt.rightClickTool == 6 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 6 and ev.buttons() == QtCore.Qt.LeftButton)):
             diff = (ev.pos() - self.mousePos)/1.5
             self.mousePos = ev.pos()
@@ -118,13 +118,13 @@ class MapWidget(QtWidgets.QWidget):
             vscroll.setValue(vscroll.value()+diff.y())
             hscroll.setValue(hscroll.value()+diff.x())
 
+        # this enables click and hold in the map with the pen tool!
         if((tools_wdgt.rightClickTool == 0 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 0 and ev.buttons() == QtCore.Qt.LeftButton)):
             pos_qpoint = ev.pos()
             pos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
             if(pos != self.prevPenPos):
                 self.prevPenPos = pos
                 movedTilesXY = pos[0]+self.penTileXY[0],pos[1]+self.penTileXY[1]
-
                 tileToChange = self.TileList[movedTilesXY[1]][movedTilesXY[0]]
 
                 if(self.currentLayer == COLISIONLAYER):
@@ -147,6 +147,8 @@ class MapWidget(QtWidgets.QWidget):
 
         if theClickedTool == 0:
             # pen
+
+            # this points are here to allow click and hold with the map editor
             pos_qpoint = ev.pos()
             self.prevPenPos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
             self.penTileXY = self.sender().tileX, self.sender().tileY
