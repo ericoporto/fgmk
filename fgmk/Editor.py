@@ -121,7 +121,7 @@ class MapWidget(QtWidgets.QWidget):
         # this enables click and hold in the map with the pen tool!
         if((tools_wdgt.rightClickTool == 0 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 0 and ev.buttons() == QtCore.Qt.LeftButton)):
             pos_qpoint = ev.pos()
-            pos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
+            pos = int(math.floor(pos_qpoint.x()/(32.0*self.myScale))), int(math.floor(pos_qpoint.y()/(32.0*self.myScale)))
             if(pos != self.prevPenPos):
                 self.prevPenPos = pos
                 movedTilesXY = int(pos[0]+self.penTileXY[0]),int(pos[1]+self.penTileXY[1])
@@ -150,7 +150,7 @@ class MapWidget(QtWidgets.QWidget):
 
             # this points are here to allow click and hold with the map editor
             pos_qpoint = ev.pos()
-            self.prevPenPos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
+            self.prevPenPos = int(math.floor(pos_qpoint.x()/(32.0*self.myScale))), int(math.floor(pos_qpoint.y()/(32.0*self.myScale)))
             self.penTileXY = self.sender().tileX, self.sender().tileY
 
             if(self.currentLayer == COLISIONLAYER):
