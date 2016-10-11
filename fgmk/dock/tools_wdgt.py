@@ -112,6 +112,10 @@ class ToolsWidget(QtWidgets.QWidget):
         self.updateToolTiles()
         self.show()
 
+    def rescale(self,newscale):
+        self.scale = newscale
+        self.updateToolTiles()
+
     def updateToolTiles(self):
         global leftClickTool
         global rightClickTool
@@ -120,6 +124,8 @@ class ToolsWidget(QtWidgets.QWidget):
         LEFTCLICKLAYER = 1
         RIGHTCLICKTILE = 2
         RIGHTCLICKLAYER = 0
+
+        self.setMinimumWidth(self.scale*32+4)
 
         for i in range(self.MaxTools):
             if i == leftClickTool:

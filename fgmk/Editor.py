@@ -510,6 +510,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewMenu.addAction(self.gridViewAction)
         self.gridViewAction.changed.connect(self.changeGridMargin)
 
+
         self.myExitFSWidget = exit_fullscreen_wdgt.ExitFSWidget(self)
         self.exitFSDockWdgt = QtWidgets.QDockWidget("", self)
         self.exitFSDockWdgt.setObjectName("ExitFullScreen")
@@ -522,6 +523,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fullscreenViewAction.setShortcut('f11')
         self.viewMenu.addAction(self.fullscreenViewAction)
         self.fullscreenViewAction.changed.connect(self.changeToFullscreen)
+
+        self.viewMenu.addSeparator()
+
+        self.toolScale2x = QtWidgets.QAction(
+            'Tools Size 2x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.toolScale2x)
+        self.toolScale2x.triggered.connect(self.changeToolsScale2x)
+
+        self.toolScale1x = QtWidgets.QAction(
+            'Tools Size 1x', self.viewMenu, checkable=True)
+        self.viewMenu.addAction(self.toolScale1x)
+        self.toolScale1x.triggered.connect(self.changeToolsScale1x)
 
         helpMenu = self.menubar.addMenu('&Help')
         helpMenu.addAction('Help...', self.help)
@@ -555,6 +568,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.toolsDockWdgt.hide()
             self.eventsDockWdgt.hide()
             self.mapExplorerDockWdgt.hide()
+
+    def changeToolsScale2x(self):
+        self.toolScale2x.setChecked(True)
+        self.toolScale1x.setChecked(False)
+        self.myToolsWidget.rescale(2)
+
+    def changeToolsScale1x(self):
+        self.toolScale2x.setChecked(False)
+        self.toolScale1x.setChecked(True)
+        self.myToolsWidget.rescale(1)
 
     def changeZoomValue(self, zoomvalue):
         self.changeZoomViewActionChecked(zoomvalue)
@@ -875,6 +898,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("size", self.size());
         self.settings.setValue("pos", self.pos());
         self.settings.setValue("zoom", self.myMapWidget.myScale)
+        self.settings.setValue("toolzoom", self.myToolsWidget.scale)
         self.settings.setValue("state", self.saveState())
         self.settings.setValue("visibledocks", self.visibleDocks)
         self.settings.setValue("tabDockVisibility", self.toggleVisibilityAll.isChecked())
@@ -893,6 +917,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
         self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
         self.changeZoomValue(float(self.settings.value("zoom", 2)))
+        if(float(self.settings.value("toolzoom", 2))==1):
+            self.changeToolsScale1x()
+        else:
+            self.changeToolsScale2x()
+
         self.visibleDocks = self.settings.value("visibledocks", [True, True, True, True, True, True], type=bool)
         self.toggleVisibilityAll.setChecked(self.settings.value("tabDockVisibility", True, type=bool))
         state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
