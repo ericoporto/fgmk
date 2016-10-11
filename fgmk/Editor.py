@@ -124,7 +124,7 @@ class MapWidget(QtWidgets.QWidget):
             pos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
             if(pos != self.prevPenPos):
                 self.prevPenPos = pos
-                movedTilesXY = pos[0]+self.penTileXY[0],pos[1]+self.penTileXY[1]
+                movedTilesXY = int(pos[0]+self.penTileXY[0]),int(pos[1]+self.penTileXY[1])
                 tileToChange = self.TileList[movedTilesXY[1]][movedTilesXY[0]]
 
                 if(self.currentLayer == COLISIONLAYER):
