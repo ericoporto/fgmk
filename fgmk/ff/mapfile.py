@@ -149,6 +149,9 @@ class MapFormat(base_model.BaseFormat):
     def setTile(self, x, y, layer, tiletype):
         self.LayersMapTiles[layer][y][x] = tiletype
 
+    def getTileType(self, x, y, layer):
+        return self.LayersMapTiles[layer][y][x]
+
     def getTileListFromLayer(self, layer):
         TileListFromLayer = np.unique(self.LayersMapTiles[layer]).tolist()
         if(0 in TileListFromLayer):

@@ -3,6 +3,7 @@
 # display a tiled image from tileset with PyQt
 import os
 import tarfile
+import math
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import base_tile, editor_mainwindow_menus, cmd, game_server, fifl, tile_charaset, persona, game_init, current_project
 from fgmk import  getdata, tile_set, configure_project
@@ -117,6 +118,22 @@ class MapWidget(QtWidgets.QWidget):
             vscroll.setValue(vscroll.value()+diff.y())
             hscroll.setValue(hscroll.value()+diff.x())
 
+        if((tools_wdgt.rightClickTool == 0 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 0 and ev.buttons() == QtCore.Qt.LeftButton)):
+            pos_qpoint = ev.pos()
+            pos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
+            if(pos != self.prevPenPos):
+                self.prevPenPos = pos
+                movedTilesXY = pos[0]+self.penTileXY[0],pos[1]+self.penTileXY[1]
+
+                tileToChange = self.TileList[movedTilesXY[1]][movedTilesXY[0]]
+
+                if(self.currentLayer == COLISIONLAYER):
+                    self.changeTileType(self.currentColision,tileToChange)
+                elif(self.currentLayer == EVENTSLAYER):
+                    self.changeTileType(self.currentEvent,tileToChange)
+                else:
+                    self.changeTileType(self.currentTile,tileToChange)
+
 
     def TileInMapRightClicked(self, ev):
         self.ClickedATileinMap(tools_wdgt.rightClickTool, ev)
@@ -130,6 +147,10 @@ class MapWidget(QtWidgets.QWidget):
 
         if theClickedTool == 0:
             # pen
+            pos_qpoint = ev.pos()
+            self.prevPenPos = math.floor(pos_qpoint.x()/(32.0*self.myScale)), math.floor(pos_qpoint.y()/(32.0*self.myScale))
+            self.penTileXY = self.sender().tileX, self.sender().tileY
+
             if(self.currentLayer == COLISIONLAYER):
                 self.changeTileType(self.currentColision)
             elif(self.currentLayer == EVENTSLAYER):
@@ -204,9 +225,11 @@ class MapWidget(QtWidgets.QWidget):
             firstClickX = None
             firstClickY = None
 
-    def changeTileType(self, changeTypeTo):
-        command = cmd.CommandCTTileType(self.parent, self.sender(
-        ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
+    def changeTileType(self, changeTypeTo, sender = None):
+        if(sender == None):
+            sender = self.sender()
+
+        command = cmd.CommandCTTileType(self.parent, sender, self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, "change tile")
         cmd.commandToStack(command)
 
     def toolBucketFill(self, changeTypeTo):
