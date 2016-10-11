@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Editor &mdash; fgmk 0.5.4 documentation</title>
+  <title>Editor &mdash; fgmk 0.5.5 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="fgmk 0.5.4 documentation" href="../index.html"/>
+    <link rel="top" title="fgmk 0.5.5 documentation" href="../index.html"/>
         <link rel="next" title="Actions" href="../Actions/Actions.html"/>
         <link rel="prev" title="Specification" href="../Specification/Specification.html"/> 
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.5.4
+                0.5.5
               </div>
             
           
@@ -180,6 +180,22 @@ using the Layers dock.</p>
 <h2>The Map Editor<a class="headerlink" href="#the-map-editor" title="Permalink to this headline">¶</a></h2>
 <p>The central thing in the FGMK Games are the maps. This is where the user
 will spend most of his time.</p>
+<p>The <strong>Tools</strong> dock will allow the user to configure a tool for the left
+or right mouse button, by clicking or right clicking in a tool. Holding
+the spacebar while browsing the map will switch to the <em>pan</em> tool, and
+releasing the spacebar will return to the previous selected tool. The
+<em>line</em> and the <em>rectangle</em> tool require two clicks at different tiles to
+work, one will connect both tiles with a line, and the other will draw a
+rectangle between selected tiles. Charas are placed with a special
+<em>charaplacer</em> tool.</p>
+<p>The <strong>Palette</strong> dock will allow selecting the current tile, and the
+<strong>Charas</strong> dock will allow selecting the current chara.</p>
+<p>Double clicking a tile in the <strong>Palette</strong> will select the <em>pen</em> tool in
+the <strong>Tools</strong> dock. Double clicking a chara in the <strong>Charas</strong> will
+select the <em>charaplacer</em> tool.</p>
+<p>You can select a layer by using the <strong>Layers</strong> dock, but clicking in the
+Events selector or the Collision selector will change the current layer
+to the Events layer or the Collision layer, respectively.</p>
 </div>
 <div class="section" id="palette-editor">
 <h2>Palette Editor<a class="headerlink" href="#palette-editor" title="Permalink to this headline">¶</a></h2>
@@ -263,7 +279,7 @@ is design for just that.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.5.4',
+            VERSION:'0.5.5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

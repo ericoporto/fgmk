@@ -44,6 +44,26 @@ The Map Editor
 The central thing in the FGMK Games are the maps. This is where the user
 will spend most of his time.
 
+The **Tools** dock will allow the user to configure a tool for the left
+or right mouse button, by clicking or right clicking in a tool. Holding
+the spacebar while browsing the map will switch to the *pan* tool, and
+releasing the spacebar will return to the previous selected tool. The
+*line* and the *rectangle* tool require two clicks at different tiles to
+work, one will connect both tiles with a line, and the other will draw a
+rectangle between selected tiles. Charas are placed with a special
+*charaplacer* tool.
+
+The **Palette** dock will allow selecting the current tile, and the
+**Charas** dock will allow selecting the current chara.
+
+Double clicking a tile in the **Palette** will select the *pen* tool in
+the **Tools** dock. Double clicking a chara in the **Charas** will
+select the *charaplacer* tool.
+
+You can select a layer by using the **Layers** dock, but clicking in the
+Events selector or the Collision selector will change the current layer
+to the Events layer or the Collision layer, respectively.
+
 Palette Editor
 --------------
 
