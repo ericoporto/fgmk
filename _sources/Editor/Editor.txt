@@ -64,6 +64,25 @@ You can select a layer by using the **Layers** dock, but clicking in the
 Events selector or the Collision selector will change the current layer
 to the Events layer or the Collision layer, respectively.
 
+Shortcuts
+~~~~~~~~~
+
+-  **ctrl + shift + n :** new project screen.
+
+-  **ctrl + n :** new map.
+
+-  **ctrl + s :** save map.
+
+-  **f5 :** save map, run server, open default browser.
+
+-  **Tab :** hides all docks, tap Tab again to show them.
+
+-  **f11 :** switches to full screen.
+
+-  **ctrl + mouse wheel or ctrl + +/- :** zomm in or zoom out
+
+-  **press and hold space bar :** switches to pan tool while on hold.
+
 Palette Editor
 --------------
 
