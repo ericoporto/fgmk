@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from fgmk.ff import base_model
 
 effects_types=['none','hp_down','st_down','dx_down','iq_down','hp_up','st_up','dx_up','iq_up']

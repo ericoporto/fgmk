@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from fgmk.ff import base_model
 
 class CharasFormat(base_model.BaseFormat):

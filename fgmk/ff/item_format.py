@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import os
 from fgmk.ff import base_model
 
