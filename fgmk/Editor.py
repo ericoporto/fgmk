@@ -41,6 +41,7 @@ class MapWidget(QtWidgets.QWidget):
         self.Grid.setVerticalSpacing(0)
         self.Grid.setSpacing(0)
         self.Grid.setContentsMargins(0, 0, 0, 0)
+        self.gridpx=0
 
         self.parent = parent
 
@@ -121,7 +122,8 @@ class MapWidget(QtWidgets.QWidget):
         # this enables click and hold in the map with the pen tool!
         if((tools_wdgt.rightClickTool == 0 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 0 and ev.buttons() == QtCore.Qt.LeftButton)):
             pos_qpoint = ev.pos()
-            pos = int(math.floor(pos_qpoint.x()/(32.0*self.myScale))), int(math.floor(pos_qpoint.y()/(32.0*self.myScale)))
+            pos = (int(math.floor(pos_qpoint.x()/(32.0*self.myScale+self.gridpx))),
+                   int(math.floor(pos_qpoint.y()/(32.0*self.myScale+self.gridpx))))
             if(pos != self.prevPenPos):
                 self.prevPenPos = pos
                 movedTilesXY = int(pos[0]+self.penTileXY[0]),int(pos[1]+self.penTileXY[1])
@@ -153,7 +155,8 @@ class MapWidget(QtWidgets.QWidget):
 
             # this points are here to allow click and hold with the map editor
             pos_qpoint = ev.pos()
-            self.prevPenPos = int(math.floor(pos_qpoint.x()/(32.0*self.myScale))), int(math.floor(pos_qpoint.y()/(32.0*self.myScale)))
+            self.prevPenPos = (int(math.floor(pos_qpoint.x()/(32.0*self.myScale+self.gridpx))),
+                               int(math.floor(pos_qpoint.y()/(32.0*self.myScale+self.gridpx))))
             self.penTileXY = self.sender().tileX, self.sender().tileY
 
             if(self.currentLayer == COLISIONLAYER):
@@ -257,6 +260,22 @@ class MapWidget(QtWidgets.QWidget):
         command = cmd.CommandCGroupTType(self.parent, self.sender(
         ), self.parent.myMap, self.parent.myTileSet.tileset, self.currentLayer, changeTypeTo, listToChange, "rectangle")
         cmd.commandToStack(command)
+
+    def changeGrid(self,state):
+        bxsz = self.parent.myTileSet.boxsize
+        if state is True:
+            self.gridpx=1
+            self.Grid.setHorizontalSpacing(1)
+            self.Grid.setVerticalSpacing(1)
+            self.resize(self.TileWidth * (bxsz * self.myScale + 1) - 1,
+                                    self.TileHeight * (bxsz * self.myScale + 1) - 1)
+        else:
+            self.gridpx=0
+            self.Grid.setHorizontalSpacing(0)
+            self.Grid.setVerticalSpacing(0)
+            self.resize(self.TileWidth * bxsz * self.myScale,
+                                    self.TileHeight * bxsz * self.myScale)
+        self.show()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -674,18 +693,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.exitFSDockWdgt.hide()
 
     def changeGridMargin(self):
-        bxsz = self.myTileSet.boxsize
-        if self.gridViewAction.isChecked() is True:
-            self.myMapWidget.Grid.setHorizontalSpacing(1)
-            self.myMapWidget.Grid.setVerticalSpacing(1)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth * (bxsz * self.myMapWidget.myScale + 1) - 1,
-                                    self.myMapWidget.TileHeight * (bxsz * self.myMapWidget.myScale + 1) - 1)
-        else:
-            self.myMapWidget.Grid.setHorizontalSpacing(0)
-            self.myMapWidget.Grid.setVerticalSpacing(0)
-            self.myMapWidget.resize(self.myMapWidget.TileWidth * bxsz * self.myMapWidget.myScale,
-                                    self.myMapWidget.TileHeight * bxsz * self.myMapWidget.myScale)
-        self.myMapWidget.show()
+        self.myMapWidget.changeGrid(self.gridViewAction.isChecked() is True)
 
     def openFromExplorer(self):
         testMap = mapfile.MapFormat()

@@ -1,6 +1,5 @@
 
 import os
-from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk.ff import base_model
 
 item_categories=['none','consumable','collectible','weapon','armor']
