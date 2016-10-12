@@ -31,6 +31,8 @@ palette_editor, persona and tile_charaset)
 """
 
 class MapWidget(QtWidgets.QWidget):
+    ctrlWheelPlu = QtCore.pyqtSignal()
+    ctrlWheelNeg = QtCore.pyqtSignal()
     def __init__(self, parent=None, **kwargs):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
@@ -277,6 +279,18 @@ class MapWidget(QtWidgets.QWidget):
                                     self.TileHeight * bxsz * self.myScale)
         self.show()
 
+    def wheelEvent(self, event):
+        modifiers = QtWidgets.QApplication.keyboardModifiers()
+        if (modifiers == QtCore.Qt.ControlModifier):
+            delta = event.angleDelta()
+            dsum = delta.x()+delta.y()
+            if(dsum>0):
+                self.ctrlWheelPlu.emit()
+            elif(dsum<0):
+                self.ctrlWheelNeg.emit()
+        else:
+            QtWidgets.QWidget.wheelEvent(self,event)
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, filelist, **kwargs):
@@ -308,9 +322,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.FancyWindow(self)
 
         self.setAcceptDrops(True)
+        self.myMapWidget.ctrlWheelPlu.connect(self.zoomIn)
+        self.myMapWidget.ctrlWheelNeg.connect(self.zoomOut)
 
         self.settings = QtCore.QSettings("FGMK", "fgmkEditor")
-
         self.firsttime = self.loadSettings()
         self.opemFileIfDropped(filelist)
 
