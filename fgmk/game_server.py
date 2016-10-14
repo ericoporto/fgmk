@@ -98,10 +98,20 @@ class AThread(QtCore.QThread):
         self.serverClass = HTTPServer
         self.handlerClass = NoCacheHTTPRequestHandler
         self.handlerClass.protocol = self.protocol
-        self.httpdGame = self.serverClass((self.ip, self.port), self.handlerClass)
+        self.socketerror = False
+
+        try:
+            self.httpdGame = self.serverClass((self.ip, self.port), self.handlerClass)
+        except OSError:
+            self.socketerror = True
+
         self.running = False
 
     def run(self):
+        if(self.socketerror):
+            self.running = False
+            return
+
         self.running = True
         self.statChanged.emit()
         sa = self.httpdGame.socket.getsockname()
@@ -145,8 +155,8 @@ class serverController(QtCore.QObject):
         #app = QCoreApplication([])
         self.thread = AThread(self.ip,self.port,self.directory)
         #self.thread.finished.connect(app.exit)
-        self.thread.start()
         self.thread.statChanged.connect(self.updateStatus)
+        self.thread.start()
 
     def stopServer(self):
         try:
@@ -168,7 +178,7 @@ class serverController(QtCore.QObject):
         try:
             stat = self.thread.running
         except AttributeError:
-            stat = 'server stopped'
+            stat = False
 
         return stat
 

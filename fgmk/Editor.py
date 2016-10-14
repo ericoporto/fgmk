@@ -323,6 +323,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.myServer = game_server.serverController()
         self.myServer.serverStatus.connect(self.statusMessage)
+        self.myServer.updateStatus()
 
         self.setAcceptDrops(True)
         self.myMapWidget.ctrlWheelPlu.connect(self.zoomIn)
