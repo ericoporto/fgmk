@@ -74,6 +74,16 @@ the Events layer or the Collision layer, respectively.
 
  - **press and hold space bar :** switches to pan tool while on hold.
 
+### The server
+
+When a project is loaded, you can open a browser at any time an point it to the
+address shown in the status bar - assuming the server loaded correctly - to test
+the current game. Each time you save the map, if you reload the browser that is
+pointing to the server, it will update to the current state of the map.
+
+The browser doesn't have to be in the same computer as FGMK, just in the same
+local network, so assuming you have a WiFi network at home, you could load FGMK
+in your computer and test the game in a smartphone or other computer.
 
 ## Palette Editor
 When you draw a map, it uses selected tiles, grouped in a palette, this is how
