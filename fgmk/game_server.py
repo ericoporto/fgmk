@@ -1,6 +1,6 @@
 import os
 import sys
-from threading import Thread
+from PyQt5.QtCore import QThread, QCoreApplication
 import webbrowser
 
 """
@@ -66,63 +66,74 @@ def openBrowser(ip,port):
     new = 2  # 2 goes to new tab, 0 same and 1 window.
     browserOk = webbrowser.open(url, new=new)
 
-def servePage(urlToServe):
+
+
+
+# Subclassing QThread
+# http://qt-project.org/doc/latest/qthread.html
+class AThread(QThread):
     """
-    Creates the server
+    The Game Server Thread
     """
-    tempOrigiCurDir = os.curdir
-    os.chdir(urlToServe)
-    serverClass = HTTPServer
-    handlerClass = NoCacheHTTPRequestHandler
+    def __init__(self, ip, port, directory):
+        QThread.__init__(self)
+        self.ip = ip
+        self.port = port
+        self.directory = directory
+        self.protocol = "HTTP/1.0"
 
-    Protocol = "HTTP/1.0"
-    port = 8080
-    ip = '127.0.0.1'
-    admIp = ip
-    admPort = 8081
+        os.chdir(self.directory)
+        self.serverClass = HTTPServer
+        self.handlerClass = NoCacheHTTPRequestHandler
+        self.handlerClass.protocol = self.protocol
+        self.httpdGame = self.serverClass((self.ip, self.port), self.handlerClass)
 
-    handlerClass.protocol = Protocol
-    try:
-        httpdGame = serverClass((ip, port), handlerClass)
-    except:
-        os.chdir(tempOrigiCurDir)
-        return False
-    httpdAdm = serverClass((admIp, admPort), handlerClass)
-
-    sa = httpdGame.socket.getsockname()
-    sb = httpdAdm.socket.getsockname()
-    if DEBUG:
-        print("\n---\nServing HTTP on {0}, port {1}\n---\n".format(sa[0], sa[1]))
-        print("\n---\nAdm HTTP listening on {0}, port {1}\n---\n".format(sb[0], sb[1]))
-
-    openBrowser(ip,port)
-
-    def runGameServer():
-        httpdGame.serve_forever()
+    def run(self):
+        self.running = True
+        sa = self.httpdGame.socket.getsockname()
         if DEBUG:
-            print("\nrunGameServer stopped\n")
-        httpdAdm.shutdown()
-        httpdAdm.socket.close()
-        httpdGame.socket.close()
-        emit(SIGNAL('browserClosed()'))
-        return
+            print("\n---\nServing HTTP on {0}, port {1}\n---\n".format(sa[0], sa[1]))
 
-    def runAdmServer():
-        httpdAdm.handle_request()
-        httpdGame.shutdown()
+        self.httpdGame.serve_forever()
+        self.httpdGame.socket.close()
         if DEBUG:
-            print("\nrunAdmServer stopped\n")
-        httpdAdm.socket.close()
-        httpdGame.socket.close()
-        return
+            print("\nGameServer stopped\n")
 
-    gameServerThread = Thread(target=runGameServer)
-    gameServerThread.daemon = True
-    admServerThread = Thread(target=runAdmServer)
-    admServerThread.daemon = True
+        self.running = False
 
-    gameServerThread.start()
-    admServerThread.start()
-    # admServerThread.join()
-    os.chdir(tempOrigiCurDir)
-    return True
+    def stop(self):
+        self.httpdGame.shutdown()
+
+
+class serverController():
+    """
+    a controller to stop and rerun the server when needed
+    """
+    def __init__(self, ip='0.0.0.0', port=8080):
+        self.curdir = os.curdir
+        self.ip = ip
+        self.port = port
+        self.directory = ''
+
+    def runServer(self, directory=''):
+        if(directory!=''):
+            self.directory=directory
+
+        try:
+            self.stopServer()
+        except:
+            pass
+        #app = QCoreApplication([])
+        self.thread = AThread(self.ip,self.port,self.directory)
+        #self.thread.finished.connect(app.exit)
+        self.thread.start()
+
+    def stopServer(self):
+        self.thread.stop()
+
+    def openWebBrowser(self):
+        openBrowser(self.ip,self.port)
+
+    def restartAndOpenBrowser(self,directory):
+        self.runServer(directory)
+        self.openWebBrowser()

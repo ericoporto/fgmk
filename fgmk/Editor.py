@@ -321,6 +321,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.FancyWindow(self)
 
+        self.myServer = game_server.serverController()
+
         self.setAcceptDrops(True)
         self.myMapWidget.ctrlWheelPlu.connect(self.zoomIn)
         self.myMapWidget.ctrlWheelNeg.connect(self.zoomOut)
@@ -753,7 +755,7 @@ class MainWindow(QtWidgets.QMainWindow):
         editor_mainwindow_menus.openFolder(foldertoopen)
 
     def runServer(self):
-        game_server.servePage(os.path.abspath(current_project.settings["gamefolder"]))
+        self.myServer.restartAndOpenBrowser(os.path.abspath(current_project.settings["gamefolder"]))
 
     def newProject(self):
         myNewProjectDialog = editor_mainwindow_menus.newProject(self)
@@ -884,6 +886,10 @@ class MainWindow(QtWidgets.QMainWindow):
             cmd.clearCommandStack()
             self.firsttime = False
             self.changeTileCurrent(0)
+            if(hasinit):
+                self.myServer.runServer(os.path.abspath(current_project.settings["gamefolder"]))
+            else:
+                self.myServer.stopServer()
 
     def openFile(self):
         if(current_project.settings["gamefolder"] == ""):
@@ -916,6 +922,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.accept()
 
 
+        self.myServer.stopServer()
         temp.clean()
         self.saveSettings()
 
