@@ -1,8 +1,8 @@
 import os
 import sys
-from PyQt5.QtCore import QThread, QCoreApplication
+from PyQt5 import QtCore
 import webbrowser
-
+import socket
 """
 This module aims to serve the game so the html can be opened in Chrome without
 the json queries failing for CORS.
@@ -67,16 +67,28 @@ def openBrowser(ip,port):
     browserOk = webbrowser.open(url, new=new)
 
 
+def getLocalIP():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 0))
+        IP = s.getsockname()[0]
+    except:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 
 # Subclassing QThread
 # http://qt-project.org/doc/latest/qthread.html
-class AThread(QThread):
+class AThread(QtCore.QThread):
+    statChanged = QtCore.pyqtSignal()
     """
     The Game Server Thread
     """
     def __init__(self, ip, port, directory):
-        QThread.__init__(self)
+        QtCore.QThread.__init__(self)
         self.ip = ip
         self.port = port
         self.directory = directory
@@ -87,9 +99,11 @@ class AThread(QThread):
         self.handlerClass = NoCacheHTTPRequestHandler
         self.handlerClass.protocol = self.protocol
         self.httpdGame = self.serverClass((self.ip, self.port), self.handlerClass)
+        self.running = False
 
     def run(self):
         self.running = True
+        self.statChanged.emit()
         sa = self.httpdGame.socket.getsockname()
         if DEBUG:
             print("\n---\nServing HTTP on {0}, port {1}\n---\n".format(sa[0], sa[1]))
@@ -100,17 +114,22 @@ class AThread(QThread):
             print("\nGameServer stopped\n")
 
         self.running = False
+        self.statChanged.emit()
 
     def stop(self):
         self.httpdGame.shutdown()
+        self.statChanged.emit()
 
 
-class serverController():
+class serverController(QtCore.QObject):
     """
     a controller to stop and rerun the server when needed
     """
+    serverStatus = QtCore.pyqtSignal('QString')
     def __init__(self, ip='0.0.0.0', port=8080):
+        QtCore.QObject.__init__(self)
         self.curdir = os.curdir
+        self.localip = getLocalIP()
         self.ip = ip
         self.port = port
         self.directory = ''
@@ -127,9 +146,16 @@ class serverController():
         self.thread = AThread(self.ip,self.port,self.directory)
         #self.thread.finished.connect(app.exit)
         self.thread.start()
+        self.thread.statChanged.connect(self.updateStatus)
 
     def stopServer(self):
-        self.thread.stop()
+        try:
+            self.thread.stop()
+        except AttributeError:
+            pass
+
+    def updateStatus(self):
+        self.serverStatus.emit(self.getStatusMsg())
 
     def openWebBrowser(self):
         openBrowser(self.ip,self.port)
@@ -137,3 +163,22 @@ class serverController():
     def restartAndOpenBrowser(self,directory):
         self.runServer(directory)
         self.openWebBrowser()
+
+    def status(self):
+        try:
+            stat = self.thread.running
+        except AttributeError:
+            stat = 'server stopped'
+
+        return stat
+
+    def getStatusMsg(self):
+        if(self.ip == '0.0.0.0' or self.ip == '127.0.0.1'):
+            ip = self.localip
+        else:
+            ip = self.ip
+
+        if self.status():
+            return 'server running at http://'+ip+':'+str(self.port)+'    '
+        else:
+            return 'server stopped'+'    '

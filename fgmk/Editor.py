@@ -322,6 +322,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.FancyWindow(self)
 
         self.myServer = game_server.serverController()
+        self.myServer.serverStatus.connect(self.statusMessage)
 
         self.setAcceptDrops(True)
         self.myMapWidget.ctrlWheelPlu.connect(self.zoomIn)
@@ -334,6 +335,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def afterInit(self):
         if self.firsttime:
             help.welcome(self)
+
+    def statusMessage(self,message):
+        self.statusLabel.setText(message)
 
 
     def changeLayerCurrent(self, changeTo):
@@ -549,7 +553,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewMenu.addAction(self.gridViewAction)
         self.gridViewAction.changed.connect(self.changeGridMargin)
 
-
         self.myExitFSWidget = exit_fullscreen_wdgt.ExitFSWidget(self)
         self.exitFSDockWdgt = QtWidgets.QDockWidget("", self)
         self.exitFSDockWdgt.setObjectName("ExitFullScreen")
@@ -583,6 +586,10 @@ class MainWindow(QtWidgets.QMainWindow):
         helpMenu.addAction('About...', self.about)
 
         self.setMenuBar(self.menubar)
+
+        self.statusLabel = QtWidgets.QLabel('    ')
+        self.statusBar().setSizeGripEnabled(False)
+        self.statusBar().addPermanentWidget(self.statusLabel)
 
     def toggleVisibleDocks(self):
         if(self.toggleVisibilityAll.isChecked()):
