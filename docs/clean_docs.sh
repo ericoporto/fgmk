@@ -15,4 +15,5 @@ rm -rf source/Roadmap
 rm -rf source/Specification
 rm -rf source/Installation
 rm -rf source/index.rst
+rm -rf source/conf.py
 rm -rf build/*

@@ -49,3 +49,6 @@ rsync -a index_qthelp.rst source/index.rst
 rsync -a conf_qthelp.py source/conf.py
 
 make qthelp
+/usr/lib/x86_64-linux-gnu/qt5/bin/qcollectiongenerator build/qthelp/fgmk.qhcp
+rsync build/qthelp/fgmk.qhc ../fgmk/data/fgmk.qhc
+rsync build/qthelp/fgmk.qch ../fgmk/data/fgmk.qch
