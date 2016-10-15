@@ -7,19 +7,24 @@ import socket
 This module aims to serve the game so the html can be opened in Chrome without
 the json queries failing for CORS.
 
-The main function here is servePage, which will receive a directory that has the
-game, nameded urlToServe and will spawn a server to serve this page, and then
-open a browser.
+As a plus, it allows you to load the game in a browser in a different device on
+the same network by going to the ip and port where the fgmk instance is running.
 
-TODO:
-In reality it would be more ideal to spawn a server when a project is loaded and
-just open a browser pointing to the served ip and port when requested.
+First you need to create a serverController and have it where you can reach it.
+Then you call serverController.runServer(DIRECTORY_TO_SERVE) to spawn a server
+running in a thread (it's also named AThread). Whenever runServer is called, if
+there was a server running previously, it kills it and load a new one.
 
-Right now I have to have two servers, one for serving the page and the other to
-monitor if the page is closed. The js engine has a listener to request a random
-json from the port of the control server when the page is closed (or reloaded),
-and the control server (httpdAdm) will detect this and kill the main web server
-(httpdGame).
+You can use serverController.restartAndOpenBrowser(DIRECTORY_TO_SERVE) to also
+load whatever is the default browser of the system.
+
+Use serverController.serverStatus.connect(function) to pass a string containing
+the current status of the server to a function to exhibit the status.
+
+I created NoCacheHTTPRequestHandler so that when the browser loads, it always
+asks the server for everything (doesn't cache), allowing you to just save the
+map and reload the browser to have the new stuff on the browser. It also hides
+browser messages unless the DEBUG flag is on.
 """
 
 # Make DEBUG=True to view log messages from servers.
@@ -85,7 +90,7 @@ def getLocalIP():
 class AThread(QtCore.QThread):
     statChanged = QtCore.pyqtSignal()
     """
-    The Game Server Thread
+    The Game Server Thread. You can stop it by calling AThread.stop() .
     """
     def __init__(self, ip, port, directory):
         QtCore.QThread.__init__(self)
