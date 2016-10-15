@@ -76,12 +76,13 @@ Experimental compatibility to python2 (2.7 and on) is added to versions above
 Documentation
 -------------
 
-[The documentation is here](docs/Markdown/index.md). When it's more mature, it
-will be presented in the interface, inside the help menu.
+The docs are available in the website: [ericoporto.github.io/fgmk/](http://ericoporto.github.io/fgmk/).
 
-[There is also a Quickstart](docs/Markdown/Quickstart/Quickstart.md).
+You can also browse the docs after opening the interface, by clicking in **Help**.
 
-You can also browse the documentation here: [ericoporto.github.io/fgmk/](http://ericoporto.github.io/fgmk/).
+[This is the Quickstart](docs/Markdown/Quickstart/Quickstart.md).
+
+If you wish to edit the docs, they are [here as markdown files](docs/Markdown/index.md).
 
 
 Contributing
