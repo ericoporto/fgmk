@@ -20,6 +20,7 @@ class QTile(QtWidgets.QLabel):
 
     clicked = QtCore.pyqtSignal(object)
     rightClicked = QtCore.pyqtSignal(object)
+    middleClicked = QtCore.pyqtSignal(object)
     mouseMoved = QtCore.pyqtSignal(object)
     mouseReleased = QtCore.pyqtSignal(object)
     doubleClicked = QtCore.pyqtSignal()
@@ -86,8 +87,10 @@ class QTile(QtWidgets.QLabel):
     def mousePressEvent(self, ev):
         if ev.button() == QtCore.Qt.RightButton:
             self.rightClicked.emit(ev)
-        else:
+        elif ev.button() == QtCore.Qt.LeftButton:
             self.clicked.emit(ev)
+        elif ev.button() == QtCore.Qt.MiddleButton:
+            self.middleClicked.emit(ev)
 
     def mouseDoubleClickEvent(self, event):
         self.doubleClicked.emit()

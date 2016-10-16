@@ -59,6 +59,7 @@ class MapWidget(QtWidgets.QWidget):
         self.TileList = []
 
         self.mousePos = QtCore.QPoint(0,0)
+        self.panning = False
 
         self.DrawMap(parent)
 
@@ -102,6 +103,7 @@ class MapWidget(QtWidgets.QWidget):
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
+                self.TileList[iy][jx].middleClicked.connect(self.TileInMapMiddleClicked)
                 self.TileList[iy][jx].mouseReleased.connect(self.mouseReleased)
                 self.TileList[iy][jx].mouseMoved.connect(self.mouseMoved)
                 self.TileList[iy][jx].rightClicked.connect(
@@ -113,7 +115,7 @@ class MapWidget(QtWidgets.QWidget):
 
     def mouseMoved(self, ev):
         # this is for the pan/move tool to work!
-        if((tools_wdgt.rightClickTool == 6 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 6 and ev.buttons() == QtCore.Qt.LeftButton)):
+        if(self.panning):
             newPos = ev.pos()
             diff = newPos - self.mousePos
             self.mousePos = newPos
@@ -153,12 +155,16 @@ class MapWidget(QtWidgets.QWidget):
                 else:
                     self.changeTileType(self.currentTile,tileToChange)
 
+    def TileInMapMiddleClicked(self, ev):
+        self.setPanning(ev)
 
     def mouseReleased(self, ev):
-        if(tools_wdgt.leftClickTool == 6):
+        if(tools_wdgt.leftClickTool == 6 ):
             self.setCursor(QtCore.Qt.OpenHandCursor)
         else:
             self.setCursor(QtCore.Qt.ArrowCursor)
+        if(self.panning):
+            self.panning = False
 
     def TileInMapRightClicked(self, ev):
         self.ClickedATileinMap(tools_wdgt.rightClickTool, ev)
@@ -247,8 +253,7 @@ class MapWidget(QtWidgets.QWidget):
 
         elif theClickedTool == 6:
             # pan
-            self.mousePos = ev.pos()
-            self.parent.myMapWidget.setCursor(QtCore.Qt.ClosedHandCursor)
+            self.setPanning(ev)
 
         else:
             firstClickX = None
@@ -309,6 +314,11 @@ class MapWidget(QtWidgets.QWidget):
                 self.ctrlWheelNeg.emit()
         else:
             QtWidgets.QWidget.wheelEvent(self,event)
+
+    def setPanning(self,ev):
+        self.mousePos = ev.pos()
+        self.parent.myMapWidget.setCursor(QtCore.Qt.ClosedHandCursor)
+        self.panning = True
 
 
 class MainWindow(QtWidgets.QMainWindow):
