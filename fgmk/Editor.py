@@ -102,6 +102,7 @@ class MapWidget(QtWidgets.QWidget):
                 self.TileList[iy][jx].initTile(
                     parent.myTileSet.tileset, jx, iy, parent.myTileSet.boxsize, LayersMapTiles[:, iy, jx], self.myScale)
                 self.TileList[iy][jx].clicked.connect(self.TileInMapClicked)
+                self.TileList[iy][jx].mouseReleased.connect(self.mouseReleased)
                 self.TileList[iy][jx].mouseMoved.connect(self.mouseMoved)
                 self.TileList[iy][jx].rightClicked.connect(
                     self.TileInMapRightClicked)
@@ -113,13 +114,24 @@ class MapWidget(QtWidgets.QWidget):
     def mouseMoved(self, ev):
         # this is for the pan/move tool to work!
         if((tools_wdgt.rightClickTool == 6 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 6 and ev.buttons() == QtCore.Qt.LeftButton)):
-            diff = (ev.pos() - self.mousePos)/1.5
-            self.mousePos = ev.pos()
+            newPos = ev.pos()
+            diff = newPos - self.mousePos
+            self.mousePos = newPos
             vscroll = self.parent.scrollArea.verticalScrollBar()
             hscroll = self.parent.scrollArea.horizontalScrollBar()
 
-            vscroll.setValue(vscroll.value()+diff.y())
-            hscroll.setValue(hscroll.value()+diff.x())
+            maxvscroll = vscroll.maximum()
+            maxhscroll = hscroll.maximum()
+
+            vvalue = max(0,min(vscroll.value()-diff.y(),maxvscroll))
+            hvalue = max(0,min(hscroll.value()-diff.x(),maxhscroll))
+            scrollPoint = QtCore.QPoint(hvalue,vvalue)
+
+            self.mousePos = self.mousePos - diff
+
+            vscroll.setValue(vvalue)
+            hscroll.setValue(hvalue)
+            ev.accept()
 
         # this enables click and hold in the map with the pen tool!
         if((tools_wdgt.rightClickTool == 0 and ev.buttons() == QtCore.Qt.RightButton) or (tools_wdgt.leftClickTool == 0 and ev.buttons() == QtCore.Qt.LeftButton)):
@@ -141,6 +153,12 @@ class MapWidget(QtWidgets.QWidget):
                 else:
                     self.changeTileType(self.currentTile,tileToChange)
 
+
+    def mouseReleased(self, ev):
+        if(tools_wdgt.leftClickTool == 6):
+            self.setCursor(QtCore.Qt.OpenHandCursor)
+        else:
+            self.setCursor(QtCore.Qt.ArrowCursor)
 
     def TileInMapRightClicked(self, ev):
         self.ClickedATileinMap(tools_wdgt.rightClickTool, ev)
@@ -230,6 +248,7 @@ class MapWidget(QtWidgets.QWidget):
         elif theClickedTool == 6:
             # pan
             self.mousePos = ev.pos()
+            self.parent.myMapWidget.setCursor(QtCore.Qt.ClosedHandCursor)
 
         else:
             firstClickX = None
@@ -328,6 +347,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setAcceptDrops(True)
         self.myMapWidget.ctrlWheelPlu.connect(self.zoomIn)
         self.myMapWidget.ctrlWheelNeg.connect(self.zoomOut)
+        self.keys_timer = None
 
         self.settings = QtCore.QSettings("FGMK", "fgmkEditor")
         self.firsttime = self.loadSettings()
@@ -414,13 +434,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menubar = QtWidgets.QMenuBar(self)
         fileMenu = self.menubar.addMenu('&File')
         editMenu = self.menubar.addMenu('&Edit')
-        current_projectectMenu = self.menubar.addMenu('&Project')
-        fileMenu.addAction('&New Map...', self.newFile, "Ctrl+N")
-        fileMenu.addAction('&Open...', self.openFile, "Ctrl+O")
+        mapMenu = self.menubar.addMenu('&Map')
+
+
+        fileMenu.addAction('&New Project...', self.newProject, 'Ctrl+Shift+N')
+        fileMenu.addAction('&Open Project...', self.openProject, 'Ctrl+Shift+O')
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
-        fileMenu.addAction('&Save As...', self.saveFileAs, "Shift+Ctrl+S")
-        fileMenu.addAction('&Export to JS...',
-                           self.exportToJsAs, "Shift+Ctrl+E")
+        fileMenu.addSeparator()
+        fileMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
+        fileMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
+        fileMenu.addAction('Open Project Folder', self.openProjectFolder, '')
+        fileMenu.addSeparator()
         fileMenu.addAction('&Exit', self.close, "Ctrl+Q")
 
         undoAction = cmd.createUndoAction(self)
@@ -429,27 +453,27 @@ class MainWindow(QtWidgets.QMainWindow):
         redoAction = cmd.createRedoAction(self)
         redoAction.setShortcuts(QtGui.QKeySequence.Redo)
         editMenu.addAction(redoAction)
+        editMenu.addSeparator()
+        editMenu.addAction('Set starting &position...',
+                                      self.selectStartPosition, '')
+        editMenu.addSeparator()
+        editMenu.addAction('Edit &charasets...', self.editCharasets, '')
+        editMenu.addAction('Edit c&haras...', self.editCharas, '')
+        editMenu.addAction('Edit &tileset...', self.editPalette, '')
+        editMenu.addAction('Edit &Items...', self.editItems, '')
 
-        current_projectectMenu.addAction('&New Project...', self.newProject, 'Ctrl+Shift+N')
-        current_projectectMenu.addAction('&Open Project...', self.openProject, 'Ctrl+Shift+O')
-        current_projectectMenu.addSeparator()
-        current_projectectMenu.addAction('Set starting &position...',
-                              self.selectStartPosition, '')
-        current_projectectMenu.addSeparator()
-        current_projectectMenu.addAction('Edit &charasets...', self.editCharasets, '')
-        current_projectectMenu.addAction('Edit c&haras...', self.editCharas, '')
-        current_projectectMenu.addAction('Edit &palette...', self.editPalette, '')
-        current_projectectMenu.addAction('Edit &Items...', self.editItems, '')
-        current_projectectMenu.addSeparator()
-        current_projectectMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
-        current_projectectMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
-        current_projectectMenu.addAction('Open Project Folder', self.openProjectFolder, '')
+        mapMenu.addAction('&New Map...', self.newFile, "Ctrl+N")
+        mapMenu.addAction('&Open...', self.openFile, "Ctrl+O")
+        mapMenu.addAction('&Save', self.saveFile, "Ctrl+S")
+        mapMenu.addAction('&Save As...', self.saveFileAs, "Shift+Ctrl+S")
+        mapMenu.addAction('&Export to JS...',
+                           self.exportToJsAs, "Shift+Ctrl+E")
 
         self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = tile_palette_wdgt.PaletteWidget(self, self.myTileSet)
-        self.paletteDockWdgt = QtWidgets.QDockWidget("Palette", self)
-        self.paletteDockWdgt.setObjectName("Palette")
+        self.paletteDockWdgt = QtWidgets.QDockWidget("Tileset", self)
+        self.paletteDockWdgt.setObjectName("Tileset")
         self.paletteDockWdgt.setWidget(self.myPaletteWidget)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.paletteDockWdgt)
 
@@ -943,7 +967,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.setValue("state", self.saveState())
         self.settings.setValue("visibledocks", self.visibleDocks)
         self.settings.setValue("tabDockVisibility", self.toggleVisibilityAll.isChecked())
-        self.settings.endGroup();
+        self.settings.endGroup()
 
         self.settings.beginGroup("Project")
         if(os.path.isfile(current_project.settings["workingFile"])):
@@ -954,9 +978,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def loadSettings(self):
-        self.settings.beginGroup("MainWindow");
-        self.resize(self.settings.value("size", QtCore.QSize(1024, 768)));
-        self.move(self.settings.value("pos", QtCore.QPoint(32,32)));
+        self.settings.beginGroup("MainWindow")
+        self.resize(self.settings.value("size", QtCore.QSize(1024, 768)))
+        self.move(self.settings.value("pos", QtCore.QPoint(32,32)))
         self.changeZoomValue(float(self.settings.value("zoom", 2)))
         if(float(self.settings.value("toolzoom", 2))==1):
             self.changeToolsScale1x()
@@ -968,7 +992,7 @@ class MainWindow(QtWidgets.QMainWindow):
         state = self.settings.value("state", QtCore.QByteArray(), type=QtCore.QByteArray)
         if state:
             self.restoreState(state)
-        self.settings.endGroup();
+        self.settings.endGroup()
 
         self.settings.beginGroup("Project")
 
@@ -977,7 +1001,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.openFileByName(workingFile)
         else:
             self.setEnabledAll(False)
-        self.settings.endGroup();
+        self.settings.endGroup()
 
         return self.settings.value("firsttime",True, type=bool)
 
@@ -1003,13 +1027,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myMapWidget.setEnabled(torf)
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Space:
-            self.myToolsWidget.switchLCToolToPan()
+        if(event.isAutoRepeat() == False):
+            if event.key() == QtCore.Qt.Key_Space:
+                self.myToolsWidget.switchLCToolToPan()
 
     def keyReleaseEvent(self, event):
         if event.key() == QtCore.Qt.Key_Space:
-            self.myToolsWidget.swithcLCToolBack()
+            if self.keys_timer:
+                self.keys_timer.stop()
+                self.keys_timer.deleteLater()
 
+            self.keys_timer = QtCore.QTimer()
+            self.keys_timer.timeout.connect(self.releaseKeyTimeout)
+            self.keys_timer.setSingleShot(True)
+            self.keys_timer.start(50)
+
+    def releaseKeyTimeout(self):
+        self.myToolsWidget.swithcLCToolBack()
 
 def Icon():
     return QtGui.QPixmap(getdata.path('icon.png'))

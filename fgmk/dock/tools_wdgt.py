@@ -20,6 +20,7 @@ class ToolsWidget(QtWidgets.QWidget):
         #super().__init__(parent, **kwargs)
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
+        self.parent = parent
         self.scale = 2
 
         self.toolTileset = tile_set.TileSet(getdata.path('tools.png'))
@@ -124,6 +125,11 @@ class ToolsWidget(QtWidgets.QWidget):
         LEFTCLICKLAYER = 1
         RIGHTCLICKTILE = 2
         RIGHTCLICKLAYER = 0
+
+        if(leftClickTool==6):
+            self.parent.myMapWidget.setCursor(QtCore.Qt.OpenHandCursor)
+        else:
+            self.parent.myMapWidget.setCursor(QtCore.Qt.ArrowCursor)
 
         self.setMinimumWidth(self.scale*32+4)
 
