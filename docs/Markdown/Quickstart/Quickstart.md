@@ -15,7 +15,7 @@ Let's create an additional map, this will be the outside of this house.
 
 ![New](screenshot/map_explorer_new.png){ width=16px } Click New in the
 **Map Explorer**.
-You can also use the menu and select `File -> New Map...`.
+You can also use the menu and select `Map -> New Map...`.
 
 ![](screenshot/new_menu.png)
 
