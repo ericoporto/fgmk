@@ -7,9 +7,9 @@ like the one above presented to you! Let's make a new project.
 
 ![](screenshot/fgmk_first_project.gif)
 
-By clicking in the Project menu, you will need to provide a place where you will
-keep your projects, and the name of the specific project (the game) you are
-building.
+By clicking in the File, then New, you will need to provide a place
+where you will keep your projects, and the name of the specific project
+(the game) you are building.
 
 Let's create an additional map, this will be the outside of this house.
 

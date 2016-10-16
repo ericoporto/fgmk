@@ -437,8 +437,8 @@ class MainWindow(QtWidgets.QMainWindow):
         mapMenu = self.menubar.addMenu('&Map')
 
 
-        fileMenu.addAction('&New Project...', self.newProject, 'Ctrl+Shift+N')
-        fileMenu.addAction('&Open Project...', self.openProject, 'Ctrl+Shift+O')
+        fileMenu.addAction('&New ...', self.newProject, 'Ctrl+Shift+N')
+        fileMenu.addAction('&Open ...', self.openProject, 'Ctrl+Shift+O')
         fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
         fileMenu.addSeparator()
         fileMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
@@ -463,10 +463,10 @@ class MainWindow(QtWidgets.QMainWindow):
         editMenu.addAction('Edit &Items...', self.editItems, '')
 
         mapMenu.addAction('&New Map...', self.newFile, "Ctrl+N")
-        mapMenu.addAction('&Open...', self.openFile, "Ctrl+O")
-        mapMenu.addAction('&Save', self.saveFile, "Ctrl+S")
-        mapMenu.addAction('&Save As...', self.saveFileAs, "Shift+Ctrl+S")
-        mapMenu.addAction('&Export to JS...',
+        mapMenu.addAction('&Open Map...', self.openFile, "Ctrl+O")
+        mapMenu.addAction('&Save Map', self.saveFile, "Ctrl+S")
+        mapMenu.addAction('&Save Map As...', self.saveFileAs, "Shift+Ctrl+S")
+        mapMenu.addAction('&Export Map to JS...',
                            self.exportToJsAs, "Shift+Ctrl+E")
 
         self.viewMenu = self.menubar.addMenu('&View')
@@ -604,7 +604,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolScale1x.triggered.connect(self.changeToolsScale1x)
 
         helpMenu = self.menubar.addMenu('&Help')
-        helpMenu.addAction('Help...', self.help)
+        helpMenu.addAction('Help', self.help)
         helpMenu.addSeparator()
         helpMenu.addAction('Load example...', self.load_example)
         helpMenu.addSeparator()

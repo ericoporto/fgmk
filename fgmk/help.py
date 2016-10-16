@@ -68,7 +68,7 @@ aboutstr = __title__ + ' v' + __version__ + "\n\n" + \
 welcome_msg = """
 Welcome to FGMK
 
-Please start a new game project by clicking in Project -> New Project
+Please start a new game project by clicking in File -> New Project
 """
 
 def welcome(parent=None):
