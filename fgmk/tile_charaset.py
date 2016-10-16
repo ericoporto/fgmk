@@ -25,6 +25,7 @@ class BaseCharaset:
 
     def init(self, image_file):
         if(image_file == None):
+            self.hasimage = False
             return False
 
         if(os.path.isfile(image_file)):
@@ -51,12 +52,14 @@ class BaseCharaset:
                     currenty += self.boxh
                     currentx = 0
 
+                self.hasimage = True
                 return True
 
             else:
                 print("error:Your file width and height are not good to {0}x{1} pixel charaset!".format(
                     self.boxw, self.boxh))
 
+        self.hasimage = False
         return False
 
 
