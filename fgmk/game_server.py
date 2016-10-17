@@ -67,7 +67,11 @@ def openBrowser(ip,port):
     note the debug variable passed so the js engine creates a listener to notify
     the adm server when the page is closed (or reloaded).
     """
-    url = "http://" + ip + ":{0}".format(port)+"?debug=1"
+    if(ip=='0.0.0.0'):
+        url = "http://127.0.0.1:{0}".format(port)+"?debug=1"
+    else:
+        url = "http://" + ip + ":{0}".format(port)+"?debug=1"
+
     new = 2  # 2 goes to new tab, 0 same and 1 window.
     browserOk = webbrowser.open(url, new=new)
 
