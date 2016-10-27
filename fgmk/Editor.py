@@ -482,6 +482,9 @@ class MainWindow(QtWidgets.QMainWindow):
         mapMenu.addAction('&Export Map to JS...',
                            self.exportToJsAs, "Shift+Ctrl+E")
 
+        mapMenu.addSeparator()
+        mapMenu.addAction('&Resize Map...', self.mapResize, '')
+
         self.viewMenu = self.menubar.addMenu('&View')
 
         self.myPaletteWidget = tile_palette_wdgt.PaletteWidget(self, self.myTileSet)
@@ -1017,6 +1020,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings.endGroup()
 
         return self.settings.value("firsttime",True, type=bool)
+
+    def mapResize(self):
+        myMapResizeDialog = editor_mainwindow_menus.MapResizeDialog(self)
+        if myMapResizeDialog.exec_() == QtWidgets.QDialog.Accepted:
+            resize = myMapResizeDialog.getValue()
+            command = cmd.CommandResizeMap("Resize Map",
+                self.myMap, self.myMapWidget, self.myCharasPalWidget,
+                resize['width'], resize['height'], resize['offsetx'], resize['offsety'])
+            cmd.commandToStack(command)
 
     def help(self):
         myHelp = help.HelpWindow(parent=self)

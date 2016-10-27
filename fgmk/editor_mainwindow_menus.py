@@ -281,3 +281,60 @@ class newFile(QtWidgets.QDialog):
 
     def getValue(self):
         return self.returnValue
+
+class MapResizeDialog(QtWidgets.QDialog):
+    """
+    The Resize Map menu. Like in GIMP you can resize canvas,
+    this dialog is meant to allow resizing the map.
+    """
+    def __init__(self, parent=None, **kwargs):
+        #super().__init__(parent, **kwargs)
+        QtWidgets.QDialog.__init__(self, parent, **kwargs)
+        self.parent = parent
+
+        #Elements
+        self.SpinBoxWidth = QtWidgets.QSpinBox()
+        self.SpinBoxHeight = QtWidgets.QSpinBox()
+        self.SpinBoxOffX = QtWidgets.QSpinBox()
+        self.SpinBoxOffY = QtWidgets.QSpinBox()
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+
+        #Logic
+        self.reset()
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        # Layout
+        self.setWindowTitle('Resize map')
+        VBox = QtWidgets.QVBoxLayout(self)
+        HBox1 = QtWidgets.QHBoxLayout()
+        HBox2 = QtWidgets.QHBoxLayout()
+        HBox3 = QtWidgets.QHBoxLayout()
+        HBox4 = QtWidgets.QHBoxLayout()
+
+        HBox1.addWidget(QtWidgets.QLabel("Width:"))
+        HBox1.addWidget(self.SpinBoxWidth)
+        HBox2.addWidget(QtWidgets.QLabel("Height:"))
+        HBox2.addWidget(self.SpinBoxHeight)
+        HBox3.addWidget(QtWidgets.QLabel("Horizontal Offset:"))
+        HBox3.addWidget(self.SpinBoxOffX)
+        HBox4.addWidget(QtWidgets.QLabel("Vertical Offset:"))
+        HBox4.addWidget(self.SpinBoxOffY)
+        VBox.addLayout(HBox1)
+        VBox.addLayout(HBox2)
+        VBox.addLayout(HBox3)
+        VBox.addLayout(HBox4)
+        VBox.addWidget(self.buttonBox)
+
+    def getValue(self):
+        return {"width": self.SpinBoxWidth.value(),
+                "height": self.SpinBoxHeight.value(),
+                "offsetx": self.SpinBoxOffX.value(),
+                "offsety": self.SpinBoxOffY.value() }
+
+    def reset(self):
+        self.SpinBoxWidth.setValue(self.parent.myMap.getMapWidth())
+        self.SpinBoxHeight.setValue(self.parent.myMap.getMapHeight())
+        self.SpinBoxOffX.setValue(0)
+        self.SpinBoxOffY.setValue(0)

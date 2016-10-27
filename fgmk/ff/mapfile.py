@@ -140,6 +140,12 @@ class MapFormat(base_model.BaseFormat):
         newLayersMapTiles = self.LayersMapTiles[:,y:(y+height),x:(x+width)]
         self.LayersMapTiles = newLayersMapTiles
 
+    def getMapWidth(self):
+        return len(self.LayersMapTiles[0][0])
+
+    def getMapHeight(self):
+        return len(self.LayersMapTiles[0])
+
     def getCharaList(self):
         return self.listOfCharas
 

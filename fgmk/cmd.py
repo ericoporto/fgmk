@@ -84,7 +84,7 @@ class CommandResizeMap(QtWidgets.QUndoCommand):
         self.pCharasPalWidget = myCharasPalWidget
 
     def redo(self):
-        self.pMap.resize(self.newW , self.newH, self.newOX, self.newOY)
+        self.pMap.mapResize(self.newW , self.newH, self.newOX, self.newOY)
         self.pMapWidget.DrawMap()
         self.pCharasPalWidget.reinit()
 
