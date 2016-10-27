@@ -79,7 +79,10 @@ class MapWidget(QtWidgets.QWidget):
         self.parent.myCharasPalWidget.reinit()
 
     # this is the function to draw and redraw all tiles!
-    def DrawMap(self, parent):
+    def DrawMap(self, parent=None):
+        if(parent==None):
+            parent = self.parent
+
         self.setVisible(False)
         LayersMapTiles = parent.myMap.LayersMapTiles
 

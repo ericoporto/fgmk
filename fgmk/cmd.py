@@ -62,6 +62,37 @@ def delAsteriskFromStr(title):
     else:
         return title
 
+
+class CommandResizeMap(QtWidgets.QUndoCommand):
+    """
+    Class for a single chara delete operation.
+    This class operates in the visible map
+    widget and the map (that has the jsontree), having redo (which is also the
+    do action) and undo capabilities.
+    """
+    def __init__(self, description, myMap, myMapWidget, myCharasPalWidget, width, height, offsetx=0, offsety=0):
+        #super().__init__(description)
+        QtWidgets.QUndoCommand.__init__(self, description)
+
+        self.pMap = myMap
+        self.newW = width
+        self.newH = height
+        self.newOX = offsetx
+        self.newOY = offsety
+        self.pMapWidget = myMapWidget
+        self.oldLayersMapTiles = self.pMap.LayersMapTiles[:]
+        self.pCharasPalWidget = myCharasPalWidget
+
+    def redo(self):
+        self.pMap.resize(self.newW , self.newH, self.newOX, self.newOY)
+        self.pMapWidget.DrawMap()
+        self.pCharasPalWidget.reinit()
+
+    def undo(self):
+        self.pMap.LayersMapTiles = self.oldLayersMapTiles[:]
+        self.pMapWidget.DrawMap()
+        self.pCharasPalWidget.reinit()
+
 class CommandEventAction(QtWidgets.QUndoCommand):
     """
     Class for adding an action to an event.

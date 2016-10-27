@@ -134,6 +134,12 @@ class MapFormat(base_model.BaseFormat):
 
         f.close()
 
+    def mapResize(self,width,height,offsetx=0,offsety=0):
+        x=min(max(offsetx,0),len(self.LayersMapTiles[0][0]))
+        y=min(max(offsety,0),len(self.LayersMapTiles[0]))
+        newLayersMapTiles = self.LayersMapTiles[:,y:(y+height),x:(x+width)]
+        self.LayersMapTiles = newLayersMapTiles
+
     def getCharaList(self):
         return self.listOfCharas
 
