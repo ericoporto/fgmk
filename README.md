@@ -15,7 +15,7 @@ Games are composed of plain text files, images and a index.html file containing
 
 These plain text files are easy to read by software and humans.
 
-[Click here to try a demo game (1MB size). ](https://ericoporto.github.io/fgmkJsEngine/index.html)
+[Click here to try a demo game (4MB size). ](https://ericoporto.github.io/fgmkJsEngine/index.html)
 
 Recommended Install and Run
 --------------------------
