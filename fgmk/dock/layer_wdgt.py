@@ -24,6 +24,11 @@ class LayerWidget(QtWidgets.QWidget):
             self.ButtonLayer[-1].setObjectName(mapfile.LayersName[i])
             self.ButtonLayer[-1].clicked.connect(self.buttonLayerClicked)
             self.VBox.addWidget(self.ButtonLayer[-1])
+            if(i==1):
+                self.ButtonLayer.append(
+                    QtWidgets.QPushButton('layer3 (charas)'))
+                self.ButtonLayer[-1].setEnabled(False)
+                self.VBox.addWidget(self.ButtonLayer[-1])
 
         self.setMaximumHeight(180)
         self.show()

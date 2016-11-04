@@ -452,7 +452,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         fileMenu.addAction('&New ...', self.newProject, 'Ctrl+Shift+N')
         fileMenu.addAction('&Open ...', self.openProject, 'Ctrl+Shift+O')
-        fileMenu.addAction('&Save', self.saveFile, "Ctrl+S")
+        fileMenu.addAction('&Save', self.saveFile, "Ctrl+B")
         fileMenu.addSeparator()
         fileMenu.addAction('Save and Run Project', self.saveAndRun, 'f5')
         fileMenu.addAction('Run Project', self.runServer, 'Ctrl+f5')
