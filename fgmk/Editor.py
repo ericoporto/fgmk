@@ -867,7 +867,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.myPaletteWidget.drawPalette(self.myTileSet)
         self.myEventsWidget.updateEventsList()
         self.myCharasPalWidget.reinit()
-        game_init.regenerateLevelList()
+        game_init.regenerateInit()
         hasinit = self.myMapExplorerWidget.reloadInitFile()
         self.setEnabledAll(hasinit == True)
         self.changeTileCurrent(0)
@@ -880,7 +880,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.save(filename)
             cmd.updateStackAtSave()
 
-            if game_init.regenerateLevelList():
+            if game_init.regenerateInit():
                 self.myMapExplorerWidget.reloadInitFile()
 
 
@@ -896,7 +896,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myMap.save(current_project.settings["workingFile"])
             cmd.updateStackAtSave()
 
-            if game_init.regenerateLevelList():
+            if game_init.regenerateInit():
                 self.myMapExplorerWidget.reloadInitFile()
 
     def exportToJsAs(self):
@@ -928,7 +928,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.myEventsWidget.updateEventsList()
             self.myEventsWidget.enableButtonsBecauseEventsList()
             self.myCharasPalWidget.reinit()
-            game_init.regenerateLevelList()
+            game_init.regenerateInit()
             hasinit = self.myMapExplorerWidget.reloadInitFile()
             self.setEnabledAll(hasinit == True)
             cmd.clearCommandStack()

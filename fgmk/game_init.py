@@ -3,7 +3,7 @@ import json
 import os.path
 from os import listdir
 from fgmk import fifl, current_project
-
+from fgmk.ff import write_file
 
 def getLevelPathFromInitFile(gamefolder, levelname):
     initFile = openInitFile(gamefolder)
@@ -42,10 +42,66 @@ def getInitFile():
         return {}
 
 
-def regenerateLevelList():
+
+
+def regenerateInit():
     initFileJsonTree = getInitFile()
+    needupdate = False
+
+    levelJsonTree = regenerateLevelList(initFileJsonTree)
+    if(levelJsonTree == None):
+        #regress to before json tree
+        levelJsonTree = initFileJsonTree
+    else:
+        needupdate = True
+
+    musicJsonTree = regenerateMusicList(levelJsonTree)
+    if(musicJsonTree == None):
+        #regress to before json tree
+        musicJsonTree = levelJsonTree
+    else:
+        needupdate = True
+
+    if(needupdate):
+        gamefolder = os.path.join(current_project.settings["gamefolder"])
+        saveInitFile(gamefolder, musicJsonTree)
+        return True
+
+    return False
+
+def regenerateMusicList(initFileJsonTree):
+    if 'MusicList' not in initFileJsonTree:
+        return None
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
+
+    if(initFileJsonTree != None):
+        songs = os.path.join(gamefolder, fifl.MUSIC)
+        mp3list = [f for f in listdir(songs) if os.path.isfile(os.path.join(songs, f)) and f.endswith(".mp3")]
+        ogglist = [f for f in listdir(songs) if os.path.isfile(os.path.join(songs, f)) and f.endswith(".ogg")]
+        wavlist = [f for f in listdir(songs) if os.path.isfile(os.path.join(songs, f)) and f.endswith(".wav")]
+        originalMusicList = initFileJsonTree["MusicList"]
+
+        filelist = mp3list + ogglist + wavlist
+        MusicList = {}
+        for file in filelist:
+            [filewoext, ext ] = os.path.splitext(file)
+            if hasattr(MusicList, filewoext):
+                MusicList[filewoext][ext[1:]] = file
+            else:
+                MusicList[filewoext] = {}
+                MusicList[filewoext][ext[1:]] = file
+
+        if(write_file.isJsonEqual(MusicList,originalMusicList) == False):
+            initFileJsonTree["MusicList"] = []
+            initFileJsonTree["MusicList"] = MusicList
+            return initFileJsonTree
+
+    return None
+
+def regenerateLevelList(initFileJsonTree):
     if 'LevelsList' not in initFileJsonTree:
-        return
+        return None
 
     gamefolder = os.path.join(current_project.settings["gamefolder"])
 
@@ -64,10 +120,9 @@ def regenerateLevelList():
         if(len(unmatched_maps)!=0):
             initFileJsonTree["LevelsList"] = []
             initFileJsonTree["LevelsList"] = LevelsList
-            saveInitFile(gamefolder, initFileJsonTree)
-            return True
+            return initFileJsonTree
 
-        return False
+    return None
 
 def getAllVariables():
     # charas.json -> ['Charas'][charanames]['actions']['list']

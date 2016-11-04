@@ -94,7 +94,7 @@ class MapExplorerWidget(QtWidgets.QWidget):
                                                    'Do you really wish to delete:\n'+mapForDeletion, QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             if reply == QtWidgets.QMessageBox.Yes:
                 osremove(target_to_delete)
-                game_init.regenerateLevelList()
+                game_init.regenerateInit()
                 self.reloadInitFile()
 
         else:

@@ -9,6 +9,7 @@ DESCRIPTORS = os.path.join("descriptors")
 LEVELS = os.path.join(DESCRIPTORS, "levels")
 IMG = os.path.join("img")
 AUDIO = os.path.join("audio")
+MUSIC = os.path.join(AUDIO, "music")
 CHARASETS = os.path.join(DESCRIPTORS, "charaset")
 FONT = os.path.join("font")
 
