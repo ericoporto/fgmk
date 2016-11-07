@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Specification &mdash; fgmk 0.5.8 documentation</title>
+  <title>Specification &mdash; fgmk 0.6.0 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="fgmk 0.5.8 documentation" href="../index.html"/>
+    <link rel="top" title="fgmk 0.6.0 documentation" href="../index.html"/>
         <link rel="next" title="Editor" href="../Editor/Editor.html"/>
         <link rel="prev" title="Quickstart" href="../Quickstart/Quickstart.html"/> 
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.5.8
+                0.6.0
               </div>
             
           
@@ -146,6 +146,7 @@ organized in the following manner.</p>
 <p>Here is how the file tree should be organized</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>game_project_name
 ├── audio
+│   └── music
 ├── descriptors
 │   ├── charaset
 │   │   └── charaset1.json
@@ -158,8 +159,6 @@ organized in the following manner.</p>
 │       ├── ahouse.map.json
 │       └── house.pal.json
 |        ...
-├── font
-│   └── INFO56_0.ttf
 ├── icon.png
 ├── img
 │   ├── bgimg1.png
@@ -182,6 +181,13 @@ organized in the following manner.</p>
 </div>
 <ul>
 <li><p class="first"><code class="docutils literal"><span class="pre">audio</span></code> (folder) - contains audio files used by the game.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">music</span></code> (folder) - this folder contains the music. A music file
+can be either .mp3, .ogg or .wav. You can add music files with the
+same name and different extensions to maximize browser
+compatibility. When downloading, the engine will prefer ogg first
+(if the browser supports it), then mp3 and later wav.</li>
+</ul>
 </li>
 <li><p class="first"><code class="docutils literal"><span class="pre">descriptors</span></code> (folder) - contains all json files, and folders
 containing json files.</p>
@@ -220,15 +226,9 @@ format.</p>
 folder contains possible pictures in png format.</li>
 </ul>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">font</span></code> (folder) - holds the type font for the engine. Currently it
-MUST be INFO56_0.</p>
+<li><p class="first"><code class="docutils literal"><span class="pre">index.html</span></code> - this is the engine. It should be placed at the root
+of the game project folder.</p>
 </li>
-</ul>
-<p>OBS: Soon the font name will be placed in init.json, so you will be able
-to change this.</p>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">index.html</span></code> - this is the engine. It should be placed at the root
-of the game project folder.</li>
 </ul>
 <div class="section" id="palette-files-pal-json">
 <h2>palette files - .pal.json<a class="headerlink" href="#palette-files-pal-json" title="Permalink to this headline">¶</a></h2>
@@ -406,6 +406,12 @@ folder.</p>
     <span class="s2">&quot;CharasetFileList&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;charaset1&quot;</span><span class="p">:</span> <span class="s2">&quot;charaset1.json&quot;</span>
     <span class="p">},</span>
+    <span class="s2">&quot;MusicList&quot;</span><span class="p">:{</span>
+        <span class="s2">&quot;villa&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ogg&quot;</span><span class="p">:</span><span class="s2">&quot;villa.ogg&quot;</span><span class="p">,</span><span class="s2">&quot;mp3&quot;</span><span class="p">:</span><span class="s2">&quot;villa.mp3&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;battle_1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ogg&quot;</span><span class="p">:</span><span class="s2">&quot;battle_1.ogg&quot;</span><span class="p">,</span><span class="s2">&quot;mp3&quot;</span><span class="p">:</span><span class="s2">&quot;battle_1.mp3&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;battle_win&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ogg&quot;</span><span class="p">:</span><span class="s2">&quot;battle_win.ogg&quot;</span><span class="p">,</span><span class="s2">&quot;mp3&quot;</span><span class="p">:</span><span class="s2">&quot;battle_win.mp3&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;opening&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ogg&quot;</span><span class="p">:</span> <span class="s2">&quot;opening.ogg&quot;</span><span class="p">,</span><span class="s2">&quot;mp3&quot;</span><span class="p">:</span> <span class="s2">&quot;opening.mp3&quot;</span><span class="p">}</span>
+    <span class="p">},</span>
     <span class="s2">&quot;HMSFile&quot;</span><span class="p">:</span> <span class="s2">&quot;hms.json&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LevelsList&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;ahouse&quot;</span><span class="p">:</span> <span class="s2">&quot;ahouse.map.json&quot;</span>
@@ -423,6 +429,10 @@ folder.</p>
     <span class="p">},</span>
     <span class="s2">&quot;World&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;initLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;ahouse&quot;</span>
+        <span class="s2">&quot;initMusic&quot;</span><span class="p">:</span> <span class="s2">&quot;opening&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;battleMusic&quot;</span><span class="p">:</span> <span class="s2">&quot;battle_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;battleVictoryMusic&quot;</span><span class="p">:</span> <span class="s2">&quot;battle_win&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;initActions&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="s2">&quot;playMusic&quot;</span><span class="p">,</span><span class="s2">&quot;villa&quot;</span><span class="p">]]</span>
     <span class="p">},</span>
     <span class="s2">&quot;itemsFile&quot;</span><span class="p">:</span> <span class="s2">&quot;items.json&quot;</span>
 <span class="p">}</span>
@@ -435,6 +445,8 @@ folder.</p>
 key is the name of the file minus it&#8217;s extension.</li>
 <li><code class="docutils literal"><span class="pre">CharasetFileList</span></code> : points to a list of <code class="docutils literal"><span class="pre">charaset</span></code> files, where
 each key is the name of the file minus it&#8217;s extension.</li>
+<li><code class="docutils literal"><span class="pre">MusicList</span></code> : contains the music names and the file for each
+extension available in audio/music folder.</li>
 <li><code class="docutils literal"><span class="pre">HMSFile</span></code> : points to where to look for the Heroes Monsters Skills
 file and it&#8217;s name. It&#8217;s advised to keep this value as <code class="docutils literal"><span class="pre">hms.json</span></code>
 to avoid confusion.</li>
@@ -462,6 +474,13 @@ starting party - this only matters for battle.</li>
 <li><code class="docutils literal"><span class="pre">World</span></code>: describes the initial states of the environment.<ul>
 <li><code class="docutils literal"><span class="pre">initLevel</span></code> : the key name of the level the player chara begins.
 This is the first map you see after the start screen.</li>
+<li><code class="docutils literal"><span class="pre">initMusic</span></code> : the name of the music in the opening screen.</li>
+<li><code class="docutils literal"><span class="pre">battleMusic</span></code> : the name of the default music to play in battle
+if no music is specified.</li>
+<li><code class="docutils literal"><span class="pre">battleVictoryMusic</span></code> : the name of the default music to play
+when the battle ends in victory if no music is specified.</li>
+<li><code class="docutils literal"><span class="pre">initActions</span></code> : in the opening screen, when start is clicked,
+these actions should be executed.</li>
 </ul>
 </li>
 </ul>
@@ -674,7 +693,7 @@ You can have as many frames as necessary.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.5.8',
+            VERSION:'0.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
