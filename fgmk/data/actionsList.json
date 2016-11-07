@@ -3,6 +3,7 @@
   "alert",
   "teleport",
   "teleportInPlace",
+  "playMusic",
   "addItem",
   "dropItem",
   "changeTile",
@@ -36,6 +37,7 @@
     "teleport":["positionx","positiony","level"],
     "changeAllTiles":["tileType", "tileType", "layer", "colision", "event", "level"],
     "changeTile":["tileType","layer","colision", "event",["positionx","positiony","level"],["current"]],
+    "playMusic":["musicname"],
     "rain":["state"],
     "addItem":["item"],
     "dropItem":["item"]

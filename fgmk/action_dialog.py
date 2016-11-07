@@ -244,6 +244,29 @@ class teleportInPlace(ActionDialog):
         return text
 
 
+class playMusic(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select music to play:")
+        self.ListItem = miniWdgt.miniMusicList()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.ListItem)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('playMusic: select music to play')
+
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
+
+    def getValue(self):
+        itemToReturn = str(self.ListItem.getItem())
+        return itemToReturn
+
+
 class addItem(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
