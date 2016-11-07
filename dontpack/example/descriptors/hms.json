@@ -28,7 +28,7 @@
     {
     "bunny":
         {
-            "name":"VorpalBunny",
+            "name":"Vorpal Bunny",
             "ExpToLevel":[2,0],
             "baseStats" : {"hp":120, "st":100, "dx":120, "iq":10 },
             "Pathway":{

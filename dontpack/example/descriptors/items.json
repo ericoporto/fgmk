@@ -4,7 +4,8 @@
     "potion":{
             "effect":{"dl":0,"basep":0,"plus":10,"effect":["hpup"]},
             "usable":true,
-            "description":"A flask containing a funny looking liquid."
+            "description":"A flask containing a funny looking liquid.",
+            "icon":1
              },
     "sword":{
             "equipable":true,

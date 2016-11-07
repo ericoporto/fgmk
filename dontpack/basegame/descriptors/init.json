@@ -4,6 +4,13 @@
     }, 
     "CharasetFileList": {
         "charaset1": "charaset1.json"
+    },
+    "MusicList":{
+        "villa" : {"ogg":"villa.ogg","mp3":"villa.mp3"},
+        "battle_1": {"ogg":"battle_1.ogg","mp3":"battle_1.mp3"},
+        "battle_win": {"ogg":"battle_win.ogg","mp3":"battle_win.mp3"},
+        "opening": {"ogg": "opening.ogg","mp3": "opening.mp3"},
+        "forest": {"ogg":"forest.ogg","mp3":"forest.mp3"}
     }, 
     "HMSFile": "hms.json", 
     "LevelsList": {
@@ -22,7 +29,11 @@
         ]
     }, 
     "World": {
-        "initLevel": "ahouse"
+        "initLevel": "ahouse",
+        "initMusic": "opening",
+        "battleMusic": "battle_1",
+        "battleVictoryMusic": "battle_win",
+        "initActions": [["playMusic","villa"]]
     }, 
     "itemsFile": "items.json"
 }

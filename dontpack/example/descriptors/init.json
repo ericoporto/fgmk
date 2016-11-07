@@ -1,33 +1,44 @@
 {
     "CharasFileList": {
         "charas1": "charas1.json"
-    }, 
+    },
     "CharasetFileList": {
         "charaset1": "charaset1.json"
-    }, 
-    "HMSFile": "hms.json", 
+    },
+    "MusicList":{
+        "villa" : {"ogg":"villa.ogg","mp3":"villa.mp3"},
+        "battle_1": {"ogg":"battle_1.ogg","mp3":"battle_1.mp3"},
+        "battle_win": {"ogg":"battle_win.ogg","mp3":"battle_win.mp3"},
+        "opening": {"ogg": "opening.ogg","mp3": "opening.mp3"},
+        "forest": {"ogg":"forest.ogg","mp3":"forest.mp3"}
+    },
+    "HMSFile": "hms.json",
     "LevelsList": {
-        "beach": "beach.map.json", 
-        "desertcave": "desertcave.map.json", 
-        "housemiddown": "housemiddown.map.json", 
-        "housetopleft": "housetopleft.map.json", 
-        "playerhouse": "playerhouse.map.json", 
+        "beach": "beach.map.json",
+        "desertcave": "desertcave.map.json",
+        "housemiddown": "housemiddown.map.json",
+        "housetopleft": "housetopleft.map.json",
+        "playerhouse": "playerhouse.map.json",
         "smallforest": "smallforest.map.json"
-    }, 
+    },
     "PictureList":["test"]
     ,
     "Player": {
-        "charaFile": "person.json", 
-        "charaSet": "person", 
-        "facing": "down", 
-        "initPosX": 224, 
-        "initPosY": 224, 
+        "charaFile": "person.json",
+        "charaSet": "person",
+        "facing": "down",
+        "initPosX": 224,
+        "initPosY": 224,
         "party": [
             "hero"
         ]
-    }, 
+    },
     "World": {
-        "initLevel": "playerhouse"
-    }, 
+        "initLevel": "playerhouse",
+        "initMusic": "opening",
+        "battleMusic": "battle_1",
+        "battleVictoryMusic": "battle_win",
+        "initActions": [["playMusic","villa"]]
+    },
     "itemsFile": "items.json"
 }

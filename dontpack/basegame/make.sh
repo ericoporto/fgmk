@@ -6,4 +6,4 @@ curl -s -L https://github.com/ericoporto/fgmkJsEngine/releases/latest |
     wget --base=http://github.com/ -i - -O index.html
 
 # pack everything 
-tar -czvf basegame.tar.gz audio/ descriptors/ font/ img/ icon.png index.html LICENSE
+tar -czvf basegame.tar.gz audio/ descriptors/ img/ icon.png index.html LICENSE
