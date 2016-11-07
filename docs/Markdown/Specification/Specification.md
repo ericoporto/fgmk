@@ -7,6 +7,7 @@ Here is how the file tree should be  organized
 
     game_project_name
     ├── audio
+    │   └── music
     ├── descriptors
     │   ├── charaset
     │   │   └── charaset1.json
@@ -19,8 +20,6 @@ Here is how the file tree should be  organized
     │       ├── ahouse.map.json
     │       └── house.pal.json
     |        ...
-    ├── font
-    │   └── INFO56_0.ttf
     ├── icon.png
     ├── img
     │   ├── bgimg1.png
@@ -42,6 +41,11 @@ Here is how the file tree should be  organized
 
 
 - `audio` (folder) - contains audio files used by the game.
+
+    - `music` (folder) - this folder contains the music. A music file can be either .mp3,
+    .ogg or .wav. You can add music files with the same name and different extensions to
+    maximize browser compatibility. When downloading, the engine will prefer ogg first (if 
+    the browser supports it), then mp3 and later wav.
 
 - `descriptors` (folder) - contains all json files, and folders containing json
 files.
@@ -80,12 +84,6 @@ files.
 
     - `pictures` (folder) - you can show a picture using action, this folder
     contains possible pictures in png format.
-
-- `font` (folder) - holds the type font for the engine. Currently it MUST be
-INFO56_0.
-
-  OBS: Soon the font name will be placed in init.json, so you will be able to
-change this.
 
 - `index.html` - this is the engine. It should be placed at the root of the
 game project folder.
@@ -267,6 +265,12 @@ placed inside the `game_root_folder/descriptors/` folder.
         "CharasetFileList": {
             "charaset1": "charaset1.json"
         },
+        "MusicList":{
+            "villa" : {"ogg":"villa.ogg","mp3":"villa.mp3"},
+            "battle_1": {"ogg":"battle_1.ogg","mp3":"battle_1.mp3"},
+            "battle_win": {"ogg":"battle_win.ogg","mp3":"battle_win.mp3"},
+            "opening": {"ogg": "opening.ogg","mp3": "opening.mp3"}
+        },
         "HMSFile": "hms.json",
         "LevelsList": {
             "ahouse": "ahouse.map.json"
@@ -284,6 +288,10 @@ placed inside the `game_root_folder/descriptors/` folder.
         },
         "World": {
             "initLevel": "ahouse"
+            "initMusic": "opening",
+            "battleMusic": "battle_1",
+            "battleVictoryMusic": "battle_win",
+            "initActions": [["playMusic","villa"]]
         },
         "itemsFile": "items.json"
     }
@@ -296,6 +304,9 @@ of the file minus it's extension.
 
 - `CharasetFileList` : points to a list of `charaset` files, where each key is the
 name of the file minus it's extension.
+
+- `MusicList` : contains the music names and the file for each extension available
+in audio/music folder.
 
 - `HMSFile` : points to where to look for the Heroes Monsters Skills file and
 it's name. It's advised to keep this value as `hms.json` to avoid confusion.
@@ -326,6 +337,14 @@ the first time in the map state.
 - `World`: describes the initial states of the environment.
 
     - `initLevel` : the key name of the level the player chara begins. This is the first map you see after the start screen.
+    
+    - `initMusic` : the name of the music in the opening screen.
+    
+    - `battleMusic` : the name of the default music to play in battle if no music is specified.
+    
+    - `battleVictoryMusic` : the name of the default music to play when the battle ends in victory if no music is specified.
+    
+    - `initActions` : in the opening screen, when start is clicked, these actions should be executed.
 
 ## items.json
 
