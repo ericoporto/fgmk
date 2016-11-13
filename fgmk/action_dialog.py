@@ -830,6 +830,38 @@ class rain(ActionDialog):
             rain_state = 'stop'
         return rain_state
 
+class shakeScreen(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select either vertical or horizontal:")
+        self.ListEffect = QtWidgets.QListWidget()
+
+        self.radiovertical = QtWidgets.QRadioButton("vertical", self)
+        self.radiohorizontal = QtWidgets.QRadioButton("horizontal", self)
+
+        self.radiovertical.setChecked(True)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.radiovertical)
+        self.VBox.addWidget(self.radiohorizontal)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('shakeScreen: choose to shake horizontal or vertical')
+
+        if(self.edit != None):
+            if(self.edit[0] == 'horizontal'):
+                self.radiohorizontal.setChecked(True)
+
+    def getValue(self):
+        shake_state='vertical'
+        if self.radiohorizontal.isChecked():
+            shake_state = 'horizontal'
+        return shake_state
+
+
 class changePlayerAnimation(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
