@@ -201,13 +201,23 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.deselectActionButton = QtWidgets.QPushButton("Deselect Actions", self)
 
         if(not self.isitem):
+            #[onclick, onover, oncharaover, charaleave, onleave]
             self.checkboxes = []
             self.checkboxes.append(QtWidgets.QCheckBox("on click", self))
             self.checkboxes.append(QtWidgets.QCheckBox("on over", self))
+            self.checkboxes.append(QtWidgets.QCheckBox("on charaover", self))
+            self.checkboxes.append(QtWidgets.QCheckBox("on charaleave", self))
+            self.checkboxes.append(QtWidgets.QCheckBox("on leave", self))
             self.checkboxes[0].setCheckState(QtCore.Qt.Checked)
             self.checkboxes[1].setCheckState(QtCore.Qt.Unchecked)
+            self.checkboxes[2].setCheckState(QtCore.Qt.Unchecked)
+            self.checkboxes[3].setCheckState(QtCore.Qt.Unchecked)
+            self.checkboxes[4].setCheckState(QtCore.Qt.Unchecked)
             self.checkboxes[0].clicked.connect(self.checkboxTypeChanged0)
             self.checkboxes[1].clicked.connect(self.checkboxTypeChanged1)
+            self.checkboxes[2].clicked.connect(self.checkboxTypeChanged2)
+            self.checkboxes[3].clicked.connect(self.checkboxTypeChanged3)
+            self.checkboxes[4].clicked.connect(self.checkboxTypeChanged4)
 
         self.addActionButton.clicked.connect(self.addAction)
         self.editActionButton.clicked.connect(self.editAction)
@@ -397,6 +407,24 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         current_actions = self.getValue()
         self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on over')
 
+    def checkboxTypeChanged2(self, int):
+        previous_actions = self.getValue()
+        previous_actions['type'][2] = not previous_actions['type'][2]
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on charaover')
+
+    def checkboxTypeChanged3(self, int):
+        previous_actions = self.getValue()
+        previous_actions['type'][3] = not previous_actions['type'][3]
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on charaleave')
+
+    def checkboxTypeChanged4(self, int):
+        previous_actions = self.getValue()
+        previous_actions['type'][4] = not previous_actions['type'][4]
+        current_actions = self.getValue()
+        self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on leave')
+
     def getValue(self):
         allactions = []
         for itemIndex in range(self.ActionList.count()):
@@ -405,7 +433,10 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         if(not self.isitem):
             onclick = self.checkboxes[0].isChecked()
             onover = self.checkboxes[1].isChecked()
-            actiontype = [onclick,onover]
+            oncharaover = self.checkboxes[2].isChecked()
+            oncharaleave = self.checkboxes[3].isChecked()
+            onleave = self.checkboxes[4].isChecked()
+            actiontype = [onclick,onover,oncharaover,oncharaleave,onleave]
             returnvalue = {'list':allactions, 'type':actiontype }
 
         else:
