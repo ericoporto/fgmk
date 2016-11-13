@@ -191,6 +191,7 @@ class tinyActionsWdgt(QtWidgets.QWidget):
 
         self.ActionList = DragAndDropList(self)
         self.ActionList.itemMoved.connect(self.actionListItemMoved)
+        self.ActionList.itemDoubleClicked.connect(self.editAction)
 
         VBoxActionList = QtWidgets.QVBoxLayout()
         VBoxButtons = QtWidgets.QVBoxLayout()
