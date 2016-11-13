@@ -255,8 +255,13 @@ class tinyActionsWdgt(QtWidgets.QWidget):
             # the actionToSet has two parts, a type (onover or click for example)
             # and also a list, which has all the actions, the most interesting part
             atype = actionToSet['type']
+            inittype = [0,0,0,0,0]
             for i in range(len(atype)):
                 if(atype[i]):
+                    inittype[i]=1
+
+            for i in range(len(inittype)):
+                if(inittype[i]):
                     self.checkboxes[i].setCheckState(QtCore.Qt.Checked)
                 else:
                     self.checkboxes[i].setCheckState(QtCore.Qt.Unchecked)

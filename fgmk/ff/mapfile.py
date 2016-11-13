@@ -218,7 +218,8 @@ class MapFormat(base_model.BaseFormat):
 
     def getEventType(self, event):
         if self.listOfEventsTypes.get(str(event), None) is None:
-            self.listOfEventsTypes[str(event)] = [1, 0]
+            self.listOfEventsTypes[str(event)] = [1, 0, 0, 0, 0]
+
         return self.listOfEventsTypes[str(event)]
 
     def setEventList(self,actionsAndType,event):
