@@ -46,14 +46,14 @@ def getMusicList():
     if("MusicList" in initJsonTree):
         return initJsonTree["MusicList"]
     else:
-        return []
+        return dict()
 
 def getSoundList():
     initJsonTree = getInitFile()
     if("SoundList" in initJsonTree):
         return initJsonTree["SoundList"]
     else:
-        return []
+        return dict()
 
 def regenerateInit():
     initFileJsonTree = getInitFile()
