@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore, QtGui
 from fgmk.ff import mapfile
-from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import COLLISIONLAYER as COLLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
 class LayerWidget(QtWidgets.QWidget):
@@ -42,7 +42,7 @@ class LayerWidget(QtWidgets.QWidget):
         elif str(self.sender().objectName()) == mapfile.LayersName[2]:
             self.changeLayerTo(2)
         elif str(self.sender().objectName()) == mapfile.LayersName[3]:
-            self.changeLayerTo(COLISIONLAYER)
+            self.changeLayerTo(COLLISIONLAYER)
         elif str(self.sender().objectName()) == mapfile.LayersName[4]:
             self.changeLayerTo(EVENTSLAYER)
 

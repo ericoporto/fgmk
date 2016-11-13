@@ -84,15 +84,15 @@ class PropertiesWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent, **kwargs)
 
         self.VBox = QtWidgets.QVBoxLayout(self)
-        self.nocolision = QtWidgets.QCheckBox("collidable")
-        self.nocolision.setToolTip("Checking makes the player and chars collide with it.")
-        self.nocolision.setCheckState(QtCore.Qt.Unchecked)
+        self.nocollision = QtWidgets.QCheckBox("collidable")
+        self.nocollision.setToolTip("Checking makes the player and chars collide with it.")
+        self.nocollision.setCheckState(QtCore.Qt.Unchecked)
         self.pushable = QtWidgets.QCheckBox("pushable object")
         self.pushable.setToolTip("This makes the object pushable, like a bigbox you can't lift.")
         self.pushable.setCheckState(QtCore.Qt.Unchecked)
 
         self.propertys =  {}
-        self.propertys['nocolision']=self.nocolision
+        self.propertys['nocollision']=self.nocollision
         self.propertys['pushable']=self.pushable
 
         for key in self.propertys:
@@ -102,7 +102,7 @@ class PropertiesWidget(QtWidgets.QWidget):
 
     def setList(self,listToSet):
         for propertyy in listToSet:
-            if(propertyy == 'nocolision' or propertyy == 'pushable'):
+            if(propertyy == 'nocollision' or propertyy == 'pushable'):
                 if(listToSet[propertyy]==0 or listToSet[propertyy]==False):
                     self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
                 else:
@@ -110,7 +110,7 @@ class PropertiesWidget(QtWidgets.QWidget):
 
     def clear(self):
         for propertyy in self.propertys:
-            if(propertyy == 'nocolision' or propertyy == 'pushable'):
+            if(propertyy == 'nocollision' or propertyy == 'pushable'):
                 self.propertys[propertyy].setCheckState(QtCore.Qt.Unchecked)
 
     def getValue(self):

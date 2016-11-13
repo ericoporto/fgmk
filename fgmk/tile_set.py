@@ -69,7 +69,7 @@ class TileSet:
                                     imageTemp.resize((int(bxsz * 0.5), int(bxsz * 0.5)), Image.NEAREST))
 
 
-colisionSet = TileSet(getdata.path('collisionTiles.png'))
+collisionSet = TileSet(getdata.path('collisionTiles.png'))
 eventSet = TileSet(getdata.path('eventTiles.png'))
 indicativeSet = TileSet(getdata.path('indicativeTiles.png'))
 clearTile = TileSet(getdata.path('clearTile.png'))

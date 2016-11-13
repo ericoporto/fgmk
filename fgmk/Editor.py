@@ -12,7 +12,7 @@ from fgmk import help
 from fgmk import palette_editor, item_editor
 from fgmk.dock import events_wdgt, layer_wdgt, map_explorer_wdgt, charas_palette_wdgt, tools_wdgt, tile_palette_wdgt, exit_fullscreen_wdgt
 from fgmk.flowlayout import FlowLayout as FlowLayout
-from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import COLLISIONLAYER as COLLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 from fgmk.ff import mapfile
 from fgmk.util import temp
@@ -54,7 +54,7 @@ class MapWidget(QtWidgets.QWidget):
         self.currentLayer = 0
 
         self.currentEvent = 1
-        self.currentColision = 1
+        self.currentCollision = 1
 
         self.TileList = []
 
@@ -151,8 +151,8 @@ class MapWidget(QtWidgets.QWidget):
 
                 tileToChange = self.TileList[movedTilesXY[1]][movedTilesXY[0]]
 
-                if(self.currentLayer == COLISIONLAYER):
-                    self.changeTileType(self.currentColision,tileToChange)
+                if(self.currentLayer == COLLISIONLAYER):
+                    self.changeTileType(self.currentCollision,tileToChange)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.changeTileType(self.currentEvent,tileToChange)
                 else:
@@ -188,8 +188,8 @@ class MapWidget(QtWidgets.QWidget):
                                int(math.floor(pos_qpoint.y()/(32.0*self.myScale+self.gridpx))))
             self.penTileXY = self.sender().tileX, self.sender().tileY
 
-            if(self.currentLayer == COLISIONLAYER):
-                self.changeTileType(self.currentColision)
+            if(self.currentLayer == COLLISIONLAYER):
+                self.changeTileType(self.currentCollision)
             elif(self.currentLayer == EVENTSLAYER):
                 self.changeTileType(self.currentEvent)
             else:
@@ -197,9 +197,9 @@ class MapWidget(QtWidgets.QWidget):
 
         elif theClickedTool == 1:
             # dropper
-            if(self.currentLayer == COLISIONLAYER):
-                self.parent.changeColisionCurrent(
-                    self.sender().tileType[COLISIONLAYER])
+            if(self.currentLayer == COLLISIONLAYER):
+                self.parent.changeCollisionCurrent(
+                    self.sender().tileType[COLLISIONLAYER])
             elif(self.currentLayer == EVENTSLAYER):
                 self.parent.changeEventCurrent(
                     self.sender().tileType[EVENTSLAYER])
@@ -209,8 +209,8 @@ class MapWidget(QtWidgets.QWidget):
 
         elif theClickedTool == 2:
             # bucket
-            if(self.currentLayer == COLISIONLAYER):
-                self.toolBucketFill(self.currentColision)
+            if(self.currentLayer == COLLISIONLAYER):
+                self.toolBucketFill(self.currentCollision)
             elif(self.currentLayer == EVENTSLAYER):
                 self.toolBucketFill(self.currentEvent)
             else:
@@ -222,8 +222,8 @@ class MapWidget(QtWidgets.QWidget):
                 firstClickX = self.sender().tileX
                 firstClickY = self.sender().tileY
             else:
-                if(self.currentLayer == COLISIONLAYER):
-                    self.toolLine(self.currentColision,
+                if(self.currentLayer == COLLISIONLAYER):
+                    self.toolLine(self.currentCollision,
                                   firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolLine(self.currentEvent, firstClickX, firstClickY)
@@ -237,8 +237,8 @@ class MapWidget(QtWidgets.QWidget):
                 firstClickX = self.sender().tileX
                 firstClickY = self.sender().tileY
             else:
-                if(self.currentLayer == COLISIONLAYER):
-                    self.toolRect(self.currentColision,
+                if(self.currentLayer == COLLISIONLAYER):
+                    self.toolRect(self.currentCollision,
                                   firstClickX, firstClickY)
                 elif(self.currentLayer == EVENTSLAYER):
                     self.toolRect(self.currentEvent, firstClickX, firstClickY)
@@ -380,12 +380,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def changeEventCurrent(self, changeTo):
         self.myMapWidget.currentEvent = changeTo
-        self.myEventsWidget.eventsAndColision.eventSelectSpinbox.setValue(changeTo)
+        self.myEventsWidget.eventsAndCollision.eventSelectSpinbox.setValue(changeTo)
         self.changeLayerCurrent(EVENTSLAYER)
 
-    def changeColisionCurrent(self, changeTo):
-        self.myMapWidget.currentColision = changeTo
-        self.myEventsWidget.eventsAndColision.setColisionValueView(changeTo)
+    def changeCollisionCurrent(self, changeTo):
+        self.myMapWidget.currentCollision = changeTo
+        self.myEventsWidget.eventsAndCollision.setCollisionValueView(changeTo)
 
     def changeTileCurrent(self, changeTo):
         self.myMapWidget.currentTile = changeTo

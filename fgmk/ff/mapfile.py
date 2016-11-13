@@ -4,8 +4,8 @@ from fgmk import tMat, getdata
 from fgmk.ff import  base_model
 import numpy as np
 
-LayersName = ["layer1", "layer2", "layer4", "colision", "events"]
-NonViewable = ["colision", "events"]
+LayersName = ["layer1", "layer2", "layer4", "collision", "events"]
+NonViewable = ["collision", "events"]
 LayersNameViewable = [
     _layer for _layer in LayersName if _layer not in NonViewable]
 

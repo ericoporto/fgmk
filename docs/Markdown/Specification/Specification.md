@@ -44,7 +44,7 @@ Here is how the file tree should be  organized
 
     - `music` (folder) - this folder contains the music. A music file can be either .mp3,
     .ogg or .wav. You can add music files with the same name and different extensions to
-    maximize browser compatibility. When downloading, the engine will prefer ogg first (if 
+    maximize browser compatibility. When downloading, the engine will prefer ogg first (if
     the browser supports it), then mp3 and later wav.
 
 - `descriptors` (folder) - contains all json files, and folders containing json
@@ -60,7 +60,7 @@ files.
     trigger actions, and usually represent the non playable characters you interact
     in the game.
 
-    - `feedback.json` - deals with the engine feedback, right now only colision and
+    - `feedback.json` - deals with the engine feedback, right now only collision and
     the sound when outputing text. This should be moved inside the engine soon.
 
     - `hms.json` - Heroes, Monsters and Skills, this file describes all the heroes
@@ -150,12 +150,12 @@ The matrix is described as a list (y dimension) of lists (x dimension). In a
 
 You can think of a map as having for layers, the **first** layer, named `layer1`
 is drawn first, and **second** the `layer2` is drawn next, the `player` and
-`charas` are drawn in the **third** layer where the `colision` takes place to,
+`charas` are drawn in the **third** layer where the `collision` takes place to,
 and on top the fourth layer, `layer4`, is drawn.
 
     { "Level":
         { "charas":  [],
-          "colision":
+          "collision":
                 [[]],
           "events":
                 [[]],
@@ -192,7 +192,7 @@ and their x and y position.
 
   - Example: `"charas": [["bear",12,7]]`
 
-- `colision` : a 2d numeric matrix, where 0 represents floor and 1 represents
+- `collision` : a 2d numeric matrix, where 0 represents floor and 1 represents
 walls.
 
 - `events` : a 2d numeric matrix, where 0 represents no event, and any other
@@ -337,13 +337,13 @@ the first time in the map state.
 - `World`: describes the initial states of the environment.
 
     - `initLevel` : the key name of the level the player chara begins. This is the first map you see after the start screen.
-    
+
     - `initMusic` : the name of the music in the opening screen.
-    
+
     - `battleMusic` : the name of the default music to play in battle if no music is specified.
-    
+
     - `battleVictoryMusic` : the name of the default music to play when the battle ends in victory if no music is specified.
-    
+
     - `initActions` : in the opening screen, when start is clicked, these actions should be executed.
 
 ## items.json

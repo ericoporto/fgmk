@@ -12,7 +12,7 @@ import os.path
 from PyQt5 import QtGui, QtCore, QtWidgets
 from fgmk import tMat, game_init, current_project, tile_set, miniWdgt
 from fgmk.ff import mapfile, charaset_format, charas_format
-from fgmk.util.layer_logic import COLISIONLAYER as COLISIONLAYER
+from fgmk.util.layer_logic import COLLISIONLAYER as COLLISIONLAYER
 from fgmk.util.layer_logic import EVENTSLAYER as EVENTSLAYER
 
 class ActionDialog(QtWidgets.QDialog):
@@ -324,12 +324,12 @@ class changeTile(ActionDialog):
 
         self.LabelText1 = QtWidgets.QLabel("Select where is the tile to change:")
         self.LabelText2 = QtWidgets.QLabel("Select to what type change:")
-        self.LabelText3 = QtWidgets.QLabel("Change to modify colision layer:")
+        self.LabelText3 = QtWidgets.QLabel("Change to modify collision layer:")
         self.LabelText4 = QtWidgets.QLabel("Select if event should also change:")
 
         self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
-        self.colisionList = ["keep", "noColision", "collidable"]
+        self.collisionList = ["keep", "nocollision", "collidable"]
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -369,10 +369,10 @@ class changeTile(ActionDialog):
         for layer in mapfile.LayersNameViewable:
             self.comboBoxLayers.addItem(str(layer))
 
-        self.comboBoxColision = QtWidgets.QComboBox()
+        self.comboBoxCollision = QtWidgets.QComboBox()
 
-        for item in self.colisionList:
-            self.comboBoxColision.addItem(str(item))
+        for item in self.collisionList:
+            self.comboBoxCollision.addItem(str(item))
 
         self.comboBoxEvent = QtWidgets.QComboBox()
 
@@ -406,9 +406,9 @@ class changeTile(ActionDialog):
                 if(val == self.edit[1]):
                     self.comboBoxLayers.setCurrentIndex(idx)
 
-            for idx, val in enumerate(self.colisionList):
+            for idx, val in enumerate(self.collisionList):
                 if(val == self.edit[2]):
-                    self.comboBoxColision.setCurrentIndex(idx)
+                    self.comboBoxCollision.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.eventList):
                 if(val == self.edit[3]):
@@ -427,7 +427,7 @@ class changeTile(ActionDialog):
         self.VBox.addWidget(self.comboBoxLayers)
 
         self.VBox.addWidget(self.LabelText3)
-        self.VBox.addWidget(self.comboBoxColision)
+        self.VBox.addWidget(self.comboBoxCollision)
         self.VBox.addWidget(self.LabelText4)
         self.VBox.addWidget(self.comboBoxEvent)
 
@@ -470,7 +470,7 @@ class changeTile(ActionDialog):
 
     def getValue(self):
         text = str(self.LineTextTile.text()) + ";" + str(self.comboBoxLayers.currentText()) + ";" + str(
-            self.comboBoxColision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.LineTextPlace.text())
+            self.comboBoxCollision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.LineTextPlace.text())
         return text
 
 
@@ -486,12 +486,12 @@ class changeAllTiles(ActionDialog):
         self.LabelText1 = QtWidgets.QLabel("Select the map for tile change:")
         self.LabelText2 = QtWidgets.QLabel("What type to change from?")
         self.LabelText3 = QtWidgets.QLabel("To what type change to?")
-        self.LabelText4 = QtWidgets.QLabel("Change to modify colision layer:")
+        self.LabelText4 = QtWidgets.QLabel("Change to modify collision layer:")
         self.LabelText5 = QtWidgets.QLabel("Select if event should also change:")
 
         self.levelSelector = miniWdgt.levelSelector(nothis=self.nothis)
 
-        self.colisionList = ["keep", "noColision", "collidable"]
+        self.collisionList = ["keep", "nocollision", "collidable"]
 
         self.scrollArea = QtWidgets.QScrollArea()
 
@@ -524,10 +524,10 @@ class changeAllTiles(ActionDialog):
         for layer in mapfile.LayersNameViewable:
             self.comboBoxLayers.addItem(str(layer))
 
-        self.comboBoxColision = QtWidgets.QComboBox()
+        self.comboBoxCollision = QtWidgets.QComboBox()
 
-        for item in self.colisionList:
-            self.comboBoxColision.addItem(str(item))
+        for item in self.collisionList:
+            self.comboBoxCollision.addItem(str(item))
 
         self.comboBoxEvent = QtWidgets.QComboBox()
 
@@ -544,9 +544,9 @@ class changeAllTiles(ActionDialog):
                 if(val == self.edit[2]):
                     self.comboBoxLayers.setCurrentIndex(idx)
 
-            for idx, val in enumerate(self.colisionList):
+            for idx, val in enumerate(self.collisionList):
                 if(val == self.edit[3]):
-                    self.comboBoxColision.setCurrentIndex(idx)
+                    self.comboBoxCollision.setCurrentIndex(idx)
 
             for idx, val in enumerate(self.eventList):
                 if(val == self.edit[4]):
@@ -563,7 +563,7 @@ class changeAllTiles(ActionDialog):
         self.VBox.addWidget(self.comboBoxLayers)
 
         self.VBox.addWidget(self.LabelText4)
-        self.VBox.addWidget(self.comboBoxColision)
+        self.VBox.addWidget(self.comboBoxCollision)
         self.VBox.addWidget(self.LabelText5)
         self.VBox.addWidget(self.comboBoxEvent)
 
@@ -593,7 +593,7 @@ class changeAllTiles(ActionDialog):
         oriTile = "{0}".format(self.oriMPWidget.getValue())
         newTile = "{0}".format(self.newMPWidget.getValue())
         text = str(oriTile) + ";" +str(newTile) + ";" + str(self.comboBoxLayers.currentText()) + ";" + str(
-            self.comboBoxColision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.levelSelector.currentText())
+            self.comboBoxCollision.currentText()) + ";" + str(self.comboBoxEvent.currentText()) + ";" + str(self.levelSelector.currentText())
         return text
 
 

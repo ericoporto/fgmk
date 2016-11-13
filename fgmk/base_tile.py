@@ -63,7 +63,7 @@ class QTile(QtWidgets.QLabel):
 
         if(self.pal==False):
             if(self.tileType[i + 1]):
-                Composite = img_util.alpha_composite(Composite, tile_set.colisionSet.tileset[
+                Composite = img_util.alpha_composite(Composite, tile_set.collisionSet.tileset[
                                                  self.tileType[i + 1]][tempscale])
         else:
             if(self.tileType[i + 1]):
