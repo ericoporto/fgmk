@@ -64,12 +64,49 @@ def regenerateInit():
     else:
         needupdate = True
 
+    soundJsonTree = regenerateSoundList(musicJsonTree)
+    if(soundJsonTree == None):
+        #regress to before json tree
+        soundJsonTree = musicJsonTree
+    else:
+        needupdate = True
+
     if(needupdate):
         gamefolder = os.path.join(current_project.settings["gamefolder"])
-        saveInitFile(gamefolder, musicJsonTree)
+        saveInitFile(gamefolder, soundJsonTree)
         return True
 
     return False
+
+def regenerateSoundList(initFileJsonTree):
+    if 'SoundList' not in initFileJsonTree:
+        return None
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
+
+    if(initFileJsonTree != None):
+        sound = os.path.join(gamefolder, fifl.AUDIO)
+        mp3list = [f for f in listdir(sound) if os.path.isfile(os.path.join(sound, f)) and f.endswith(".mp3")]
+        ogglist = [f for f in listdir(sound) if os.path.isfile(os.path.join(sound, f)) and f.endswith(".ogg")]
+        wavlist = [f for f in listdir(sound) if os.path.isfile(os.path.join(sound, f)) and f.endswith(".wav")]
+        originalSoundList = initFileJsonTree["SoundList"]
+
+        filelist = mp3list + ogglist + wavlist
+        SoundList = {}
+        for file in filelist:
+            [filewoext, ext ] = os.path.splitext(file)
+            if hasattr(SoundList, filewoext):
+                SoundList[filewoext][ext[1:]] = file
+            else:
+                SoundList[filewoext] = {}
+                SoundList[filewoext][ext[1:]] = file
+
+        if(write_file.isJsonEqual(SoundList,originalSoundList) == False):
+            initFileJsonTree["SoundList"] = []
+            initFileJsonTree["SoundList"] = SoundList
+            return initFileJsonTree
+
+    return None
 
 def regenerateMusicList(initFileJsonTree):
     if 'MusicList' not in initFileJsonTree:
