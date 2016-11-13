@@ -388,3 +388,38 @@ class miniMusicList(QtWidgets.QWidget):
             if(item.text()==songname):
                 self.musicList.setCurrentRow(i)
                 return
+
+class miniSoundList(QtWidgets.QWidget):
+    def __init__(self,parent=None, **kwargs):
+        QtWidgets.QWidget.__init__(self, parent, **kwargs)
+
+        self.dictSoundList = game_init.getSoundList()
+        self.soundList = QtWidgets.QListWidget(self)
+        self.soundList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.load()
+        VBox = QtWidgets.QVBoxLayout(self)
+        VBox.addWidget(self.soundList)
+        self.setLayout(VBox)
+
+    def load(self):
+        self.soundList.clear()
+        items =  list(self.dictSoundList.keys())
+        for i in range(len(items)):
+            item = items[i]
+            self.soundList.addItem(item)
+
+        self.soundList.setCurrentRow(0)
+
+    def getItem(self):
+        listitem = self.soundList.currentItem()
+        if(listitem != None):
+            return listitem.text()
+        else:
+            return None
+
+    def setItem(self,songname):
+        for i in range(self.soundList.count()):
+            item = self.soundList.item(i)
+            if(item.text()==songname):
+                self.soundList.setCurrentRow(i)
+                return

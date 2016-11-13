@@ -5,6 +5,9 @@
     "CharasetFileList": {
         "charaset1": "charaset1.json"
     },
+    "SoundList":{
+        "doorClose": {"wav":"doorClose.wav"}
+    }, 
     "MusicList":{
         "villa" : {"ogg":"villa.ogg","mp3":"villa.mp3"},
         "battle_1": {"ogg":"battle_1.ogg","mp3":"battle_1.mp3"},

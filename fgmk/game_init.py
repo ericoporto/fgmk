@@ -43,8 +43,17 @@ def getInitFile():
 
 def getMusicList():
     initJsonTree = getInitFile()
-    return initJsonTree["MusicList"]
+    if("MusicList" in initJsonTree):
+        return initJsonTree["MusicList"]
+    else:
+        return []
 
+def getSoundList():
+    initJsonTree = getInitFile()
+    if("SoundList" in initJsonTree):
+        return initJsonTree["SoundList"]
+    else:
+        return []
 
 def regenerateInit():
     initFileJsonTree = getInitFile()

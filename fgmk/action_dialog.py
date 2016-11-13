@@ -266,6 +266,28 @@ class playMusic(ActionDialog):
         itemToReturn = str(self.ListItem.getItem())
         return itemToReturn
 
+class playSound(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select sound to play:")
+        self.ListItem = miniWdgt.miniSoundList()
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.ListItem)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('playSound: select sound to play')
+
+        if(self.edit != None):
+            self.ListItem.setItem(self.edit[0])
+
+    def getValue(self):
+        itemToReturn = str(self.ListItem.getItem())
+        return itemToReturn
+
 
 class addItem(ActionDialog):
     def __init__(self, **kwargs):
