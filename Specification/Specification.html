@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Specification &mdash; fgmk 0.6.0 documentation</title>
+  <title>Specification &mdash; fgmk 0.7.0 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="fgmk 0.6.0 documentation" href="../index.html"/>
+    <link rel="top" title="fgmk 0.7.0 documentation" href="../index.html"/>
         <link rel="next" title="Editor" href="../Editor/Editor.html"/>
         <link rel="prev" title="Quickstart" href="../Quickstart/Quickstart.html"/> 
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.0
               </div>
             
           
@@ -202,7 +202,7 @@ that describes the animations you use with Charas.</li>
 can move and trigger actions, and usually represent the non
 playable characters you interact in the game.</li>
 <li><code class="docutils literal"><span class="pre">feedback.json</span></code> - deals with the engine feedback, right now only
-colision and the sound when outputing text. This should be moved
+collision and the sound when outputing text. This should be moved
 inside the engine soon.</li>
 <li><code class="docutils literal"><span class="pre">hms.json</span></code> - Heroes, Monsters and Skills, this file describes
 all the heroes that you can add to the party, all the monsters you
@@ -295,11 +295,11 @@ something like:</p>
 <p>You can think of a map as having for layers, the <strong>first</strong> layer, named
 <code class="docutils literal"><span class="pre">layer1</span></code> is drawn first, and <strong>second</strong> the <code class="docutils literal"><span class="pre">layer2</span></code> is drawn next,
 the <code class="docutils literal"><span class="pre">player</span></code> and <code class="docutils literal"><span class="pre">charas</span></code> are drawn in the <strong>third</strong> layer where the
-<code class="docutils literal"><span class="pre">colision</span></code> takes place to, and on top the fourth layer, <code class="docutils literal"><span class="pre">layer4</span></code>, is
-drawn.</p>
+<code class="docutils literal"><span class="pre">collision</span></code> takes place to, and on top the fourth layer, <code class="docutils literal"><span class="pre">layer4</span></code>,
+is drawn.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Level&quot;</span><span class="p">:</span>
     <span class="p">{</span> <span class="s2">&quot;charas&quot;</span><span class="p">:</span>  <span class="p">[],</span>
-      <span class="s2">&quot;colision&quot;</span><span class="p">:</span>
+      <span class="s2">&quot;collision&quot;</span><span class="p">:</span>
             <span class="p">[[]],</span>
       <span class="s2">&quot;events&quot;</span><span class="p">:</span>
             <span class="p">[[]],</span>
@@ -335,7 +335,7 @@ drawn.</p>
 and their x and y position.</li>
 <li><code class="docutils literal"><span class="pre">&quot;charas&quot;:</span> <span class="pre">[[&quot;CHARANAME&quot;,X,Y],[&quot;CHARANAME&quot;,X,Y],...]</span></code> .</li>
 <li>Example: <code class="docutils literal"><span class="pre">&quot;charas&quot;:</span> <span class="pre">[[&quot;bear&quot;,12,7]]</span></code></li>
-<li><code class="docutils literal"><span class="pre">colision</span></code> : a 2d numeric matrix, where 0 represents floor and 1
+<li><code class="docutils literal"><span class="pre">collision</span></code> : a 2d numeric matrix, where 0 represents floor and 1
 represents walls.</li>
 <li><code class="docutils literal"><span class="pre">events</span></code> : a 2d numeric matrix, where 0 represents no event, and
 any other number represents an event.</li>
@@ -693,7 +693,7 @@ You can have as many frames as necessary.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -64,7 +64,7 @@ Here is how the file tree should be organized
       playable characters you interact in the game.
 
    -  ``feedback.json`` - deals with the engine feedback, right now only
-      colision and the sound when outputing text. This should be moved
+      collision and the sound when outputing text. This should be moved
       inside the engine soon.
 
    -  ``hms.json`` - Heroes, Monsters and Skills, this file describes
@@ -166,14 +166,14 @@ something like:
 You can think of a map as having for layers, the **first** layer, named
 ``layer1`` is drawn first, and **second** the ``layer2`` is drawn next,
 the ``player`` and ``charas`` are drawn in the **third** layer where the
-``colision`` takes place to, and on top the fourth layer, ``layer4``, is
-drawn.
+``collision`` takes place to, and on top the fourth layer, ``layer4``,
+is drawn.
 
 ::
 
     { "Level":
         { "charas":  [],
-          "colision":
+          "collision":
                 [[]],
           "events":
                 [[]],
@@ -210,7 +210,7 @@ Each ``.map.json`` file has the keywork ``Level`` at top-level.
 
 -  Example: ``"charas": [["bear",12,7]]``
 
--  ``colision`` : a 2d numeric matrix, where 0 represents floor and 1
+-  ``collision`` : a 2d numeric matrix, where 0 represents floor and 1
    represents walls.
 
 -  ``events`` : a 2d numeric matrix, where 0 represents no event, and
