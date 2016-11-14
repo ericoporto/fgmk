@@ -163,7 +163,18 @@ Parameter:"start/stop"
 
 **rain** makes rain. You can stop the rain using stop.
 
-|image10| fadeOut
+|image10| shakeScreen
+~~~~~~~~~~~~~~~~~~~~~
+
+Parameter:"horizontalorvertical"
+
+.. figure:: actions/screenshots/shakeScreen.png
+   :alt: 
+
+**shakeScreen** shakes the screen. Also blocks the actions for a short
+period. You can choose between shaking vertical or horizontal direction.
+
+|image11| fadeOut
 ~~~~~~~~~~~~~~~~~
 
 Parameter:"effect", "keepEffect"
@@ -175,7 +186,7 @@ Parameter:"effect", "keepEffect"
 effect, usually when you want to do something in between and then play a
 fadeIn.
 
-|image11| fadeIn
+|image12| fadeIn
 ~~~~~~~~~~~~~~~~
 
 Parameter:"effect", "keepEffect"
@@ -186,7 +197,27 @@ Parameter:"effect", "keepEffect"
 **fadeIn** is similar to fadeOut, but instead it's meant to bring the
 screen back from a fadeOut.
 
-|image12| setVar
+|image13| playMusic
+~~~~~~~~~~~~~~~~~~~
+
+Parameter:"musicname"
+
+.. figure:: actions/screenshots/playMusic.png
+   :alt: 
+
+**playMusic** play a music from the folder ``audio/music``.
+
+|image14| playSound
+~~~~~~~~~~~~~~~~~~~
+
+Parameter:"soundname"
+
+.. figure:: actions/screenshots/playSound.png
+   :alt: 
+
+**playSound** play a sound from the folder ``audio/``.
+
+|image15| setVar
 ~~~~~~~~~~~~~~~~
 
 Parameter:"variable","value"
@@ -201,7 +232,7 @@ Right now the only supported *special string* is "var:varname", where
 varname should be changed to the name of a variable which the value you
 want to pass to the Variable - the first parameter.
 
-|image13| varPlusOne
+|image16| varPlusOne
 ~~~~~~~~~~~~~~~~~~~~
 
 Parameter:"variable"
@@ -213,7 +244,7 @@ Parameter:"variable"
 
 If variable doesn't exist, it creates it!
 
-|image14| waitCycle
+|image17| waitCycle
 ~~~~~~~~~~~~~~~~~~~
 
 Parameter:"int"
@@ -223,7 +254,7 @@ Parameter:"int"
 
 **waitCycle** blocks the player for a number of specified cycles.
 
-|image15| IF
+|image18| IF
 ~~~~~~~~~~~~
 
 Parameter:"condition"
@@ -291,21 +322,21 @@ you between two maps:
      ["teleportInPlace","darkworld"],
      ["END"]]
 
-|image16| ELSE
+|image19| ELSE
 ~~~~~~~~~~~~~~
 
 Parameter: ""
 
 **ELSE** is to be used with IF action.
 
-|image17| END
+|image20| END
 ~~~~~~~~~~~~~
 
 Parameter: ""
 
 **END** is to be used with IF action.
 
-|image18| noEffect
+|image21| noEffect
 ~~~~~~~~~~~~~~~~~~
 
 No parameter
@@ -333,21 +364,27 @@ ones from fadeIn and fadeOut.
    :width: 16px
 .. |image9| image:: actions/icons/rain.png
    :width: 16px
-.. |image10| image:: actions/icons/fadeOut.png
+.. |image10| image:: actions/icons/shakeScreen.png
    :width: 16px
-.. |image11| image:: actions/icons/fadeIn.png
+.. |image11| image:: actions/icons/fadeOut.png
    :width: 16px
-.. |image12| image:: actions/icons/setVar.png
+.. |image12| image:: actions/icons/fadeIn.png
    :width: 16px
-.. |image13| image:: actions/icons/varPlusOne.png
+.. |image13| image:: actions/icons/playMusic.png
    :width: 16px
-.. |image14| image:: actions/icons/waitCycle.png
+.. |image14| image:: actions/icons/playSound.png
    :width: 16px
-.. |image15| image:: actions/icons/IF.png
+.. |image15| image:: actions/icons/setVar.png
    :width: 16px
-.. |image16| image:: actions/icons/ELSE.png
+.. |image16| image:: actions/icons/varPlusOne.png
    :width: 16px
-.. |image17| image:: actions/icons/END.png
+.. |image17| image:: actions/icons/waitCycle.png
    :width: 16px
-.. |image18| image:: actions/icons/noEffect.png
+.. |image18| image:: actions/icons/IF.png
+   :width: 16px
+.. |image19| image:: actions/icons/ELSE.png
+   :width: 16px
+.. |image20| image:: actions/icons/END.png
+   :width: 16px
+.. |image21| image:: actions/icons/noEffect.png
    :width: 16px

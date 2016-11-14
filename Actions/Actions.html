@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Actions &mdash; fgmk 0.7.0 documentation</title>
+  <title>Actions &mdash; fgmk 0.7.3 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="fgmk 0.7.0 documentation" href="../index.html"/>
+    <link rel="top" title="fgmk 0.7.3 documentation" href="../index.html"/>
         <link rel="next" title="Roadmap" href="../Roadmap/Roadmap.html"/>
         <link rel="prev" title="Editor" href="../Editor/Editor.html"/> 
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.7.3
               </div>
             
           
@@ -99,15 +99,18 @@
 <li class="toctree-l3"><a class="reference internal" href="#image7-changealltiles"> changeAllTiles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#image8-changeplayeranimation"> changePlayerAnimation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#image9-rain"> rain</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image10-fadeout"> fadeOut</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image11-fadein"> fadeIn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image12-setvar"> setVar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image13-varplusone"> varPlusOne</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image14-waitcycle"> waitCycle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image15-if"> IF</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image16-else"> ELSE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image17-end"> END</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#image18-noeffect"> noEffect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image10-shakescreen"> shakeScreen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image11-fadeout"> fadeOut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image12-fadein"> fadeIn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image13-playmusic"> playMusic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image14-playsound"> playSound</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image15-setvar"> setVar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image16-varplusone"> varPlusOne</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image17-waitcycle"> waitCycle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image18-if"> IF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image19-else"> ELSE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image20-end"> END</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image21-noeffect"> noEffect</a></li>
 </ul>
 </li>
 </ul>
@@ -289,8 +292,17 @@ set to default to let animations flow as usual.</p>
 </div>
 <p><strong>rain</strong> makes rain. You can stop the rain using stop.</p>
 </div>
-<div class="section" id="image10-fadeout">
-<h3><a class="reference internal" href="../_images/fadeOut.png"><img alt="image10" src="../_images/fadeOut.png" style="width: 16px;" /></a> fadeOut<a class="headerlink" href="#image10-fadeout" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image10-shakescreen">
+<h3><a class="reference internal" href="../_images/shakeScreen.png"><img alt="image10" src="../_images/shakeScreen.png" style="width: 16px;" /></a> shakeScreen<a class="headerlink" href="#image10-shakescreen" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;horizontalorvertical&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/shakeScreen1.png" />
+</div>
+<p><strong>shakeScreen</strong> shakes the screen. Also blocks the actions for a short
+period. You can choose between shaking vertical or horizontal direction.</p>
+</div>
+<div class="section" id="image11-fadeout">
+<h3><a class="reference internal" href="../_images/fadeOut.png"><img alt="image11" src="../_images/fadeOut.png" style="width: 16px;" /></a> fadeOut<a class="headerlink" href="#image11-fadeout" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;effect&#8221;, &#8220;keepEffect&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/fadeOut1.png" />
@@ -299,8 +311,8 @@ set to default to let animations flow as usual.</p>
 effect, usually when you want to do something in between and then play a
 fadeIn.</p>
 </div>
-<div class="section" id="image11-fadein">
-<h3><a class="reference internal" href="../_images/fadeIn.png"><img alt="image11" src="../_images/fadeIn.png" style="width: 16px;" /></a> fadeIn<a class="headerlink" href="#image11-fadein" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image12-fadein">
+<h3><a class="reference internal" href="../_images/fadeIn.png"><img alt="image12" src="../_images/fadeIn.png" style="width: 16px;" /></a> fadeIn<a class="headerlink" href="#image12-fadein" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;effect&#8221;, &#8220;keepEffect&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/fadeIn1.png" />
@@ -308,8 +320,24 @@ fadeIn.</p>
 <p><strong>fadeIn</strong> is similar to fadeOut, but instead it&#8217;s meant to bring the
 screen back from a fadeOut.</p>
 </div>
-<div class="section" id="image12-setvar">
-<h3><a class="reference internal" href="../_images/setVar.png"><img alt="image12" src="../_images/setVar.png" style="width: 16px;" /></a> setVar<a class="headerlink" href="#image12-setvar" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image13-playmusic">
+<h3><a class="reference internal" href="../_images/playMusic.png"><img alt="image13" src="../_images/playMusic.png" style="width: 16px;" /></a> playMusic<a class="headerlink" href="#image13-playmusic" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;musicname&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/playMusic1.png" />
+</div>
+<p><strong>playMusic</strong> play a music from the folder <code class="docutils literal"><span class="pre">audio/music</span></code>.</p>
+</div>
+<div class="section" id="image14-playsound">
+<h3><a class="reference internal" href="../_images/playSound.png"><img alt="image14" src="../_images/playSound.png" style="width: 16px;" /></a> playSound<a class="headerlink" href="#image14-playsound" title="Permalink to this headline">¶</a></h3>
+<p>Parameter:&#8221;soundname&#8221;</p>
+<div class="figure">
+<img alt="" src="../_images/playSound1.png" />
+</div>
+<p><strong>playSound</strong> play a sound from the folder <code class="docutils literal"><span class="pre">audio/</span></code>.</p>
+</div>
+<div class="section" id="image15-setvar">
+<h3><a class="reference internal" href="../_images/setVar.png"><img alt="image15" src="../_images/setVar.png" style="width: 16px;" /></a> setVar<a class="headerlink" href="#image15-setvar" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;variable&#8221;,&#8221;value&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/setVar1.png" />
@@ -320,8 +348,8 @@ a number, a string or a <em>special string</em>.</p>
 varname should be changed to the name of a variable which the value you
 want to pass to the Variable - the first parameter.</p>
 </div>
-<div class="section" id="image13-varplusone">
-<h3><a class="reference internal" href="../_images/varPlusOne.png"><img alt="image13" src="../_images/varPlusOne.png" style="width: 16px;" /></a> varPlusOne<a class="headerlink" href="#image13-varplusone" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image16-varplusone">
+<h3><a class="reference internal" href="../_images/varPlusOne.png"><img alt="image16" src="../_images/varPlusOne.png" style="width: 16px;" /></a> varPlusOne<a class="headerlink" href="#image16-varplusone" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;variable&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/varPlusOne1.png" />
@@ -329,16 +357,16 @@ want to pass to the Variable - the first parameter.</p>
 <p><strong>varPlusOne</strong> sums integer 1 on variable (var).</p>
 <p>If variable doesn&#8217;t exist, it creates it!</p>
 </div>
-<div class="section" id="image14-waitcycle">
-<h3><a class="reference internal" href="../_images/waitCycle.png"><img alt="image14" src="../_images/waitCycle.png" style="width: 16px;" /></a> waitCycle<a class="headerlink" href="#image14-waitcycle" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image17-waitcycle">
+<h3><a class="reference internal" href="../_images/waitCycle.png"><img alt="image17" src="../_images/waitCycle.png" style="width: 16px;" /></a> waitCycle<a class="headerlink" href="#image17-waitcycle" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;int&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/waitCycle1.png" />
 </div>
 <p><strong>waitCycle</strong> blocks the player for a number of specified cycles.</p>
 </div>
-<div class="section" id="image15-if">
-<h3><a class="reference internal" href="../_images/IF.png"><img alt="image15" src="../_images/IF.png" style="width: 16px;" /></a> IF<a class="headerlink" href="#image15-if" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image18-if">
+<h3><a class="reference internal" href="../_images/IF.png"><img alt="image18" src="../_images/IF.png" style="width: 16px;" /></a> IF<a class="headerlink" href="#image18-if" title="Permalink to this headline">¶</a></h3>
 <p>Parameter:&#8221;condition&#8221;</p>
 <div class="figure">
 <img alt="" src="../_images/IF1.png" />
@@ -389,18 +417,18 @@ you between two maps:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="image16-else">
-<h3><a class="reference internal" href="../_images/ELSE.png"><img alt="image16" src="../_images/ELSE.png" style="width: 16px;" /></a> ELSE<a class="headerlink" href="#image16-else" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image19-else">
+<h3><a class="reference internal" href="../_images/ELSE.png"><img alt="image19" src="../_images/ELSE.png" style="width: 16px;" /></a> ELSE<a class="headerlink" href="#image19-else" title="Permalink to this headline">¶</a></h3>
 <p>Parameter: &#8220;&#8221;</p>
 <p><strong>ELSE</strong> is to be used with IF action.</p>
 </div>
-<div class="section" id="image17-end">
-<h3><a class="reference internal" href="../_images/END.png"><img alt="image17" src="../_images/END.png" style="width: 16px;" /></a> END<a class="headerlink" href="#image17-end" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image20-end">
+<h3><a class="reference internal" href="../_images/END.png"><img alt="image20" src="../_images/END.png" style="width: 16px;" /></a> END<a class="headerlink" href="#image20-end" title="Permalink to this headline">¶</a></h3>
 <p>Parameter: &#8220;&#8221;</p>
 <p><strong>END</strong> is to be used with IF action.</p>
 </div>
-<div class="section" id="image18-noeffect">
-<h3><a class="reference internal" href="../_images/noEffect.png"><img alt="image18" src="../_images/noEffect.png" style="width: 16px;" /></a> noEffect<a class="headerlink" href="#image18-noeffect" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="image21-noeffect">
+<h3><a class="reference internal" href="../_images/noEffect.png"><img alt="image21" src="../_images/noEffect.png" style="width: 16px;" /></a> noEffect<a class="headerlink" href="#image21-noeffect" title="Permalink to this headline">¶</a></h3>
 <p>No parameter</p>
 <p>This a placeholder, but it&#8217;s meant to turn off all effects, like the
 ones from fadeIn and fadeOut.</p>
@@ -449,7 +477,7 @@ ones from fadeIn and fadeOut.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.7.0',
+            VERSION:'0.7.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
