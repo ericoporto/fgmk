@@ -138,6 +138,16 @@ Parameter:"effect", "keepEffect"
 usually when you want to do something in between and then play a fadeIn.
 
 
+### ![](actions/icons/shakeScreen.png){ width=16px } fadeOut
+Parameter:"horizontalorvertical"
+
+![](actions/screenshots/shakeScreen.png)
+
+**shakeScreen** shakes the screen. Also blocks the actions for a
+short period. You can choose between shaking vertical or horizontal
+direction.
+
+
 ### ![](actions/icons/fadeIn.png){ width=16px } fadeIn
 Parameter:"effect", "keepEffect"
 
@@ -145,6 +155,23 @@ Parameter:"effect", "keepEffect"
 
 **fadeIn** is similar to fadeOut, but instead it's meant to bring the screen
 back from a fadeOut.
+
+
+
+### ![](actions/icons/playMusic.png){ width=16px } fadeIn
+Parameter:"musicname"
+
+![](actions/screenshots/playMusic.png)
+
+**playMusic** play a music from the folder `audio/music`.
+
+
+### ![](actions/icons/playSound.png){ width=16px } fadeIn
+Parameter:"soundname"
+
+![](actions/screenshots/playSound.png)
+
+**playSound** play a sound from the folder `audio/`.
 
 
 ### ![](actions/icons/setVar.png){ width=16px } setVar
