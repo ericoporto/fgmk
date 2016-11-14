@@ -129,16 +129,7 @@ Parameter:"start/stop"
 **rain** makes rain. You can stop the rain using stop.
 
 
-### ![](actions/icons/fadeOut.png){ width=16px } fadeOut
-Parameter:"effect", "keepEffect"
-
-![](actions/screenshots/fadeOut.png)
-
-**fadeOut** fades the screen using a effect and can optionally keep that effect,
-usually when you want to do something in between and then play a fadeIn.
-
-
-### ![](actions/icons/shakeScreen.png){ width=16px } fadeOut
+### ![](actions/icons/shakeScreen.png){ width=16px } shakeScreen
 Parameter:"horizontalorvertical"
 
 ![](actions/screenshots/shakeScreen.png)
@@ -146,6 +137,15 @@ Parameter:"horizontalorvertical"
 **shakeScreen** shakes the screen. Also blocks the actions for a
 short period. You can choose between shaking vertical or horizontal
 direction.
+
+
+### ![](actions/icons/fadeOut.png){ width=16px } fadeOut
+Parameter:"effect", "keepEffect"
+
+![](actions/screenshots/fadeOut.png)
+
+**fadeOut** fades the screen using a effect and can optionally keep that effect,
+usually when you want to do something in between and then play a fadeIn.
 
 
 ### ![](actions/icons/fadeIn.png){ width=16px } fadeIn
@@ -158,7 +158,7 @@ back from a fadeOut.
 
 
 
-### ![](actions/icons/playMusic.png){ width=16px } fadeIn
+### ![](actions/icons/playMusic.png){ width=16px } playMusic
 Parameter:"musicname"
 
 ![](actions/screenshots/playMusic.png)
@@ -166,7 +166,7 @@ Parameter:"musicname"
 **playMusic** play a music from the folder `audio/music`.
 
 
-### ![](actions/icons/playSound.png){ width=16px } fadeIn
+### ![](actions/icons/playSound.png){ width=16px } playSound
 Parameter:"soundname"
 
 ![](actions/screenshots/playSound.png)
