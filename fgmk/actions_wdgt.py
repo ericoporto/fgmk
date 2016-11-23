@@ -187,19 +187,21 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.HBox = QtWidgets.QHBoxLayout(self)
         self.HBox.setAlignment(QtCore.Qt.AlignTop)
 
-        self.labelActionList = QtWidgets.QLabel("List of Actions:")
+        self.labelActionList = QtWidgets.QLabel("Actions:")
 
         self.ActionList = DragAndDropList(self)
         self.ActionList.itemMoved.connect(self.actionListItemMoved)
         self.ActionList.itemDoubleClicked.connect(self.editAction)
 
         VBoxActionList = QtWidgets.QVBoxLayout()
-        VBoxButtons = QtWidgets.QVBoxLayout()
+        HBoxButtons = QtWidgets.QHBoxLayout()
+        VBoxCheckboxes = QtWidgets.QVBoxLayout()
+        VBoxCheckboxes.setAlignment(QtCore.Qt.AlignTop)
 
-        self.addActionButton = QtWidgets.QPushButton("Add Action", self)
-        self.editActionButton = QtWidgets.QPushButton("Edit Action", self)
-        self.removeActionButton = QtWidgets.QPushButton("Remove Action", self)
-        self.deselectActionButton = QtWidgets.QPushButton("Deselect Actions", self)
+        self.addActionButton = QtWidgets.QPushButton("Add", self)
+        self.editActionButton = QtWidgets.QPushButton("Edit", self)
+        self.removeActionButton = QtWidgets.QPushButton("Remove", self)
+        self.deselectActionButton = QtWidgets.QPushButton("Deselect", self)
 
         if(not self.isitem):
             #[onclick, onover, oncharaover, charaleave, onleave]
@@ -228,19 +230,20 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.ActionList.delKeyPress.connect(self.removeAction)
 
         self.HBox.addLayout(VBoxActionList)
-        self.HBox.addLayout(VBoxButtons)
+        self.HBox.addLayout(VBoxCheckboxes)
 
-        VBoxActionList.addWidget(self.labelActionList)
+        HBoxButtons.addWidget(self.labelActionList)
+        VBoxActionList.addLayout(HBoxButtons)
         VBoxActionList.addWidget(self.ActionList)
 
-        VBoxButtons.addWidget(self.addActionButton)
-        VBoxButtons.addWidget(self.editActionButton)
-        VBoxButtons.addWidget(self.removeActionButton)
-        VBoxButtons.addWidget(self.deselectActionButton)
+        HBoxButtons.addWidget(self.addActionButton)
+        HBoxButtons.addWidget(self.editActionButton)
+        HBoxButtons.addWidget(self.removeActionButton)
+        HBoxButtons.addWidget(self.deselectActionButton)
 
         if(not self.isitem):
             for checkbox in self.checkboxes:
-                VBoxButtons.addWidget(checkbox)
+                VBoxCheckboxes.addWidget(checkbox)
 
         self.ActionList.itemSelectionChanged.connect(self.enableButtonsBecauseActionList)
 
