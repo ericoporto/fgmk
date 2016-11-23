@@ -88,8 +88,11 @@ class EffectWidget(QtWidgets.QWidget):
             self.plusSpinbox.setValue(0)
 
         if('atr' in effect_json):
-            atr_index = item_format.atr_types.index(effect_json['atr'])
-            self.atrCombobox.setCurrentIndex(atr_index)
+            if(effect_json['atr'] in item_format.atr_types):
+                atr_index = item_format.atr_types.index(effect_json['atr'])
+                self.atrCombobox.setCurrentIndex(atr_index)
+            else:
+                self.atrCombobox.setCurrentIndex(0)                
         else:
             self.atrCombobox.setCurrentIndex(0)
 
