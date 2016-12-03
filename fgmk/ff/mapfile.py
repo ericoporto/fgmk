@@ -135,10 +135,15 @@ class MapFormat(base_model.BaseFormat):
         f.close()
 
     def mapResize(self,width,height,offsetx=0,offsety=0):
-        x=min(max(offsetx,0),len(self.LayersMapTiles[0][0]))
-        y=min(max(offsety,0),len(self.LayersMapTiles[0]))
-        newLayersMapTiles = self.LayersMapTiles[:,y:(y+height),x:(x+width)]
-        self.LayersMapTiles = newLayersMapTiles
+        pads=((0,0),(abs(offsety),abs(offsety)+height),(abs(offsetx),abs(offsetx)+width))
+        newLayersMapTiles=np.lib.pad(self.LayersMapTiles,pads,'constant',constant_values=0)
+        self.LayersMapTiles = newLayersMapTiles[:,
+                    offsety+abs(offsety):offsety+abs(offsety)+height,
+                    offsetx+abs(offsetx):offsetx+abs(offsetx)+width]
+        # x=min(max(offsetx,0),len(self.LayersMapTiles[0][0]))
+        # y=min(max(offsety,0),len(self.LayersMapTiles[0]))
+        # newLayersMapTiles = self.LayersMapTiles[:,y:(y+height),x:(x+width)]
+        # self.LayersMapTiles = newLayersMapTiles
 
     def getMapWidth(self):
         return len(self.LayersMapTiles[0][0])

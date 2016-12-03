@@ -296,7 +296,11 @@ class MapResizeDialog(QtWidgets.QDialog):
         self.SpinBoxWidth = QtWidgets.QSpinBox()
         self.SpinBoxHeight = QtWidgets.QSpinBox()
         self.SpinBoxOffX = QtWidgets.QSpinBox()
+        self.SpinBoxOffX.setMinimum(-50)
+        self.SpinBoxOffX.setMaximum(50)
         self.SpinBoxOffY = QtWidgets.QSpinBox()
+        self.SpinBoxOffY.setMinimum(-50)
+        self.SpinBoxOffY.setMaximum(50)
         self.buttonBox = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
