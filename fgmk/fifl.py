@@ -8,6 +8,8 @@ import os
 DESCRIPTORS = os.path.join("descriptors")
 LEVELS = os.path.join(DESCRIPTORS, "levels")
 IMG = os.path.join("img")
+ANIMATIONS = os.path.join(IMG, "animations")
+PICTURES = os.path.join(IMG, "pictures")
 AUDIO = os.path.join("audio")
 MUSIC = os.path.join(AUDIO, "music")
 CHARASETS = os.path.join(DESCRIPTORS, "charaset")

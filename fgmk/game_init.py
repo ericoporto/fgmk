@@ -80,12 +80,74 @@ def regenerateInit():
     else:
         needupdate = True
 
+    pictureJsonTree = regeneratePictureList(soundJsonTree)
+    if(pictureJsonTree == None):
+        #regress to before json tree
+        pictureJsonTree = soundJsonTree
+    else:
+        needupdate = True
+
+    animJsonTree = regenerateAnimationList(pictureJsonTree)
+    if(animJsonTree == None):
+        #regress to before json tree
+        animJsonTree = pictureJsonTree
+    else:
+        needupdate = True
+
     if(needupdate):
         gamefolder = os.path.join(current_project.settings["gamefolder"])
-        saveInitFile(gamefolder, soundJsonTree)
+        saveInitFile(gamefolder, animJsonTree)
         return True
 
     return False
+
+
+def regeneratePictureList(initFileJsonTree):
+    if 'PictureList' not in initFileJsonTree:
+        return None
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
+
+    if(initFileJsonTree != None):
+        pictures = os.path.join(gamefolder, fifl.PICTURES)
+        filelist = [f for f in listdir(pictures) if os.path.isfile(os.path.join(pictures, f)) and f.endswith(".png")]
+        originalPictureList = initFileJsonTree["PictureList"]
+
+        PictureList = {}
+        for file in filelist:
+            filewoext = file.split(os.extsep, 1)[0]
+            PictureList[filewoext] = file
+
+        if(sorted(PictureList) != sorted(originalPictureList)):
+            initFileJsonTree["PictureList"] = []
+            initFileJsonTree["PictureList"] = PictureList
+            return initFileJsonTree
+
+    return None
+
+def regenerateAnimationList(initFileJsonTree):
+    if 'AnimationList' not in initFileJsonTree:
+        return None
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
+
+    if(initFileJsonTree != None):
+        animations = os.path.join(gamefolder, fifl.ANIMATIONS)
+        filelist = [f for f in listdir(animations) if os.path.isfile(os.path.join(animations, f)) and f.endswith(".png")]
+        originalAnimationList = initFileJsonTree["AnimationList"]
+
+        AnimationList = {}
+        for file in filelist:
+            filewoext = file.split(os.extsep, 1)[0]
+            AnimationList[filewoext] = file
+
+        if(sorted(AnimationList) != sorted(originalAnimationList)):
+            initFileJsonTree["AnimationList"] = []
+            initFileJsonTree["AnimationList"] = AnimationList
+            return initFileJsonTree
+
+    return None
+
 
 def regenerateSoundList(initFileJsonTree):
     if 'SoundList' not in initFileJsonTree:
