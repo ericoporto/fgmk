@@ -852,6 +852,37 @@ class rain(ActionDialog):
             rain_state = 'stop'
         return rain_state
 
+class blockInput(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select either block or allow:")
+        self.ListEffect = QtWidgets.QListWidget()
+
+        self.radioBlock = QtWidgets.QRadioButton("block", self)
+        self.radioAllow = QtWidgets.QRadioButton("allow", self)
+
+        self.radioBlock.setChecked(True)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.radioBlock)
+        self.VBox.addWidget(self.radioAllow)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('blockInput: choose if player input is blocked')
+
+        if(self.edit != None):
+            if(self.edit[0] == 'allow' or self.edit[0] == 'false'):
+                self.radioAllow.setChecked(True)
+
+    def getValue(self):
+        block_state='start'
+        if self.radioAllow.isChecked():
+            block_state = 'stop'
+        return block_state
+
 class shakeScreen(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
