@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
+import re
 from PyQt5 import QtCore, QtWidgets, QtGui
-from fgmk import action_dialog, getdata
+from fgmk import action_dialog, getdata, copypaste
 
 """
 this module concentrates dealing with a list of actions.
@@ -40,6 +41,7 @@ class DragAndDropList(QtWidgets.QListWidget):
     """
     itemMoved = QtCore.pyqtSignal(int, int) # Oldindex, newindex
     delKeyPress = QtCore.pyqtSignal() #signal when del key is pressed
+    somethingPasted = QtCore.pyqtSignal('QString')
 
     def __init__(self, parent=None, **args):
         QtWidgets.QListWidget.__init__(self, parent, **args)
@@ -64,6 +66,18 @@ class DragAndDropList(QtWidgets.QListWidget):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Delete:
             self.delKeyPress.emit()
+        elif event == QtGui.QKeySequence.Copy:
+            if(len(self.selectedItems())>0):
+                selecteditem = self.selectedItems()[0]
+                actionParam = selecteditem.getAction()
+                action = actionParam[0]
+                param= actionParam[1]
+                copypaste.copyFromText('["'+str(action)+'","'+str(param) +'"]')
+        elif event == QtGui.QKeySequence.Paste:
+            text = copypaste.pasteTextFromClipboard()
+            self.somethingPasted.emit(str(text))
+
+
 
 class ActionButton(QtWidgets.QPushButton):
     """
@@ -192,6 +206,7 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         self.ActionList = DragAndDropList(self)
         self.ActionList.itemMoved.connect(self.actionListItemMoved)
         self.ActionList.itemDoubleClicked.connect(self.editAction)
+        self.ActionList.somethingPasted.connect(self.somethingPasted)
 
         VBoxActionList = QtWidgets.QVBoxLayout()
         HBoxButtons = QtWidgets.QHBoxLayout()
@@ -433,6 +448,41 @@ class tinyActionsWdgt(QtWidgets.QWidget):
         previous_actions['type'][4] = not previous_actions['type'][4]
         current_actions = self.getValue()
         self.somethingChanged.emit(previous_actions,current_actions,'typeChanged','changed on leave')
+
+    def somethingPasted(self,text):
+        lines = [s.strip() for s in text.splitlines()]
+        line = lines[0]
+        if(len(line)>3):
+            pattern_quotes = re.compile('\[["][A-Za-z]+["]\,["][^\n\"\'\]]*["]\]')
+            pattern_squotes = re.compile("\[[\'][A-Za-z]+[\']\,[\'][^\n\'\"\]]*[\']\]")
+            pattern_nquotes = re.compile("\[[A-Za-z]+\,[^\n\'\"\]]*\]")
+            index = 0
+            if(len(self.ActionList.selectedItems())>0):
+                index = self.ActionList.row(self.ActionList.selectedItems()[0])
+
+            action = ""
+            param = ""
+
+            if pattern_quotes.match(line):
+                parts = line.split(",")
+                action = parts[0].split("\"")[1]
+                param = parts[1].split("\"")[1]
+
+            elif pattern_squotes.match(line):
+                parts = line.split(",")
+                action = parts[0].split("\'")[1]
+                param = parts[1].split("\'")[1]
+
+            elif pattern_nquotes.match(line):
+                parts = line.split(",")
+                action = parts[0]
+                param = parts[1]
+
+            if(action != ""):
+                previous_actions = self.getValue()
+                self.ActionList.insertItem(index,actionItem([action,param]))
+                current_actions = self.getValue()
+                self.somethingChanged.emit(previous_actions,current_actions,'pasted action','pasted action')
 
     def getValue(self):
         allactions = []
