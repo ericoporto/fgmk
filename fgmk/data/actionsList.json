@@ -11,6 +11,7 @@
   "changeAllTiles",
   "changePlayerAnimation",
   "rain",
+  "insideOutside",
   "shakeScreen",
   "fadeIn",
   "fadeOut",
@@ -43,6 +44,7 @@
     "playMusic":["musicname"],
     "playSound":["soundname"],
     "rain":["state"],
+    "insideOutside":["inout"],
     "addItem":["item"],
     "dropItem":["item"]
     }

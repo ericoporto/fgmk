@@ -821,6 +821,39 @@ class fadeOut(ActionDialog):
             keepEffect = 'keepEffect'
         return effecToReturn + ';' + keepEffect
 
+
+class insideOutside(ActionDialog):
+    def __init__(self, **kwargs):
+        #super().__init__(parent, **kwargs)
+        ActionDialog.__init__(self, **kwargs)
+
+        self.LabelText = QtWidgets.QLabel("Select either inside or outside:")
+        self.ListEffect = QtWidgets.QListWidget()
+
+        self.radioinside = QtWidgets.QRadioButton("inside", self)
+        self.radiooutside = QtWidgets.QRadioButton("outside", self)
+
+        self.radioinside.setChecked(True)
+
+        self.VBox.addWidget(self.LabelText)
+        self.VBox.addWidget(self.radioinside)
+        self.VBox.addWidget(self.radiooutside)
+
+
+        self.setGeometry(300, 40, 350, 350)
+        self.setWindowTitle('insideOutside: choose where you are going')
+
+        if(self.edit != None):
+            if(self.edit[0] == 'outside'):
+                self.radiooutside.setChecked(True)
+
+    def getValue(self):
+        io_state='inside'
+        if self.radiooutside.isChecked():
+            io_state = 'outside'
+        return io_state
+
+
 class rain(ActionDialog):
     def __init__(self, **kwargs):
         #super().__init__(parent, **kwargs)
