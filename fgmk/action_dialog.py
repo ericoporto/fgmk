@@ -911,9 +911,9 @@ class blockInput(ActionDialog):
                 self.radioAllow.setChecked(True)
 
     def getValue(self):
-        block_state='start'
+        block_state='block'
         if self.radioAllow.isChecked():
-            block_state = 'stop'
+            block_state = 'allow'
         return block_state
 
 class shakeScreen(ActionDialog):

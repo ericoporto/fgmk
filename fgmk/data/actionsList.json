@@ -18,6 +18,7 @@
   "setVar",
   "varPlusOne",
   "waitCycle",
+  "blockInput",
   "IF",
   "ELSE",
   "END",
@@ -44,6 +45,7 @@
     "playMusic":["musicname"],
     "playSound":["soundname"],
     "rain":["state"],
+    "blockInput":["truefalse"],
     "insideOutside":["inout"],
     "addItem":["item"],
     "dropItem":["item"]
