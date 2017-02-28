@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding=utf8
 from setuptools import setup
 from codecs import open
 import platform
@@ -23,7 +23,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 def mkdir_p(path):
-#thanks http://stackoverflow.com/a/600612/965638
+
     try:
         os.makedirs(path)
     except OSError as exc:  # Python >2.5
@@ -51,7 +51,8 @@ if osname == 'Linux':
                                           'platform/ubuntu/fgmk-map.svg']),
                     ('share/mime', ['platform/ubuntu/fgmk.xml'])])
 
-with open('fgmk/__init__.py', 'r') as fd:
+
+with open('fgmk/__init__.py', 'r', encoding="utf-8") as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
