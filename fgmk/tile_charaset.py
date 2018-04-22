@@ -5,7 +5,7 @@ import json
 from PIL import Image
 from PIL.ImageQt import ImageQt
 from PyQt5 import QtGui, QtCore, QtWidgets
-from fgmk import fifl, current_project
+from fgmk import fifl, current_project, game_init
 from fgmk.util import img_util
 from fgmk.ff import charaset_format
 
@@ -620,19 +620,29 @@ class CharasetEditorWidget(QtWidgets.QDialog):
                     self.ssettings["gamefolder"], fifl.CHARASETS)
 
         filename = str(QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', filepath))
+            self, 'Open File', filepath)[0])
         self.__charasetOpen(filename)
 
     def __charasetOpen(self, filename):
+        print(filename)
         if os.path.isfile(filename):
             self.csetsList.clear()
             self.animNames.clear()
             self.animList.clear()
+
+            game_init.regenerateInit()
+
             self.cset.load(filename)
+            
+            self.csetsOpenEdit.setText(os.path.splitext(os.path.basename(filename))[0] )
+
+            print(os.path.splitext(os.path.basename(filename))[0])
+
             self.ssettings["gamefolder"] = os.path.abspath(
                 os.path.join(os.path.dirname(str(filename)), "../../"))
             self.__imgOpen(os.path.join(self.ssettings[
                            "gamefolder"], fifl.IMG, self.cset.jsonTree["Charaset"]["tileImage"]))
+                           
             for charset in self.cset.jsonTree["Charaset"]:
                 if(charset != "tileImage"):
                     self.csetsList.addItem(
@@ -646,15 +656,26 @@ class CharasetEditorWidget(QtWidgets.QDialog):
             self.cset.addCharaset(str(self.csetsList.item(
                 itemIndex).aname), self.csetsList.item(itemIndex).jsonTree)
 
-        self.cset.save()
+        if( len(self.csetsOpenEdit.text()) > 0):
+            self.cset.filename = os.path.join(
+                self.ssettings["gamefolder"], 
+                fifl.CHARASETS, 
+                self.csetsOpenEdit.text()) + ".json"
+
+        self.cset.save( )
+
+        game_init.regenerateInit()
 
     def imgOpen(self):
 
         if(self.ssettings == {}):
             filepath = os.path.expanduser("~")
+        if "gamefolder" in self.ssettings:
+            filepath = os.path.join(
+                self.ssettings["gamefolder"], fifl.IMG)
 
         filename = str(QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Open File', filepath))
+            self, 'Open File', filepath)[0])
         if os.path.isfile(filename):
             self.__imgOpen(filename)
 

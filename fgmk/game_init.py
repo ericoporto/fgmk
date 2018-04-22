@@ -41,6 +41,13 @@ def getInitFile():
     else:
         return {}
 
+def getCharasetFileList():
+    initJsonTree = getInitFile()
+    if("CharasetFileList" in initJsonTree):
+        return initJsonTree["CharasetFileList"]
+    else:
+        return dict()
+
 def getMusicList():
     initJsonTree = getInitFile()
     if("MusicList" in initJsonTree):
@@ -94,9 +101,16 @@ def regenerateInit():
     else:
         needupdate = True
 
+    charasetJsonTree = regenerateCharasetFileList(animJsonTree)
+    if(charasetJsonTree == None):
+        #regress to before json tree
+        charasetJsonTree = animJsonTree
+    else:
+        needupdate = True
+
     if(needupdate):
         gamefolder = os.path.join(current_project.settings["gamefolder"])
-        saveInitFile(gamefolder, animJsonTree)
+        saveInitFile(gamefolder, charasetJsonTree)
         return True
 
     return False
@@ -230,6 +244,31 @@ def regenerateLevelList(initFileJsonTree):
         if(len(unmatched_maps)!=0):
             initFileJsonTree["LevelsList"] = []
             initFileJsonTree["LevelsList"] = LevelsList
+            return initFileJsonTree
+
+    return None
+
+def regenerateCharasetFileList(initFileJsonTree):
+    if 'CharasetFileList' not in initFileJsonTree:
+        return None
+
+    gamefolder = os.path.join(current_project.settings["gamefolder"])
+
+    if(initFileJsonTree != None):
+        charaset = os.path.join(gamefolder, fifl.CHARASETS)
+        filelist = [f for f in listdir(charaset) if os.path.isfile(os.path.join(charaset, f)) and f.endswith(".json")]
+        originalCharasetFileList = initFileJsonTree["CharasetFileList"]
+
+        CharasetFileList = {}
+        for file in filelist:
+            filewoext = file.split(os.extsep, 1)[0]
+            CharasetFileList[filewoext] = file
+
+        unmatched_charasets = set(CharasetFileList.items()) ^ set(originalCharasetFileList.items())
+
+        if(len(unmatched_charasets)!=0):
+            initFileJsonTree["CharasetFileList"] = []
+            initFileJsonTree["CharasetFileList"] = CharasetFileList
             return initFileJsonTree
 
     return None
