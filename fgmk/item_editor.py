@@ -211,7 +211,7 @@ class StatModWidget(QtWidgets.QWidget):
         if st != 0:
             stat['st']=st
         if dx != 0:
-            stat['dx']=st
+            stat['dx']=dx
         if iq != 0:
             stat['iq']=iq
 
